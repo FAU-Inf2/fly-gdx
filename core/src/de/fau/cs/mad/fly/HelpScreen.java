@@ -15,12 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
- * Displays the help information
+ * Displays the help information.
  *
  * @author Tobias Zangl
  */
 public class HelpScreen implements Screen {
-	final Fly game;
+	private final Fly game;
 	
 	private SpriteBatch batch;
 	private Skin skin;
@@ -33,7 +33,11 @@ public class HelpScreen implements Screen {
 		batch = new SpriteBatch();
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		stage = new Stage();
-		
+
+		addHelp();
+	}
+	
+	private void addHelp() {
 		table = new Table();
 		table.setFillParent(true);
 		stage.addActor(table);

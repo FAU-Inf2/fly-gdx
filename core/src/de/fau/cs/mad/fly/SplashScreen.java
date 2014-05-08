@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.TimeUtils;
 
 /**
  * Displays the splash screen.
@@ -12,16 +13,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * @author Tobias Zangl
  */
 public class SplashScreen implements Screen {
-	final Fly game;
+	private final Fly game;
 	
-	SpriteBatch batch;
-	Texture img;
+	private SpriteBatch batch;
+	private Texture splashImg;
+	
+	private long startTime;
+	private final static long splashDuration = 2000;
 	
 	public SplashScreen(final Fly game) {
 		this.game = game;
 		
 		batch = new SpriteBatch();
-		img = new Texture("Fly.png");
+		splashImg = new Texture("Fly.png");
 	}
 
 	@Override
@@ -29,8 +33,12 @@ public class SplashScreen implements Screen {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();		
+		batch.draw(splashImg, 0, 0);
+		batch.end();
+		
+		if(TimeUtils.millis() > startTime + splashDuration) {
+			game.setMainMenuScreen();
+		}
 	}
 
 	@Override
@@ -41,8 +49,7 @@ public class SplashScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-		
+		startTime = TimeUtils.millis();
 	}
 
 	@Override
@@ -65,7 +72,7 @@ public class SplashScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		splashImg.dispose();
+		batch.dispose();
 	}
 }

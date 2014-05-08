@@ -23,14 +23,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  * @author Tobias Zangl
  */
 public class MainMenuScreen implements Screen {
-	final Fly game;
+	private final Fly game;
 	
 	private SpriteBatch batch;
 	private Skin skin;
 	private Stage stage;
 	private Table table;
 	
-	private Window infoWindow;
+	//private Window infoWindow;
 	
 	public MainMenuScreen(final Fly game) {
 		this.game = game;
@@ -38,7 +38,11 @@ public class MainMenuScreen implements Screen {
 		batch = new SpriteBatch();
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		stage = new Stage();
-		
+
+		addMenu();
+	}
+	
+	private void addMenu() {
 		table = new Table();
 		table.setFillParent(true);
 		stage.addActor(table);
@@ -48,20 +52,16 @@ public class MainMenuScreen implements Screen {
 		final TextButton helpButton = new TextButton("Help", skin, "default");
 		final TextButton exitButton = new TextButton("Exit", skin, "default");
 		
-		infoWindow = new Window("Info", skin, "default");
-		infoWindow.setVisible(false);
-		final Label label = new Label("Game started!", skin);
-		infoWindow.add(label);
-		stage.addActor(infoWindow);
+		table.add(startButton).width(200f).height(40f).pad(10f);
+		table.add(helpButton).width(200f).height(40f).pad(10f);
+		table.row();
+		table.add(optionButton).width(200f).height(40f).pad(10f);
+		table.add(exitButton).width(200f).height(40f).pad(10f);
 		
 		startButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
-				if(infoWindow.isVisible()) {
-					infoWindow.setVisible(false);
-				} else {
-					infoWindow.setVisible(true);
-				}
+				game.setGameScreen();
 			}
 		});
 		
@@ -86,12 +86,6 @@ public class MainMenuScreen implements Screen {
 				//Gdx.app.exit();
 			}
 		});
-		
-		table.add(startButton).width(200f).height(40f).pad(10f);
-		table.add(helpButton).width(200f).height(40f).pad(10f);
-		table.row();
-		table.add(optionButton).width(200f).height(40f).pad(10f);
-		table.add(exitButton).width(200f).height(40f).pad(10f);
 	}
 
 	@Override
@@ -100,6 +94,7 @@ public class MainMenuScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		    
 		batch.begin();
+		stage.act(delta);
 		stage.draw();
 		batch.end();
 	}

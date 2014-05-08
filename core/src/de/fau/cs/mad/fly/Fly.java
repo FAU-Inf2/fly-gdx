@@ -13,11 +13,11 @@ import com.badlogic.gdx.Game;
  * @author Tobias Zangl
  */
 public class Fly extends Game {
-	SplashScreen splashScreen;
-	GameScreen gameScreen;
-	MainMenuScreen mainMenuScreen;
-	OptionScreen optionScreen;
-	HelpScreen helpScreen;
+	private SplashScreen splashScreen;
+	private GameScreen gameScreen;
+	private MainMenuScreen mainMenuScreen;
+	private OptionScreen optionScreen;
+	private HelpScreen helpScreen;
 	
 	@Override
 	public void create() {
