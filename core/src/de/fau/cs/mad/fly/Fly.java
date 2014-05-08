@@ -3,17 +3,15 @@ package de.fau.cs.mad.fly;
 import com.badlogic.gdx.Game;
 
 /**
- * Manages the different game screens:
- * - SplashScreen
- * - GameScreen
- * - MainMenuScreen
- * - OptionScreen
- * - HelpScreen
- * 
+ * Manages the different game screens.
+ * <p>
+ * Includes screens for SplashScreen, LoadingScreen, GameScreen, MainMenuScreen, OptionScreen, HelpScreen.
+ *  
  * @author Tobias Zangl
  */
 public class Fly extends Game {
 	private SplashScreen splashScreen;
+	private LoadingScreen loadingScreen;
 	private GameScreen gameScreen;
 	private MainMenuScreen mainMenuScreen;
 	private OptionScreen optionScreen;
@@ -22,6 +20,7 @@ public class Fly extends Game {
 	@Override
 	public void create() {
 		splashScreen = new SplashScreen(this);
+		loadingScreen = new LoadingScreen(this);
 		gameScreen = new GameScreen(this);
 		mainMenuScreen = new MainMenuScreen(this);
 		optionScreen = new OptionScreen(this);
@@ -34,6 +33,10 @@ public class Fly extends Game {
 	
 	public void setSplashScreen() {
 		setScreen(splashScreen);
+	}
+	
+	public void setLoadingScreen() {
+		setScreen(loadingScreen);
 	}
 	
 	public void setGameScreen() {

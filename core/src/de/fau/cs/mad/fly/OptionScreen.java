@@ -38,6 +38,9 @@ public class OptionScreen implements Screen {
 		addOptions();
 	}
 	
+	/**
+	 * Adds the options and the Save and Back buttons to the option screen.
+	 */
 	private void addOptions() {
 		table = new Table();
 		table.setFillParent(true);

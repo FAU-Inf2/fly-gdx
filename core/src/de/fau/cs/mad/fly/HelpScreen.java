@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
@@ -37,6 +36,9 @@ public class HelpScreen implements Screen {
 		addHelp();
 	}
 	
+	/**
+	 * Adds the scrollable help text and the Back button to the help screen.
+	 */
 	private void addHelp() {
 		table = new Table();
 		table.setFillParent(true);

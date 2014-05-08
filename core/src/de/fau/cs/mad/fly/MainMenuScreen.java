@@ -6,19 +6,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
- * Displays the main menu with:
- * - Start
- * - Options
- * - Help
- * - Exit
+ * Displays the main menu with Start, Options, Help and Exit buttons.
  * 
  * @author Tobias Zangl
  */
@@ -30,8 +24,6 @@ public class MainMenuScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	
-	//private Window infoWindow;
-	
 	public MainMenuScreen(final Fly game) {
 		this.game = game;
 		
@@ -42,6 +34,11 @@ public class MainMenuScreen implements Screen {
 		addMenu();
 	}
 	
+	/**
+	 * Adds the main menu to the main menu screen.
+	 * <p>
+	 * Includes buttons for Start, Options, Help, Exit.
+	 */
 	private void addMenu() {
 		table = new Table();
 		table.setFillParent(true);
@@ -61,7 +58,7 @@ public class MainMenuScreen implements Screen {
 		startButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
-				game.setGameScreen();
+				game.setLoadingScreen();
 			}
 		});
 		
