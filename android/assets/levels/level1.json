@@ -1,0 +1,71 @@
+{
+	"id": 1,
+	"name": "Level 1",
+	"startingPointX": 0.0,
+	"startingPointY": 0.0,
+	"startingPointZ": 0.0,
+	"firstSection":
+		{
+			"id": 0,
+			"directionX": 0.0,
+			"directionY": 0.0,
+			"directionZ": 10.0,
+			"length": 10.0,	
+			"successorSections": [1],
+			"gateID": 0
+		},
+	"sections": [
+		{
+			"id": 1,
+			"minHorizontalAngle": 0.0,
+			"maxHorizontalAngle": 0.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 8,
+			"successorSections": [2],
+			"gateID": 1
+		},
+		{
+			"id": 2,
+			"minHorizontalAngle": 20.0,
+			"maxHorizontalAngle": 25.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 8,
+			"successorSections": [3],
+			"gateID": 2
+		},
+		{
+			"id": 3,
+			"minHorizontalAngle": 0.0,
+			"maxHorizontalAngle": 0.0,
+			"minVerticalAngle": 20.0,
+			"maxVerticalAngle": 30.0,
+			"length": 9,
+			"successorSections": [4],
+			"gateID": 3
+		},
+		{
+			"id": 4,
+			"minHorizontalAngle": 30.0,
+			"maxHorizontalAngle": 40.0,
+			"minVerticalAngle": -20.0,
+			"maxVerticalAngle": -30.0,
+			"length": 9,
+			"successorSections": [5],
+			"gateID": 4
+		},
+		{
+			"id": 5,
+			"minHorizontalAngle": 0.0,
+			"maxHorizontalAngle": 0.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 5,
+			"successorSections": [],
+			"gateID": 5
+		}
+	]
+}
+
+

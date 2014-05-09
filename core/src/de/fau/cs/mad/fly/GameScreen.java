@@ -1,8 +1,12 @@
 package de.fau.cs.mad.fly;
 
+import java.io.FileNotFoundException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+
+import de.fau.cs.mad.fly.levelLoader.LevelManager;
 
 /**
  * Displays the 3D-world.
@@ -19,6 +23,12 @@ public class GameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		if(Gdx.input.justTouched()) {
+			LevelManager lm = new LevelManager();
+			try {
+				lm.loadLevel("level1");
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 			game.setMainMenuScreen();
 		}
 		

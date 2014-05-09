@@ -1,11 +1,9 @@
 package de.fau.cs.mad.fly.levelLoader;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.Gson;
 
 /**
@@ -15,6 +13,16 @@ import com.google.gson.Gson;
  * 
  */
 public class LevelManager {
+	/**
+	 * path to the level directory in the assets directory which contains the
+	 * levels
+	 */
+	public final String LEVEL_DIRECTORY = "levels/";
+
+	/**
+	 * ending of each level-file
+	 */
+	public final String LEVEL_ENDING = ".json";
 
 	/**
 	 * Gson object which is necessary to load a level as a GSON file
@@ -29,18 +37,31 @@ public class LevelManager {
 	private Level level;
 
 	/**
-	 * Load a level out of a GSON file. As a result only a {@link RawLevel} is
-	 * loaded to {@link #level}. It has to be converted afterwards in
-	 * {@link #convertLevel()}.
+	 * Load a level out of a file.
 	 * 
-	 * @param pathToGsonFile
+	 * The level is searched in the {@link #LEVEL_DIRECTORY}. The ending
+	 * {@link #LEVEL_ENDING} is added automatically. As a result only a
+	 * {@link RawLevel} is loaded to {@link #level}. It has to be converted
+	 * afterwards in {@link #convertLevel()}.
+	 * 
+	 * @param levelName
 	 * @throws FileNotFoundException
 	 */
-	public void loadLevel(String pathToGsonFile) throws FileNotFoundException {
-		BufferedReader reader = null;
-		reader = new BufferedReader(new FileReader(pathToGsonFile));
-		level = gson.fromJson(reader, Level.class);
-		closeQuietly(reader);
+	public void loadLevel(String levelName) throws FileNotFoundException {
+		String levelPath = LEVEL_DIRECTORY + levelName + LEVEL_ENDING;
+		if (Gdx.files.internal(levelPath).exists()) {
+			FileHandle levelFile;
+			levelFile = Gdx.files.internal(levelPath);
+			if (levelFile.length() > 0) {
+				Gdx.app.log("loadLevel", "level loaded");
+				level = gson.fromJson(levelFile.readString(), Level.class);
+			} else {
+				Gdx.app.log("LevelLoader", "failed to load level: " + levelPath);
+			}
+		}
+		else {
+			Gdx.app.log("LevelLoader", "level does not exist: " + levelPath);
+		}
 	}
 
 	/**
@@ -60,17 +81,4 @@ public class LevelManager {
 	private void convertGatePositions() {
 	}
 
-	/**
-	 * Closes a reader and catches potential Exceptions
-	 * @param closeable
-	 */
-	private void closeQuietly(Closeable closeable) {
-		if (closeable != null) {
-			try {
-				closeable.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 }
