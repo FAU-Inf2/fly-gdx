@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 
 /**
  * Displays the loading screen with a progress bar.
@@ -37,7 +38,7 @@ public class LoadingScreen implements Screen {
 	
 		batch = new SpriteBatch();
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
-		stage = new Stage();
+		stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 	
 		addLoadingProgress();
 	}
@@ -84,17 +85,17 @@ public class LoadingScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 		
-		incProgress(0.5f);
+		incProgress(1f);
 		
 		if(progress >= 100f) {
 			game.setGameScreen();
+			setProgress(0f);
 		}
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
+		stage.getViewport().update(width, height, true);
 	}
 
 	@Override

@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -26,7 +28,7 @@ import de.fau.cs.mad.fly.levelLoader.LevelManager;
  *
  * @author Tobias Zangl
  */
-public class GameScreen implements Screen {
+public class GameScreen implements Screen, InputProcessor {
 	private final Fly game;
 	
 	private float startRoll, startPitch;
@@ -46,23 +48,11 @@ public class GameScreen implements Screen {
 	}
 
 	@Override
-	public void render(float delta) {
-		if(Gdx.input.justTouched()) {
-			LevelManager lm = new LevelManager();
-			try {
-				lm.loadLevel("level1");
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			game.setMainMenuScreen();
-		}
-		
+	public void render(float delta) {		
 		Gdx.gl.glClearColor(0, 0, 0, 1);		
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
-		
-		
+
 		// rotating the camera according to UserInput
 		interpretUserInput();
 		
@@ -88,9 +78,20 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
+		Gdx.input.setInputProcessor(this);
+		Gdx.input.setCatchBackKey(true);
+		
 		setUpCamera();
 		setUpEnvironment();
+		
+		
+		// TODO Put it in LoadingScreen? new Method? ...
+		LevelManager lm = new LevelManager();
+		try {
+			lm.loadLevel("level1");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -113,7 +114,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 		batch.dispose();
 		model.dispose();
 		for(int i = 0; i < 6; i++) {
@@ -207,5 +207,55 @@ public class GameScreen implements Screen {
 		//Gdx.app.log("myApp", "up: " + camera.up);
 		camera.update();
 		
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		if(keycode == Keys.BACK || keycode == Keys.BACKSPACE) {
+			game.setMainMenuScreen();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
