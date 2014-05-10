@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -35,6 +36,10 @@ public class GameScreen implements Screen, InputProcessor {
 
 	private PerspectiveCamera camera;
 	private float cameraSpeed = 0.1f;
+	
+	private int rollDir = 0;
+	private int pitchDir = 0;
+	private boolean useSensorData;
 
 	private ModelBatch batch;
 	private Model model;
@@ -45,6 +50,8 @@ public class GameScreen implements Screen, InputProcessor {
 	
 	public GameScreen(final Fly game) {
 		this.game = game;
+		
+		useSensorData = false;
 	}
 
 	@Override
@@ -54,7 +61,13 @@ public class GameScreen implements Screen, InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		// rotating the camera according to UserInput
-		interpretUserInput();
+		if(useSensorData) {
+			interpretSensorInput();
+		}
+		
+		// rotating the camera
+		rotateCamera(rollDir, pitchDir);
+		camera.update();
 		
 		// move the camera (first person flight)
 		Vector3 dir = new Vector3(camera.direction.x, camera.direction.y, camera.direction.z);
@@ -172,41 +185,46 @@ public class GameScreen implements Screen, InputProcessor {
 	}
 	
 	/**
-	 * Interprets userinput like rotation of the smartphone or touches on the screen and rotates the camera accordingly
+	 * Interprets the rotation of the smartphone and rotates the camera accordingly
 	 */
-	private void interpretUserInput() {		
+	private void interpretSensorInput() {		
 		float roll = Gdx.input.getRoll();
 		float pitch = Gdx.input.getPitch();
 		
 		float difRoll = roll - startRoll;
 		float difPitch = pitch - startPitch;
+
+		rollDir = 0;
+		pitchDir = 0;
 		
 		// camera rotation according to smartphone rotation
-		// rotation up or down
 		if(difRoll > 10.0f) {
-			camera.rotate(camera.direction.cpy().crs(camera.up), -1.0f);
+			rollDir = -1;
 		} else if(difRoll < -10.0f) {
-			camera.rotate(camera.direction.cpy().crs(camera.up), 1.0f);
+			rollDir = 1;
 		}
+		
+		if(difPitch > 10.0f) {
+			pitchDir = -1;
+		} else if(difPitch < -10.0f) {
+			pitchDir = 1;
+		}		
+	}
+	
+	/**
+	 * Rotates the camera according to rollDir and pitchDir
+	 * @param rollDir	defines if the camera should be rotated up or down
+	 * @param pitchDir	defines if the camera should be rotated left or right
+	 */
+	private void rotateCamera(int rollDir, int pitchDir) {
+		// rotation up or down
+		camera.rotate(camera.direction.cpy().crs(camera.up), 1.0f * rollDir);
 		
 		// rotation around camera.direction/viewDirection (roll)
-		/*if(difPitch > 10.0f) {
-			camera.rotate(camera.direction, -1.0f);
-		} else if(difPitch < -10.0f) {
-			camera.rotate(camera.direction, 1.0f);
-		}*/
+		//camera.rotate(camera.direction, 1.0f * pitchDir);
 		
 		// rotation around camera.up (turning left/right)
-		if(difPitch > 10.0f) {
-			camera.rotate(camera.up, -1.0f);
-		} else if(difPitch < -10.0f) {
-			camera.rotate(camera.up, 1.0f);
-		}
-		
-		//Gdx.app.log("myApp", "direction: " + camera.direction);
-		//Gdx.app.log("myApp", "up: " + camera.up);
-		camera.update();
-		
+		camera.rotate(camera.up, 1.0f * pitchDir);
 	}
 
 	@Override
@@ -232,12 +250,38 @@ public class GameScreen implements Screen, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		// TODO Auto-generated method stub
+		if(button == Buttons.LEFT && !useSensorData) {
+			
+			float width = (float) Gdx.graphics.getWidth();
+			float height = (float) Gdx.graphics.getHeight();
+			
+			float xPosition = ((float) screenX) / width;
+			float yPosition = ((float) screenY) / height;
+			
+			if(xPosition < 0.4f) {
+				pitchDir = -1;
+			} else if(xPosition > 0.6f) {
+				pitchDir = 1;
+			}
+			
+			if(yPosition < 0.25f) {
+				rollDir = -1;
+			} else if(yPosition > 0.75f) {
+				rollDir = 1;
+			}
+		}
+		
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		// TODO Auto-generated method stub
+		if(button == Buttons.LEFT) {
+			rollDir = 0;
+			pitchDir = 0;
+		}
+		
 		return false;
 	}
 
