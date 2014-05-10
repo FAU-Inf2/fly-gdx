@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly;
 import java.io.FileNotFoundException;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -187,11 +188,19 @@ public class GameScreen implements Screen {
 		} else if(difRoll < -10.0f) {
 			camera.rotate(camera.direction.cpy().crs(camera.up), 1.0f);
 		}
+		
 		// rotation around camera.direction/viewDirection (roll)
-		if(difPitch > 10.f) {
+		/*if(difPitch > 10.0f) {
 			camera.rotate(camera.direction, -1.0f);
 		} else if(difPitch < -10.0f) {
 			camera.rotate(camera.direction, 1.0f);
+		}*/
+		
+		// rotation around camera.up (turning left/right)
+		if(difPitch > 10.0f) {
+			camera.rotate(camera.up, -1.0f);
+		} else if(difPitch < -10.0f) {
+			camera.rotate(camera.up, 1.0f);
 		}
 		
 		//Gdx.app.log("myApp", "direction: " + camera.direction);
