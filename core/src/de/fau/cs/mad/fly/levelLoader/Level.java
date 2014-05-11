@@ -14,14 +14,37 @@ public class Level extends RawLevel {
 	 * Radius of the Level which defines the outer boundary which should be
 	 * never reached by the user.
 	 */
-	public float radius = 0.0f;
+	private float radius = 0.0f;
+	
+	
+	
+	/**
+	 * Converts the {@link RawLevel} to a {@link Level} where all information is
+	 * generated to create the 3D world.
+	 */
+	public void refactor() {
+		calculateLevelRadius();
+		calculateGatePositions();
+	}
+
+	/**
+	 * Converts the relative positions defined as sections to absolute positions. These positions are saved in the 
+	 */
+	private void calculateGatePositions() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public float getRadius() {
+		return radius;
+	}
 
 	/**
 	 * Calculates the {@link #radius} of the Level as a sum of the length of all
 	 * sections. To make sure the radius can never be reached, the final result
 	 * is increased by 10 %.
 	 */
-	public void calculateRadius() {
+	private void calculateLevelRadius() {
 		radius = super.firstSection.length;
 		for (Section section : super.sections) {
 			radius += section.length;

@@ -104,8 +104,7 @@ public class GameScreen implements Screen, InputProcessor {
 		Gdx.input.setCatchBackKey(true);
 
 		try {
-			levelManager.loadLevel("level1");
-			level = levelManager.convertLevel();
+			level = levelManager.loadLevel("level1");
 			setUpCamera();
 			setUpEnvironment();
 		} catch (FileNotFoundException e) {
@@ -184,8 +183,8 @@ public class GameScreen implements Screen, InputProcessor {
 //		instance = new ModelInstance(model);
 
 		// create the horiozon of the level (currently I dont know to put texture on that sphere)
-		gameHorizon = modelBuilder.createSphere(level.radius, level.radius,
-				level.radius, 20, 20, 1,
+		gameHorizon = modelBuilder.createSphere(level.getRadius(), level.getRadius(),
+				level.getRadius(), 20, 20, 1,
 				new Material(),
 				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
 		gameHorizonInstance = new ModelInstance(gameHorizon);
