@@ -12,15 +12,15 @@ public class FirstSection extends Section {
 	/**
 	 * x-coordinate of 3d direction vector 
 	 */
-	public double directionX = 0.0;
+	public float directionX = 0.0f;
 	/**
 	 * y-coordinate of 3d direction vector 
 	 */
-	public double directionY = 0.0;
+	public float directionY = 0.0f;
 	/**
 	 * y-coordinate of 3d direction vector 
 	 */
-	public double directionZ = 0.0;
+	public float directionZ = 0.0f;
 
 	@Override
 	public String toString() {

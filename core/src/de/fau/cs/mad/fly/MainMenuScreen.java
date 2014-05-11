@@ -83,7 +83,7 @@ public class MainMenuScreen implements Screen {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
 				// disabled for debugging reasons
-				//Gdx.app.exit();
+				Gdx.app.exit();
 			}
 		});
 	}

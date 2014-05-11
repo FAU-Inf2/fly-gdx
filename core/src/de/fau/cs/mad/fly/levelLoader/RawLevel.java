@@ -23,16 +23,16 @@ public class RawLevel {
 	/**
 	 * x-coordinate of the starting point of this level
 	 */
-	public double startingPointX = 0.0;
+	public float startingPointX = 0.0f;
 	/**
 	 * y-coordinate of the starting point of this level
 	 */
-	public double startingPointY = 0.0;
+	public float startingPointY = 0.0f;
 
 	/**
 	 * z-coordinate of the starting point of this level
 	 */
-	public double startingPointZ = 0.0;
+	public float startingPointZ = 0.0f;
 
 	/**
 	 * section that connects the starting point with the following sections. It
