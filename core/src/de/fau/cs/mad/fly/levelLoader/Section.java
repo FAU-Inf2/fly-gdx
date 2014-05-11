@@ -50,7 +50,7 @@ public class Section {
 	/**
 	 * Length of the line between the starting and the endpoint of this section.
 	 */
-	public double length = 0.0;
+	public float length = 0.0f;
 
 	/**
 	 * List of succesor section. If it contains more than one section, the path

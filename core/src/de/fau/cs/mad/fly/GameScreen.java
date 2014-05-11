@@ -3,7 +3,6 @@ package de.fau.cs.mad.fly;
 import java.io.FileNotFoundException;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
@@ -21,6 +20,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Sphere;
 
 import de.fau.cs.mad.fly.levelLoader.Level;
 import de.fau.cs.mad.fly.levelLoader.LevelManager;
@@ -39,6 +39,7 @@ public class GameScreen implements Screen, InputProcessor {
 	private float cameraSpeed = 0.1f;
 
 	private LevelManager levelManager = new LevelManager();
+	private Level level;
 
 	private int rollDir = 0;
 	private int pitchDir = 0;
@@ -48,13 +49,15 @@ public class GameScreen implements Screen, InputProcessor {
 	private Model model;
 	private Model[] skyBox = new Model[6];
 	private ModelInstance instance;
+	private Model gameHorizon;
+	private ModelInstance gameHorizonInstance;
 	private ModelInstance[] skyBoxInstance = new ModelInstance[6];
 	private Environment environment;
 
 	public GameScreen(final Fly game) {
 		this.game = game;
 
-		useSensorData = false;
+		useSensorData = true;
 	}
 
 	@Override
@@ -81,7 +84,8 @@ public class GameScreen implements Screen, InputProcessor {
 
 		// rendering a small box and a skybox
 		batch.begin(camera);
-		batch.render(instance, environment);
+		//batch.render(instance, environment);
+		batch.render(gameHorizonInstance, environment);
 		for (int i = 0; i < 6; i++) {
 			batch.render(skyBoxInstance[i], environment);
 		}
@@ -101,8 +105,8 @@ public class GameScreen implements Screen, InputProcessor {
 
 		try {
 			levelManager.loadLevel("level1");
-			Level level = levelManager.convertLevel();
-			setUpCamera(level.getCameraStartPosition(), level.getCameraLookAt());
+			level = levelManager.convertLevel();
+			setUpCamera();
 			setUpEnvironment();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -130,7 +134,8 @@ public class GameScreen implements Screen, InputProcessor {
 	@Override
 	public void dispose() {
 		batch.dispose();
-		model.dispose();
+		//model.dispose();
+		gameHorizon.dispose();
 		for (int i = 0; i < 6; i++) {
 			skyBox[i].dispose();
 		}
@@ -138,10 +143,8 @@ public class GameScreen implements Screen, InputProcessor {
 
 	/**
 	 * Sets up the camera for the initial view.
-	 * 
-	 * @param position initial position of the camera
 	 */
-	private void setUpCamera(Vector3 position, Vector3 lookAt) {
+	private void setUpCamera() {
 
 		// initializing Roll- and Pitch-Values for later comparison
 		startRoll = Gdx.input.getRoll();
@@ -152,8 +155,8 @@ public class GameScreen implements Screen, InputProcessor {
 		float screenWidth = Gdx.graphics.getWidth();
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
-		camera.position.set(position);
-		camera.lookAt(lookAt);
+		camera.position.set(level.getCameraStartPosition());
+		camera.lookAt(level.getCameraLookAt());
 		camera.near = 1f;
 		camera.far = 200f;
 		camera.update();
@@ -175,10 +178,17 @@ public class GameScreen implements Screen, InputProcessor {
 
 		// create a small box at (0,0,0)
 		ModelBuilder modelBuilder = new ModelBuilder();
-		model = modelBuilder.createBox(5f, 5f, 5f,
-				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-				Usage.Position | Usage.Normal);
-		instance = new ModelInstance(model);
+//		model = modelBuilder.createBox(5f, 5f, 5f,
+//				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
+//				Usage.Position | Usage.Normal);
+//		instance = new ModelInstance(model);
+
+		// create the horiozon of the level (currently I dont know to put texture on that sphere)
+		gameHorizon = modelBuilder.createSphere(level.radius, level.radius,
+				level.radius, 20, 20, 1,
+				new Material(),
+				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
+		gameHorizonInstance = new ModelInstance(gameHorizon);
 
 		// creating a skybox where each plane has a different color
 		skyBox[0] = modelBuilder.createRect(-50f, -50f, -50f, 50f, -50f, -50f,

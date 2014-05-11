@@ -14,7 +14,7 @@ public class Level extends RawLevel {
 	 * Radius of the Level which defines the outer boundary which should be
 	 * never reached by the user.
 	 */
-	public double radius = 0.0;
+	public float radius = 0.0f;
 
 	/**
 	 * Calculates the {@link #radius} of the Level as a sum of the length of all
