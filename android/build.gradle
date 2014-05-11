@@ -14,6 +14,38 @@ android {
 
         instrumentTest.setRoot('tests')
     }
+
+    signingConfigs {
+	release {
+	    storeFile 		file("unknown")
+	    storePassword 	"unknown"
+	    keyAlias 		"unknown"
+	    keyPassword 	"unknown"
+	}
+    }
+
+    buildTypes {
+	release {
+	    signingConfig signingConfigs.release
+        }
+    }
+}
+
+allprojects {
+    afterEvaluate { project ->
+        def propsFile = rootProject.file('keystore.properties')
+        def configName = 'release'
+
+		println("I am here")
+        if (propsFile.exists() && android.signingConfigs.hasProperty(configName)) {
+            def props = new Properties()
+            props.load(new FileInputStream(propsFile))
+            android.signingConfigs[configName].storeFile 	= file(props['storeFile'])
+            android.signingConfigs[configName].storePassword 	= props['storePassword']
+            android.signingConfigs[configName].keyAlias 	= props['keyAlias']
+            android.signingConfigs[configName].keyPassword 	= props['keyPassword']
+        }
+    }
 }
 
 // needed to add JNI shared libraries to APK when compiling on CLI
