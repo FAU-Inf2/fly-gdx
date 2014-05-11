@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -30,9 +31,14 @@ public class MainMenuScreen implements Screen {
 		
 		batch = new SpriteBatch();
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
-		stage = new Stage(new FillViewport(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f));
 		
-		Gdx.app.log("FLY", "Viewport: " + Gdx.graphics.getWidth() + ":" + Gdx.graphics.getHeight());
+		if(Gdx.app.getType() == ApplicationType.Android) {
+			stage = new Stage(new FillViewport(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f));
+		} else {
+			stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		}
+		
+		//Gdx.app.log("FLY", "Viewport: " + Gdx.graphics.getWidth() + ":" + Gdx.graphics.getHeight());
 
 		addMenu();
 	}
@@ -82,7 +88,6 @@ public class MainMenuScreen implements Screen {
 		exitButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
-				// disabled for debugging reasons
 				Gdx.app.exit();
 			}
 		});
