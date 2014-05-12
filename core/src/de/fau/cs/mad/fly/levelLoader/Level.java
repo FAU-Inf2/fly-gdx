@@ -22,6 +22,10 @@ public class Level extends RawLevel {
 
 	private HashMap<Integer, Gate> gates = new HashMap<Integer, Gate>();
 
+	public HashMap<Integer, Gate> getGates() {
+		return gates;
+	}
+
 	/**
 	 * Converts the {@link RawLevel} to a {@link Level} where all information is
 	 * generated to create the 3D world.
@@ -69,7 +73,11 @@ public class Level extends RawLevel {
 	private void calculateGatePositions() {
 		// get the end of first section as first possible position for a gate
 		Vector3 currentPosition = getCameraLookAt();
-
+		
+		Vector3 verticalTurningAxis = new Vector3(0,1,0);
+		Vector3 horizontalTurningAxis = new Vector3(firstSection.directionX, firstSection.directionY, firstSection.directionZ);
+		horizontalTurningAxis = horizontalTurningAxis.crs(verticalTurningAxis).nor();
+		
 		if (firstSection.gateID != Gate.NO_GATE) {
 			Gate newGate = new Gate(currentPosition);
 			gates.put(newGate.getId(), newGate);
