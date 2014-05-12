@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -31,7 +32,8 @@ public class Level extends RawLevel {
 	 * generated to create the 3D world.
 	 * 
 	 * @see #isComplete() for level completion check
-	 * @throws ParseException when level is not complete
+	 * @throws ParseException
+	 *             when level is not complete
 	 */
 	public void refactor() throws ParseException {
 		if (isComplete()) {
@@ -42,7 +44,7 @@ public class Level extends RawLevel {
 					+ this.toString(), 0);
 		}
 	}
-	
+
 	/**
 	 * Decides if all necessary information is loaded to create a level out of
 	 * it.
@@ -73,16 +75,81 @@ public class Level extends RawLevel {
 	private void calculateGatePositions() {
 		// get the end of first section as first possible position for a gate
 		Vector3 currentPosition = getCameraLookAt();
-		
-		Vector3 verticalTurningAxis = new Vector3(0,1,0);
-		Vector3 horizontalTurningAxis = new Vector3(firstSection.directionX, firstSection.directionY, firstSection.directionZ);
-		horizontalTurningAxis = horizontalTurningAxis.crs(verticalTurningAxis).nor();
-		
+		Matrix4 rotationMatrix = null;
+
+		Vector3 verticalTurningAxis = new Vector3(0, 1, 0);
+		Vector3 horizontalTurningAxis = new Vector3(firstSection.directionX,
+				firstSection.directionY, firstSection.directionZ);
+		horizontalTurningAxis = horizontalTurningAxis.crs(verticalTurningAxis)
+				.nor();
+		float horizontalAngle = 0.0f;
+		float verticalAngle = 0.0f;
+
+		Vector3 currentVector = new Vector3(firstSection.directionX,
+				firstSection.directionY, firstSection.directionZ);
+
 		if (firstSection.gateID != Gate.NO_GATE) {
-			Gate newGate = new Gate(currentPosition);
+			Gate newGate = new Gate(currentPosition.cpy());
 			gates.put(newGate.getId(), newGate);
 		}
+		for (Section s : sections) {
+			horizontalAngle = calculateHorizontalAngle(s);
+			if (horizontalAngle != 0) {
+				rotationMatrix = new Matrix4().setToRotation(
+						horizontalTurningAxis, horizontalAngle);
+				currentVector = currentVector.rot(rotationMatrix);
+				verticalTurningAxis = verticalTurningAxis.rot(rotationMatrix);
+			}
+			verticalAngle = calculateVerticalAngle(s);
+			if (verticalAngle != 0) {
+				rotationMatrix = new Matrix4().setToRotation(
+						verticalTurningAxis, verticalAngle);
+				currentVector = currentVector.rot(rotationMatrix);
+				horizontalTurningAxis = horizontalTurningAxis
+						.rot(rotationMatrix);
+			}
+			currentVector = currentVector.nor();
+			currentPosition.mulAdd(currentVector, s.length);
+			if (s.gateID != Gate.NO_GATE) {
+				Vector3 position = new Vector3(currentPosition.x,
+						currentPosition.y, currentPosition.z);
+				Gate newGate = new Gate(position);
+				gates.put(newGate.getId(), newGate);
+			}
+		}
 
+	}
+
+	/**
+	 * If {@link Section#minHorizontalAngle} ==
+	 * {@link Section#maxHorizontalAngle} this angle is return. Otherwise a
+	 * random number between the two values is generate.
+	 * 
+	 * @param section
+	 * @return horizontalAngle
+	 */
+	private float calculateHorizontalAngle(Section section) {
+		if (section.minHorizontalAngle == section.maxHorizontalAngle) {
+			return section.minHorizontalAngle;
+		} else {
+			return (float) (section.minHorizontalAngle + (Math.random() * (section.maxHorizontalAngle - section.minHorizontalAngle)));
+		}
+	}
+
+	/**
+	 * If {@link Section#minVerticalAngle} == {@link Section#maxVerticalAngle}
+	 * this angle is return. Otherwise a random number between the two values is
+	 * generate.
+	 * 
+	 * @param section
+	 * @return verticalAngle
+	 */
+	private float calculateVerticalAngle(Section section) {
+		if (section.minVerticalAngle == section.maxVerticalAngle) {
+			return section.minVerticalAngle;
+		} else {
+			return (float) (section.minVerticalAngle + (Math.random() * (section.maxVerticalAngle - section.minVerticalAngle)));
+		}
 	}
 
 	/**
@@ -134,13 +201,13 @@ public class Level extends RawLevel {
 
 	@Override
 	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder("RawLevel:\n");
-		stringBuilder.append("id: " + id + ",\n");
-		stringBuilder.append("name: " + name + ",\n");
-		stringBuilder.append("starting point: (" + startingPointX + ", "
-				+ startingPointY + ", " + startingPointZ + "),\n");
-		stringBuilder.append("first section: " + firstSection + ",\n");
-		stringBuilder.append("sections: " + sections + "\n");
-		return stringBuilder.toString();
+		String string = new String("RawLevel:\n");
+		string += ("id: " + id + ",\n");
+		string += ("name: " + name + ",\n");
+		string += ("starting point: (" + startingPointX + ", " + startingPointY
+				+ ", " + startingPointZ + "),\n");
+		string += ("first section: " + firstSection + ",\n");
+		string += ("sections: " + sections + "\n");
+		return string.toString();
 	}
 }

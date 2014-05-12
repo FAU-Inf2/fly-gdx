@@ -43,15 +43,31 @@ public class Gate {
 		this.id = id;
 	}
 
-	/**
-	 * Compares the {@link #id} of two gates.
-	 */
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Gate) {
-			return this.getId() == ((Gate) o).getId();
-		} else {
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
 			return false;
 		}
+		if (!(obj instanceof Gate)) {
+			return false;
+		}
+		Gate other = (Gate) obj;
+		if (id != other.id) {
+			return false;
+		}
+		return true;
 	}
+
+
 }
