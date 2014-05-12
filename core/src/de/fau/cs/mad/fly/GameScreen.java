@@ -1,26 +1,21 @@
 package de.fau.cs.mad.fly;
 
-import java.io.FileNotFoundException;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Sphere;
 
 import de.fau.cs.mad.fly.levelLoader.Level;
 import de.fau.cs.mad.fly.levelLoader.LevelManager;
@@ -53,6 +48,8 @@ public class GameScreen implements Screen, InputProcessor {
 	private ModelInstance gameHorizonInstance;
 	private ModelInstance[] skyBoxInstance = new ModelInstance[6];
 	private Environment environment;
+	private AssetManager assets;
+	private ModelInstance space;
 
 	public GameScreen(final Fly game) {
 		this.game = game;
@@ -82,12 +79,10 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.translate(dir.scl(cameraSpeed));
 		camera.update();
 
-		// rendering a small box and a skybox
+		// rendering outer space
 		batch.begin(camera);
-		//batch.render(instance, environment);
-		batch.render(gameHorizonInstance, environment);
-		for (int i = 0; i < 6; i++) {
-			batch.render(skyBoxInstance[i], environment);
+		if (space != null) {
+			batch.render(space);
 		}
 		batch.end();
 	}
@@ -133,11 +128,6 @@ public class GameScreen implements Screen, InputProcessor {
 	@Override
 	public void dispose() {
 		batch.dispose();
-		//model.dispose();
-		gameHorizon.dispose();
-		for (int i = 0; i < 6; i++) {
-			skyBox[i].dispose();
-		}
 	}
 
 	/**
@@ -157,7 +147,7 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.position.set(level.getCameraStartPosition());
 		camera.lookAt(level.getCameraLookAt());
 		camera.near = 1f;
-		camera.far = 200f;
+		camera.far = 400f;
 		camera.update();
 
 	}
@@ -175,49 +165,13 @@ public class GameScreen implements Screen, InputProcessor {
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
 				-0.8f, -0.2f));
 
-		// create a small box at (0,0,0)
-		ModelBuilder modelBuilder = new ModelBuilder();
-//		model = modelBuilder.createBox(5f, 5f, 5f,
-//				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-//				Usage.Position | Usage.Normal);
-//		instance = new ModelInstance(model);
 
-		// create the horiozon of the level (currently I dont know to put texture on that sphere)
-		gameHorizon = modelBuilder.createSphere(level.getRadius(), level.getRadius(),
-				level.getRadius(), 20, 20, 1,
-				new Material(),
-				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
-		gameHorizonInstance = new ModelInstance(gameHorizon);
+		assets = new AssetManager();
+		assets.load("spacesphere.obj", Model.class);
+		assets.finishLoading();
+		space = new ModelInstance(assets.get("spacesphere.obj", Model.class));
+		space.transform = new Matrix4().scale(2f, 2f, 2f);
 
-		// creating a skybox where each plane has a different color
-		skyBox[0] = modelBuilder.createRect(-50f, -50f, -50f, 50f, -50f, -50f,
-				50f, 50f, -50f, -50f, 50f, -50f, 0, 0, 1, new Material(
-						ColorAttribute.createDiffuse(Color.DARK_GRAY)),
-				Usage.Position | Usage.Normal);
-		skyBox[1] = modelBuilder.createRect(-50f, -50f, 50f, -50f, -50f, -50f,
-				-50f, 50f, -50f, -50f, 50f, 50f, 1, 0, 0, new Material(
-						ColorAttribute.createDiffuse(Color.BLUE)),
-				Usage.Position | Usage.Normal);
-		skyBox[2] = modelBuilder.createRect(-50f, 50f, -50f, 50f, 50f, -50f,
-				50f, 50f, 50f, -50f, 50f, 50f, 0, -1, 0, new Material(
-						ColorAttribute.createDiffuse(Color.MAGENTA)),
-				Usage.Position | Usage.Normal);
-		skyBox[3] = modelBuilder.createRect(-50f, -50f, 50f, 50f, -50f, 50f,
-				50f, -50f, -50f, -50f, -50f, -50f, 0, 1, 0, new Material(
-						ColorAttribute.createDiffuse(Color.ORANGE)),
-				Usage.Position | Usage.Normal);
-		skyBox[4] = modelBuilder.createRect(50f, -50f, -50f, 50f, -50f, 50f,
-				50f, 50f, 50f, 50f, 50f, -50f, -1, 0, 0, new Material(
-						ColorAttribute.createDiffuse(Color.RED)),
-				Usage.Position | Usage.Normal);
-		skyBox[5] = modelBuilder.createRect(50f, -50f, 50f, -50f, -50f, 50f,
-				-50f, 50f, 50f, 50f, 50f, 50f, 0, 0, -1, new Material(
-						ColorAttribute.createDiffuse(Color.GRAY)),
-				Usage.Position | Usage.Normal);
-
-		for (int i = 0; i < 6; i++) {
-			skyBoxInstance[i] = new ModelInstance(skyBox[i]);
-		}
 	}
 
 	/**
