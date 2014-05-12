@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.levelLoader;
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -16,7 +18,7 @@ public class Level extends RawLevel {
 	 */
 	private float radius = 0.0f;
 	
-	
+	private HashMap<Integer, Gate> gates;
 	
 	/**
 	 * Converts the {@link RawLevel} to a {@link Level} where all information is
