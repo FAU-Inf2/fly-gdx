@@ -18,7 +18,7 @@ public class Level extends RawLevel {
 	 */
 	private float radius = 0.0f;
 	
-	private HashMap<Integer, Gate> gates;
+	private HashMap<Integer, Gate> gates = new HashMap<Integer, Gate>();
 	
 	/**
 	 * Converts the {@link RawLevel} to a {@link Level} where all information is
@@ -33,7 +33,13 @@ public class Level extends RawLevel {
 	 * Converts the relative positions defined as sections to absolute positions. These positions are saved in the 
 	 */
 	private void calculateGatePositions() {
-		// TODO Auto-generated method stub
+		//get the end of first section as first possible position for a gate
+		Vector3 currentPosition = getCameraLookAt();
+		
+		if(firstSection.gateID != Gate.NO_GATE) {
+			Gate newGate = new Gate(currentPosition);
+			gates.put(newGate.getId(), newGate);
+		}
 		
 	}
 	
