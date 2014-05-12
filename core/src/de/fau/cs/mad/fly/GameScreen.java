@@ -107,8 +107,8 @@ public class GameScreen implements Screen, InputProcessor {
 			level = levelManager.loadLevel("level1");
 			setUpCamera();
 			setUpEnvironment();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			Gdx.app.log("GameScreen.show():", e.getMessage(), e);
 		}
 	}
 

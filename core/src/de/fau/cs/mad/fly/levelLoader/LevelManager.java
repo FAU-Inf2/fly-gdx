@@ -1,6 +1,7 @@
 package de.fau.cs.mad.fly.levelLoader;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -35,8 +36,9 @@ public class LevelManager {
 	 * @return level - the loaded and refactored level
 	 * @param levelName
 	 * @throws FileNotFoundException
+	 * @throws ParseException 
 	 */
-	public Level loadLevel(String levelName) throws FileNotFoundException {
+	public Level loadLevel(String levelName) throws FileNotFoundException, ParseException {
 		Level level = null;
 		Gson gson = new Gson();
 		String levelPath = LEVEL_DIRECTORY + levelName + LEVEL_ENDING;

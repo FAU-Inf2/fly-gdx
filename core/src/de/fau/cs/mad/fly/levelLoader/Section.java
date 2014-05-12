@@ -15,12 +15,12 @@ public class Section {
 	 * Each section should not have a horizontal angle that is greater than this
 	 * value.
 	 */
-	public final double MAX_ABS_HORIZONTAL_ANGLE = 90.0;
+	public final float MAX_ABS_HORIZONTAL_ANGLE = 90.0f;
 	/**
 	 * Each section should not have a vertical angle that is greater than this
 	 * value.
 	 */
-	public final double MAX_ABS_VERTICAL_ANGLE = 90.0;
+	public final float MAX_ABS_VERTICAL_ANGLE = 90.0f;
 	/**
 	 * ID which has to be greater than 0. This id has to be successor of any
 	 * other section in the level, otherwise it is not used.
@@ -31,22 +31,22 @@ public class Section {
 	 * Defines the minimum horizontal angle this section differs horizontally
 	 * from its predecessor
 	 */
-	public double minHorizontalAngle = 0.0;
+	public float minHorizontalAngle = 0.0f;
 	/**
 	 * Defines the maximum horizontal angle this section differs from its
 	 * predecessor
 	 */
-	public double maxHorizontalAngle = 0.0;
+	public float maxHorizontalAngle = 0.0f;
 	/**
 	 * Defines the minimum vertical angle this section differs horizontally from
 	 * its predecessor
 	 */
-	public double minVerticalAngle = 0.0;
+	public float minVerticalAngle = 0.0f;
 	/**
 	 * Defines the maximum vertical angle this section differs horizontally from
 	 * its predecessor
 	 */
-	public double maxVerticalAngle = 0.0;
+	public float maxVerticalAngle = 0.0f;
 	/**
 	 * Length of the line between the starting and the endpoint of this section.
 	 */
@@ -69,16 +69,17 @@ public class Section {
 	/**
 	 * Checks if the information of this section is complete to use it.
 	 * 
-	 * @see #MAX_HORIZONTAL_ANGLE, @see {@link #MAX_ABS_VERTICAL_ANGLE}
+	 * @see #MAX_HORIZONTAL_ANGLE
+	 * @see #MAX_ABS_VERTICAL_ANGLE
 	 * @return true information is complete
 	 * @return false some information is missing
 	 */
 	public boolean isComplete() {
-		if (id > 0 && length > 0.0 && minVerticalAngle <= maxVerticalAngle
-				&& minHorizontalAngle <= maxHorizontalAngle
+		if (id >= 0 && length > 0.0 && minVerticalAngle <= maxVerticalAngle
+				&& minHorizontalAngle <= maxHorizontalAngle 
 				&& minVerticalAngle >= -MAX_ABS_VERTICAL_ANGLE
 				&& maxVerticalAngle <= MAX_ABS_VERTICAL_ANGLE
-				&& minHorizontalAngle >= MAX_ABS_HORIZONTAL_ANGLE
+				&& minHorizontalAngle >= -MAX_ABS_HORIZONTAL_ANGLE
 				&& maxHorizontalAngle <= MAX_ABS_HORIZONTAL_ANGLE) {
 			return true;
 		}

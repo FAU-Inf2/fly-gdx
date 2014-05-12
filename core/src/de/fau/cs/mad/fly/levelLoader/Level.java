@@ -1,7 +1,9 @@
 package de.fau.cs.mad.fly.levelLoader;
 
+import java.text.ParseException;
 import java.util.HashMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -17,32 +19,70 @@ public class Level extends RawLevel {
 	 * never reached by the user.
 	 */
 	private float radius = 0.0f;
-	
+
 	private HashMap<Integer, Gate> gates = new HashMap<Integer, Gate>();
-	
+
 	/**
 	 * Converts the {@link RawLevel} to a {@link Level} where all information is
 	 * generated to create the 3D world.
+	 * 
+	 * @see #isComplete() for level completion check
+	 * @throws ParseException when level is not complete
 	 */
-	public void refactor() {
-		calculateLevelRadius();
-		calculateGatePositions();
+	public void refactor() throws ParseException {
+		if (isComplete()) {
+			calculateLevelRadius();
+			calculateGatePositions();
+		} else {
+			throw new ParseException("Level " + this.name + " is not complete:"
+					+ this.toString(), 0);
+		}
+	}
+	
+	/**
+	 * Decides if all necessary information is loaded to create a level out of
+	 * it.
+	 * 
+	 * @return true level is completely loaded
+	 * @return false some information is missing
+	 */
+	public boolean isComplete() {
+		boolean complete = true;
+		if (id >= 0 && name != "" && firstSection != null && sections != null
+				&& firstSection.isComplete()) {
+			int i = 0;
+			while (i < sections.size() && complete) {
+				complete = sections.get(i).isComplete();
+				i++;
+			}
+		} else {
+			Gdx.app.log("Level.isComplete()", "first comparison wrong");
+			complete = false;
+		}
+		return complete;
 	}
 
 	/**
-	 * Converts the relative positions defined as sections to absolute positions. These positions are saved in the 
+	 * Converts the relative positions defined as sections to absolute
+	 * positions. These positions are saved in the
 	 */
 	private void calculateGatePositions() {
-		//get the end of first section as first possible position for a gate
+		// get the end of first section as first possible position for a gate
 		Vector3 currentPosition = getCameraLookAt();
-		
-		if(firstSection.gateID != Gate.NO_GATE) {
+
+		if (firstSection.gateID != Gate.NO_GATE) {
 			Gate newGate = new Gate(currentPosition);
 			gates.put(newGate.getId(), newGate);
 		}
-		
+
 	}
-	
+
+	/**
+	 * Radius of the level.
+	 * 
+	 * @see #calculateLevelRadius()
+	 * @return {@link #radius}
+	 */
 	public float getRadius() {
 		return radius;
 	}
@@ -86,9 +126,13 @@ public class Level extends RawLevel {
 
 	@Override
 	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder("Level: ");
-		stringBuilder.append("radius: " + radius + ",\n");
-		stringBuilder.append("extends RawLevel: " + super.toString());
+		StringBuilder stringBuilder = new StringBuilder("RawLevel:\n");
+		stringBuilder.append("id: " + id + ",\n");
+		stringBuilder.append("name: " + name + ",\n");
+		stringBuilder.append("starting point: (" + startingPointX + ", "
+				+ startingPointY + ", " + startingPointZ + "),\n");
+		stringBuilder.append("first section: " + firstSection + ",\n");
+		stringBuilder.append("sections: " + sections + "\n");
 		return stringBuilder.toString();
 	}
 }

@@ -49,8 +49,8 @@
 			"id": 4,
 			"minHorizontalAngle": 30.0,
 			"maxHorizontalAngle": 40.0,
-			"minVerticalAngle": -20.0,
-			"maxVerticalAngle": -30.0,
+			"minVerticalAngle": -30.0,
+			"maxVerticalAngle": -20.0,
 			"length": 9,
 			"successorSections": [5],
 			"gateID": 4
