@@ -6,14 +6,18 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
@@ -46,7 +50,7 @@ public class GameScreen implements Screen, InputProcessor {
 	private ModelInstance instance;
 	private Model gameHorizon;
 	private ModelInstance gameHorizonInstance;
-	private ModelInstance[] skyBoxInstance = new ModelInstance[6];
+	private ModelInstance[] gates;
 	private Environment environment;
 	private AssetManager assets;
 	private ModelInstance space;
@@ -79,10 +83,29 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.translate(dir.scl(cameraSpeed));
 		camera.update();
 
+		ModelBuilder modelBuilder = new ModelBuilder();
+		Model gate = modelBuilder.createBox(2f, 2f, 2f, new Material(
+				ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position
+				| Usage.Normal);
+		Matrix4 mat;
+		int numberOfGates = level.getGates().size();
+		gates = new ModelInstance[numberOfGates];
+
+		for (int i = 0; i < numberOfGates; i++) {
+			gates[i] = new ModelInstance(gate);
+			mat = new Matrix4().translate(level.getGates().get(i + 1)
+					.getPosition());
+			gates[i].transform = mat;
+		}
+
 		// rendering outer space
 		batch.begin(camera);
 		if (space != null) {
 			batch.render(space);
+		}
+
+		for (ModelInstance m : gates) {
+			batch.render(m, environment);
 		}
 		batch.end();
 	}
@@ -164,7 +187,6 @@ public class GameScreen implements Screen, InputProcessor {
 				0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
 				-0.8f, -0.2f));
-
 
 		assets = new AssetManager();
 		assets.load("spacesphere.obj", Model.class);
