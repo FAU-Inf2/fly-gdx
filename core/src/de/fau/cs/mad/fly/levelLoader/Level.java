@@ -88,6 +88,7 @@ public class Level extends RawLevel {
 		Vector3 currentPosition = getCameraLookAt();
 		Matrix4 rotationMatrix = null;
 		Matrix4 translationMatrix = new Matrix4();
+		ModelInstance lastGateInstance = null;
 		float horizontalAngle = 0.0f;
 		float verticalAngle = 0.0f;
 		Vector3 currentVector = new Vector3(firstSection.directionX,
@@ -100,42 +101,39 @@ public class Level extends RawLevel {
 
 		if (firstSection.gateID != Gate.NO_GATE) {
 			Gate newGate = new Gate(firstSection.gateID);
-			newGate.modelInstance = new ModelInstance(
+			lastGateInstance = new ModelInstance(
 					Assets.manager.get(Assets.torus));
-			newGate.modelInstance.transform = translationMatrix.translate(
-					getCameraLookAt()).rotate(verticalTurningAxis, getCameraLookAt());
+			lastGateInstance.transform = translationMatrix.translate(
+					getCameraLookAt()).rotate(verticalTurningAxis, getCameraLookAt()).cpy();
+			newGate.modelInstance = lastGateInstance;
 			gates.put(newGate.getId(), newGate);
 		}
 		for (Section s : sections) {
+			rotationMatrix = new Matrix4();
 			horizontalAngle = calculateAngle(s.minHorizontalAngle,
 					s.maxHorizontalAngle);
 			if (horizontalAngle != 0) {
-				rotationMatrix = new Matrix4().setToRotation(
+				rotationMatrix = rotationMatrix.setToRotation(
 						horizontalTurningAxis, horizontalAngle);
-				currentVector = currentVector.rot(rotationMatrix);
-				verticalTurningAxis = verticalTurningAxis.rot(rotationMatrix);
 			}
 			verticalAngle = calculateAngle(s.minVerticalAngle,
 					s.maxVerticalAngle);
 			if (verticalAngle != 0) {
-				rotationMatrix = new Matrix4().setToRotation(
+				rotationMatrix = rotationMatrix.setToRotation(
 						verticalTurningAxis, verticalAngle);
-				currentVector = currentVector.rot(rotationMatrix);
-				horizontalTurningAxis = horizontalTurningAxis
-						.rot(rotationMatrix);
 			}
+			currentVector = currentVector.rot(rotationMatrix);
+			verticalTurningAxis = verticalTurningAxis.rot(rotationMatrix);
+			
 			currentVector = currentVector.nor();
 			currentPosition.mulAdd(currentVector, s.length);
 			if (s.gateID != Gate.NO_GATE) {
-				Vector3 position = new Vector3(currentPosition.x,
-						currentPosition.y, currentPosition.z);
 				Gate newGate = new Gate(s.gateID);
-				newGate.modelInstance = new ModelInstance(
-						Assets.manager.get(Assets.torus));
-				translationMatrix = new Matrix4();
-				newGate.modelInstance.transform = translationMatrix.translate(
-						position);
+				newGate.modelInstance = lastGateInstance.copy();
+				newGate.modelInstance.transform = translationMatrix.trn(
+						new Vector3().mulAdd(currentVector, s.length)).cpy();
 				gates.put(newGate.getId(), newGate);
+				lastGateInstance = newGate.modelInstance;
 			}
 		}
 	}
