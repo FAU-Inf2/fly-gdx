@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 public class Gate {
 
 	public static final int NO_GATE = -1;
-	
-	private static int nextId = 1;
 
 	/**
 	 * ID which identifies the object.
@@ -16,8 +14,8 @@ public class Gate {
 	public ModelInstance modelInstance;
 
 	
-	public Gate(){
-		this.id = nextId++;
+	public Gate(int id){
+		this.id = id;
 	}
 	
 	

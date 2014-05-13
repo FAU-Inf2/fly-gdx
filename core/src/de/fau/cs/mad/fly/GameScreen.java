@@ -172,7 +172,7 @@ public class GameScreen implements Screen, InputProcessor {
 		int numberOfGates = level.getGates().size();
 		gates = new ModelInstance[numberOfGates];
 		for(int i = 0; i < numberOfGates; i++) {
-			gates[i] = level.getGates().get(i+1).modelInstance;
+			gates[i] = level.getGates().get(i).modelInstance;
 		}
 		
 		

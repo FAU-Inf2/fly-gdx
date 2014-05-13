@@ -99,11 +99,11 @@ public class Level extends RawLevel {
 				.nor();
 
 		if (firstSection.gateID != Gate.NO_GATE) {
-			Gate newGate = new Gate();
+			Gate newGate = new Gate(firstSection.gateID);
 			newGate.modelInstance = new ModelInstance(
 					Assets.manager.get(Assets.torus));
 			newGate.modelInstance.transform = translationMatrix.translate(
-					getCameraLookAt());
+					getCameraLookAt()).rotate(verticalTurningAxis, getCameraLookAt());
 			gates.put(newGate.getId(), newGate);
 		}
 		for (Section s : sections) {
@@ -129,7 +129,7 @@ public class Level extends RawLevel {
 			if (s.gateID != Gate.NO_GATE) {
 				Vector3 position = new Vector3(currentPosition.x,
 						currentPosition.y, currentPosition.z);
-				Gate newGate = new Gate();
+				Gate newGate = new Gate(s.gateID);
 				newGate.modelInstance = new ModelInstance(
 						Assets.manager.get(Assets.torus));
 				translationMatrix = new Matrix4();
