@@ -45,10 +45,7 @@ public class GameScreen implements Screen, InputProcessor {
 	private int pitchDir = 0;
 	private boolean useSensorData;
 
-	private ModelInstance[] gates;
 	private Environment environment;
-	private AssetManager assets;
-	private G3dModelLoader g3dModelLoader;
 	private ModelInstance space;
 
 	public GameScreen(final Fly game) {
@@ -80,14 +77,15 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.update();
 
 		ModelBatch batch = new ModelBatch();
-		// rendering outer space
+
 		batch.begin(camera);
+		// rendering outer space
 		if (space != null) {
 			batch.render(space);
 		}
-
-		for (int i = 0; i < gates.length; i++) {
-			batch.render(gates[i], environment);
+		// render gates
+		for (int i = 0; i < level.getGates().size(); i++) {
+			batch.render(level.getGates().get(i).modelInstance, environment);
 		}
 		batch.end();
 	}
@@ -115,19 +113,16 @@ public class GameScreen implements Screen, InputProcessor {
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -167,15 +162,7 @@ public class GameScreen implements Screen, InputProcessor {
 				0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
 				-0.8f, -0.2f));
-		
-		//load gates
-		int numberOfGates = level.getGates().size();
-		gates = new ModelInstance[numberOfGates];
-		for(int i = 0; i < numberOfGates; i++) {
-			gates[i] = level.getGates().get(i).modelInstance;
-		}
-		
-		
+
 		space = new ModelInstance(Assets.manager.get(Assets.space));
 		space.transform = new Matrix4().scale(2f, 2f, 2f);
 	}
