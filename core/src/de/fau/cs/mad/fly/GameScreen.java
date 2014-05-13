@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -44,15 +45,10 @@ public class GameScreen implements Screen, InputProcessor {
 	private int pitchDir = 0;
 	private boolean useSensorData;
 
-	private ModelBatch batch;
-	private Model model;
-	private Model[] skyBox = new Model[6];
-	private ModelInstance instance;
-	private Model gameHorizon;
-	private ModelInstance gameHorizonInstance;
 	private ModelInstance[] gates;
 	private Environment environment;
 	private AssetManager assets;
+	private G3dModelLoader g3dModelLoader;
 	private ModelInstance space;
 
 	public GameScreen(final Fly game) {
@@ -83,29 +79,15 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.translate(dir.scl(cameraSpeed));
 		camera.update();
 
-		ModelBuilder modelBuilder = new ModelBuilder();
-		Model gate = modelBuilder.createBox(2f, 2f, 2f, new Material(
-				ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position
-				| Usage.Normal);
-		Matrix4 mat;
-		int numberOfGates = level.getGates().size();
-		gates = new ModelInstance[numberOfGates];
-
-		for (int i = 0; i < numberOfGates; i++) {
-			gates[i] = new ModelInstance(gate);
-			mat = new Matrix4().translate(level.getGates().get(i + 1)
-					.getPosition());
-			gates[i].transform = mat;
-		}
-
+		ModelBatch batch = new ModelBatch();
 		// rendering outer space
 		batch.begin(camera);
 		if (space != null) {
 			batch.render(space);
 		}
 
-		for (ModelInstance m : gates) {
-			batch.render(m, environment);
+		for (int i = 0; i < gates.length; i++) {
+			batch.render(gates[i], environment);
 		}
 		batch.end();
 	}
@@ -150,7 +132,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 	@Override
 	public void dispose() {
-		batch.dispose();
+		Assets.dispose();
 	}
 
 	/**
@@ -179,21 +161,23 @@ public class GameScreen implements Screen, InputProcessor {
 	 * Sets up the environment in which the camera should fly
 	 */
 	private void setUpEnvironment() {
-		batch = new ModelBatch();
-
 		// setting up the environment
 		environment = new Environment();
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
 				0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
 				-0.8f, -0.2f));
-
-		assets = new AssetManager();
-		assets.load("spacesphere.obj", Model.class);
-		assets.finishLoading();
-		space = new ModelInstance(assets.get("spacesphere.obj", Model.class));
+		
+		//load gates
+		int numberOfGates = level.getGates().size();
+		gates = new ModelInstance[numberOfGates];
+		for(int i = 0; i < numberOfGates; i++) {
+			gates[i] = level.getGates().get(i+1).modelInstance;
+		}
+		
+		
+		space = new ModelInstance(Assets.manager.get(Assets.space));
 		space.transform = new Matrix4().scale(2f, 2f, 2f);
-
 	}
 
 	/**

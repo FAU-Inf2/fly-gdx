@@ -4,8 +4,11 @@ import java.text.ParseException;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+
+import de.fau.cs.mad.fly.Assets;
 
 /**
  * Child class of {@link RawLevel} that contains all functions and containers to
@@ -84,6 +87,7 @@ public class Level extends RawLevel {
 		// get the end of first section as first possible position for a gate
 		Vector3 currentPosition = getCameraLookAt();
 		Matrix4 rotationMatrix = null;
+		Matrix4 translationMatrix = new Matrix4();
 		float horizontalAngle = 0.0f;
 		float verticalAngle = 0.0f;
 		Vector3 currentVector = new Vector3(firstSection.directionX,
@@ -95,7 +99,11 @@ public class Level extends RawLevel {
 				.nor();
 
 		if (firstSection.gateID != Gate.NO_GATE) {
-			Gate newGate = new Gate(currentPosition.cpy());
+			Gate newGate = new Gate();
+			newGate.modelInstance = new ModelInstance(
+					Assets.manager.get(Assets.torus));
+			newGate.modelInstance.transform = translationMatrix.translate(
+					getCameraLookAt());
 			gates.put(newGate.getId(), newGate);
 		}
 		for (Section s : sections) {
@@ -121,7 +129,12 @@ public class Level extends RawLevel {
 			if (s.gateID != Gate.NO_GATE) {
 				Vector3 position = new Vector3(currentPosition.x,
 						currentPosition.y, currentPosition.z);
-				Gate newGate = new Gate(position);
+				Gate newGate = new Gate();
+				newGate.modelInstance = new ModelInstance(
+						Assets.manager.get(Assets.torus));
+				translationMatrix = new Matrix4();
+				newGate.modelInstance.transform = translationMatrix.translate(
+						position);
 				gates.put(newGate.getId(), newGate);
 			}
 		}

@@ -45,14 +45,14 @@ public class LoadingScreen implements Screen {
 		} else {
 			stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		}
-	
+		Assets.load();
 		addLoadingProgress();
 	}
 
 	/**
 	 * Adds the progress bar to the loading screen.
 	 */
-	private void addLoadingProgress() {				
+	private void addLoadingProgress() {
 		progressBar = new ProgressBar(0f, 100f, 1f, false, skin);
 		progressBar.setValue(progress);
 		

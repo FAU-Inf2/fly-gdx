@@ -1,6 +1,6 @@
 package de.fau.cs.mad.fly.levelLoader;
 
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
 public class Gate {
 
@@ -13,30 +13,20 @@ public class Gate {
 	 */
 	private int id;
 
-	/**
-	 * Position of the gate.
-	 */
-	private Vector3 position;
+	public ModelInstance modelInstance;
+
 	
-	public Gate(Vector3 position) {
-		setPosition(position);
+	public Gate(){
 		this.id = nextId++;
 	}
-
+	
+	
 	/**
 	 * 
 	 * @return {@link #id}
 	 */
 	public int getId() {
 		return id;
-	}
-
-	public Vector3 getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vector3 position) {
-		this.position = position;
 	}
 
 	public void setId(int id) {
