@@ -2,6 +2,8 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Game;
 
+import de.fau.cs.mad.fly.levelLoader.Level;
+
 /**
  * Manages the different game screens.
  * <p>
@@ -16,6 +18,7 @@ public class Fly extends Game {
 	private MainMenuScreen mainMenuScreen;
 	private OptionScreen optionScreen;
 	private HelpScreen helpScreen;
+	private Level level;
 	
 	@Override
 	public void create() {
@@ -29,6 +32,14 @@ public class Fly extends Game {
 		setMainMenuScreen();
 		// disabled for debugging reasons
 		//setSplashScreen();
+	}
+	
+	public void setLevel(Level level) {
+		this.level = level;
+	}
+	
+	public Level getLevel() {
+		return this.level;
 	}
 	
 	public void setSplashScreen() {

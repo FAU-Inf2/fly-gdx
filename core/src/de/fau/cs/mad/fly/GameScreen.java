@@ -15,9 +15,6 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
-import de.fau.cs.mad.fly.levelLoader.Level;
-import de.fau.cs.mad.fly.levelLoader.LevelManager;
-
 /**
  * Displays the 3D-world.
  * 
@@ -31,9 +28,6 @@ public class GameScreen implements Screen, InputProcessor {
 	private PerspectiveCamera camera;
 	private float cameraSpeed = 0.1f;
 
-	private LevelManager levelManager = new LevelManager();
-	private Level level;
-
 	private int rollDir = 0;
 	private int pitchDir = 0;
 	private boolean useSensorData;
@@ -43,11 +37,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 	public GameScreen(final Fly game) {
 		this.game = game;
-		try {
-			level = levelManager.loadLevel("level2");
-		} catch (Exception e) {
-			Gdx.app.log("GameScreen.show():", e.getMessage(), e);
-		}
+		
 		useSensorData = true;
 	}
 
@@ -81,8 +71,8 @@ public class GameScreen implements Screen, InputProcessor {
 			batch.render(space);
 		}
 		// render gates
-		for (int i = 0; i < level.getGates().size(); i++) {
-			batch.render(level.getGates().get(i).modelInstance, environment);
+		for (int i = 0; i < game.getLevel().getGates().size(); i++) {
+			batch.render(game.getLevel().getGates().get(i).modelInstance, environment);
 		}
 		batch.end();
 	}
@@ -136,8 +126,8 @@ public class GameScreen implements Screen, InputProcessor {
 		float screenWidth = Gdx.graphics.getWidth();
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
-		camera.position.set(level.getCameraStartPosition());
-		camera.lookAt(level.getCameraLookAt());
+		camera.position.set(game.getLevel().getCameraStartPosition());
+		camera.lookAt(game.getLevel().getCameraLookAt());
 		camera.near = 1f;
 		camera.far = 400f;
 		camera.update();
