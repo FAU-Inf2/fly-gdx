@@ -1,0 +1,111 @@
+{
+	"id": 2,
+	"name": "circle",
+	"startingPointX": 0.0,
+	"startingPointY": 0.0,
+	"startingPointZ": 0.0,
+	"firstSection":
+		{
+			"id": 0,
+			"directionX": 0.0,
+			"directionY": 0.0,
+			"directionZ": 10.0,
+			"length": 20.0,	
+			"successorSections": [1],
+			"gateID": 0
+		},
+	"sections": [
+		{
+			"id": 1,
+			"minHorizontalAngle": 10.0,
+			"maxHorizontalAngle": 10.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 15,
+			"successorSections": [2],
+			"gateID": 1
+		},
+		{
+			"id": 2,
+			"minHorizontalAngle": 10.0,
+			"maxHorizontalAngle": 10.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 15,
+			"successorSections": [3],
+			"gateID": 2
+		},
+		{
+			"id": 3,
+			"minHorizontalAngle": 10.0,
+			"maxHorizontalAngle": 10.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 15,
+			"successorSections": [4],
+			"gateID": 3
+		},
+		{
+			"id": 4,
+			"minHorizontalAngle": 10.0,
+			"maxHorizontalAngle": 10.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 15,
+			"successorSections": [5],
+			"gateID": 4
+		},
+		{
+			"id": 5,
+			"minHorizontalAngle": 10.0,
+			"maxHorizontalAngle": 10.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 15,
+			"successorSections": [6],
+			"gateID": 5
+		},
+		{
+			"id": 6,
+			"minHorizontalAngle": 10.0,
+			"maxHorizontalAngle": 10.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 15,
+			"successorSections": [7],
+			"gateID": 6
+		},
+		{
+			"id": 7,
+			"minHorizontalAngle": 10.0,
+			"maxHorizontalAngle": 10.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 15,
+			"successorSections": [8],
+			"gateID": 7
+		},
+		{
+			"id": 8,
+			"minHorizontalAngle": 10.0,
+			"maxHorizontalAngle": 10.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 15,
+			"successorSections": [9],
+			"gateID": 8
+		},
+		{
+			"id": 9,
+			"minHorizontalAngle": 10.0,
+			"maxHorizontalAngle": 10.0,
+			"minVerticalAngle": 0.0,
+			"maxVerticalAngle": 0.0,
+			"length": 15,
+			"successorSections": [],
+			"gateID": 9
+		}
+	]
+}
+
+

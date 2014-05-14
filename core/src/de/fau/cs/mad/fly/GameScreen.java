@@ -102,7 +102,7 @@ public class GameScreen implements Screen, InputProcessor {
 		Gdx.input.setCatchBackKey(true);
 
 		try {
-			level = levelManager.loadLevel("level1");
+			level = levelManager.loadLevel("level2");
 			setUpCamera();
 			setUpEnvironment();
 		} catch (Exception e) {
