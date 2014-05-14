@@ -103,8 +103,9 @@ public class Level extends RawLevel {
 			Gate newGate = new Gate(firstSection.gateID);
 			lastGateInstance = new ModelInstance(
 					Assets.manager.get(Assets.torus));
-			lastGateInstance.transform = translationMatrix.translate(
-					getCameraLookAt()).rotate(verticalTurningAxis, getCameraLookAt()).cpy();
+			lastGateInstance.transform = translationMatrix
+					.translate(getCameraLookAt())
+					.rotate(verticalTurningAxis, getCameraLookAt()).cpy();
 			newGate.modelInstance = lastGateInstance;
 			gates.put(newGate.getId(), newGate);
 		}
@@ -124,14 +125,16 @@ public class Level extends RawLevel {
 			}
 			currentVector = currentVector.rot(rotationMatrix);
 			verticalTurningAxis = verticalTurningAxis.rot(rotationMatrix);
-			
+
 			currentVector = currentVector.nor();
 			currentPosition.mulAdd(currentVector, s.length);
 			if (s.gateID != Gate.NO_GATE) {
 				Gate newGate = new Gate(s.gateID);
 				newGate.modelInstance = lastGateInstance.copy();
-				newGate.modelInstance.transform = translationMatrix.trn(
-						new Vector3().mulAdd(currentVector, s.length)).cpy();
+				newGate.modelInstance.transform = translationMatrix
+						.trn(new Vector3().mulAdd(currentVector, s.length))
+						.rotate(verticalTurningAxis, verticalAngle)
+						.rotate(horizontalTurningAxis, horizontalAngle).cpy();
 				gates.put(newGate.getId(), newGate);
 				lastGateInstance = newGate.modelInstance;
 			}
