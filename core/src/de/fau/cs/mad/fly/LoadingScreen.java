@@ -20,30 +20,33 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
  */
 public class LoadingScreen implements Screen {
 	private final Fly game;
-	
+
 	private SpriteBatch batch;
 	private Texture splashImg;
-	
+
 	private Skin skin;
 	private Stage stage;
-	
+
 	private ProgressBar progressBar;
-	
+
 	private float progress = 0f;
-	
+
 	public LoadingScreen(final Fly game) {
 		this.game = game;
-		
+		Assets.loadAssetsForLoadingScreen();
+
 		batch = new SpriteBatch();
-		splashImg = new Texture("Fly.png");
-	
+		splashImg = Assets.manager.get(Assets.flyTextureLoadingScreen);
+		
 		batch = new SpriteBatch();
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-		if(Gdx.app.getType() == ApplicationType.Android) {
-			stage = new Stage(new FillViewport(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f));
+		if (Gdx.app.getType() == ApplicationType.Android) {
+			stage = new Stage(new FillViewport(Gdx.graphics.getWidth() / 2f,
+					Gdx.graphics.getHeight() / 2f));
 		} else {
-			stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			stage = new Stage(new FillViewport(Gdx.graphics.getWidth(),
+					Gdx.graphics.getHeight()));
 		}
 		Assets.load();
 		addLoadingProgress();
@@ -55,24 +58,26 @@ public class LoadingScreen implements Screen {
 	private void addLoadingProgress() {
 		progressBar = new ProgressBar(0f, 100f, 1f, false, skin);
 		progressBar.setValue(progress);
-		
+
 		stage.addActor(progressBar);
 	}
-	
+
 	/**
 	 * Sets the value of the progress bar.
 	 * 
-	 * @param value the new value for the progress bar.
+	 * @param value
+	 *            the new value for the progress bar.
 	 */
 	public void setProgress(float value) {
 		progress = value;
 		progressBar.setValue(progress);
 	}
-	
+
 	/**
 	 * Increments the value of the progress bar.
 	 * 
-	 * @param value the incremental value.
+	 * @param value
+	 *            the incremental value.
 	 */
 	public void incProgress(float value) {
 		progress += value;
@@ -87,13 +92,13 @@ public class LoadingScreen implements Screen {
 		batch.begin();
 		batch.draw(splashImg, 0, 0);
 		batch.end();
-		
+
 		stage.act(delta);
 		stage.draw();
-		
+
 		incProgress(1f);
-		
-		if(progress >= 100f) {
+
+		if (progress >= 100f) {
 			game.setGameScreen();
 			setProgress(0f);
 		}
@@ -112,19 +117,19 @@ public class LoadingScreen implements Screen {
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

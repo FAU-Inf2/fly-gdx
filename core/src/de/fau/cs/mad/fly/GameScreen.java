@@ -5,20 +5,13 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
@@ -50,7 +43,11 @@ public class GameScreen implements Screen, InputProcessor {
 
 	public GameScreen(final Fly game) {
 		this.game = game;
-
+		try {
+			level = levelManager.loadLevel("level2");
+		} catch (Exception e) {
+			Gdx.app.log("GameScreen.show():", e.getMessage(), e);
+		}
 		useSensorData = true;
 	}
 
@@ -101,13 +98,8 @@ public class GameScreen implements Screen, InputProcessor {
 		Gdx.input.setInputProcessor(this);
 		Gdx.input.setCatchBackKey(true);
 
-		try {
-			level = levelManager.loadLevel("level2");
-			setUpCamera();
-			setUpEnvironment();
-		} catch (Exception e) {
-			Gdx.app.log("GameScreen.show():", e.getMessage(), e);
-		}
+		setUpCamera();
+		setUpEnvironment();
 	}
 
 	@Override
