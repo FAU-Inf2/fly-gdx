@@ -21,6 +21,18 @@ public class RawLevel {
 	public String name = "";
 
 	/**
+	 * Name of the object which is used as level border. Default is outer space.
+	 */
+	public String levelBorder = "spacesphere.obj";
+
+	/**
+	 * Radius of the Level which defines the outer boundary which should be
+	 * never reached by the user. The default level border defines a sphere with
+	 * radius 100.
+	 */
+	public float radius = 100.0f;
+
+	/**
 	 * x-coordinate of the starting point of this level
 	 */
 	public float startingPointX = 0.0f;

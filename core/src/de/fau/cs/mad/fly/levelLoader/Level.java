@@ -4,6 +4,11 @@ import java.text.ParseException;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -18,12 +23,6 @@ import de.fau.cs.mad.fly.Assets;
  * 
  */
 public class Level extends RawLevel {
-	/**
-	 * Radius of the Level which defines the outer boundary which should be
-	 * never reached by the user.
-	 */
-	private float radius = 0.0f;
-
 	/**
 	 * Map of all Gate-objects with absolute position in 3D space.
 	 */
@@ -48,7 +47,6 @@ public class Level extends RawLevel {
 	 */
 	public void refactor() throws ParseException {
 		if (check()) {
-			calculateLevelRadius();
 			calculateGatePositions();
 		} else {
 			throw new ParseException("Level " + this.name + " is not complete:"
@@ -149,29 +147,6 @@ public class Level extends RawLevel {
 	}
 
 	/**
-	 * Radius of the level.
-	 * 
-	 * @see #calculateLevelRadius()
-	 * @return {@link #radius}
-	 */
-	public float getRadius() {
-		return radius;
-	}
-
-	/**
-	 * Calculates the {@link #radius} of the Level as a sum of the length of all
-	 * sections. To make sure the radius can never be reached, the final result
-	 * is increased by 10 %.
-	 */
-	private void calculateLevelRadius() {
-		radius = super.firstSection.length;
-		for (Section section : super.sections) {
-			radius += section.length;
-		}
-		radius *= 1.1;
-	}
-
-	/**
 	 * Getter for the starting position of the level
 	 * 
 	 * @return Vector3 with the starting position of the level
@@ -193,6 +168,36 @@ public class Level extends RawLevel {
 					firstSection.directionZ);
 		}
 		return lookAt;
+	}
+
+	/**
+	 * Object that is used as level border
+	 * 
+	 * @return level border
+	 */
+	public ModelInstance getLevelBorder() {
+		return new ModelInstance(Assets.manager.get(new AssetDescriptor<Model>(
+				levelBorder, Model.class)));
+	}
+	
+	/**
+	 * Render the level
+	 * @param camera that displays the level
+	 * @param environment in which the level should be rendered
+	 */
+	public void render(PerspectiveCamera camera, Environment environment) {
+		ModelBatch batch = new ModelBatch();
+		batch.begin(camera);
+		// rendering outer space
+		if (levelBorder != null) {
+			batch.render(getLevelBorder());
+		}
+		// render gates
+		for (int i = 0; i < getGates().size(); i++) {
+			batch.render(getGates().get(i).modelInstance,
+					environment);
+		}
+		batch.end();
 	}
 
 	@Override

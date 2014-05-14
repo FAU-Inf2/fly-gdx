@@ -8,11 +8,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -33,11 +30,10 @@ public class GameScreen implements Screen, InputProcessor {
 	private boolean useSensorData;
 
 	private Environment environment;
-	private ModelInstance space;
 
 	public GameScreen(final Fly game) {
 		this.game = game;
-		
+
 		useSensorData = true;
 	}
 
@@ -63,18 +59,8 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.translate(dir.scl(cameraSpeed));
 		camera.update();
 
-		ModelBatch batch = new ModelBatch();
+		game.getLevel().render(camera, environment);
 
-		batch.begin(camera);
-		// rendering outer space
-		if (space != null) {
-			batch.render(space);
-		}
-		// render gates
-		for (int i = 0; i < game.getLevel().getGates().size(); i++) {
-			batch.render(game.getLevel().getGates().get(i).modelInstance, environment);
-		}
-		batch.end();
 	}
 
 	@Override
@@ -129,7 +115,9 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.position.set(game.getLevel().getCameraStartPosition());
 		camera.lookAt(game.getLevel().getCameraLookAt());
 		camera.near = 1f;
-		camera.far = 400f;
+		// within a sphere it should not happen that not everything of this
+		// sphere is displayed. Therefore use the diameter as far plane
+		camera.far = game.getLevel().radius * 2;
 		camera.update();
 
 	}
@@ -144,9 +132,6 @@ public class GameScreen implements Screen, InputProcessor {
 				0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
 				-0.8f, -0.2f));
-
-		space = new ModelInstance(Assets.manager.get(Assets.space));
-		space.transform = new Matrix4().scale(2f, 2f, 2f);
 	}
 
 	/**
