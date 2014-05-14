@@ -7,9 +7,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -28,8 +25,6 @@ public class GameScreen implements Screen, InputProcessor {
 	private int rollDir = 0;
 	private int pitchDir = 0;
 	private boolean useSensorData;
-
-	private Environment environment;
 
 	public GameScreen(final Fly game) {
 		this.game = game;
@@ -59,7 +54,7 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.translate(dir.scl(cameraSpeed));
 		camera.update();
 
-		game.getLevel().render(camera, environment);
+		game.getLevel().render(camera);
 
 	}
 
@@ -75,7 +70,6 @@ public class GameScreen implements Screen, InputProcessor {
 		Gdx.input.setCatchBackKey(true);
 
 		setUpCamera();
-		setUpEnvironment();
 	}
 
 	@Override
@@ -120,18 +114,6 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.far = game.getLevel().radius * 2;
 		camera.update();
 
-	}
-
-	/**
-	 * Sets up the environment in which the camera should fly
-	 */
-	private void setUpEnvironment() {
-		// setting up the environment
-		environment = new Environment();
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
-				0.4f, 0.4f, 1f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
-				-0.8f, -0.2f));
 	}
 
 	/**

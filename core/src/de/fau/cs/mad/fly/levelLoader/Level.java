@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
@@ -27,6 +29,7 @@ public class Level extends RawLevel {
 	 * Map of all Gate-objects with absolute position in 3D space.
 	 */
 	private HashMap<Integer, Gate> gates = new HashMap<Integer, Gate>();
+	private Environment environment;
 
 	/**
 	 * Getter for {@link #gates}
@@ -179,13 +182,15 @@ public class Level extends RawLevel {
 		return new ModelInstance(Assets.manager.get(new AssetDescriptor<Model>(
 				levelBorder, Model.class)));
 	}
-	
+
 	/**
 	 * Render the level
-	 * @param camera that displays the level
-	 * @param environment in which the level should be rendered
+	 * 
+	 * @param camera
+	 *            that displays the level
 	 */
-	public void render(PerspectiveCamera camera, Environment environment) {
+	public void render(PerspectiveCamera camera) {
+		setUpEnvironment();
 		ModelBatch batch = new ModelBatch();
 		batch.begin(camera);
 		// rendering outer space
@@ -194,10 +199,21 @@ public class Level extends RawLevel {
 		}
 		// render gates
 		for (int i = 0; i < getGates().size(); i++) {
-			batch.render(getGates().get(i).modelInstance,
-					environment);
+			batch.render(getGates().get(i).modelInstance, environment);
 		}
 		batch.end();
+	}
+
+	/**
+	 * Sets up the environment for the level with its light.
+	 */
+	private void setUpEnvironment() {
+		// setting up the environment
+		environment = new Environment();
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
+				0.4f, 0.4f, 1f));
+		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
+				-0.8f, -0.2f));
 	}
 
 	@Override
