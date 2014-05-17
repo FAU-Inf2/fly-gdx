@@ -55,7 +55,7 @@ public class MainMenuScreen implements Screen {
 
 		final TextButton continueButton = new TextButton("Continue", skin, "default");
 		final TextButton chooseLevelButton = new TextButton("Choose Level", skin, "default");
-		final TextButton optionButton = new TextButton("Options", skin, "default");
+		final TextButton optionButton = new TextButton("Settings", skin, "default");
 		final TextButton helpButton = new TextButton("Help", skin, "default");
 		final TextButton exitButton = new TextButton("Exit", skin, "default");
 
@@ -78,7 +78,7 @@ public class MainMenuScreen implements Screen {
 		optionButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
-				game.setOptionScreen();
+				game.setSettingScreen();
 			}
 		});
 		

@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -13,7 +15,8 @@ import de.fau.cs.mad.fly.levelLoader.Level;
 import de.fau.cs.mad.fly.ui.HelpScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
-import de.fau.cs.mad.fly.ui.OptionScreen;
+import de.fau.cs.mad.fly.ui.SettingManager;
+import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SplashScreen;
 
 /**
@@ -28,26 +31,39 @@ public class Fly extends Game {
 	private LoadingScreen loadingScreen;
 	private GameScreen gameScreen;
 	private MainMenuScreen mainMenuScreen;
-	private OptionScreen optionScreen;
+	private SettingScreen settingScreen;
 	private HelpScreen helpScreen;
 	private Level level;
+	
+	private SettingManager settingManager;
 	
 	private Skin skin;
 	
 	@Override
 	public void create() {
-		createSkin();	
+		createSkin();
+		
+		createSettings();
 		
 		splashScreen = new SplashScreen(this);
 		loadingScreen = new LoadingScreen(this);
 		gameScreen = new GameScreen(this);
 		mainMenuScreen = new MainMenuScreen(this);
-		optionScreen = new OptionScreen(this);
+		settingScreen = new SettingScreen(this);
 		helpScreen = new HelpScreen(this);
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
 		//setSplashScreen();
+	}
+	
+	public void createSettings() {
+		settingManager = new SettingManager("fly_preferences", skin);
+		
+		settingManager.addTextSetting("name", "Playername:", "Test");
+		String[] selection = { "Red", "Blue", "Green", "Yellow" };
+		settingManager.addSelectionSetting("color", "Color:", 0, selection);
+		settingManager.addCheckBoxSetting("useTouch", "Use TouchScreen:", false);
 	}
 	
 	public void createSkin() {
@@ -66,6 +82,10 @@ public class Fly extends Game {
 	
 	public Skin getSkin() {
 		return skin;
+	}
+	
+	public SettingManager getSettingManager() {
+		return settingManager;
 	}
 	
 	public void setLevel(Level level) {
@@ -92,8 +112,8 @@ public class Fly extends Game {
 		setScreen(mainMenuScreen);
 	}
 	
-	public void setOptionScreen() {
-		setScreen(optionScreen);
+	public void setSettingScreen() {
+		setScreen(settingScreen);
 	}
 	
 	public void setHelpScreen() {

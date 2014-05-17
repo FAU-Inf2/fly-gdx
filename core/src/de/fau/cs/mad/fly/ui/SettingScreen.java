@@ -26,8 +26,9 @@ import de.fau.cs.mad.fly.Fly;
  *
  * @author Tobias Zangl
  */
-public class OptionScreen implements Screen, InputProcessor {
+public class SettingScreen implements Screen, InputProcessor {
 	private final Fly game;
+	private final SettingManager settingManager;
 	
 	private SpriteBatch batch;
 	private Skin skin;
@@ -36,9 +37,10 @@ public class OptionScreen implements Screen, InputProcessor {
 
 	private InputMultiplexer inputMultiplexer;
 	
-	public OptionScreen(final Fly game) {
+	public SettingScreen(final Fly game) {
 		this.game = game;
 		skin = game.getSkin();
+		settingManager = game.getSettingManager();
 		
 		batch = new SpriteBatch();
 		
@@ -46,46 +48,7 @@ public class OptionScreen implements Screen, InputProcessor {
 		
 		inputMultiplexer = new InputMultiplexer(stage, this);
 		
-		addOptions();
-	}
-	
-	/**
-	 * Adds the options and the Save and Back buttons to the option screen.
-	 */
-	private void addOptions() {
-		table = new Table();
-		//table.debug();
-		table.pad(Gdx.graphics.getWidth() * 0.1f);
-		table.setFillParent(true);
-		stage.addActor(table);
-		
-		for(int i = 0; i < 2; i++) {
-			final Label label = new Label("Option " + i + ": ", skin);
-			final TextField textField = new TextField("...", skin);
-			
-			table.row().expand();
-			table.add(label).pad(2f);
-			table.add(textField).pad(2f);
-		}
-		
-		for(int i = 2; i < 4; i++) {
-			final Label label = new Label("Option " + i + ": ", skin);
-			final SelectBox<String> selectBox = new SelectBox<String>(skin);
-			selectBox.setItems(new String[] {"Item 1", "Item 2", "Item 3"});
-			
-			table.row().expand();
-			table.add(label).pad(2f);
-			table.add(selectBox).pad(2f);
-		}
-		
-		for(int i = 4; i < 6; i++) {
-			final Label label = new Label("Option " + i + ": ", skin);
-			final CheckBox checkBox = new CheckBox("", skin);
-			
-			table.row().expand();
-			table.add(label).pad(2f);
-			table.add(checkBox).fill().pad(2f);
-		}
+		settingManager.display(stage, skin);
 	}
 
 	@Override
@@ -135,6 +98,7 @@ public class OptionScreen implements Screen, InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 		if(keycode == Keys.BACK || keycode == Keys.ESCAPE) {
+			settingManager.saveSettings();
 			game.setMainMenuScreen();
 		}
 		return false;
@@ -181,4 +145,5 @@ public class OptionScreen implements Screen, InputProcessor {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 }
