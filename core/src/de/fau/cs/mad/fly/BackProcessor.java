@@ -15,6 +15,7 @@ public class BackProcessor extends InputAdapter {
 	public boolean keyDown(int keycode) {
 		if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
 			game.setMainMenuScreen();
+			return true;
 		}
 		return false;
 	}
