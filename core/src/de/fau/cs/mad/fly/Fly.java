@@ -14,6 +14,7 @@ import de.fau.cs.mad.fly.levelLoader.Level;
 public class Fly extends Game {
 	private SplashScreen splashScreen;
 	private LoadingScreen loadingScreen;
+	private LevelChooserScreen levelChooserScreen;
 	private GameScreen gameScreen;
 	private MainMenuScreen mainMenuScreen;
 	private OptionScreen optionScreen;
@@ -22,6 +23,7 @@ public class Fly extends Game {
 	
 	@Override
 	public void create() {
+		levelChooserScreen = new LevelChooserScreen(this);
 		splashScreen = new SplashScreen(this);
 		loadingScreen = new LoadingScreen(this);
 		gameScreen = new GameScreen(this);
@@ -40,6 +42,10 @@ public class Fly extends Game {
 	
 	public Level getLevel() {
 		return this.level;
+	}
+	
+	public void setLevelChoosingScreen() {
+		setScreen(levelChooserScreen);
 	}
 	
 	public void setSplashScreen() {
