@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -38,7 +39,7 @@ public class SettingManager {
 		table.setFillParent(true);
 		stage.addActor(table);
 		
-		for(HashMap.Entry<String, Setting> entry : settingMap.entrySet()) {
+		for(Map.Entry<String, Setting> entry : settingMap.entrySet()) {
 			table.row().expand();			
 			table.add(entry.getValue().getLabel()).pad(2f);
 			table.add(entry.getValue().getActor()).pad(2f);
@@ -98,7 +99,7 @@ public class SettingManager {
 	}
 	
 	public void saveSettings() {
-		for(HashMap.Entry<String, Setting> entry : settingMap.entrySet()) {
+		for(Map.Entry<String, Setting> entry : settingMap.entrySet()) {
 			entry.getValue().saveSetting();
 		}
 		prefs.flush();
