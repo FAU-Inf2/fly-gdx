@@ -48,15 +48,7 @@ public class LevelChooserScreen implements Screen {
 		}
 		inputProcessor = new InputMultiplexer();
 		// create an InputProcess to handle the back key
-		InputProcessor backProcessor = new InputAdapter() {
-			@Override
-			public boolean keyDown(int keycode) {
-				if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
-					game.setMainMenuScreen();
-				}
-				return false;
-			}
-		};
+		InputProcessor backProcessor = new BackProcessor(game);
 		inputProcessor.addProcessor(backProcessor);
 	}
 
