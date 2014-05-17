@@ -26,6 +26,11 @@ public class LevelChooserScreen implements Screen {
 	private Skin skin;
 	private Stage stage;
 	private Table table;
+	
+	/**
+	 * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the
+	 * multiplexer offers the possibility to add several InputProcessors
+	 */
 	private InputMultiplexer inputProcessor;
 
 	public LevelChooserScreen(final Fly game) {
@@ -42,17 +47,17 @@ public class LevelChooserScreen implements Screen {
 					Gdx.graphics.getHeight()));
 		}
 		inputProcessor = new InputMultiplexer();
+		// create an InputProcess to handle the back key
 		InputProcessor backProcessor = new InputAdapter() {
-            @Override
-            public boolean keyDown(int keycode) {
-
-                if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK) ) {
-                	game.setMainMenuScreen();
-                }
-                return false;
-            }
-        };
-        inputProcessor.addProcessor(backProcessor);
+			@Override
+			public boolean keyDown(int keycode) {
+				if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
+					game.setMainMenuScreen();
+				}
+				return false;
+			}
+		};
+		inputProcessor.addProcessor(backProcessor);
 	}
 
 	@Override
@@ -71,7 +76,9 @@ public class LevelChooserScreen implements Screen {
 
 	@Override
 	public void show() {
+		// allow this screen to catch the back key
 		Gdx.input.setCatchBackKey(true);
+		// delegate all inputs to the #inputProcessor
 		Gdx.input.setInputProcessor(inputProcessor);
 	}
 
