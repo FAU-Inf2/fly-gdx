@@ -10,6 +10,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.levelLoader.Level;
+import de.fau.cs.mad.fly.ui.HelpScreen;
+import de.fau.cs.mad.fly.ui.LoadingScreen;
+import de.fau.cs.mad.fly.ui.MainMenuScreen;
+import de.fau.cs.mad.fly.ui.OptionScreen;
+import de.fau.cs.mad.fly.ui.SplashScreen;
 
 /**
  * Manages the different game screens.

@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly;
+package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -7,29 +7,36 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import de.fau.cs.mad.fly.Fly;
+
 /**
- * Displays the help information.
+ * Displays and changes the options of the game.
  *
  * @author Tobias Zangl
  */
-public class HelpScreen implements Screen, InputProcessor {
+public class OptionScreen implements Screen, InputProcessor {
 	private final Fly game;
 	
 	private SpriteBatch batch;
 	private Skin skin;
 	private Stage stage;
 	private Table table;
-	
+
 	private InputMultiplexer inputMultiplexer;
 	
-	public HelpScreen(final Fly game) {
+	public OptionScreen(final Fly game) {
 		this.game = game;
 		skin = game.getSkin();
 		
@@ -39,28 +46,46 @@ public class HelpScreen implements Screen, InputProcessor {
 		
 		inputMultiplexer = new InputMultiplexer(stage, this);
 		
-		addHelp();
+		addOptions();
 	}
 	
 	/**
-	 * Adds the scrollable help text and the Back button to the help screen.
+	 * Adds the options and the Save and Back buttons to the option screen.
 	 */
-	private void addHelp() {
+	private void addOptions() {
 		table = new Table();
+		//table.debug();
 		table.pad(Gdx.graphics.getWidth() * 0.1f);
 		table.setFillParent(true);
 		stage.addActor(table);
 		
-		final String helpString = "Lorem ipsum dolor sit amet,\nconsectetur adipisicing elit,\nsed do eiusmod tempor incididunt ut\nlabore et dolore magna aliqua.\nUt enim ad minim veniam,\nquis nostrud exercitation ullamco\nlaboris nisi ut aliquip ex\nea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident,\nsunt in culpa qui officia deserunt mollit anim\nid est laborum.\nLorem ipsum dolor sit amet,\nconsectetur adipisicing elit,\nsed do eiusmod tempor incididunt ut\nlabore et dolore magna aliqua.\nUt enim ad minim veniam,\nquis nostrud exercitation ullamco\nlaboris nisi ut aliquip ex\nea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident,\nsunt in culpa qui officia deserunt mollit anim\nid est laborum.";
-		final Label helpLabel = new Label(helpString, skin);
+		for(int i = 0; i < 2; i++) {
+			final Label label = new Label("Option " + i + ": ", skin);
+			final TextField textField = new TextField("...", skin);
+			
+			table.row().expand();
+			table.add(label).pad(2f);
+			table.add(textField).pad(2f);
+		}
 		
-		final Table helpTable = new Table();
-		final ScrollPane helpPane = new ScrollPane(helpTable, skin);
-		helpTable.add(helpLabel).pad(10f);
-		helpPane.setFadeScrollBars(true);
+		for(int i = 2; i < 4; i++) {
+			final Label label = new Label("Option " + i + ": ", skin);
+			final SelectBox<String> selectBox = new SelectBox<String>(skin);
+			selectBox.setItems(new String[] {"Item 1", "Item 2", "Item 3"});
+			
+			table.row().expand();
+			table.add(label).pad(2f);
+			table.add(selectBox).pad(2f);
+		}
 		
-		table.row().expand();
-		table.add(helpPane);
+		for(int i = 4; i < 6; i++) {
+			final Label label = new Label("Option " + i + ": ", skin);
+			final CheckBox checkBox = new CheckBox("", skin);
+			
+			table.row().expand();
+			table.add(label).pad(2f);
+			table.add(checkBox).fill().pad(2f);
+		}
 	}
 
 	@Override
@@ -70,6 +95,7 @@ public class HelpScreen implements Screen, InputProcessor {
 
 		stage.act(delta);
 		stage.draw();
+		//Table.drawDebug(stage);
 	}
 
 	@Override
