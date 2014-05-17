@@ -1,6 +1,13 @@
 package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.levelLoader.Level;
 
@@ -20,8 +27,12 @@ public class Fly extends Game {
 	private HelpScreen helpScreen;
 	private Level level;
 	
+	private Skin skin;
+	
 	@Override
 	public void create() {
+		createSkin();	
+		
 		splashScreen = new SplashScreen(this);
 		loadingScreen = new LoadingScreen(this);
 		gameScreen = new GameScreen(this);
@@ -32,6 +43,24 @@ public class Fly extends Game {
 		setMainMenuScreen();
 		// disabled for debugging reasons
 		//setSplashScreen();
+	}
+	
+	public void createSkin() {
+		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
+		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
+		fontParameter.size = 28;
+		BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
+		fontGenerator.dispose();
+
+		skin = new Skin();
+		skin.addRegions(new TextureAtlas(Gdx.files.internal("uiskin.atlas")));
+		skin.add("default-font", bitmapFont);
+
+		skin.load(Gdx.files.internal("uiskin.json"));
+	}
+	
+	public Skin getSkin() {
+		return skin;
 	}
 	
 	public void setLevel(Level level) {
