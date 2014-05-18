@@ -30,7 +30,7 @@ public class GameScreen implements Screen, InputProcessor {
 	public GameScreen(final Fly game) {
 		this.game = game;
 
-		useSensorData = true;
+		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
 	}
 
 	@Override
@@ -69,6 +69,7 @@ public class GameScreen implements Screen, InputProcessor {
 	public void show() {
 		Gdx.input.setInputProcessor(this);
 		Gdx.input.setCatchBackKey(true);
+		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
 
 		setUpCamera();
 	}
@@ -217,6 +218,8 @@ public class GameScreen implements Screen, InputProcessor {
 		return false;
 	}
 
+	int currentEvent = -1;
+	
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		// TODO Auto-generated method stub
@@ -228,17 +231,10 @@ public class GameScreen implements Screen, InputProcessor {
 			float xPosition = ((float) screenX) / width;
 			float yPosition = ((float) screenY) / height;
 
-			if (xPosition < 0.4f) {
-				azimuthDir = -1;
-			} else if (xPosition > 0.6f) {
-				azimuthDir = 1;
-			}
-
-			if (yPosition < 0.25f) {
-				rollDir = -1;
-			} else if (yPosition > 0.75f) {
-				rollDir = 1;
-			}
+			azimuthDir = 5 * (0.5f - xPosition);
+			rollDir = 5 * (0.5f - yPosition);
+			
+			currentEvent = pointer;
 		}
 
 		return false;
@@ -258,6 +254,17 @@ public class GameScreen implements Screen, InputProcessor {
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		// TODO Auto-generated method stub
+		if (pointer == currentEvent) {
+
+			float width = (float) Gdx.graphics.getWidth();
+			float height = (float) Gdx.graphics.getHeight();
+
+			float xPosition = ((float) screenX) / width;
+			float yPosition = ((float) screenY) / height;
+			
+			azimuthDir = 5 * (0.5f - xPosition);
+			rollDir = 5 * (0.5f - yPosition);
+		}
 		return false;
 	}
 
