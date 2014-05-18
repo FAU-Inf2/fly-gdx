@@ -106,6 +106,13 @@ default-slider
   rotate: false
   xy: 29, 20
   size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+default-slider-before
+  rotate: false
+  xy: 43, 20
+  size: 8, 8
   split: 2, 2, 2, 2
   orig: 8, 8
   offset: 0, 0

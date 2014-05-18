@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.res.Level;
@@ -30,6 +31,7 @@ public class LoadingScreen implements Screen {
 
 	private Skin skin;
 	private Stage stage;
+	private Table table;
 
 	private ProgressBar progressBar;
 
@@ -61,10 +63,18 @@ public class LoadingScreen implements Screen {
 	 * Adds the progress bar to the loading screen.
 	 */
 	private void addLoadingProgress() {
+		table = new Table();
+		table.pad(Gdx.graphics.getWidth() * 0.2f);
+		table.padTop(Gdx.graphics.getHeight() * 0.7f);
+		table.setFillParent(true);
+		stage.addActor(table);
+		
 		progressBar = new ProgressBar(0f, 100f, 1f, false, skin);
 		progressBar.setValue(progress);
+		progressBar.scaleBy(100.0f);
 
-		stage.addActor(progressBar);
+		table.row().expand();
+		table.add(progressBar).fill().pad(10f);
 	}
 
 	/**
@@ -91,7 +101,7 @@ public class LoadingScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
@@ -105,7 +115,7 @@ public class LoadingScreen implements Screen {
 
 		if (progress >= 100f) {
 			game.setGameScreen();
-			setProgress(0f);
+			//setProgress(0f);
 		}
 	}
 
