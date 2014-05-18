@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-
 
 /**
  * Stores one setting and displays its description and its value
@@ -40,7 +38,21 @@ public class Setting extends ChangeListener {
 		TEXT, SELECTION, CHECKBOX
 	}
 	
-	public Setting(SettingManager manager, String id, String description, String value, Skin skin) {
+
+	/**
+	 * Creates a new Setting with a TextField.
+	 * @param manager
+	 *            the parent SettingManager
+	 * @param id
+	 *            the id of the Setting
+	 * @param description
+	 *            the description of the Setting
+	 * @param value
+	 *            the default value of the Setting
+	 * @param skin
+	 *            the Skin of the UI        
+	 */
+	Setting(SettingManager manager, String id, String description, String value, Skin skin) {
 		this.type = SettingType.TEXT;
 		this.manager = manager;
 		this.id = id;
@@ -54,6 +66,21 @@ public class Setting extends ChangeListener {
 		textField.addListener(this);
 	}
 	
+	/**
+	 * Creates a new Setting with a SelectionBox
+	 * @param manager
+	 *            the parent SettingManager
+	 * @param id
+	 *            the id of the Setting
+	 * @param description
+	 *            the description of the Setting
+	 * @param value
+	 *            the default value of the Setting
+	 * @param selectionList
+	 *            the possible selections of the SelectionBox
+	 * @param skin
+	 *            the Skin of the UI        
+	 */
 	public Setting(SettingManager manager, String id, String description, int value, String[] selectionList, Skin skin) {
 		this.type = SettingType.SELECTION;
 		this.manager = manager;
@@ -71,6 +98,19 @@ public class Setting extends ChangeListener {
 		selectBox.addListener(this);
 	}
 	
+	/**
+	 * Creates a new Setting with a CheckBox
+	 * @param manager
+	 *            the parent SettingManager
+	 * @param id
+	 *            the id of the Setting
+	 * @param description
+	 *            the description of the Setting
+	 * @param value
+	 *            the default value of the Setting
+	 * @param skin
+	 *            the Skin of the UI        
+	 */
 	public Setting(SettingManager manager, String id, String description, boolean value, Skin skin) {
 		this.type = SettingType.CHECKBOX;
 		this.manager = manager;
@@ -86,30 +126,51 @@ public class Setting extends ChangeListener {
 		checkBox.addListener(this);
 	}
 	
+	/**
+	 * Getter for the SettingType.
+	 */
 	public SettingType getType() {
 		return type;
 	}
 	
+	/**
+	 * Getter for the Label.
+	 */
 	public Label getLabel() {
 		return label;
 	}
 
+	/**
+	 * Getter for the Actor.
+	 */
 	public Actor getActor() {
 		return actor;
 	}
 	
+	/**
+	 * Getter for the saved Text.
+	 */
 	public String getText() {
 		return textValue;
 	}
 	
+	/**
+	 * Getter for the saved Selection.
+	 */
 	public int getSelection() {
 		return selectionValue;
 	}
 	
+	/**
+	 * Getter for the current CheckBox status.
+	 */
 	public boolean getCheckBox() {
 		return checkBoxValue;
 	}
 	
+	/**
+	 * Saves the setting in the preference-file.
+	 */
 	public void saveSetting() {
 		if(type == SettingType.TEXT) {
 			manager.getPreferences().putString(id, textValue);
@@ -120,6 +181,9 @@ public class Setting extends ChangeListener {
 		}
 	}
 
+	/**
+	 * Stores the current value of the widget in the variable.
+	 */
 	@Override
 	public void changed(ChangeEvent event, Actor actor) {
 		if(type == SettingType.TEXT) {

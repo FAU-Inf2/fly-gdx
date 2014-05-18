@@ -1,10 +1,7 @@
 package de.fau.cs.mad.fly;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -57,6 +54,9 @@ public class Fly extends Game {
 		//setSplashScreen();
 	}
 	
+	/**
+	 * Creates the SettingManager and all the Settings.
+	 */
 	public void createSettings() {
 		settingManager = new SettingManager("fly_preferences", skin);
 		
@@ -66,6 +66,9 @@ public class Fly extends Game {
 		settingManager.addCheckBoxSetting("useTouch", "Use TouchScreen:", false);
 	}
 	
+	/**
+	 * Creates the Skin for the UI.
+	 */
 	public void createSkin() {
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
@@ -80,42 +83,72 @@ public class Fly extends Game {
 		skin.load(Gdx.files.internal("uiskin.json"));
 	}
 	
+	/**
+	 * Getter for the Skin.
+	 */
 	public Skin getSkin() {
 		return skin;
 	}
 	
+	/**
+	 * Getter for the SettingManager.
+	 */
 	public SettingManager getSettingManager() {
 		return settingManager;
 	}
 	
+	/**
+	 * Setter for the Level.
+	 */
 	public void setLevel(Level level) {
 		this.level = level;
 	}
 	
+	/**
+	 * Getter for the Level.
+	 */
 	public Level getLevel() {
 		return this.level;
 	}
 	
+	/**
+	 * Switches the current Screen to the SplashScreen.
+	 */
 	public void setSplashScreen() {
 		setScreen(splashScreen);
 	}
 	
+	/**
+	 * Switches the current Screen to the LoadingScreen.
+	 */
 	public void setLoadingScreen() {
 		setScreen(loadingScreen);
 	}
 	
+	/**
+	 * Switches the current Screen to the GameScreen.
+	 */
 	public void setGameScreen() {
 		setScreen(gameScreen);
 	}
 	
+	/**
+	 * Switches the current Screen to the MainMenuScreen.
+	 */
 	public void setMainMenuScreen() {
 		setScreen(mainMenuScreen);
 	}
 	
+	/**
+	 * Switches the current Screen to the SettingScreen.
+	 */
 	public void setSettingScreen() {
 		setScreen(settingScreen);
 	}
 	
+	/**
+	 * Switches the current Screen to the HelpScreen.
+	 */
 	public void setHelpScreen() {
 		setScreen(helpScreen);
 	}
