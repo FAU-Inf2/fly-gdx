@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.HelpScreen;
+import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SettingManager;
@@ -19,13 +21,18 @@ import de.fau.cs.mad.fly.ui.SplashScreen;
 /**
  * Manages the different game screens.
  * <p>
- * Includes screens for SplashScreen, LoadingScreen, GameScreen, MainMenuScreen, OptionScreen, HelpScreen.
- *  
+ * Includes screens for SplashScreen, LoadingScreen, GameScreen, MainMenuScreen,
+ * OptionScreen, HelpScreen and LevelChooserScreen.
+ * <p>
+ * All screens should be loaded only when they are needed. To create an instance
+ * of all of them takes about 4 seconds on a Nex5.
+ * 
  * @author Tobias Zangl
  */
 public class Fly extends Game {
 	private SplashScreen splashScreen;
 	private LoadingScreen loadingScreen;
+	private LevelChooserScreen levelChooserScreen;
 	private GameScreen gameScreen;
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
@@ -41,13 +48,6 @@ public class Fly extends Game {
 		createSkin();
 		
 		createSettings();
-		
-		splashScreen = new SplashScreen(this);
-		loadingScreen = new LoadingScreen(this);
-		gameScreen = new GameScreen(this);
-		mainMenuScreen = new MainMenuScreen(this);
-		settingScreen = new SettingScreen(this);
-		helpScreen = new HelpScreen(this);
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
@@ -98,23 +98,36 @@ public class Fly extends Game {
 	}
 	
 	/**
-	 * Setter for the Level.
+	 * Lazy loading of screen to choose level.
 	 */
-	public void setLevel(Level level) {
-		this.level = level;
+	public void setLevelChoosingScreen() {
+		if (levelChooserScreen == null) {
+			levelChooserScreen = new LevelChooserScreen();
+		}
+		setScreen(levelChooserScreen);
 	}
 	
 	/**
-	 * Getter for the Level.
+	 * returns the current level
 	 */
 	public Level getLevel() {
 		return this.level;
 	}
 	
 	/**
+	 * sets the current level
+	 */
+	public void setLevel(Level level) {
+		this.level = level;
+	}
+	
+	/**
 	 * Switches the current Screen to the SplashScreen.
 	 */
 	public void setSplashScreen() {
+		if (splashScreen == null) {
+			splashScreen = new SplashScreen(this);
+		}
 		setScreen(splashScreen);
 	}
 	
@@ -122,13 +135,19 @@ public class Fly extends Game {
 	 * Switches the current Screen to the LoadingScreen.
 	 */
 	public void setLoadingScreen() {
+		if (loadingScreen == null) {
+			loadingScreen = new LoadingScreen(this);
+		}
 		setScreen(loadingScreen);
 	}
-	
+
 	/**
-	 * Switches the current Screen to the GameScreen.
+	 * Lazy loading of game screen.
 	 */
 	public void setGameScreen() {
+		if (gameScreen == null) {
+			gameScreen = new GameScreen(this);
+		}
 		setScreen(gameScreen);
 	}
 	
@@ -136,6 +155,9 @@ public class Fly extends Game {
 	 * Switches the current Screen to the MainMenuScreen.
 	 */
 	public void setMainMenuScreen() {
+		if (mainMenuScreen == null) {
+			mainMenuScreen = new MainMenuScreen(this);
+		}
 		setScreen(mainMenuScreen);
 	}
 	
@@ -143,6 +165,9 @@ public class Fly extends Game {
 	 * Switches the current Screen to the SettingScreen.
 	 */
 	public void setSettingScreen() {
+		if(settingScreen == null) {
+			settingScreen = new SettingScreen(this);
+		}
 		setScreen(settingScreen);
 	}
 	
@@ -150,6 +175,9 @@ public class Fly extends Game {
 	 * Switches the current Screen to the HelpScreen.
 	 */
 	public void setHelpScreen() {
+		if(helpScreen == null) {
+			helpScreen = new HelpScreen(this);
+		}
 		setScreen(helpScreen);
 	}
 }
