@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.ui;
 
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -8,13 +7,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.BackProcessor;
@@ -30,7 +30,9 @@ public class LevelChooserScreen implements Screen {
 	private SpriteBatch batch;
 	private Skin skin;
 	private Stage stage;
-	private Table table;
+	private Table outerTable;
+	private List<Label> levelList;
+	private ScrollPane levelScrollPane;
 
 	/**
 	 * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the
@@ -49,7 +51,8 @@ public class LevelChooserScreen implements Screen {
 		// create an InputProcess to handle the back key
 		InputProcessor backProcessor = new BackProcessor(((Fly)Gdx.app.getApplicationListener()));
 		inputProcessor.addProcessor(backProcessor);
-
+		inputProcessor.addProcessor(stage);
+		
 		showLevels();
 	}
 
@@ -57,49 +60,30 @@ public class LevelChooserScreen implements Screen {
 	 * Shows a list of all available levels.
 	 */
 	public void showLevels() {
-		table = new Table();
-		// table.debug();
-		// access the current game
-		((Fly)Gdx.app.getApplicationListener()).getLevel();
+
+		Table scrollableTable = new Table(skin);
 		
-		table.pad(Gdx.graphics.getWidth() * 0.1f);
-		table.setFillParent(true);
-		stage.addActor(table);
-
-		for (int i = 0; i < 2; i++) {
-			final Label label = new Label("Option " + i + ": ", skin);
-			final TextField textField = new TextField("...", skin);
-
-			table.row().expand();
-			table.add(label).pad(2f);
-			table.add(textField).pad(2f);
-		}
-
-		for (int i = 2; i < 4; i++) {
-			final Label label = new Label("Option " + i + ": ", skin);
-			final SelectBox<String> selectBox = new SelectBox<String>(skin);
-			selectBox.setItems(new String[] { "Item 1", "Item 2", "Item 3" });
-
-			table.row().expand();
-			table.add(label).pad(2f);
-			table.add(selectBox).pad(2f);
-		}
-
-		for (int i = 4; i < 20; i++) {
-			final Label label = new Label("Option " + i + ": ", skin);
-			final CheckBox checkBox = new CheckBox("", skin);
-
-			table.row().expand();
-			table.add(label).pad(2f);
-			table.add(checkBox).fill().pad(2f);
-		}
+		final TextButton level1 = new TextButton("Level 1", skin, "default");
+		final TextButton level2 = new TextButton("Level 2", skin, "default");
+		final TextButton level3 = new TextButton("Level 3", skin, "default");
+		final TextButton level4 = new TextButton("Level 4", skin, "default");
+		
+		scrollableTable.add(level1).size(400).pad(10f).uniform().row();
+		scrollableTable.add(level2).size(400).pad(10f).uniform().row();
+		scrollableTable.add(level3).size(400).pad(10f).uniform().row();
+		scrollableTable.add(level4).size(400).pad(10f).uniform().row();
+		
+		levelScrollPane = new ScrollPane(scrollableTable, skin);
+		levelScrollPane.setScrollingDisabled(true, false);
+		levelScrollPane.setFillParent(true);
+		
+		stage.addActor(levelScrollPane);
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		stage.act(delta);
 		stage.draw();
 	}
