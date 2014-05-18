@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -17,13 +18,13 @@ import com.badlogic.gdx.math.Vector3;
 public class GameScreen implements Screen, InputProcessor {
 	private final Fly game;
 
-	private float startRoll, startPitch;
+	private float startRoll, startAzimuth;
 
 	private PerspectiveCamera camera;
 	private float cameraSpeed = 0.1f;
 
-	private int rollDir = 0;
-	private int pitchDir = 0;
+	private float rollDir = 0.0f;
+	private float azimuthDir = 0.0f;
 	private boolean useSensorData;
 
 	public GameScreen(final Fly game) {
@@ -45,7 +46,7 @@ public class GameScreen implements Screen, InputProcessor {
 		}
 
 		// rotating the camera
-		rotateCamera(rollDir, pitchDir);
+		rotateCamera(rollDir, azimuthDir);
 		camera.update();
 
 		// move the camera (first person flight)
@@ -98,8 +99,12 @@ public class GameScreen implements Screen, InputProcessor {
 	private void setUpCamera() {
 
 		// initializing Roll- and Pitch-Values for later comparison
+		float roll = Gdx.input.getRoll();
+		float pitch = Gdx.input.getPitch();
+		float azimuth = Gdx.input.getAzimuth();
+		
+		startAzimuth = computeAzimuth(roll, pitch, azimuth);
 		startRoll = Gdx.input.getRoll();
-		startPitch = Gdx.input.getPitch();
 
 		// setting up the camera
 		float screenHeight = Gdx.graphics.getHeight();
@@ -123,25 +128,19 @@ public class GameScreen implements Screen, InputProcessor {
 	private void interpretSensorInput() {
 		float roll = Gdx.input.getRoll();
 		float pitch = Gdx.input.getPitch();
+		float azimuth = Gdx.input.getAzimuth();
+		
+		azimuth = computeAzimuth(roll, pitch, azimuth);
 
 		float difRoll = roll - startRoll;
-		float difPitch = pitch - startPitch;
+		float difAzimuth = azimuth - startAzimuth;
 
-		rollDir = 0;
-		pitchDir = 0;
+		rollDir = 0.0f;
+		azimuthDir = 0.0f;
 
 		// camera rotation according to smartphone rotation
-		if (difRoll > 10.0f) {
-			rollDir = -1;
-		} else if (difRoll < -10.0f) {
-			rollDir = 1;
-		}
-
-		if (difPitch > 10.0f) {
-			pitchDir = -1;
-		} else if (difPitch < -10.0f) {
-			pitchDir = 1;
-		}
+		rollDir = difRoll * -0.1f;
+		azimuthDir = difAzimuth * -0.1f;
 	}
 
 	/**
@@ -152,15 +151,50 @@ public class GameScreen implements Screen, InputProcessor {
 	 * @param pitchDir
 	 *            defines if the camera should be rotated left or right
 	 */
-	private void rotateCamera(int rollDir, int pitchDir) {
+	private void rotateCamera(float rollDir, float azimuthDir) {
 		// rotation up or down
 		camera.rotate(camera.direction.cpy().crs(camera.up), 1.0f * rollDir);
 
 		// rotation around camera.direction/viewDirection (roll)
-		// camera.rotate(camera.direction, 1.0f * pitchDir);
+		//camera.rotate(camera.direction, 1.0f * -azimuthDir);
 
 		// rotation around camera.up (turning left/right)
-		camera.rotate(camera.up, 1.0f * pitchDir);
+		//camera.rotate(camera.up, 1.0f * pitchDir);
+		camera.rotate(camera.up, 1.0f * azimuthDir);
+	}
+	
+	private float computeAzimuth(float roll, float pitch, float azimuth){
+		Matrix3 mX = new Matrix3();
+		Matrix3 mY = new Matrix3();
+		Matrix3 mZ = new Matrix3();
+		
+		roll = roll * (float) Math.PI / 180.f;
+		pitch = pitch * (float) Math.PI / 180.f;
+		azimuth = azimuth * (float) Math.PI / 180.f;
+		
+		float cos = (float) Math.cos(pitch);
+		float sin = (float) Math.sin(pitch);
+		
+		float[] values = {1.f,0.f,0.f,   0.f, cos, sin,   0.f, -sin, cos};
+		mY.set(values);
+		
+		cos = (float) Math.cos(roll);
+		sin = (float) Math.sin(roll);
+		float[] values2 = {cos,0.f,-sin,   0.f, 1.f, 0.f,   sin, 0.f, cos};
+		mX.set(values2);
+		
+		cos = (float) Math.cos(azimuth);
+		sin = (float) Math.sin(azimuth);
+		float[] values3 = {cos,sin,0.f,   -sin, cos, 0.f,   0.f, 0.f, 1.f};
+		mZ.set(values3);
+		
+		Matrix3 mat = mZ.mul(mY.mul(mX));
+		
+		Vector3 newFront = new Vector3(0.f,1.f,0.f).mul(mat);
+		
+		Vector3 z = new Vector3(0.f,0.f,1.f);
+		
+		return (float) Math.acos(z.dot(new Vector3(0, newFront.y, newFront.z)) / (float) Math.sqrt(newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f/ (float) Math.PI;
 	}
 
 	@Override
@@ -195,9 +229,9 @@ public class GameScreen implements Screen, InputProcessor {
 			float yPosition = ((float) screenY) / height;
 
 			if (xPosition < 0.4f) {
-				pitchDir = -1;
+				azimuthDir = -1;
 			} else if (xPosition > 0.6f) {
-				pitchDir = 1;
+				azimuthDir = 1;
 			}
 
 			if (yPosition < 0.25f) {
@@ -215,7 +249,7 @@ public class GameScreen implements Screen, InputProcessor {
 		// TODO Auto-generated method stub
 		if (button == Buttons.LEFT) {
 			rollDir = 0;
-			pitchDir = 0;
+			azimuthDir = 0;
 		}
 
 		return false;
