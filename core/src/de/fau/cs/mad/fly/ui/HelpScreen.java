@@ -39,7 +39,7 @@ public class HelpScreen implements Screen, InputProcessor {
 		
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		
-		inputMultiplexer = new InputMultiplexer(stage, this);
+		inputMultiplexer = new InputMultiplexer(this, stage);
 		
 		addHelp();
 	}
