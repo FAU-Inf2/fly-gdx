@@ -1,17 +1,21 @@
-package de.fau.cs.mad.fly;
+package de.fau.cs.mad.fly.ui;
 
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import de.fau.cs.mad.fly.Fly;
+
 
 /**
  * Displays the main menu with Start, Options, Help and Exit buttons.
@@ -28,17 +32,11 @@ public class MainMenuScreen implements Screen {
 	
 	public MainMenuScreen(final Fly game) {
 		this.game = game;
+		skin = game.getSkin();
 		
 		batch = new SpriteBatch();
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
-		
-		if(Gdx.app.getType() == ApplicationType.Android) {
-			stage = new Stage(new FillViewport(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f));
-		} else {
-			stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		}
-		
-		//Gdx.app.log("FLY", "Viewport: " + Gdx.graphics.getWidth() + ":" + Gdx.graphics.getHeight());
+
+		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
 		addMenu();
 	}
@@ -50,21 +48,27 @@ public class MainMenuScreen implements Screen {
 	 */
 	private void addMenu() {
 		table = new Table();
+		//table.debug();
+		table.pad(Gdx.graphics.getWidth() * 0.1f);
 		table.setFillParent(true);
 		stage.addActor(table);
-		
-		final TextButton startButton = new TextButton("Start", skin, "default");
-		final TextButton optionButton = new TextButton("Options", skin, "default");
+
+		final TextButton continueButton = new TextButton("Continue", skin, "default");
+		final TextButton chooseLevelButton = new TextButton("Choose Level", skin, "default");
+		final TextButton optionButton = new TextButton("Settings", skin, "default");
 		final TextButton helpButton = new TextButton("Help", skin, "default");
 		final TextButton exitButton = new TextButton("Exit", skin, "default");
+
+		table.row().expand();
+		table.add(continueButton).fill().pad(10f).colspan(2);
+		table.row().expand();
+		table.add(chooseLevelButton).fill().pad(10f).uniform();
+		table.add(helpButton).fill().pad(10f).uniform();
+		table.row().expand();
+		table.add(optionButton).fill().pad(10f).uniform();
+		table.add(exitButton).fill().pad(10f).uniform();
 		
-		table.add(startButton).width(200f).height(40f).pad(10f);
-		table.add(helpButton).width(200f).height(40f).pad(10f);
-		table.row();
-		table.add(optionButton).width(200f).height(40f).pad(10f);
-		table.add(exitButton).width(200f).height(40f).pad(10f);
-		
-		startButton.addListener(new ClickListener() {
+		continueButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
 				game.setLoadingScreen();
@@ -74,7 +78,7 @@ public class MainMenuScreen implements Screen {
 		optionButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
-				game.setOptionScreen();
+				game.setSettingScreen();
 			}
 		});
 		
@@ -95,11 +99,12 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		stage.act(delta);
 		stage.draw();
+		//Table.drawDebug(stage);
 	}
 
 	@Override

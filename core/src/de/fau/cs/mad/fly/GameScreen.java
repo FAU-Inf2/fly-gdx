@@ -36,7 +36,7 @@ public class GameScreen implements Screen, InputProcessor {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight());
+		Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		// rotating the camera according to UserInput
@@ -165,7 +165,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if (keycode == Keys.BACK || keycode == Keys.BACKSPACE) {
+		if (keycode == Keys.BACK || keycode == Keys.ESCAPE) {
 			game.setMainMenuScreen();
 		}
 		return false;

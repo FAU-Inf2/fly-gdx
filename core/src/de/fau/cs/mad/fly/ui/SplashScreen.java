@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly;
+package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
+
+import de.fau.cs.mad.fly.Fly;
 
 /**
  * Displays the splash screen.

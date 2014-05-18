@@ -1,18 +1,19 @@
-package de.fau.cs.mad.fly;
+package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.res.ResourceManager;
+import de.fau.cs.mad.fly.Assets;
+import de.fau.cs.mad.fly.Fly;
 
 /**
  * Displays the loading screen with a progress bar.
@@ -36,21 +37,16 @@ public class LoadingScreen implements Screen {
 
 	public LoadingScreen(final Fly game) {
 		this.game = game;
+		skin = game.getSkin();
 		Assets.loadAssetsForLoadingScreen();
 
 		batch = new SpriteBatch();
 		splashImg = Assets.manager.get(Assets.flyTextureLoadingScreen);
 		
 		batch = new SpriteBatch();
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-		if (Gdx.app.getType() == ApplicationType.Android) {
-			stage = new Stage(new FillViewport(Gdx.graphics.getWidth() / 2f,
-					Gdx.graphics.getHeight() / 2f));
-		} else {
-			stage = new Stage(new FillViewport(Gdx.graphics.getWidth(),
-					Gdx.graphics.getHeight()));
-		}
+		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+
 		Assets.load();
 		try {
 			Level l = ResourceManager.getLevel("level2");
@@ -99,13 +95,13 @@ public class LoadingScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-		batch.draw(splashImg, 0, 0);
+		batch.draw(splashImg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.end();
 
 		stage.act(delta);
 		stage.draw();
 
-		incProgress(1f);
+		incProgress(2f);
 
 		if (progress >= 100f) {
 			game.setGameScreen();
