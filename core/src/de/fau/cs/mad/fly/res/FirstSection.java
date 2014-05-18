@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.levelLoader;
+package de.fau.cs.mad.fly.res;
 
 /**
  * Child of {@link Section} wich is the only section that stores an absolute

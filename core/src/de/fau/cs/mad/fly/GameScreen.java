@@ -106,8 +106,8 @@ public class GameScreen implements Screen, InputProcessor {
 		float screenWidth = Gdx.graphics.getWidth();
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
-		camera.position.set(game.getLevel().getCameraStartPosition());
-		camera.lookAt(game.getLevel().getCameraLookAt());
+		camera.position.set(game.getLevel().start.position);
+		camera.lookAt(game.getLevel().start.viewDirection);
 		camera.near = 1f;
 		// within a sphere it should not happen that not everything of this
 		// sphere is displayed. Therefore use the diameter as far plane

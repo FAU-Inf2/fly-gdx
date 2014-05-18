@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.levelLoader;
+package de.fau.cs.mad.fly.res;
 
 import java.util.ArrayList;
 

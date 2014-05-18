@@ -1,109 +1,63 @@
 {
 	"id": 2,
 	"name": "circle",
-	"startingPointX": 0.0,
-	"startingPointY": 0.0,
-	"startingPointZ": 0.0,
-	"firstSection":
+	"start": {
+		"position": { "x": 0, "y": 0, "z": 0},
+		"viewDirection": { "x": 0, "y": 4, "z": 20 }
+	},
+	"dependencies": {
+		"torus": "model:torus"
+	},
+	"gates": [
 		{
 			"id": 0,
-			"directionX": 0.0,
-			"directionY": 0.0,
-			"directionZ": 10.0,
-			"length": 20.0,	
-			"successorSections": [1],
-			"gateID": 0
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 5.9604645e-08, 0.99999994, 0.0, 0.0, -0.99999994, 5.9604645e-08, 0.0, 0.0, 0.0, 10.0, 1.0 ]
 		},
-	"sections": [
 		{
 			"id": 1,
-			"minHorizontalAngle": 10.0,
-			"maxHorizontalAngle": 10.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 15,
-			"successorSections": [2],
-			"gateID": 1
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.17364821, 0.98480767, 0.0, 0.0, -0.98480767, 0.17364821, 0.0, 0.0, 2.6047225, 24.772118, 1.0 ]
 		},
 		{
 			"id": 2,
-			"minHorizontalAngle": 10.0,
-			"maxHorizontalAngle": 10.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 15,
-			"successorSections": [3],
-			"gateID": 2
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.34202015, 0.9396925, 0.0, 0.0, -0.9396925, 0.34202015, 0.0, 0.0, 7.7350245, 38.867508, 1.0 ]
 		},
 		{
 			"id": 3,
-			"minHorizontalAngle": 10.0,
-			"maxHorizontalAngle": 10.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 15,
-			"successorSections": [4],
-			"gateID": 3
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.49999997, 0.8660252, 0.0, 0.0, -0.8660252, 0.49999997, 0.0, 0.0, 15.2350235, 51.85789, 1.0 ]
 		},
 		{
 			"id": 4,
-			"minHorizontalAngle": 10.0,
-			"maxHorizontalAngle": 10.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 15,
-			"successorSections": [5],
-			"gateID": 4
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.6427875, 0.76604426, 0.0, 0.0, -0.76604426, 0.6427875, 0.0, 0.0, 24.876837, 63.34856, 1.0 ]
 		},
 		{
 			"id": 5,
-			"minHorizontalAngle": 10.0,
-			"maxHorizontalAngle": 10.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 15,
-			"successorSections": [6],
-			"gateID": 5
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.7660443, 0.64278746, 0.0, 0.0, -0.64278746, 0.7660443, 0.0, 0.0, 36.367504, 72.99037, 1.0 ]
 		},
 		{
 			"id": 6,
-			"minHorizontalAngle": 10.0,
-			"maxHorizontalAngle": 10.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 15,
-			"successorSections": [7],
-			"gateID": 6
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.86602527, 0.49999988, 0.0, 0.0, -0.49999988, 0.86602527, 0.0, 0.0, 49.357883, 80.49037, 1.0 ]
 		},
 		{
 			"id": 7,
-			"minHorizontalAngle": 10.0,
-			"maxHorizontalAngle": 10.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 15,
-			"successorSections": [8],
-			"gateID": 7
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.93969244, 0.34202003, 0.0, 0.0, -0.34202003, 0.93969244, 0.0, 0.0, 63.453274, 85.620674, 1.0 ]
 		},
 		{
 			"id": 8,
-			"minHorizontalAngle": 10.0,
-			"maxHorizontalAngle": 10.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 15,
-			"successorSections": [9],
-			"gateID": 8
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.9848075, 0.1736481, 0.0, 0.0, -0.1736481, 0.9848075, 0.0, 0.0, 78.22539, 88.225395, 1.0 ]
 		},
 		{
 			"id": 9,
-			"minHorizontalAngle": 10.0,
-			"maxHorizontalAngle": 10.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 15,
-			"successorSections": [],
-			"gateID": 9
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.9999997, -1.4901161e-08, 0.0, 0.0, 1.4901161e-08, 0.9999997, 0.0, 0.0, 93.22539, 88.225395, 1.0 ]
 		}
 	]
 }

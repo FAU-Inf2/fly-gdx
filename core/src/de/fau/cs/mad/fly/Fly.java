@@ -2,7 +2,7 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Game;
 
-import de.fau.cs.mad.fly.levelLoader.Level;
+import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Manages the different game screens.

@@ -11,7 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
-import de.fau.cs.mad.fly.levelLoader.LevelManager;
+import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.res.ResourceManager;
 
 /**
  * Displays the loading screen with a progress bar.
@@ -51,9 +52,9 @@ public class LoadingScreen implements Screen {
 					Gdx.graphics.getHeight()));
 		}
 		Assets.load();
-		LevelManager levelManager = new LevelManager();
 		try {
-			game.setLevel(levelManager.loadLevel("level2"));
+			Level l = ResourceManager.getLevel("level2");
+			game.setLevel(l);
 		} catch (Exception e) {
 			Gdx.app.log("GameScreen.show():", e.getMessage(), e);
 		}

@@ -1,71 +1,42 @@
 {
 	"id": 1,
 	"name": "Level 1",
-	"startingPointX": 0.0,
-	"startingPointY": 0.0,
-	"startingPointZ": 0.0,
-	"firstSection":
+	"start": {
+		"position": { "x": 0, "y": 0, "z": 0 }
+	},
+	"dependencies": {
+		"torus": "model:torus"
+	},
+	"gates": [
 		{
 			"id": 0,
-			"directionX": 0.0,
-			"directionY": 0.0,
-			"directionZ": 10.0,
-			"length": 10.0,	
-			"successorSections": [1],
-			"gateID": 0
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 5.9604645e-08, 0.99999994, 0.0, 0.0, -0.99999994, 5.9604645e-08, 0.0, 0.0, 0.0, 10.0, 1.0 ]
 		},
-	"sections": [
 		{
 			"id": 1,
-			"minHorizontalAngle": 0.0,
-			"maxHorizontalAngle": 0.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 8,
-			"successorSections": [2],
-			"gateID": 1
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 5.9604645e-08, 0.99999994, 0.0, 0.0, -0.99999994, 5.9604645e-08, 0.0, 0.0, 0.0, 18.0, 1.0 ]
 		},
 		{
 			"id": 2,
-			"minHorizontalAngle": 20.0,
-			"maxHorizontalAngle": 25.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 8,
-			"successorSections": [3],
-			"gateID": 2
+			"model": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.40727004, 0.9133077, 0.0, 0.0, -0.9133077, 0.40727004, 0.0, 0.0, 3.25816, 25.306461, 1.0 ]
 		},
 		{
 			"id": 3,
-			"minHorizontalAngle": 0.0,
-			"maxHorizontalAngle": 0.0,
-			"minVerticalAngle": 20.0,
-			"maxVerticalAngle": 30.0,
-			"length": 9,
-			"successorSections": [4],
-			"gateID": 3
+			"model": "torus",
+			"transformMatrix": [ 0.91852987, 0.26419854, -0.29411227, 0.0, 0.16101487, 0.4294432, 0.888624, 0.0, 0.36107773, -0.8635841, 0.35191652, 0.0, 3.558165, 6.6249676, 32.856567, 1.0 ]
 		},
 		{
 			"id": 4,
-			"minHorizontalAngle": 30.0,
-			"maxHorizontalAngle": 40.0,
-			"minVerticalAngle": -30.0,
-			"maxVerticalAngle": -20.0,
-			"length": 9,
-			"successorSections": [5],
-			"gateID": 4
+			"model": "torus",
+			"transformMatrix": [ 0.9984013, 0.0377717, -0.042048372, 0.0, -0.008650919, 0.8372772, 0.54671013, 0.0, 0.05585631, -0.5454723, 0.83626544, 0.0, 4.0668654, 10.284538, 41.063198, 1.0 ]
 		},
 		{
 			"id": 5,
-			"minHorizontalAngle": 0.0,
-			"maxHorizontalAngle": 0.0,
-			"minVerticalAngle": 0.0,
-			"maxVerticalAngle": 0.0,
-			"length": 5,
-			"successorSections": [],
-			"gateID": 5
+			"model": "torus",
+			"transformMatrix": [ 0.9984013, 0.0377717, -0.042048372, 0.0, -0.008650919, 0.8372772, 0.54671013, 0.0, 0.05585631, -0.5454723, 0.83626544, 0.0, 4.349477, 12.317633, 45.622437, 1.0 ]
 		}
 	]
 }
-
-
