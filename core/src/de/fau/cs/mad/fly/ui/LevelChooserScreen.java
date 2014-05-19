@@ -24,6 +24,7 @@ import com.esotericsoftware.tablelayout.Value;
 import de.fau.cs.mad.fly.BackProcessor;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.res.ResourceManager;
 
 /**
  * Offers a selections of Levels to start
@@ -83,37 +84,8 @@ public class LevelChooserScreen implements Screen {
 
 		Table scrollableTable = new Table(skin);
 
-		ArrayList<Level> allLevels = new ArrayList<Level>();
-		Level level1 = new Level();
-		level1.name = "Level 1";
-		allLevels.add(level1);
-		Level level2 = new Level();
-		level2.name = "Level 2";
-		allLevels.add(level2);
-		Level level3 = new Level();
-		level3.name = "Level 3";
-		allLevels.add(level3);
-		Level level4 = new Level();
-		level4.name = "Level 4";
-		allLevels.add(level4);
-		Level level5 = new Level();
-		level5.name = "Level 4";
-		allLevels.add(level5);
-		Level level6 = new Level();
-		level6.name = "Level 4";
-		allLevels.add(level6);
-		Level level7 = new Level();
-		level7.name = "Level 4";
-		allLevels.add(level7);
-		Level level8 = new Level();
-		level8.name = "Level 4";
-		allLevels.add(level8);
-		Level level9 = new Level();
-		level9.name = "Level 4";
-		allLevels.add(level9);
-		Level level10 = new Level();
-		level10.name = "Level 4";
-		allLevels.add(level10);
+		ArrayList<Level> allLevels = ResourceManager.getLevelList();
+		
 
 		scrollableTable.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
@@ -124,12 +96,13 @@ public class LevelChooserScreen implements Screen {
 			int max = Math.min(allLevels.size() - (row * buttonsInARow),
 					buttonsInARow);
 			for (int i = 0; i < max; i++) {
-				final TextButton button = new TextButton(allLevels.get(row
-						* buttonsInARow + i).name, skin, "default");
+				final Level level = allLevels.get(row
+						* buttonsInARow + i);
+				final TextButton button = new TextButton(level.name, skin, "default");
 				button.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						// TODO: set Level in Game
+						((Fly) Gdx.app.getApplicationListener()).setLevel(level);
 						((Fly) Gdx.app.getApplicationListener())
 								.setLoadingScreen();
 					}
