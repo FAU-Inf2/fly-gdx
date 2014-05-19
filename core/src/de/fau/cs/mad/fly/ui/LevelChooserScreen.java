@@ -10,16 +10,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.esotericsoftware.tablelayout.BaseTableLayout;
-import com.esotericsoftware.tablelayout.Value;
 
 import de.fau.cs.mad.fly.BackProcessor;
 import de.fau.cs.mad.fly.Fly;
@@ -36,9 +32,27 @@ public class LevelChooserScreen implements Screen {
 	private SpriteBatch batch;
 	private Skin skin;
 	private Stage stage;
-	private Table outerTable;
-	private List<Label> levelList;
-	private ScrollPane levelScrollPane;
+	/** Max. number of buttons for level to show in a row */
+	private int buttonsInARow = 3;
+	/** This percentage of the screen width is covered with button surface */
+	private float percentageOfButtonsWitdth = .8f;
+	/**
+	 * This percentage of the screen width is covered with space between buttons
+	 */
+	private float percentageOfSpaceWidth = 1 - percentageOfButtonsWitdth;
+	/**
+	 * This percentage of the screen height is covered with button surface.
+	 * <p>
+	 * If more levels exist, than there is place for buttons, show a row with
+	 * halve buttons to indicate that there are more levels left. Hence
+	 * {@link #percentageOfButtonsHeight} + {@link #percentageOfSpaceHeight} <
+	 * 1.0.
+	 */
+	float percentageOfButtonsHeight = .7f;
+	/**
+	 * This percentage of the screen width is covered with space between buttons
+	 */
+	float percentageOfSpaceHeight = .15f;
 
 	/**
 	 * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the
@@ -47,10 +61,8 @@ public class LevelChooserScreen implements Screen {
 	private InputMultiplexer inputProcessor;
 
 	public LevelChooserScreen() {
-
 		batch = new SpriteBatch();
 		skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
-
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight()));
 		inputProcessor = new InputMultiplexer();
@@ -67,42 +79,38 @@ public class LevelChooserScreen implements Screen {
 	 * Shows a list of all available levels.
 	 */
 	public void showLevels() {
-
-		int buttonsInARow = 3;
-		float percentageOfButtonsWitdth = .8f;
-		float percentageOfSpaceWidth = 1 - percentageOfButtonsWitdth;
+		// calculate width and height of buttons and the space inbetween
 		float buttonWidth = percentageOfButtonsWitdth / 3.0f
 				* Gdx.graphics.getWidth();
 		float spaceWidth = percentageOfSpaceWidth / 6 * Gdx.graphics.getWidth();
-
-		float percentageOfButtonsHeight = .7f;
-		float percentageOfSpaceHeight = .15f;
 		float buttonHeight = percentageOfButtonsHeight / 3.0f
 				* Gdx.graphics.getHeight();
 		float spaceHeight = percentageOfSpaceHeight / 6
 				* Gdx.graphics.getHeight();
 
-		Table scrollableTable = new Table(skin);
-
 		ArrayList<Level> allLevels = ResourceManager.getLevelList();
-		
 
+		// table that contains all buttons
+		Table scrollableTable = new Table(skin);
 		scrollableTable.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 
+		// create a button for each level
 		int maxRows = ((int) Math.ceil(((double) allLevels.size())
 				/ ((double) buttonsInARow)));
 		for (int row = 0; row < maxRows; row++) {
 			int max = Math.min(allLevels.size() - (row * buttonsInARow),
 					buttonsInARow);
+			// fill a row with buttons
 			for (int i = 0; i < max; i++) {
-				final Level level = allLevels.get(row
-						* buttonsInARow + i);
-				final TextButton button = new TextButton(level.name, skin, "default");
+				final Level level = allLevels.get(row * buttonsInARow + i);
+				final TextButton button = new TextButton(level.name, skin,
+						"default");
 				button.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						((Fly) Gdx.app.getApplicationListener()).setLevel(level);
+						((Fly) Gdx.app.getApplicationListener())
+								.setLevel(level);
 						((Fly) Gdx.app.getApplicationListener())
 								.setLoadingScreen();
 					}
@@ -113,13 +121,13 @@ public class LevelChooserScreen implements Screen {
 						.center();
 			}
 			scrollableTable.row();
-			scrollableTable.invalidate();
 		}
 
-		levelScrollPane = new ScrollPane(scrollableTable, skin);
+		// place the table of buttons in a ScrollPane to make it scrollable, if
+		// not all buttons can be displayed
+		ScrollPane levelScrollPane = new ScrollPane(scrollableTable, skin);
 		levelScrollPane.setScrollingDisabled(true, false);
 		levelScrollPane.setFillParent(true);
-
 		stage.addActor(levelScrollPane);
 	}
 
