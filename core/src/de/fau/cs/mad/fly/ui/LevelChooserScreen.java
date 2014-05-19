@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.esotericsoftware.tablelayout.BaseTableLayout;
 import com.esotericsoftware.tablelayout.Value;
@@ -65,10 +67,7 @@ public class LevelChooserScreen implements Screen {
 	 */
 	public void showLevels() {
 
-		Table scrollableTable = new Table(skin);
-
-		ArrayList<Level> allLevels = new ArrayList<Level>();
-
+		int buttonsInARow = 3;
 		float percentageOfButtonsWitdth = .8f;
 		float percentageOfSpaceWidth = 1 - percentageOfButtonsWitdth;
 		float buttonWidth = percentageOfButtonsWitdth / 3.0f
@@ -82,43 +81,60 @@ public class LevelChooserScreen implements Screen {
 		float spaceHeight = percentageOfSpaceHeight / 6
 				* Gdx.graphics.getHeight();
 
-		final TextButton level1 = new TextButton(String.valueOf(Gdx.graphics
-				.getWidth()), skin, "default");
-		final TextButton level2 = new TextButton(String.valueOf(Gdx.graphics
-				.getHeight()), skin, "default");
-		final TextButton level3 = new TextButton(String.valueOf(buttonWidth),
-				skin, "default");
-		final TextButton level4 = new TextButton(String.valueOf(spaceWidth),
-				skin, "default");
-		final TextButton level5 = new TextButton("Level 5", skin, "default");
-		final TextButton level6 = new TextButton("Level 6", skin, "default");
-		final TextButton level7 = new TextButton("Level 7", skin, "default");
-		final TextButton level8 = new TextButton("Level 8", skin, "default");
-		final TextButton level9 = new TextButton("Level 9", skin, "default");
-		final TextButton level10 = new TextButton("Level 10", skin, "default");
-		final TextButton level11 = new TextButton("Level 11", skin, "default");
-		final TextButton level12 = new TextButton("Level 12", skin, "default");
+		Table scrollableTable = new Table(skin);
 
-		ArrayList<TextButton> buttons = new ArrayList<TextButton>();
-		buttons.add(level1);
-		buttons.add(level2);
-		buttons.add(level3);
-		buttons.add(level4);
-		buttons.add(level5);
-		buttons.add(level6);
-		buttons.add(level7);
-		buttons.add(level8);
-		buttons.add(level9);
-		buttons.add(level10);
-		buttons.add(level11);
-		buttons.add(level12);
+		ArrayList<Level> allLevels = new ArrayList<Level>();
+		Level level1 = new Level();
+		level1.name = "Level 1";
+		allLevels.add(level1);
+		Level level2 = new Level();
+		level2.name = "Level 2";
+		allLevels.add(level2);
+		Level level3 = new Level();
+		level3.name = "Level 3";
+		allLevels.add(level3);
+		Level level4 = new Level();
+		level4.name = "Level 4";
+		allLevels.add(level4);
+		Level level5 = new Level();
+		level5.name = "Level 4";
+		allLevels.add(level5);
+		Level level6 = new Level();
+		level6.name = "Level 4";
+		allLevels.add(level6);
+		Level level7 = new Level();
+		level7.name = "Level 4";
+		allLevels.add(level7);
+		Level level8 = new Level();
+		level8.name = "Level 4";
+		allLevels.add(level8);
+		Level level9 = new Level();
+		level9.name = "Level 4";
+		allLevels.add(level9);
+		Level level10 = new Level();
+		level10.name = "Level 4";
+		allLevels.add(level10);
 
 		scrollableTable.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 
-		for (int row = 0; row < 4; row++) {
-			for (int i = row * 3; i < row * 3 + 3; i++) {
-				scrollableTable.add(buttons.get(i)).width(buttonWidth)
+		int maxRows = ((int) Math.ceil(((double) allLevels.size())
+				/ ((double) buttonsInARow)));
+		for (int row = 0; row < maxRows; row++) {
+			int max = Math.min(allLevels.size() - (row * buttonsInARow),
+					buttonsInARow);
+			for (int i = 0; i < max; i++) {
+				final TextButton button = new TextButton(allLevels.get(row
+						* buttonsInARow + i).name, skin, "default");
+				button.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						// TODO: set Level in Game
+						((Fly) Gdx.app.getApplicationListener())
+								.setLoadingScreen();
+					}
+				});
+				scrollableTable.add(button).width(buttonWidth)
 						.height(buttonHeight)
 						.pad(spaceHeight, spaceWidth, spaceHeight, spaceWidth)
 						.center();
