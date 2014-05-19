@@ -11,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.res.ResourceManager;
 import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.Fly;
 
@@ -50,12 +48,6 @@ public class LoadingScreen implements Screen {
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
 		Assets.load();
-		try {
-			Level l = ResourceManager.getLevel("level2");
-			game.setLevel(l);
-		} catch (Exception e) {
-			Gdx.app.log("GameScreen.show():", e.getMessage(), e);
-		}
 		addLoadingProgress();
 	}
 

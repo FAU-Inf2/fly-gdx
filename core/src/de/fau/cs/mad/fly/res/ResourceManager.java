@@ -1,6 +1,7 @@
 package de.fau.cs.mad.fly.res;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,27 +14,29 @@ import java.util.*;
 
 /**
  * This class is used to load levels.
- *
+ * 
  * @author Lukas Hahmann
- *
+ * 
  */
 public class ResourceManager {
 	private static final Map<String, TypeInformation> typeMap = new HashMap<String, TypeInformation>();
 	private static final Map<String, Resource> loadedResources = new HashMap<String, Resource>();
-	private static final Gson gson = new GsonBuilder().registerTypeAdapter(Resource.class, new TypeAdapter<Resource>() {
-		@Override
-		public void write(JsonWriter out, Resource value) throws IOException {
-			out.value(value.id);
-		}
+	private static final Gson gson = new GsonBuilder().registerTypeAdapter(
+			Resource.class, new TypeAdapter<Resource>() {
+				@Override
+				public void write(JsonWriter out, Resource value)
+						throws IOException {
+					out.value(value.id);
+				}
 
-		@Override
-		public Resource read(JsonReader in) throws IOException {
-			return ResourceManager.get(in.nextString());
-		}
-	}).create();
+				@Override
+				public Resource read(JsonReader in) throws IOException {
+					return ResourceManager.get(in.nextString());
+				}
+			}).create();
 
 	public static Resource get(String identifier) {
-		if ( !loadedResources.containsKey(identifier) )
+		if (!loadedResources.containsKey(identifier))
 			loadedResources.put(identifier, load(identifier));
 		return loadedResources.get(identifier);
 	}
@@ -42,10 +45,30 @@ public class ResourceManager {
 		return (Level) get("level:" + name);
 	}
 
-	public static void register(String type, Class<? extends Resource> clazz, Loader loader, String prefix, String... possibleExtensions) {
-		if ( possibleExtensions.length == 0 )
-			throw new IllegalArgumentException("You have to specify at least one extension.");
-		typeMap.put(type, new TypeInformation(clazz, prefix, loader, Arrays.asList(possibleExtensions)));
+	/**
+	 * Searches for all levels within the defined folder and returns them in a
+	 * List.
+	 * 
+	 * @return ArrayList of all available levels
+	 */
+	public static ArrayList<Level> getLevelList() {
+		ArrayList<Level> allLevels = new ArrayList<Level>();
+		FileHandle dirHandle = Gdx.files.internal("levels/");
+		for(FileHandle fh : dirHandle.list()) {
+			allLevels.add(getLevel(fh.nameWithoutExtension()));
+		}
+		return allLevels;
+	}
+
+	public static void register(String type, Class<? extends Resource> clazz,
+			Loader loader, String prefix, String... possibleExtensions) {
+		if (possibleExtensions.length == 0)
+			throw new IllegalArgumentException(
+					"You have to specify at least one extension.");
+		typeMap.put(
+				type,
+				new TypeInformation(clazz, prefix, loader, Arrays
+						.asList(possibleExtensions)));
 	}
 
 	static {
@@ -65,12 +88,14 @@ public class ResourceManager {
 
 	private static Resource load(String identifier) {
 		TypeInformation t = TypeInformation.get(identifier);
-		if ( t == null )
-			throw new RuntimeException("Unknown resource type: " + TypeInformation.typeFor(identifier) + "! Register it first.");
-		for( String p : t.possiblePaths(identifier)) {
+		if (t == null)
+			throw new RuntimeException("Unknown resource type: "
+					+ TypeInformation.typeFor(identifier)
+					+ "! Register it first.");
+		for (String p : t.possiblePaths(identifier)) {
 			System.out.println("Path: " + p);
 			FileHandle handle = Gdx.files.internal(p);
-			if ( handle.exists() )
+			if (handle.exists())
 				return t.loader.load(handle);
 		}
 		return Resource.unsatisfied(identifier);
@@ -82,7 +107,8 @@ public class ResourceManager {
 		String prefix;
 		Loader loader;
 
-		private TypeInformation(Class<? extends Resource> clazz, String prefix, Loader loader, Iterable<String> possibleExtensions) {
+		private TypeInformation(Class<? extends Resource> clazz, String prefix,
+				Loader loader, Iterable<String> possibleExtensions) {
 			this.clazz = clazz;
 			this.loader = loader;
 			this.possibleExtensions = possibleExtensions;
@@ -92,7 +118,7 @@ public class ResourceManager {
 		public Iterable<String> possiblePaths(String identifier) {
 			String file = fileFor(identifier);
 			List<String> paths = new ArrayList<String>();
-			for ( String e : possibleExtensions )
+			for (String e : possibleExtensions)
 				paths.add(prefix + file + e);
 			return paths;
 		}

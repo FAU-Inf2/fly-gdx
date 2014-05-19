@@ -66,6 +66,13 @@ public class MainMenuScreen implements Screen {
 		table.add(optionButton).fill().pad(10f).uniform();
 		table.add(exitButton).fill().pad(10f).uniform();
 		
+		chooseLevelButton.addListener(new ClickListener() {
+			@Override 
+			public void clicked(InputEvent event, float x, float y) {
+				game.setLevelChoosingScreen();
+			}
+		});
+		
 		continueButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
