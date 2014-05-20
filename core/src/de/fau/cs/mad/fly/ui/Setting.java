@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -24,6 +25,7 @@ public class Setting extends ChangeListener {
 	private String textValue;
 	private int selectionValue;
 	private boolean checkBoxValue;
+	private float sliderValue;
 	
 	private String[] selectionList;
 	
@@ -33,9 +35,10 @@ public class Setting extends ChangeListener {
 	private TextField textField;
 	private SelectBox<String> selectBox;
 	private CheckBox checkBox;
+	private Slider slider;
 	
 	public enum SettingType {
-		TEXT, SELECTION, CHECKBOX
+		TEXT, SELECTION, CHECKBOX, SLIDER
 	}
 	
 
@@ -127,6 +130,40 @@ public class Setting extends ChangeListener {
 	}
 	
 	/**
+	 * Creates a new Setting with a Slider
+	 * @param manager
+	 *            the parent SettingManager
+	 * @param id
+	 *            the id of the Setting
+	 * @param description
+	 *            the description of the Setting
+	 * @param value
+	 *            the default value of the Setting
+	 * @param min
+	 *            the minimum value of the Slider
+	 * @param max
+	 *            the maximum value of the Slider
+	 * @param stepSize
+	 *            the step size of the Slider
+	 * @param skin
+	 *            the Skin of the UI        
+	 */
+	public Setting(SettingManager manager, String id, String description, float value, float min, float max, float stepSize, Skin skin) {
+		this.type = SettingType.SLIDER;
+		this.manager = manager;
+		this.id = id;
+		this.description = description;
+		this.sliderValue = value;
+		
+		label = new Label(description, skin);
+		slider = new Slider(min, max, stepSize, false, skin);
+		
+		actor = slider;
+		
+		slider.addListener(this);
+	}
+	
+	/**
 	 * Getter for the SettingType.
 	 */
 	public SettingType getType() {
@@ -169,6 +206,13 @@ public class Setting extends ChangeListener {
 	}
 	
 	/**
+	 * Getter for the current Slider position;
+	 */
+	public float getSlider() {
+		return sliderValue;
+	}
+	
+	/**
 	 * Saves the setting in the preference-file.
 	 */
 	public void saveSetting() {
@@ -178,6 +222,8 @@ public class Setting extends ChangeListener {
 			manager.getPreferences().putInteger(id, selectionValue);
 		} else if(type == SettingType.CHECKBOX) {
 			manager.getPreferences().putBoolean(id, checkBoxValue);
+		} else if(type == SettingType.SLIDER) {
+			manager.getPreferences().putFloat(id, sliderValue);
 		}
 	}
 
@@ -192,6 +238,8 @@ public class Setting extends ChangeListener {
 			selectionValue = selectBox.getSelectedIndex();
 		} else if(type == SettingType.CHECKBOX) {
 			checkBoxValue = checkBox.isChecked();
+		} else if(type == SettingType.SLIDER) {
+			sliderValue = slider.getValue();
 		}
 	}
 

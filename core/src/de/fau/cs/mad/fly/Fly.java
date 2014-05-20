@@ -66,8 +66,8 @@ public class Fly extends Game {
 		settingManager.addTextSetting("name", "Playername:", "Test");
 		String[] selection = { "Red", "Blue", "Green", "Yellow" };
 		settingManager.addSelectionSetting("color", "Color:", 0, selection);
-		settingManager
-				.addCheckBoxSetting("useTouch", "Use TouchScreen:", false);
+		settingManager.addCheckBoxSetting("useTouch", "Use TouchScreen:", false);
+		settingManager.addSliderSetting("sliderTest", "Slider:", 10.0f, 0.0f, 100.0f, 1.0f);
 	}
 
 	/**
