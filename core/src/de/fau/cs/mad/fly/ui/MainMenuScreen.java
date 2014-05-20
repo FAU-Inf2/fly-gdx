@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.Fly;
 
 
@@ -33,7 +34,6 @@ public class MainMenuScreen implements Screen {
 		skin = game.getSkin();
 		
 		batch = new SpriteBatch();
-
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
 		addMenu();
@@ -97,6 +97,8 @@ public class MainMenuScreen implements Screen {
 		exitButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
+				game.dispose();
+				Assets.dispose();
 				Gdx.app.exit();
 			}
 		});
@@ -143,5 +145,9 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void dispose() {
 		batch.dispose();
+		stage.dispose();
+		skin.dispose();
+		Assets.dispose();
+		game.dispose();
 	}
 }

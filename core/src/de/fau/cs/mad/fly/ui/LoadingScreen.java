@@ -42,8 +42,6 @@ public class LoadingScreen implements Screen {
 
 		batch = new SpriteBatch();
 		splashImg = Assets.manager.get(Assets.flyTextureLoadingScreen);
-		
-		batch = new SpriteBatch();
 
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
@@ -143,5 +141,7 @@ public class LoadingScreen implements Screen {
 	public void dispose() {
 		splashImg.dispose();
 		batch.dispose();
+		skin.dispose();
+		stage.dispose();
 	}
 }
