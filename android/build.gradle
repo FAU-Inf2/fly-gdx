@@ -11,6 +11,10 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+		test {
+			java.srcDirs = ['test/src']
+            resources.srcDirs = ['test/res']		
+		}
 
         instrumentTest.setRoot('tests')
     }

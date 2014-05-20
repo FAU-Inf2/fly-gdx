@@ -31,6 +31,7 @@
   </forceLinkClasses>
   <libs>
     <lib>build/libs/ios/libgdx-bullet.a</lib>
+    <lib>build/libs/ios/libgdx-freetype.a</lib>
     <lib>build/libs/ios/libgdx.a</lib>
     <lib>build/libs/ios/libObjectAL.a</lib>
   </libs>
