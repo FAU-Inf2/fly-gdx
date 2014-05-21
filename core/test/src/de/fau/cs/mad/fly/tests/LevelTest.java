@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.res.tests;
+package de.fau.cs.mad.fly.tests;
 
 import static org.junit.Assert.*;
 
