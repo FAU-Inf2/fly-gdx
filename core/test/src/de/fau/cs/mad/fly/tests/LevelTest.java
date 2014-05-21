@@ -20,7 +20,8 @@ public class LevelTest {
 	
 	@Test
 	public void testGetLevelBorder(){
-		//ModelInstance model = level.getLevelBorder();		
+		//ModelInstance model = level.getLevelBorder();	
+		assertTrue("This fail is sooooo typical :D", false);	
 	}
 	
 }
