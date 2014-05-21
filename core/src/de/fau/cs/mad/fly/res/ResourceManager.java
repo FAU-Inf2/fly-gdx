@@ -53,8 +53,14 @@ public class ResourceManager {
 	 */
 	public static ArrayList<Level> getLevelList() {
 		ArrayList<Level> allLevels = new ArrayList<Level>();
-		FileHandle dirHandle = Gdx.files.internal("levels/");
-		for(FileHandle fh : dirHandle.list()) {
+		// TODO: fix platform dependency
+		FileHandle dirHandle;
+		if (Gdx.app.getType() == ApplicationType.Desktop) {
+			dirHandle = Gdx.files.internal("bin/levels/");
+		} else {
+			dirHandle = Gdx.files.internal("levels/");
+		}
+		for (FileHandle fh : dirHandle.list()) {
 			allLevels.add(getLevel(fh.nameWithoutExtension()));
 		}
 		return allLevels;
