@@ -70,8 +70,10 @@ public class GameScreen implements Screen, InputProcessor {
 		Gdx.input.setInputProcessor(this);
 		Gdx.input.setCatchBackKey(true);
 		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
-
+		
 		setUpCamera();
+		
+		game.getLevel().initLevel();
 	}
 
 	@Override
