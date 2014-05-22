@@ -5,10 +5,18 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
  * Displays the 3D-world.
@@ -27,8 +35,31 @@ public class GameScreen implements Screen, InputProcessor {
 	private float azimuthDir = 0.0f;
 	private boolean useSensorData;
 
+	private Skin skin;
+	private Stage stage;
+	private Label timeDescription, timeCounter;
+	private float time;
+
 	public GameScreen(final Fly game) {
 		this.game = game;
+
+		skin = game.getSkin();
+		
+		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+
+		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
+		timeDescription = new Label("Time:", labelStyle);
+		timeDescription.setPosition(20f, 10f);
+		timeCounter = new Label("0", labelStyle);
+		timeCounter.setPosition(100f, 10f);
+
+		stage.addActor(timeDescription);
+		stage.addActor(timeCounter);
+
+		if(!game.getSettingManager().getCheckBoxValue("showTime")) {
+			timeDescription.setVisible(false);
+			timeCounter.setVisible(false);
+		}
 
 		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
 	}
@@ -39,7 +70,7 @@ public class GameScreen implements Screen, InputProcessor {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
 		Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
+		
 		// rotating the camera according to UserInput
 		if (useSensorData) {
 			interpretSensorInput();
@@ -57,6 +88,11 @@ public class GameScreen implements Screen, InputProcessor {
 
 		game.getLevel().render(camera);
 
+		timeCounter.setText(String.valueOf((long) time));
+		stage.act(delta);
+		stage.draw();
+		
+		time += delta;
 	}
 
 	@Override
@@ -74,6 +110,16 @@ public class GameScreen implements Screen, InputProcessor {
 		setUpCamera();
 		
 		game.getLevel().initLevel();
+		
+		time = 0.0f;
+
+		if(!game.getSettingManager().getCheckBoxValue("showTime")) {
+			timeDescription.setVisible(false);
+			timeCounter.setVisible(false);
+		} else {
+			timeDescription.setVisible(true);
+			timeCounter.setVisible(true);
+		}
 	}
 
 	@Override

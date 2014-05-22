@@ -42,6 +42,8 @@ public class Fly extends Game {
 	private SettingManager settingManager;
 
 	private Skin skin;
+	
+	private float screenWidth, screenHeight;
 
 	@Override
 	public void create() {
@@ -51,6 +53,8 @@ public class Fly extends Game {
 		createSettings();
 		this.level = ResourceManager.getLevelList().get(0);
 		
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
@@ -63,11 +67,12 @@ public class Fly extends Game {
 	public void createSettings() {
 		settingManager = new SettingManager("fly_preferences", skin);
 
-		settingManager.addTextSetting("name", "Playername:", "Test");
+		settingManager.addSetting("name", "Playername:", "Test");
 		String[] selection = { "Red", "Blue", "Green", "Yellow" };
-		settingManager.addSelectionSetting("color", "Color:", 0, selection);
-		settingManager.addCheckBoxSetting("useTouch", "Use TouchScreen:", false);
-		settingManager.addSliderSetting("sliderTest", "Slider:", 10.0f, 0.0f, 100.0f, 1.0f);
+		settingManager.addSetting("color", "Color:", 0, selection);
+		settingManager.addSetting("useTouch", "Use TouchScreen:", false);
+		settingManager.addSetting("showTime", "Show Time:", false);
+		settingManager.addSetting("sliderTest", "Slider:", 10.0f, 0.0f, 100.0f, 1.0f);
 	}
 
 	/**
@@ -86,6 +91,26 @@ public class Fly extends Game {
 		skin.add("default-font", bitmapFont);
 
 		skin.load(Gdx.files.internal("uiskin.json"));
+	}
+	
+	/**
+	 * Returns the absolute x-position calculated with the percent and the current screen width.
+	 * 
+	 * @param percentX the x-position on the screen in percent from 0-100.
+	 * @return the absolute x-position on the screen.
+	 */
+	public int getAbsoluteX(float percentX) {
+		return (int) (screenWidth * percentX);
+	}
+	
+	/**
+	 * Returns the absolute y-position calculated with the percent and the current screen height.
+	 * 
+	 * @param percentY the y-position on the screen in percent from 0-100.
+	 * @return the absolute y-position on the screen.
+	 */
+	public int getAbsoluteY(float percentY) {
+		return (int) (screenHeight * percentY);
 	}
 
 	/**
@@ -140,6 +165,8 @@ public class Fly extends Game {
 	 * Switches the current Screen to the LoadingScreen.
 	 */
 	public void setLoadingScreen() {
+		// TODO: Wrong Way ! we have to find a better solution than creating new loading screens everytime
+		
 		//if (loadingScreen == null) {
 			loadingScreen = new LoadingScreen(this);
 		//}

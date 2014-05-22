@@ -68,7 +68,7 @@ public class SettingManager {
 	 * @param value
 	 *            the default value of the Setting
 	 */
-	public void addTextSetting(String id, String description, String value) {
+	public void addSetting(String id, String description, String value) {
 		if(!prefs.contains(id)) {
 			prefs.putString(id, value);
 			prefs.flush();
@@ -91,7 +91,7 @@ public class SettingManager {
 	 * @param selectionList
 	 *            the possible selections of the SelectionBox
 	 */
-	public void addSelectionSetting(String id, String description, int value, String[] selectionList) {
+	public void addSetting(String id, String description, int value, String[] selectionList) {
 		if(!prefs.contains(id)) {
 			prefs.putInteger(id, value);
 			prefs.flush();
@@ -112,7 +112,7 @@ public class SettingManager {
 	 * @param value
 	 *            the default value of the Setting
 	 */
-	public void addCheckBoxSetting(String id, String description, boolean value) {
+	public void addSetting(String id, String description, boolean value) {
 		if(!prefs.contains(id)) {
 			prefs.putBoolean(id, value);
 			prefs.flush();
@@ -139,7 +139,7 @@ public class SettingManager {
 	 * @param stepSize
 	 *            the step size of the Slider
 	 */
-	public void addSliderSetting(String id, String description, float value, float min, float max, float stepSize) {
+	public void addSetting(String id, String description, float value, float min, float max, float stepSize) {
 		if(!prefs.contains(id)) {
 			prefs.putFloat(id, value);
 			prefs.flush();
