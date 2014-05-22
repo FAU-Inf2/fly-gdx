@@ -29,7 +29,7 @@ public class GameScreen implements Screen, InputProcessor {
 	private float startRoll, startAzimuth;
 
 	private PerspectiveCamera camera;
-	private float cameraSpeed = 0.1f;
+	private float cameraSpeed = 2.0f;
 
 	private float rollDir = 0.0f;
 	private float azimuthDir = 0.0f;
@@ -39,6 +39,8 @@ public class GameScreen implements Screen, InputProcessor {
 	private Stage stage;
 	private Label timeDescription, timeCounter;
 	private float time;
+	private Label fpsDescription, fpsCounter;
+	private int framesPerSecond;
 
 	public GameScreen(final Fly game) {
 		this.game = game;
@@ -52,13 +54,26 @@ public class GameScreen implements Screen, InputProcessor {
 		timeDescription.setPosition(20f, 10f);
 		timeCounter = new Label("0", labelStyle);
 		timeCounter.setPosition(100f, 10f);
-
+		
 		stage.addActor(timeDescription);
 		stage.addActor(timeCounter);
+		
+		fpsDescription = new Label("FPS:", labelStyle);
+		fpsDescription.setPosition(20f, game.getAbsoluteY(0.9f));
+		fpsCounter = new Label("0", labelStyle);
+		fpsCounter.setPosition(100f, game.getAbsoluteY(0.9f));
+
+		stage.addActor(fpsDescription);
+		stage.addActor(fpsCounter);
 
 		if(!game.getSettingManager().getCheckBoxValue("showTime")) {
 			timeDescription.setVisible(false);
 			timeCounter.setVisible(false);
+		}
+		
+		if(!game.getSettingManager().getCheckBoxValue("showFPS")) {
+			fpsDescription.setVisible(false);
+			fpsCounter.setVisible(false);
 		}
 
 		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
@@ -83,12 +98,15 @@ public class GameScreen implements Screen, InputProcessor {
 		// move the camera (first person flight)
 		Vector3 dir = new Vector3(camera.direction.x, camera.direction.y,
 				camera.direction.z);
-		camera.translate(dir.scl(cameraSpeed));
+		camera.translate(dir.scl(cameraSpeed * delta));
 		camera.update();
 
 		game.getLevel().render(camera);
+		
+		framesPerSecond = (int) (1.0 / delta);
 
 		timeCounter.setText(String.valueOf((long) time));
+		fpsCounter.setText(String.valueOf(framesPerSecond));
 		stage.act(delta);
 		stage.draw();
 		
@@ -119,6 +137,14 @@ public class GameScreen implements Screen, InputProcessor {
 		} else {
 			timeDescription.setVisible(true);
 			timeCounter.setVisible(true);
+		}
+		
+		if(!game.getSettingManager().getCheckBoxValue("showFPS")) {
+			fpsDescription.setVisible(false);
+			fpsCounter.setVisible(false);
+		} else {
+			fpsDescription.setVisible(true);
+			fpsCounter.setVisible(true);
 		}
 	}
 
