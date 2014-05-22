@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,11 +24,14 @@ public class SettingManager {
 	private Preferences prefs;
 	private HashMap<String, Setting> settingMap;
 	
+	private ArrayList<String> settingList;
+	
 	public SettingManager(String file, Skin skin) {
 		this.skin = skin;
 		prefs = Gdx.app.getPreferences(file);
 		
 		settingMap = new HashMap<String, Setting>();
+		settingList = new ArrayList<String>();
 	}
 	
 	/**
@@ -45,11 +49,11 @@ public class SettingManager {
 		
 		final Table settingTable = new Table();
 		final ScrollPane settingPane = new ScrollPane(settingTable, skin);
-		
-		for(Map.Entry<String, Setting> entry : settingMap.entrySet()) {
+
+		for(String s : settingList) {
 			settingTable.row();
-			settingTable.add(entry.getValue().getLabel()).pad(6f).uniform();
-			settingTable.add(entry.getValue().getActor()).pad(6f).uniform();
+			settingTable.add(settingMap.get(s).getLabel()).pad(6f).uniform();
+			settingTable.add(settingMap.get(s).getActor()).pad(6f).uniform();
 		}
 		
 		settingPane.setFadeScrollBars(true);
@@ -78,6 +82,7 @@ public class SettingManager {
 		
 		Setting setting = new Setting(this, id, description, value, skin);
 		settingMap.put(id, setting);
+		settingList.add(id);
 	}
 	
 	/**
@@ -101,6 +106,7 @@ public class SettingManager {
 		
 		Setting setting = new Setting(this, id, description, value, selectionList, skin);
 		settingMap.put(id, setting);
+		settingList.add(id);
 	}
 	
 	/**
@@ -122,6 +128,7 @@ public class SettingManager {
 		
 		Setting setting = new Setting(this, id, description, value, skin);
 		settingMap.put(id, setting);
+		settingList.add(id);
 	}
 	
 	/**
@@ -149,6 +156,7 @@ public class SettingManager {
 		
 		Setting setting = new Setting(this, id, description, value, min, max, stepSize, skin);
 		settingMap.put(id, setting);
+		settingList.add(id);
 	}
 	
 	/**
