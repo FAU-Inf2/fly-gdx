@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -23,8 +22,7 @@ import de.fau.cs.mad.fly.Fly;
  */
 public class HelpScreen implements Screen, InputProcessor {
 	private final Fly game;
-	
-	private SpriteBatch batch;
+
 	private Skin skin;
 	private Stage stage;
 	private Table table;
@@ -34,9 +32,7 @@ public class HelpScreen implements Screen, InputProcessor {
 	public HelpScreen(final Fly game) {
 		this.game = game;
 		skin = game.getSkin();
-		
-		batch = new SpriteBatch();
-		
+
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		
 		inputMultiplexer = new InputMultiplexer(this, stage);
@@ -105,7 +101,7 @@ public class HelpScreen implements Screen, InputProcessor {
 
 	@Override
 	public void dispose() {
-		batch.dispose();
+		// TODO Auto-generated method stub
 	}
 
 	@Override

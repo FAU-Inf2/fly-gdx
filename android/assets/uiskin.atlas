@@ -44,9 +44,9 @@ default-scroll
   index: -1
 default-slider-knob
   rotate: false
-  xy: 1, 1
-  size: 9, 18
-  orig: 9, 18
+  xy: 202, 1
+  size: 11, 28
+  orig: 11, 28
   offset: 0, 0
   index: -1
 default-round-down
@@ -104,17 +104,17 @@ tree-plus
   index: -1
 default-slider
   rotate: false
-  xy: 29, 20
-  size: 8, 8
-  orig: 8, 8
+  xy: 57, 29
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
 default-slider-before
   rotate: false
-  xy: 43, 20
-  size: 8, 8
+  xy: 78, 29
+  size: 16, 16
   split: 2, 2, 2, 2
-  orig: 8, 8
+  orig: 16, 16
   offset: 0, 0
   index: -1
 default-pane

@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.ui.Setting.SettingType;
 
 /**
  * Stores all the settings in a HashMap
@@ -47,24 +46,22 @@ public class SettingManager {
 	 */
 	public void display(Stage stage, Skin skin) {
 		Table table = new Table();
-		//table.debug();
 		table.pad(Gdx.graphics.getWidth() * 0.1f);
 		table.setFillParent(true);
+		stage.addActor(table);
 		
 		final Table settingTable = new Table();
 		final ScrollPane settingPane = new ScrollPane(settingTable, skin);
+		settingPane.setFadeScrollBars(true);
 
 		for(String s : settingList) {
-			settingTable.row();
+			settingTable.row().expand();
 			settingTable.add(settingMap.get(s).getLabel()).pad(6f).uniform();
 			settingTable.add(settingMap.get(s).getActor()).pad(6f).uniform();
 		}
-		
-		settingPane.setFadeScrollBars(true);
-		
+
 		table.row().expand();
 		table.add(settingPane);
-		stage.addActor(table);
 	}
 	
 	/**
