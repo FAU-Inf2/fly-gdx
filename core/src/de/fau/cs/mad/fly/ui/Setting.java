@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -124,6 +125,7 @@ public class Setting extends ChangeListener {
 		label = new Label(description, skin);
 		checkBox = new CheckBox("", skin);
 		checkBox.setChecked(value);
+		checkBox.getCells().get(0).size(0.05f * Gdx.graphics.getWidth(), 0.05f * Gdx.graphics.getHeight());
 		actor = checkBox;
 		
 		checkBox.addListener(this);

@@ -47,14 +47,14 @@ public class Fly extends Game {
 
 	@Override
 	public void create() {
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
+		
 		Assets.init();
 		createSkin();
 
 		createSettings();
 		this.level = ResourceManager.getLevelList().get(0);
-		
-		screenWidth = Gdx.graphics.getWidth();
-		screenHeight = Gdx.graphics.getHeight();
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
@@ -65,7 +65,7 @@ public class Fly extends Game {
 	 * Creates the SettingManager and all the Settings.
 	 */
 	public void createSettings() {
-		settingManager = new SettingManager("fly_preferences", skin);
+		settingManager = new SettingManager(this, "fly_preferences", skin);
 
 		settingManager.addSetting("name", "Playername:", "Test");
 		String[] selection = { "Red", "Blue", "Green", "Yellow" };
@@ -83,7 +83,7 @@ public class Fly extends Game {
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
 				Gdx.files.internal("OpenSans-Regular.ttf"));
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
-		fontParameter.size = 28;
+		fontParameter.size = (int) (screenWidth * 0.04);
 		BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
 		fontGenerator.dispose();
 
