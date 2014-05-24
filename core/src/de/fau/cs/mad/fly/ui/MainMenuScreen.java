@@ -1,6 +1,8 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Assets;
+import de.fau.cs.mad.fly.BackProcessor;
 import de.fau.cs.mad.fly.Fly;
 
 
@@ -29,12 +32,24 @@ public class MainMenuScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	
+	/**
+	 * Processes all the input within the {@link #MainMenuScreen(Fly)}. the
+	 * multiplexer offers the possibility to add several InputProcessors
+	 */
+	private InputMultiplexer inputProcessor;
+	
 	public MainMenuScreen(final Fly game) {
 		this.game = game;
 		skin = game.getSkin();
 		
 		batch = new SpriteBatch();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		
+		inputProcessor = new InputMultiplexer();
+		// create an InputProcess to handle the back key
+		InputProcessor backProcessor = new BackProcessor();
+		inputProcessor.addProcessor(stage);
+		inputProcessor.addProcessor(backProcessor);
 
 		addMenu();
 	}
@@ -55,7 +70,6 @@ public class MainMenuScreen implements Screen {
 		final TextButton chooseLevelButton = new TextButton("Choose Level", skin, "default");
 		final TextButton optionButton = new TextButton("Settings", skin, "default");
 		final TextButton helpButton = new TextButton("Help", skin, "default");
-		final TextButton exitButton = new TextButton("Exit", skin, "default");
 
 		table.row().expand();
 		table.add(continueButton).fill().pad(10f).colspan(2);
@@ -64,7 +78,6 @@ public class MainMenuScreen implements Screen {
 		table.add(helpButton).fill().pad(10f).uniform();
 		table.row().expand();
 		table.add(optionButton).fill().pad(10f).uniform();
-		table.add(exitButton).fill().pad(10f).uniform();
 		
 		chooseLevelButton.addListener(new ClickListener() {
 			@Override 
@@ -94,14 +107,6 @@ public class MainMenuScreen implements Screen {
 			}
 		});
 		
-		exitButton.addListener(new ClickListener() {
-			@Override 
-			public void clicked(InputEvent event, float x, float y) {
-				game.dispose();
-				Assets.dispose();
-				Gdx.app.exit();
-			}
-		});
 	}
 
 	@Override
@@ -121,7 +126,10 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(stage);
+		// allow this screen to catch the back key
+		Gdx.input.setCatchBackKey(true);
+		// delegate all inputs to the #inputProcessor
+		Gdx.input.setInputProcessor(inputProcessor);
 	}
 
 	@Override
@@ -149,5 +157,6 @@ public class MainMenuScreen implements Screen {
 		skin.dispose();
 		Assets.dispose();
 		game.dispose();
+		Gdx.app.exit();
 	}
 }

@@ -67,8 +67,7 @@ public class LevelChooserScreen implements Screen {
 				Gdx.graphics.getHeight()));
 		inputProcessor = new InputMultiplexer();
 		// create an InputProcess to handle the back key
-		InputProcessor backProcessor = new BackProcessor(
-				((Fly) Gdx.app.getApplicationListener()));
+		InputProcessor backProcessor = new BackProcessor();
 		inputProcessor.addProcessor(backProcessor);
 		inputProcessor.addProcessor(stage);
 
