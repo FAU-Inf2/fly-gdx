@@ -110,7 +110,7 @@ public class LevelChooserScreen implements Screen {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						((Fly) Gdx.app.getApplicationListener())
-								.setLevel(level);
+								.getPlayer().setLastLevel(level);
 						((Fly) Gdx.app.getApplicationListener())
 								.setLoadingScreen();
 					}

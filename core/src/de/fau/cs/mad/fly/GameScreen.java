@@ -21,7 +21,7 @@ public class GameScreen implements Screen, InputProcessor {
 	private float startRoll, startAzimuth;
 
 	private PerspectiveCamera camera;
-	private float cameraSpeed = 2.0f;
+	private float cameraSpeed = 5.0f;
 
 	private float rollDir = 0.0f;
 	private float azimuthDir = 0.0f;
@@ -59,7 +59,7 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.translate(dir.scl(cameraSpeed * delta));
 		camera.update();
 
-		game.getLevel().render(camera);
+		game.getPlayer().getLastLevel().render(camera);
 		
 		gameOverlay.render(delta);
 	}
@@ -78,7 +78,7 @@ public class GameScreen implements Screen, InputProcessor {
 		
 		setUpCamera();
 		
-		game.getLevel().initLevel();
+		game.getPlayer().getLastLevel().initLevel();
 		
 		gameOverlay.initOverlay();
 	}
@@ -121,12 +121,12 @@ public class GameScreen implements Screen, InputProcessor {
 		float screenWidth = Gdx.graphics.getWidth();
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
-		camera.position.set(game.getLevel().start.position);
-		camera.lookAt(game.getLevel().start.viewDirection);
+		camera.position.set(game.getPlayer().getLastLevel().start.position);
+		camera.lookAt(game.getPlayer().getLastLevel().start.viewDirection);
 		camera.near = 0.1f;
 		// within a sphere it should not happen that not everything of this
 		// sphere is displayed. Therefore use the diameter as far plane
-		camera.far = game.getLevel().radius * 2;
+		camera.far = game.getPlayer().getLastLevel().radius * 2;
 		camera.update();
 
 	}

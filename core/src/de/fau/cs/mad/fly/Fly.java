@@ -35,7 +35,7 @@ public class Fly extends Game {
 	private GameScreen gameScreen;
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
-	private Level level;
+	private Player player;
 
 	private SettingManager settingManager;
 
@@ -52,7 +52,7 @@ public class Fly extends Game {
 		createSkin();
 
 		createSettings();
-		this.level = ResourceManager.getLevelList().get(0);
+		player = new Player();
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
@@ -137,20 +137,6 @@ public class Fly extends Game {
 	}
 
 	/**
-	 * returns the current level
-	 */
-	public Level getLevel() {
-		return this.level;
-	}
-
-	/**
-	 * sets the current level
-	 */
-	public void setLevel(Level level) {
-		this.level = level;
-	}
-
-	/**
 	 * Switches the current Screen to the SplashScreen.
 	 */
 	public void setSplashScreen() {
@@ -200,5 +186,13 @@ public class Fly extends Game {
 			settingScreen = new SettingScreen(this);
 		}
 		setScreen(settingScreen);
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }
