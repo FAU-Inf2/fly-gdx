@@ -27,7 +27,7 @@ import de.fau.cs.mad.fly.Fly;
 public class MainMenuScreen implements Screen {
 	private final Fly game;
 	
-	private SpriteBatch batch;
+	//private SpriteBatch batch; Lukas: is batch needed anymore?
 	private Skin skin;
 	private Stage stage;
 	private Table table;
@@ -42,7 +42,7 @@ public class MainMenuScreen implements Screen {
 		this.game = game;
 		skin = game.getSkin();
 		
-		batch = new SpriteBatch();
+		//batch = new SpriteBatch();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		
 		inputProcessor = new InputMultiplexer();
@@ -143,7 +143,7 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		batch.dispose();
+		//batch.dispose();
 		stage.dispose();
 		skin.dispose();
 		Assets.dispose();
