@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.res.ResourceManager;
-import de.fau.cs.mad.fly.ui.HelpScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -36,7 +35,6 @@ public class Fly extends Game {
 	private GameScreen gameScreen;
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
-	private HelpScreen helpScreen;
 	private Level level;
 
 	private SettingManager settingManager;
@@ -203,15 +201,4 @@ public class Fly extends Game {
 		}
 		setScreen(settingScreen);
 	}
-
-	/**
-	 * Switches the current Screen to the HelpScreen.
-	 */
-	public void setHelpScreen() {
-		if (helpScreen == null) {
-			helpScreen = new HelpScreen(this);
-		}
-		setScreen(helpScreen);
-	}
-
 }
