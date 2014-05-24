@@ -69,15 +69,14 @@ public class MainMenuScreen implements Screen {
 		final TextButton continueButton = new TextButton("Continue", skin, "default");
 		final TextButton chooseLevelButton = new TextButton("Choose Level", skin, "default");
 		final TextButton optionButton = new TextButton("Settings", skin, "default");
-		final TextButton helpButton = new TextButton("Help", skin, "default");
 
 		table.row().expand();
 		table.add(continueButton).fill().pad(10f).colspan(2);
 		table.row().expand();
 		table.add(chooseLevelButton).fill().pad(10f).uniform();
-		table.add(helpButton).fill().pad(10f).uniform();
-		table.row().expand();
 		table.add(optionButton).fill().pad(10f).uniform();
+		table.row().expand();
+		
 		
 		chooseLevelButton.addListener(new ClickListener() {
 			@Override 
@@ -99,14 +98,6 @@ public class MainMenuScreen implements Screen {
 				game.setSettingScreen();
 			}
 		});
-		
-		helpButton.addListener(new ClickListener() {
-			@Override 
-			public void clicked(InputEvent event, float x, float y) {
-				game.setHelpScreen();
-			}
-		});
-		
 	}
 
 	@Override
