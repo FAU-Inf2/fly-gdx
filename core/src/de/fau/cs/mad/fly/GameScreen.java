@@ -123,7 +123,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 		camera.position.set(game.getLevel().start.position);
 		camera.lookAt(game.getLevel().start.viewDirection);
-		camera.near = 1f;
+		camera.near = 0.1f;
 		// within a sphere it should not happen that not everything of this
 		// sphere is displayed. Therefore use the diameter as far plane
 		camera.far = game.getLevel().radius * 2;
