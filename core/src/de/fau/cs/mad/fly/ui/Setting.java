@@ -1,7 +1,5 @@
 package de.fau.cs.mad.fly.ui;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -20,15 +18,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 public class Setting extends ChangeListener {
 	private SettingManager manager;
 	private String id;
-	private String description;
 	private SettingType type;
 	
 	private String textValue;
 	private int selectionValue;
 	private boolean checkBoxValue;
 	private float sliderValue;
-	
-	private String[] selectionList;
 	
 	private Label label;
 	private Actor actor;
@@ -60,7 +55,6 @@ public class Setting extends ChangeListener {
 		this.type = SettingType.TEXT;
 		this.manager = manager;
 		this.id = id;
-		this.description = description;
 		this.textValue = value;
 		
 		label = new Label(description, skin);
@@ -89,9 +83,7 @@ public class Setting extends ChangeListener {
 		this.type = SettingType.SELECTION;
 		this.manager = manager;
 		this.id = id;
-		this.description = description;
 		this.selectionValue = value;
-		this.selectionList = selectionList;
 
 		label = new Label(description, skin);
 		selectBox = new SelectBox<String>(skin);
@@ -119,7 +111,6 @@ public class Setting extends ChangeListener {
 		this.type = SettingType.CHECKBOX;
 		this.manager = manager;
 		this.id = id;
-		this.description = description;
 		this.checkBoxValue = value;
 		
 		label = new Label(description, skin);
@@ -154,12 +145,11 @@ public class Setting extends ChangeListener {
 		this.type = SettingType.SLIDER;
 		this.manager = manager;
 		this.id = id;
-		this.description = description;
 		this.sliderValue = value;
 		
 		label = new Label(description, skin);
 		slider = new Slider(min, max, stepSize, false, skin);
-		
+
 		actor = slider;
 		
 		slider.addListener(this);

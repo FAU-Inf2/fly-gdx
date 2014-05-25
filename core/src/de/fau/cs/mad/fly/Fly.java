@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.res.ResourceManager;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -70,6 +68,7 @@ public class Fly extends Game {
 		settingManager.addSetting("color", "Color:", 0, selection);
 		settingManager.addSetting("useTouch", "Use TouchScreen:", false);
 		settingManager.addSetting("useRoll", "Use Rolling:", false);
+		settingManager.addSetting("showOverlay", "Show Overlay:", false);
 		settingManager.addSetting("showTime", "Show Time:", false);
 		settingManager.addSetting("showFPS", "Show FPS:", false);
 		settingManager.addSetting("sliderTest", "Slider:", 10.0f, 0.0f, 100.0f, 1.0f);

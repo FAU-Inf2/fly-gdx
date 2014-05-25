@@ -7,6 +7,9 @@ import de.fau.cs.mad.fly.Fly;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "FLY";
+		//config.width = 640;
+		//config.height = 8;
 		new LwjglApplication(new Fly(), config);
 	}
 }

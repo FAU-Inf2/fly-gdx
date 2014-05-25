@@ -5,7 +5,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -26,8 +25,7 @@ import de.fau.cs.mad.fly.Fly;
  */
 public class MainMenuScreen implements Screen {
 	private final Fly game;
-	
-	//private SpriteBatch batch; Lukas: is batch needed anymore?
+
 	private Skin skin;
 	private Stage stage;
 	private Table table;
@@ -41,8 +39,7 @@ public class MainMenuScreen implements Screen {
 	public MainMenuScreen(final Fly game) {
 		this.game = game;
 		skin = game.getSkin();
-		
-		//batch = new SpriteBatch();
+
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		
 		inputProcessor = new InputMultiplexer();
@@ -143,7 +140,6 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		//batch.dispose();
 		stage.dispose();
 		skin.dispose();
 		Assets.dispose();

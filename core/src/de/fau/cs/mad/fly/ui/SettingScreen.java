@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -21,8 +20,7 @@ import de.fau.cs.mad.fly.Fly;
 public class SettingScreen implements Screen, InputProcessor {
 	private final Fly game;
 	private final SettingManager settingManager;
-	
-	private SpriteBatch batch;
+
 	private Skin skin;
 	private Stage stage;
 
@@ -32,8 +30,6 @@ public class SettingScreen implements Screen, InputProcessor {
 		this.game = game;
 		skin = game.getSkin();
 		settingManager = game.getSettingManager();
-		
-		batch = new SpriteBatch();
 		
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		
@@ -77,12 +73,11 @@ public class SettingScreen implements Screen, InputProcessor {
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void dispose() {
-		batch.dispose();
+		// TODO Auto-generated method stub
 	}
 
 	@Override
