@@ -12,6 +12,8 @@ import de.fau.cs.mad.fly.Fly;
 public class CameraController implements InputProcessor {
 	
 	private boolean useSensorData;
+	private boolean useRolling;
+	
 	private Fly game;
 	private PerspectiveCamera camera;
 
@@ -27,6 +29,8 @@ public class CameraController implements InputProcessor {
 		this.useSensorData = useSensorData;
 		this.game = game;
 		
+		useRolling = game.getSettingManager().getCheckBoxValue("useRoll");
+		
 		setUpCamera();
 	}
 	
@@ -36,6 +40,10 @@ public class CameraController implements InputProcessor {
 	
 	public void setUseSensorData(boolean useSensorData){
 		this.useSensorData = useSensorData;
+	}
+	
+	public void setUseRolling(boolean useRolling){
+		this.useRolling = useRolling;
 	}
 	
 	public PerspectiveCamera recomputeCamera(float delta){
@@ -120,11 +128,13 @@ public class CameraController implements InputProcessor {
 		camera.rotate(camera.direction.cpy().crs(camera.up), 1.0f * rollDir);
 
 		// rotation around camera.direction/viewDirection (roll)
-		//camera.rotate(camera.direction, 1.0f * -azimuthDir);
-
-		// rotation around camera.up (turning left/right)
-		//camera.rotate(camera.up, 1.0f * pitchDir);
-		camera.rotate(camera.up, 1.0f * azimuthDir);
+		if(useRolling) {
+			camera.rotate(camera.direction, 1.0f * -azimuthDir);
+		} else {
+			// rotation around camera.up (turning left/right)
+			//camera.rotate(camera.up, 1.0f * pitchDir);
+			camera.rotate(camera.up, 1.0f * azimuthDir);
+		}
 	}
 	
 	private float computeAzimuth(float roll, float pitch, float azimuth){
@@ -158,7 +168,7 @@ public class CameraController implements InputProcessor {
 		
 		Vector3 z = new Vector3(0.f,0.f,1.f);
 		
-		return (float) Math.acos(z.dot(new Vector3(0, newFront.y, newFront.z)) / (float) Math.sqrt(newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f/ (float) Math.PI;
+		return (float) Math.acos(z.dot(new Vector3(newFront.x, newFront.y, newFront.z)) / (float) Math.sqrt(newFront.x * newFront.x + newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f/ (float) Math.PI;
 	}
 
 	@Override

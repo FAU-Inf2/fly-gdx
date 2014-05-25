@@ -69,6 +69,7 @@ public class Fly extends Game {
 		String[] selection = { "Red", "Blue", "Green", "Yellow" };
 		settingManager.addSetting("color", "Color:", 0, selection);
 		settingManager.addSetting("useTouch", "Use TouchScreen:", false);
+		settingManager.addSetting("useRoll", "Use Rolling:", false);
 		settingManager.addSetting("showTime", "Show Time:", false);
 		settingManager.addSetting("showFPS", "Show FPS:", false);
 		settingManager.addSetting("sliderTest", "Slider:", 10.0f, 0.0f, 100.0f, 1.0f);

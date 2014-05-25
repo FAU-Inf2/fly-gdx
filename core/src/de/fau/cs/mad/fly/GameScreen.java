@@ -77,6 +77,10 @@ public class GameScreen implements Screen{
 		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
 		camController.setUseSensorData(useSensorData);
 		
+		boolean useRolling = game.getSettingManager().getCheckBoxValue("useRoll");
+		camController.setUseRolling(useRolling);
+		
+		camController.setUpCamera();
 		camera = camController.getCamera();
 		
 		game.getPlayer().getLastLevel().initLevel();
