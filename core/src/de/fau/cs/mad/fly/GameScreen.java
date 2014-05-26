@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 
 import de.fau.cs.mad.fly.game.CameraController;
+import de.fau.cs.mad.fly.game.GameController;
 
 /**
  * Displays the 3D-world.
@@ -25,6 +26,7 @@ public class GameScreen implements Screen{
 	private GameOverlay gameOverlay;
 	
 	private InputMultiplexer inputProcessor;
+	GameController gameController;
 
 	public GameScreen(final Fly game) {
 		this.game = game;
@@ -36,7 +38,8 @@ public class GameScreen implements Screen{
 		camController = new CameraController(useSensorData, game);
 		
 		camera = camController.getCamera();
-
+		
+		gameController = new GameController(this.game, camController);
 		inputProcessor = new InputMultiplexer();
 		
 		// create an InputProcess to handle the back key

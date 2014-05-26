@@ -7,22 +7,29 @@ import de.fau.cs.mad.fly.GameOverlay;
 import de.fau.cs.mad.fly.res.Level;
 
 //Lukas: we probably rename this class, to avoid confusion with com.badlogic.gdx.Game, suggestion: GameController
-public class Game {
+public class GameController {
 	private Fly game;
 	// private GameOverlay gameOverlay; will be added as an optional feature
 	private CameraController cameraController;
-	private ArrayList<IOptionalFeatureToInit> optionalFeaturesToInit;
-	private ArrayList<IOptionalFeatureToRender> optionalFeaturesToRender;
+	private ArrayList<IFeatureInit> optionalFeaturesToInit;
+	private ArrayList<IFeatureRender> optionalFeaturesToRender;
 
 	private Level level;
 
 	private boolean isRunning;
 
-	public Game(Fly game, GameOverlay gameOverlay,
-			CameraController cameraController) {
+	public GameController(Fly game, CameraController cameraController) {
 		this.game = game;
 		//this.gameOverlay = gameOverlay;
 		this.cameraController = cameraController;
+	}
+	
+	public Level getLevel() {
+		return level;
+	}
+	
+	public void setLevel(Level level) {
+		this.level = level;
 	}
 
 	/**
@@ -32,9 +39,9 @@ public class Game {
 	 * @param optionalFeature
 	 *            that has to be initialized at startup of the Level.
 	 */
-	public void registerToInitGame(IOptionalFeatureToInit optionalFeature) {
+	public void registerToInitGame(IFeatureInit optionalFeature) {
 		if (optionalFeaturesToInit == null) {
-			optionalFeaturesToInit = new ArrayList<IOptionalFeatureToInit>();
+			optionalFeaturesToInit = new ArrayList<IFeatureInit>();
 		}
 		optionalFeaturesToInit.add(optionalFeature);
 	}
@@ -62,7 +69,7 @@ public class Game {
 		// gameOverlay.initOverlay()
 
 		// initializes all optional features
-		for (IOptionalFeatureToInit optionalFeature : optionalFeaturesToInit) {
+		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
 			optionalFeature.init(this);
 		}
 	}
@@ -91,9 +98,9 @@ public class Game {
 	 * @param optionalFeature
 	 *            that has to be rendered in each frame.
 	 */
-	public void registerToRender(IOptionalFeatureToRender optionalFeature) {
+	public void registerToRender(IFeatureRender optionalFeature) {
 		if (optionalFeaturesToRender == null) {
-			optionalFeaturesToRender = new ArrayList<IOptionalFeatureToRender>();
+			optionalFeaturesToRender = new ArrayList<IFeatureRender>();
 		}
 		optionalFeaturesToRender.add(optionalFeature);
 	}
@@ -122,9 +129,13 @@ public class Game {
 		// class?)
 		
 		// render optional features, for example game overlay
-		for (IOptionalFeatureToRender optionalFeature : optionalFeaturesToRender) {
+		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
 			optionalFeature.render(this, delta);
 		}
+	}
+	
+	public void endGame() {
+		
 	}
 
 }

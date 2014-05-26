@@ -12,19 +12,27 @@ import de.fau.cs.mad.fly.res.Level;
  * @author Lukas Hahmann
  * 
  */
-public class LevelProgress {
+public class LevelProgress implements IFeatureInit {
 
 	/** list of all gates that can be passed next */
 	private ArrayList<Gate> nextGates;
 
 	private ArrayList<Gate> allGates;
 
-	public LevelProgress(Level level) {
+	private GameController game;
+
+	@Override
+	public void init(GameController game) {
+		this.game = game;
 		nextGates = new ArrayList<Gate>();
-		allGates = (ArrayList<Gate>) level.gates;
+		allGates = (ArrayList<Gate>) this.game.getLevel().gates;
 		// the first has always id 0 and there is no alternative to this first
 		// gate
 		nextGates.add(allGates.get(0));
+	}
+
+	public LevelProgress(Level level) {
+
 	}
 
 	/**
@@ -47,7 +55,8 @@ public class LevelProgress {
 		if (nextGates != null && nextGates.contains(gate)) {
 			nextGates.remove(gate);
 			if (gate.successors.size() == 0) {
-				// level is finished
+				// last gate is passed
+				game.endGame();
 			} else {
 				// add all successors to nextGates
 				for (Integer id : gate.successors) {
