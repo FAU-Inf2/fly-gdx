@@ -2,6 +2,11 @@ package de.fau.cs.mad.fly.game;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.GameOverlay;
 import de.fau.cs.mad.fly.res.Level;
@@ -10,22 +15,36 @@ import de.fau.cs.mad.fly.res.Level;
 public class GameController {
 	private Fly game;
 	// private GameOverlay gameOverlay; will be added as an optional feature
-	private CameraController cameraController;
 	private ArrayList<IFeatureInit> optionalFeaturesToInit;
 	private ArrayList<IFeatureRender> optionalFeaturesToRender;
+	private CameraController camController;
+	private boolean useSensorData;
+	PerspectiveCamera camera;
 
 	private Level level;
 
 	private boolean isRunning;
 
-	public GameController(Fly game, CameraController cameraController) {
-		this.game = game;
-		//this.gameOverlay = gameOverlay;
-		this.cameraController = cameraController;
+	public GameController(Fly game) {
+		this.game = game;	
+		
+		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
+		
+		camController = new CameraController(useSensorData, game);
+		optionalFeaturesToInit = new ArrayList<IFeatureInit>();
+		optionalFeaturesToRender = new ArrayList<IFeatureRender>();
+	}
+	
+	public CameraController getCameraController() {
+		return camController;
 	}
 	
 	public Level getLevel() {
 		return level;
+	}
+	
+	public PerspectiveCamera getCamera() {
+		return camera;
 	}
 	
 	public void setLevel(Level level) {
@@ -40,9 +59,6 @@ public class GameController {
 	 *            that has to be initialized at startup of the Level.
 	 */
 	public void registerToInitGame(IFeatureInit optionalFeature) {
-		if (optionalFeaturesToInit == null) {
-			optionalFeaturesToInit = new ArrayList<IFeatureInit>();
-		}
 		optionalFeaturesToInit.add(optionalFeature);
 	}
 
@@ -53,6 +69,16 @@ public class GameController {
 	 * initialized.
 	 */
 	public void initGame() {
+		
+		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
+		camController.setUseSensorData(useSensorData);
+		
+		boolean useRolling = game.getSettingManager().getCheckBoxValue("useRoll");
+		camController.setUseRolling(useRolling);
+		
+		camController.setUpCamera();
+		camera = camController.getCamera();
+		
 		// level = new Level("Level XYZ");
 		// Level-Constructor includes:
 		// load level from file
@@ -72,6 +98,7 @@ public class GameController {
 		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
 			optionalFeature.init(this);
 		}
+		startGame();
 	}
 
 	public void startGame() {
@@ -99,9 +126,6 @@ public class GameController {
 	 *            that has to be rendered in each frame.
 	 */
 	public void registerToRender(IFeatureRender optionalFeature) {
-		if (optionalFeaturesToRender == null) {
-			optionalFeaturesToRender = new ArrayList<IFeatureRender>();
-		}
 		optionalFeaturesToRender.add(optionalFeature);
 	}
 	
@@ -109,6 +133,15 @@ public class GameController {
 		if (!isRunning)
 			return;
 
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
+		Gdx.graphics.getHeight());
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		
+		camera = camController.recomputeCamera(delta);
+
+		game.getPlayer().getLastLevel().render(camera);
+		
 		// check if game is finished
 		// stopGame();
 

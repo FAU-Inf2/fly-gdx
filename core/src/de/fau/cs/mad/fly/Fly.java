@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -34,6 +35,7 @@ public class Fly extends Game {
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
 	private Player player;
+	public GameController gameController;
 
 	private SettingManager settingManager;
 

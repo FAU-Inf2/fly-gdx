@@ -18,48 +18,27 @@ import de.fau.cs.mad.fly.game.GameController;
 public class GameScreen implements Screen{
 	private final Fly game;
 	
-	CameraController camController;
-
-	private PerspectiveCamera camera;
-	private boolean useSensorData;
-	
 	private GameOverlay gameOverlay;
 	
 	private InputMultiplexer inputProcessor;
-	GameController gameController;
+	
 
 	public GameScreen(final Fly game) {
 		this.game = game;
 		
 		gameOverlay = new GameOverlay(game);
 
-		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
-		
-		camController = new CameraController(useSensorData, game);
-		
-		camera = camController.getCamera();
-		
-		gameController = new GameController(this.game, camController);
 		inputProcessor = new InputMultiplexer();
 		
 		// create an InputProcess to handle the back key
 		InputProcessor backProcessor = new BackProcessor();
-		inputProcessor.addProcessor(camController);
+		inputProcessor.addProcessor(game.gameController.getCameraController());
 		inputProcessor.addProcessor(backProcessor);
 	}
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
-		Gdx.graphics.getHeight());
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
-		
-		camera = camController.recomputeCamera(delta);
-
-		game.getPlayer().getLastLevel().render(camera);
-		
+		game.gameController.render(delta);		
 		gameOverlay.render(delta);
 	}
 
@@ -77,14 +56,7 @@ public class GameScreen implements Screen{
 		// delegate all inputs to the #inputProcessor
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
-		camController.setUseSensorData(useSensorData);
-		
-		boolean useRolling = game.getSettingManager().getCheckBoxValue("useRoll");
-		camController.setUseRolling(useRolling);
-		
-		camController.setUpCamera();
-		camera = camController.getCamera();
+		game.gameController.initGame();
 		
 		game.getPlayer().getLastLevel().initLevel();
 		

@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.game.GameController;
 
 /**
  * Displays the loading screen with a progress bar.
@@ -46,6 +47,7 @@ public class LoadingScreen implements Screen {
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
 		Assets.load();
+		game.gameController = new GameController(this.game);
 		addLoadingProgress();
 	}
 
