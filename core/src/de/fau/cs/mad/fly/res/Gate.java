@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.res;
 
+import java.util.ArrayList;
+
 public class Gate {
 
 	public static final int NO_GATE = -1;
@@ -9,6 +11,8 @@ public class Gate {
 	public String model;
 
 	public float[] transformMatrix;
+	
+	public ArrayList<Integer> successors = new ArrayList<Integer>();
 
 	@Override
 	public int hashCode() {
