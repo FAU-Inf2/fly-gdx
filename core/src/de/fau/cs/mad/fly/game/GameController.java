@@ -3,12 +3,10 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.GameOverlay;
 import de.fau.cs.mad.fly.res.Level;
 
 //Lukas: we probably rename this class, to avoid confusion with com.badlogic.gdx.Game, suggestion: GameController

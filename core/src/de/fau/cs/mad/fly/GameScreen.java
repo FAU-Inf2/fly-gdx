@@ -4,11 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-
-import de.fau.cs.mad.fly.game.CameraController;
-import de.fau.cs.mad.fly.game.GameController;
 
 /**
  * Displays the 3D-world.
