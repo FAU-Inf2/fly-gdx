@@ -3,7 +3,6 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 
 import de.fau.cs.mad.fly.res.Gate;
-import de.fau.cs.mad.fly.res.Level;
 
 /**
  * This class contains the current progress of the user in a level. Especially
@@ -29,10 +28,6 @@ public class LevelProgress implements IFeatureInit {
 		// the first has always id 0 and there is no alternative to this first
 		// gate
 		nextGates.add(allGates.get(0));
-	}
-
-	public LevelProgress(Level level) {
-
 	}
 
 	/**

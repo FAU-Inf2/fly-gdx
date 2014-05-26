@@ -18,6 +18,7 @@ public class GameController {
 	private CameraController camController;
 	private boolean useSensorData;
 	PerspectiveCamera camera;
+	private LevelProgress levelProgress;
 
 	private Level level;
 
@@ -31,6 +32,7 @@ public class GameController {
 		camController = new CameraController(useSensorData, game);
 		optionalFeaturesToInit = new ArrayList<IFeatureInit>();
 		optionalFeaturesToRender = new ArrayList<IFeatureRender>();
+		levelProgress = new LevelProgress();
 	}
 	
 	public CameraController getCameraController() {
@@ -76,6 +78,8 @@ public class GameController {
 		
 		camController.setUpCamera();
 		camera = camController.getCamera();
+		
+		levelProgress.init(this);
 		
 		// level = new Level("Level XYZ");
 		// Level-Constructor includes:

@@ -48,6 +48,7 @@ public class LoadingScreen implements Screen {
 
 		Assets.load();
 		game.gameController = new GameController(this.game);
+		game.gameController.setLevel(game.getPlayer().getLastLevel());
 		addLoadingProgress();
 	}
 
