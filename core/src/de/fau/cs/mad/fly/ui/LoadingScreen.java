@@ -49,7 +49,7 @@ public class LoadingScreen implements Screen {
 
 		Assets.load();
 		game.gameController = new GameController.Builder().setPlayer(
-				game.getPlayer()).build();
+				game.getPlayer()).addGateIndicator().build();
 		addLoadingProgress();
 	}
 

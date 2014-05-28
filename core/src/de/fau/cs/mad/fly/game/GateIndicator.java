@@ -7,7 +7,7 @@ package de.fau.cs.mad.fly.game;
  * @author Lukas Hahmann
  * 
  */
-public class GateIndcator implements IFeatureInit, IFeatureFinishLevel,
+public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		IFeatureRender, IFeatureGatePassed {
 
 	@Override

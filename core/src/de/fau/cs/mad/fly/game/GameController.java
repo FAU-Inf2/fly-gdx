@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import de.fau.cs.mad.fly.Player;
 import de.fau.cs.mad.fly.res.Level;
 
-//Lukas: we probably rename this class, to avoid confusion with com.badlogic.gdx.Game, suggestion: GameController
 public class GameController {
 	private Player player;
 	// private GameOverlay gameOverlay; will be added as an optional feature
@@ -48,17 +47,6 @@ public class GameController {
 
 	public void setLevel(Level level) {
 		this.level = level;
-	}
-
-	/**
-	 * If an optional Feature needs to be initialized, it has to register with
-	 * this Method.
-	 * 
-	 * @param optionalFeature
-	 *            that has to be initialized at startup of the Level.
-	 */
-	public void registerToInitGame(IFeatureInit optionalFeature) {
-		optionalFeaturesToInit.add(optionalFeature);
 	}
 
 	/**
@@ -120,17 +108,6 @@ public class GameController {
 		isRunning = running;
 	}
 
-	/**
-	 * If an optional Feature needs to be rendered, it has to register with this
-	 * Method.
-	 * 
-	 * @param optionalFeature
-	 *            that has to be rendered in each frame.
-	 */
-	public void registerToRender(IFeatureRender optionalFeature) {
-		optionalFeaturesToRender.add(optionalFeature);
-	}
-
 	public void render(float delta) {
 		if (!isRunning)
 			return;
@@ -188,6 +165,7 @@ public class GameController {
 		private static CameraController cameraController;
 		private static ArrayList<IFeatureInit> optionalFeaturesToInit = new ArrayList<IFeatureInit>();
 		private static ArrayList<IFeatureRender> optionalFeaturesToRender = new ArrayList<IFeatureRender>();
+		private static ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
 		private static LevelProgress levelProgress = new LevelProgress();
 
 		/**
@@ -201,11 +179,25 @@ public class GameController {
 		 */
 		public Builder setPlayer(Player player) {
 			Builder.player = player;
-			this.level = player.getLastLevel();
+			Builder.level = player.getLastLevel();
 			useSensorData = !player.getSettingManager().getCheckBoxValue(
 					"useTouch");
 			Builder.cameraController = new CameraController(useSensorData,
 					player);
+			return this;
+		}
+
+		/**
+		 * Adds a {@link GateIndicator} to the GameController, that is
+		 * initialized, updated every frame and updated, when a gate is passed.
+		 * 
+		 * @return Builder instance with GateIndicator
+		 */
+		public Builder addGateIndicator() {
+			GateIndicator gateIndicator = new GateIndicator();
+			optionalFeaturesToInit.add(gateIndicator);
+			optionalFeaturesToRender.add(gateIndicator);
+			optionalFeaturesGatePassed.add(gateIndicator);
 			return this;
 		}
 
