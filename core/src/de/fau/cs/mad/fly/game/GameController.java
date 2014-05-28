@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 
 import de.fau.cs.mad.fly.Player;
 import de.fau.cs.mad.fly.res.Level;
@@ -21,7 +25,7 @@ public class GameController {
 	private Player player;
 	// private GameOverlay gameOverlay; will be added as an optional feature
 	private ArrayList<IFeatureInit> optionalFeaturesToInit;
-	private ArrayList<IFeatureRender> optionalFeaturesToRender;
+	private ArrayList<IRenderableFeature> optionalFeaturesToRender;
 	private CameraController camController;
 	private boolean useSensorData;
 	PerspectiveCamera camera;
@@ -30,6 +34,10 @@ public class GameController {
 	private Level level;
 
 	private boolean isRunning;
+	
+	private Environment environment;
+
+	private ModelBatch batch;
 
 	/**
 	 * You can only create an instance of GameController by the Builder.
@@ -37,6 +45,9 @@ public class GameController {
 	 * @param gameControllerBuilder
 	 */
 	private GameController(Builder gameControllerBuilder) {
+		setUpEnvironment();
+		batch = new ModelBatch();
+		
 		this.player = Builder.player;
 		this.useSensorData = Builder.useSensorData;
 		this.camController = Builder.cameraController;
@@ -132,7 +143,7 @@ public class GameController {
 
 		camera = camController.recomputeCamera(delta);
 
-		player.getLastLevel().render(camera);
+		player.getLastLevel().render(environment, camera, batch, delta);
 
 		// check if game is finished
 		// stopGame();
@@ -154,8 +165,8 @@ public class GameController {
 		// class?)
 
 		// render optional features, for example game overlay
-		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
-			optionalFeature.render(this, delta);
+		for (IRenderableFeature optionalFeature : optionalFeaturesToRender) {
+			optionalFeature.render(environment, camera, batch, delta);
 		}
 	}
 
@@ -177,7 +188,7 @@ public class GameController {
 		private static boolean useSensorData;
 		private static CameraController cameraController;
 		private static ArrayList<IFeatureInit> optionalFeaturesToInit = new ArrayList<IFeatureInit>();
-		private static ArrayList<IFeatureRender> optionalFeaturesToRender = new ArrayList<IFeatureRender>();
+		private static ArrayList<IRenderableFeature> optionalFeaturesToRender = new ArrayList<IRenderableFeature>();
 		private static ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
 		private static LevelProgress levelProgress = new LevelProgress();
 
@@ -223,5 +234,17 @@ public class GameController {
 		public GameController build() {
 			return new GameController(this);
 		}
+	}
+	
+	/**
+	 * Sets up the environment for the level with its light.
+	 */
+	private void setUpEnvironment() {
+		// setting up the environment
+		environment = new Environment();
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
+				0.4f, 0.4f, 1f));
+		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
+				-0.8f, -0.2f));
 	}
 }

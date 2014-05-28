@@ -1,5 +1,9 @@
 package de.fau.cs.mad.fly.game;
 
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+
 /**
  * This class implements the function to show in the game small arrows that
  * indicate the direction of the next gates.
@@ -8,13 +12,7 @@ package de.fau.cs.mad.fly.game;
  * 
  */
 public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
-		IFeatureRender, IFeatureGatePassed {
-
-	@Override
-	public void render(GameController game, float delta) {
-		// TODO Auto-generated method stub
-
-	}
+		IRenderableFeature, IFeatureGatePassed {
 
 	@Override
 	public void finish(GameController game) {
@@ -32,6 +30,13 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 	public void gatePassed(GameController gameController) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void render(Environment environment, PerspectiveCamera camera,
+			ModelBatch batch, float delta) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
