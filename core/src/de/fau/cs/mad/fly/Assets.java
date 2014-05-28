@@ -12,6 +12,8 @@ public class Assets {
 			"spacesphere.obj", Model.class);
 	public static final AssetDescriptor<Model> torus = new AssetDescriptor<Model>(
 			"torus.obj", Model.class);
+	public static final AssetDescriptor<Model> arrow = new AssetDescriptor<Model>(
+			"3dArrow/arrow.obj", Model.class);
 	public static final AssetDescriptor<Texture> flyTextureLoadingScreen = new AssetDescriptor<Texture>(
 			"Fly.png", Texture.class);
 
@@ -32,5 +34,10 @@ public class Assets {
 
 	public static void dispose() {
 		manager.dispose();
+	}
+	
+	public static void loadArrow() {
+		manager.load(arrow);
+		manager.finishLoading();
 	}
 }

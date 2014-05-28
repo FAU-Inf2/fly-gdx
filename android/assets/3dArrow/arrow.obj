@@ -1,7 +1,6 @@
 # Blender v2.69 (sub 0) OBJ File: 'arrow.blend'
 # www.blender.org
 mtllib arrow.mtl
-o Cube_Cube.004
 v -0.346855 -0.158534 1.587405
 v 0.346855 -0.158534 1.587405
 v -0.346855 0.158534 1.587405
