@@ -29,7 +29,7 @@ public class CameraController implements InputProcessor {
 		this.useSensorData = useSensorData;
 		this.game = game;
 		
-		useRolling = game.getSettingManager().getCheckBoxValue("useRoll");
+		useRolling = game.getPlayer().getSettingManager().getCheckBoxValue("useRoll");
 		
 		setUpCamera();
 	}

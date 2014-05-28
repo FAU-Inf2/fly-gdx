@@ -11,16 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import de.fau.cs.mad.fly.Fly;
-
 /**
  * Stores all the settings in a HashMap
  * 
  * @author Tobias Zangl
  */
-public class SettingManager {
-	private final Fly game;
-	
+public class SettingManager {	
 	private Skin skin;
 	
 	private Preferences prefs;
@@ -28,8 +24,7 @@ public class SettingManager {
 	
 	private ArrayList<String> settingList;
 	
-	public SettingManager(Fly game, String file, Skin skin) {
-		this.game = game;
+	public SettingManager(String file, Skin skin) {
 		this.skin = skin;
 		prefs = Gdx.app.getPreferences(file);
 		

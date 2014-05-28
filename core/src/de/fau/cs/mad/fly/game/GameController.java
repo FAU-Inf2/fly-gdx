@@ -27,7 +27,7 @@ public class GameController {
 	public GameController(Fly game) {
 		this.game = game;	
 		
-		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
+		useSensorData = !game.getPlayer().getSettingManager().getCheckBoxValue("useTouch");
 		
 		camController = new CameraController(useSensorData, game);
 		optionalFeaturesToInit = new ArrayList<IFeatureInit>();
@@ -70,10 +70,10 @@ public class GameController {
 	 */
 	public void initGame() {
 		
-		useSensorData = !game.getSettingManager().getCheckBoxValue("useTouch");
+		useSensorData = !game.getPlayer().getSettingManager().getCheckBoxValue("useTouch");
 		camController.setUseSensorData(useSensorData);
 		
-		boolean useRolling = game.getSettingManager().getCheckBoxValue("useRoll");
+		boolean useRolling = game.getPlayer().getSettingManager().getCheckBoxValue("useRoll");
 		camController.setUseRolling(useRolling);
 		
 		camController.setUpCamera();

@@ -104,9 +104,9 @@ public class GameOverlay {
 	public void initOverlay() {
 		time = 0.0f;
 		
-		showOverlay = game.getSettingManager().getCheckBoxValue("showOverlay");
+		showOverlay = game.getPlayer().getSettingManager().getCheckBoxValue("showOverlay");
 
-		if(!game.getSettingManager().getCheckBoxValue("showTime")) {
+		if(!game.getPlayer().getSettingManager().getCheckBoxValue("showTime")) {
 			timeDescription.setVisible(false);
 			timeCounter.setVisible(false);
 		} else {
@@ -114,7 +114,7 @@ public class GameOverlay {
 			timeCounter.setVisible(true);
 		}
 		
-		if(!game.getSettingManager().getCheckBoxValue("showFPS")) {
+		if(!game.getPlayer().getSettingManager().getCheckBoxValue("showFPS")) {
 			fpsDescription.setVisible(false);
 			fpsCounter.setVisible(false);
 		} else {

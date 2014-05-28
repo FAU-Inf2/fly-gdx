@@ -12,7 +12,6 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
-import de.fau.cs.mad.fly.ui.SettingManager;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SplashScreen;
 
@@ -37,8 +36,6 @@ public class Fly extends Game {
 	private Player player;
 	public GameController gameController;
 
-	private SettingManager settingManager;
-
 	private Skin skin;
 	
 	private float screenWidth, screenHeight;
@@ -51,29 +48,12 @@ public class Fly extends Game {
 		Assets.init();
 		createSkin();
 
-		createSettings();
 		player = new Player();
+		player.createSettings(skin);
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
 		// setSplashScreen();
-	}
-
-	/**
-	 * Creates the SettingManager and all the Settings.
-	 */
-	public void createSettings() {
-		settingManager = new SettingManager(this, "fly_preferences", skin);
-
-		settingManager.addSetting("name", "Playername:", "Test");
-		String[] selection = { "Red", "Blue", "Green", "Yellow" };
-		settingManager.addSetting("color", "Color:", 0, selection);
-		settingManager.addSetting("useTouch", "Use TouchScreen:", false);
-		settingManager.addSetting("useRoll", "Use Rolling:", false);
-		settingManager.addSetting("showOverlay", "Show Overlay:", false);
-		settingManager.addSetting("showTime", "Show Time:", false);
-		settingManager.addSetting("showFPS", "Show FPS:", false);
-		settingManager.addSetting("sliderTest", "Slider:", 10.0f, 0.0f, 100.0f, 1.0f);
 	}
 
 	/**
@@ -119,13 +99,6 @@ public class Fly extends Game {
 	 */
 	public Skin getSkin() {
 		return skin;
-	}
-
-	/**
-	 * Getter for the SettingManager.
-	 */
-	public SettingManager getSettingManager() {
-		return settingManager;
 	}
 
 	/**

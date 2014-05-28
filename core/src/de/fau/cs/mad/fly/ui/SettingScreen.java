@@ -29,7 +29,7 @@ public class SettingScreen implements Screen, InputProcessor {
 	public SettingScreen(final Fly game) {
 		this.game = game;
 		skin = game.getSkin();
-		settingManager = game.getSettingManager();
+		settingManager = game.getPlayer().getSettingManager();
 		
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		
