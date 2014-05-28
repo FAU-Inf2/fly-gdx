@@ -8,13 +8,14 @@ import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.Player;
 
 public class CameraController implements InputProcessor {
 	
 	private boolean useSensorData;
 	private boolean useRolling;
 	
-	private Fly game;
+	private Player player;
 	private PerspectiveCamera camera;
 
 	private float startRoll, startAzimuth;
@@ -25,11 +26,11 @@ public class CameraController implements InputProcessor {
 
 	private int currentEvent = -1;
 	
-	public CameraController(boolean useSensorData, Fly game){
+	public CameraController(boolean useSensorData, Player player){
 		this.useSensorData = useSensorData;
-		this.game = game;
+		this.player = player;
 		
-		useRolling = game.getPlayer().getSettingManager().getCheckBoxValue("useRoll");
+		useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
 		
 		setUpCamera();
 	}
@@ -83,12 +84,12 @@ public class CameraController implements InputProcessor {
 		float screenWidth = Gdx.graphics.getWidth();
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
-		camera.position.set(game.getPlayer().getLastLevel().start.position);
-		camera.lookAt(game.getPlayer().getLastLevel().start.viewDirection);
+		camera.position.set(player.getLastLevel().start.position);
+		camera.lookAt(player.getLastLevel().start.viewDirection);
 		camera.near = 0.1f;
 		// within a sphere it should not happen that not everything of this
 		// sphere is displayed. Therefore use the diameter as far plane
-		camera.far = game.getPlayer().getLastLevel().radius * 2;
+		camera.far = player.getLastLevel().radius * 2;
 		camera.update();
 
 	}

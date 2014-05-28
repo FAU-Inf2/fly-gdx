@@ -6,12 +6,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 
-import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.Player;
 import de.fau.cs.mad.fly.res.Level;
 
 //Lukas: we probably rename this class, to avoid confusion with com.badlogic.gdx.Game, suggestion: GameController
 public class GameController {
-	private Fly game;
+	private Player player;
 	// private GameOverlay gameOverlay; will be added as an optional feature
 	private ArrayList<IFeatureInit> optionalFeaturesToInit;
 	private ArrayList<IFeatureRender> optionalFeaturesToRender;
@@ -24,29 +24,28 @@ public class GameController {
 
 	private boolean isRunning;
 
-	public GameController(Fly game) {
-		this.game = game;	
-		
-		useSensorData = !game.getPlayer().getSettingManager().getCheckBoxValue("useTouch");
-		
-		camController = new CameraController(useSensorData, game);
-		optionalFeaturesToInit = new ArrayList<IFeatureInit>();
-		optionalFeaturesToRender = new ArrayList<IFeatureRender>();
-		levelProgress = new LevelProgress();
+	public GameController(Builder gameControllerBuilder) {
+		this.player = Builder.player;
+		this.useSensorData = Builder.useSensorData;
+		this.camController = Builder.cameraController;
+		this.optionalFeaturesToInit = Builder.optionalFeaturesToInit;
+		this.optionalFeaturesToRender = Builder.optionalFeaturesToRender;
+		this.levelProgress = Builder.levelProgress;
+		this.level = Builder.level;
 	}
-	
+
 	public CameraController getCameraController() {
 		return camController;
 	}
-	
+
 	public Level getLevel() {
 		return level;
 	}
-	
+
 	public PerspectiveCamera getCamera() {
 		return camera;
 	}
-	
+
 	public void setLevel(Level level) {
 		this.level = level;
 	}
@@ -69,18 +68,20 @@ public class GameController {
 	 * initialized.
 	 */
 	public void initGame() {
-		
-		useSensorData = !game.getPlayer().getSettingManager().getCheckBoxValue("useTouch");
+
+		useSensorData = !player.getSettingManager()
+				.getCheckBoxValue("useTouch");
 		camController.setUseSensorData(useSensorData);
-		
-		boolean useRolling = game.getPlayer().getSettingManager().getCheckBoxValue("useRoll");
+
+		boolean useRolling = player.getSettingManager().getCheckBoxValue(
+				"useRoll");
 		camController.setUseRolling(useRolling);
-		
+
 		camController.setUpCamera();
 		camera = camController.getCamera();
-		
+
 		levelProgress.init(this);
-		
+
 		// level = new Level("Level XYZ");
 		// Level-Constructor includes:
 		// load level from file
@@ -119,10 +120,9 @@ public class GameController {
 		isRunning = running;
 	}
 
-	
 	/**
-	 * If an optional Feature needs to be rendered, it has to register with
-	 * this Method.
+	 * If an optional Feature needs to be rendered, it has to register with this
+	 * Method.
 	 * 
 	 * @param optionalFeature
 	 *            that has to be rendered in each frame.
@@ -130,20 +130,20 @@ public class GameController {
 	public void registerToRender(IFeatureRender optionalFeature) {
 		optionalFeaturesToRender.add(optionalFeature);
 	}
-	
+
 	public void render(float delta) {
 		if (!isRunning)
 			return;
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
-		Gdx.graphics.getHeight());
+				Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
+
 		camera = camController.recomputeCamera(delta);
 
-		game.getPlayer().getLastLevel().render(camera);
-		
+		player.getLastLevel().render(camera);
+
 		// check if game is finished
 		// stopGame();
 
@@ -162,15 +162,61 @@ public class GameController {
 
 		// update time, points, fuel, whatever.. (here, in level or in player
 		// class?)
-		
+
 		// render optional features, for example game overlay
 		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
 			optionalFeature.render(this, delta);
 		}
 	}
-	
+
 	public void endGame() {
-		
+
 	}
 
+	/**
+	 * This class implements the builder patter to create a GameController with
+	 * all of its dependent components.
+	 * 
+	 * @author Lukas Hahmann
+	 * 
+	 */
+	public static class Builder {
+
+		private static Player player;
+		private static Level level;
+		private static boolean useSensorData;
+		private static CameraController cameraController;
+		private static ArrayList<IFeatureInit> optionalFeaturesToInit = new ArrayList<IFeatureInit>();
+		private static ArrayList<IFeatureRender> optionalFeaturesToRender = new ArrayList<IFeatureRender>();
+		private static LevelProgress levelProgress = new LevelProgress();
+
+		/**
+		 * Creates a basic {@link GameController} with a certain level, linked
+		 * to the current player, its settings and the selected level.
+		 * 
+		 * @param player
+		 *            needed to get the current settings and the level
+		 * @return new GameController with the current selected level and the
+		 *         selected settings
+		 */
+		public Builder setPlayer(Player player) {
+			Builder.player = player;
+			this.level = player.getLastLevel();
+			useSensorData = !player.getSettingManager().getCheckBoxValue(
+					"useTouch");
+			Builder.cameraController = new CameraController(useSensorData,
+					player);
+			return this;
+		}
+
+		/**
+		 * Creates a new GameController out of your defined preferences in the
+		 * other methods before.
+		 * 
+		 * @return new GameController
+		 */
+		public GameController build() {
+			return new GameController(this);
+		}
+	}
 }

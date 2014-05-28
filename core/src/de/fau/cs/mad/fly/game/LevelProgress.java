@@ -18,13 +18,13 @@ public class LevelProgress implements IFeatureInit {
 
 	private ArrayList<Gate> allGates;
 
-	private GameController game;
+	private GameController gameController;
 
 	@Override
 	public void init(GameController game) {
-		this.game = game;
+		this.gameController = game;
 		nextGates = new ArrayList<Gate>();
-		allGates = (ArrayList<Gate>) this.game.getLevel().gates;
+		allGates = (ArrayList<Gate>) this.gameController.getLevel().gates;
 		// the first has always id 0 and there is no alternative to this first
 		// gate
 		nextGates.add(allGates.get(0));
@@ -51,7 +51,7 @@ public class LevelProgress implements IFeatureInit {
 			nextGates.remove(gate);
 			if (gate.successors.size() == 0) {
 				// last gate is passed
-				game.endGame();
+				gameController.endGame();
 			} else {
 				// add all successors to nextGates
 				for (Integer id : gate.successors) {

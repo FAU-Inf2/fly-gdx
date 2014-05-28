@@ -44,11 +44,12 @@ public class LoadingScreen implements Screen {
 		batch = new SpriteBatch();
 		splashImg = Assets.manager.get(Assets.flyTextureLoadingScreen);
 
-		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight()));
 
 		Assets.load();
-		game.gameController = new GameController(this.game);
-		game.gameController.setLevel(game.getPlayer().getLastLevel());
+		game.gameController = new GameController.Builder().setPlayer(
+				game.getPlayer()).build();
 		addLoadingProgress();
 	}
 
@@ -61,7 +62,7 @@ public class LoadingScreen implements Screen {
 		table.padTop(Gdx.graphics.getHeight() * 0.7f);
 		table.setFillParent(true);
 		stage.addActor(table);
-		
+
 		progressBar = new ProgressBar(0f, 100f, 1f, false, skin);
 		progressBar.setValue(progress);
 		progressBar.scaleBy(100.0f);
@@ -98,7 +99,8 @@ public class LoadingScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-		batch.draw(splashImg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.draw(splashImg, 0, 0, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
 		batch.end();
 
 		stage.act(delta);
@@ -108,7 +110,7 @@ public class LoadingScreen implements Screen {
 
 		if (progress >= 100f) {
 			game.setGameScreen();
-			//setProgress(0f);
+			// setProgress(0f);
 		}
 	}
 
