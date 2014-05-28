@@ -9,6 +9,14 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import de.fau.cs.mad.fly.Player;
 import de.fau.cs.mad.fly.res.Level;
 
+/**
+ * Controller that handles all components that are related to the 3D game
+ * itself. You can create an instance of {@link GameController} by the
+ * {@link Builder}.
+ * 
+ * @author Lukas Hahmann
+ * 
+ */
 public class GameController {
 	private Player player;
 	// private GameOverlay gameOverlay; will be added as an optional feature
@@ -23,7 +31,12 @@ public class GameController {
 
 	private boolean isRunning;
 
-	public GameController(Builder gameControllerBuilder) {
+	/**
+	 * You can only create an instance of GameController by the Builder.
+	 * 
+	 * @param gameControllerBuilder
+	 */
+	private GameController(Builder gameControllerBuilder) {
 		this.player = Builder.player;
 		this.useSensorData = Builder.useSensorData;
 		this.camController = Builder.cameraController;
@@ -169,15 +182,15 @@ public class GameController {
 		private static LevelProgress levelProgress = new LevelProgress();
 
 		/**
-		 * Creates a basic {@link GameController} with a certain level, linked
-		 * to the current player, its settings and the selected level.
+		 * Creates a basic {@link GameController} with a certain player, its
+		 * last level and the selected level of the player.
 		 * 
 		 * @param player
 		 *            needed to get the current settings and the level
 		 * @return new GameController with the current selected level and the
 		 *         selected settings
 		 */
-		public Builder setPlayer(Player player) {
+		public Builder basicGameController(Player player) {
 			Builder.player = player;
 			Builder.level = player.getLastLevel();
 			useSensorData = !player.getSettingManager().getCheckBoxValue(
@@ -202,8 +215,8 @@ public class GameController {
 		}
 
 		/**
-		 * Creates a new GameController out of your defined preferences in the
-		 * other methods before.
+		 * Creates a new GameController instance out of your defined preferences
+		 * in the other methods before.
 		 * 
 		 * @return new GameController
 		 */

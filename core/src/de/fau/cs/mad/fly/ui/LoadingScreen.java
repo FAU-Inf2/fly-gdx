@@ -48,7 +48,7 @@ public class LoadingScreen implements Screen {
 				Gdx.graphics.getHeight()));
 
 		Assets.load();
-		game.gameController = new GameController.Builder().setPlayer(
+		game.gameController = new GameController.Builder().basicGameController(
 				game.getPlayer()).addGateIndicator().build();
 		addLoadingProgress();
 	}
