@@ -85,7 +85,7 @@ public class Level extends Resource {
 	 */
 	public void render(Environment environment, PerspectiveCamera camera,
 			ModelBatch batch, float delta) {
-		batch.begin(camera);
+		
 		// rendering outer space
 		if (levelBorderModel != null) {
 			batch.render(levelBorderModel);
@@ -94,7 +94,7 @@ public class Level extends Resource {
 		for (ModelInstance mi : gateModels) {
 			batch.render(mi, environment);
 		}
-		batch.end();
+		
 	}
 
 	@Override

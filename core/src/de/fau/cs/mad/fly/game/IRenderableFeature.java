@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.game;
 
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 
@@ -11,6 +10,6 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
  * 
  */
 public interface IRenderableFeature {
-	public void render(Environment environment, PerspectiveCamera camera,
-			ModelBatch batch, float delta);
+	public void render(ModelBatch batch, Environment environment, 
+			 float delta);
 }

@@ -143,7 +143,7 @@ public class GameController {
 
 		camera = camController.recomputeCamera(delta);
 
-		player.getLastLevel().render(environment, camera, batch, delta);
+		
 
 		// check if game is finished
 		// stopGame();
@@ -163,11 +163,14 @@ public class GameController {
 
 		// update time, points, fuel, whatever.. (here, in level or in player
 		// class?)
-
+		batch.begin(camera);
+		player.getLastLevel().render(environment, camera, batch, delta);
+		
 		// render optional features, for example game overlay
 		for (IRenderableFeature optionalFeature : optionalFeaturesToRender) {
-			optionalFeature.render(environment, camera, batch, delta);
+			optionalFeature.render(batch, environment, delta);
 		}
+		batch.end();
 	}
 
 	public void endGame() {

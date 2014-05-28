@@ -1,11 +1,10 @@
 package de.fau.cs.mad.fly.game;
 
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.math.Matrix4;
 
 import de.fau.cs.mad.fly.Assets;
 
@@ -20,6 +19,7 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		IRenderableFeature, IFeatureGatePassed {
 
 	private ModelInstance arrowModel;
+	private GameController game;
 
 	@Override
 	public void finish(GameController game) {
@@ -29,6 +29,7 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 
 	@Override
 	public void init(GameController game) {
+		this.game = game;
 		Assets.loadArrow();
 		arrowModel = new ModelInstance(Assets.manager.get(Assets.arrow));
 	}
@@ -40,13 +41,13 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 	}
 
 	@Override
-	public void render(Environment environment, PerspectiveCamera camera,
-			ModelBatch batch, float delta) {
-		batch.begin(camera);
+	public void render(ModelBatch batch, Environment environment, float delta) {
+		Matrix4 transformationMatrix = new Matrix4();
+		arrowModel.transform = transformationMatrix;
+
 		if (arrowModel != null) {
 			batch.render(arrowModel);
 		}
-		batch.end();
 
 	}
 
