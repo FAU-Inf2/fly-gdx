@@ -2,9 +2,7 @@ package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -13,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import de.fau.cs.mad.fly.BackProcessor;
 import de.fau.cs.mad.fly.Fly;
 
 /**
@@ -20,14 +19,14 @@ import de.fau.cs.mad.fly.Fly;
  *
  * @author Tobias Zangl
  */
-public class HelpScreen implements Screen, InputProcessor {
+public class HelpScreen implements Screen {
 	private final Fly game;
 
 	private Skin skin;
 	private Stage stage;
 	private Table table;
 	
-	private InputMultiplexer inputMultiplexer;
+	private InputMultiplexer inputProcessor;
 	
 	public HelpScreen(final Fly game) {
 		this.game = game;
@@ -35,7 +34,7 @@ public class HelpScreen implements Screen, InputProcessor {
 
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		
-		inputMultiplexer = new InputMultiplexer(this, stage);
+		inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
 		
 		addHelp();
 	}
@@ -77,8 +76,8 @@ public class HelpScreen implements Screen, InputProcessor {
 
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(inputMultiplexer);
 		Gdx.input.setCatchBackKey(true);
+		Gdx.input.setInputProcessor(inputProcessor);
 	}
 
 	@Override
@@ -102,55 +101,5 @@ public class HelpScreen implements Screen, InputProcessor {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-		if(keycode == Keys.BACK || keycode == Keys.ESCAPE) {
-			game.setMainMenuScreen();
-		}
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }
