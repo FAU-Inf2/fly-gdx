@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 
 /**
@@ -10,31 +9,21 @@ import com.badlogic.gdx.Screen;
  * 
  * @author Tobias Zangl
  */
-public class GameScreen implements Screen{
+public class GameScreen implements Screen {
 	private final Fly game;
-	
-	private GameOverlay gameOverlay;
 	
 	private InputMultiplexer inputProcessor;
 	
 
 	public GameScreen(final Fly game) {
 		this.game = game;
-		
-		gameOverlay = new GameOverlay(game);
 
-		inputProcessor = new InputMultiplexer();
-		
-		// create an InputProcess to handle the back key
-		InputProcessor backProcessor = new BackProcessor();
-		inputProcessor.addProcessor(game.gameController.getCameraController());
-		inputProcessor.addProcessor(backProcessor);
+		inputProcessor = new InputMultiplexer(game.gameController.getCameraController(), new BackProcessor());
 	}
 
 	@Override
 	public void render(float delta) {
-		game.gameController.render(delta);		
-		gameOverlay.render(delta);
+		game.gameController.render(delta);
 	}
 
 	@Override
@@ -48,14 +37,14 @@ public class GameScreen implements Screen{
 		//Gdx.input.setInputProcessor(this);
 		Gdx.input.setCatchBackKey(true);
 		
+		inputProcessor.addProcessor(game.gameController.getStage());
+		
 		// delegate all inputs to the #inputProcessor
 		Gdx.input.setInputProcessor(inputProcessor);
 		
 		game.gameController.initGame();
 		
 		game.getPlayer().getLastLevel().initLevel();
-		
-		gameOverlay.initOverlay();
 	}
 
 	@Override

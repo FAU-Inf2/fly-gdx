@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.game;
 
 import java.util.ArrayList;
 
+import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.res.Gate;
 
 /**
