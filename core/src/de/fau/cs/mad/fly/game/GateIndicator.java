@@ -1,12 +1,14 @@
 package de.fau.cs.mad.fly.game;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -33,8 +35,9 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 	private ModelInstance cube;
 	private GameController gameController;
 	private ModelBuilder modelBuilder;
-	private ModelBatch batch; 
+	private ModelBatch batch;
 
+	private ModelInstance debugModel;
 
 	@Override
 	public void init(GameController game) {
@@ -71,13 +74,26 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		
 		// calculate orthogonal up vector
 		up.crs(vectorToTarget).crs(vectorToTarget);
+		up.scl(-1);
 		
 		arrowModel.transform = transformationMatrix.setToLookAt(vectorToTarget,
 				up).trn(translationVector);
+		
+		
+		
+		modelBuilder.begin();
+		MeshPartBuilder partBuilder = modelBuilder.part("lines", GL20.GL_LINES, Usage.Position, new Material(ColorAttribute.createDiffuse(Color.GREEN)));
+		Vector3 linePos = translationVector.cpy();
+		//partBuilder.line(targetPosition, linePos);
+		partBuilder.line(linePos.cpy().add(vectorToTarget), linePos);
+		partBuilder.line(linePos.cpy().add(up), linePos);
+		
+		debugModel = new ModelInstance(modelBuilder.end());
+		
 
 		batch.render(arrowModel);
 		batch.render(cube);
-
+		batch.render(debugModel);
 	}
 
 	@Override
