@@ -46,7 +46,7 @@ public class Level extends Resource {
 
 	private ModelInstance levelBorderModel;
 	
-	private List<ModelInstance> gateModels;
+	public List<ModelInstance> gateModels;
 	
 	public void initLevel() {
 		if (levelBorder != null) {
