@@ -46,30 +46,40 @@ public class LoadingScreen implements Screen {
 
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight()));
+		
+		addLoadingProgress();
+		
+		loadNewGame();
+	}
+	
+	/**
+	 * Loads everything needed for a new game.
+	 */
+	private void loadNewGame() {
+		// TODO: run asynchronous to the screen
 
 		Assets.load();
 
 		GameController.Builder builder = new GameController.Builder();
 		builder.init(game);
-		if(game.getPlayer().getSettingManager().getCheckBoxValue("showGateIndicator")) {
+		if (game.getPlayer().getSettingManager().getCheckBoxValue("showGateIndicator")) {
 			builder.addGateIndicator();
 		}
-		if(game.getPlayer().getSettingManager().getCheckBoxValue("showTime")) {
+		if (game.getPlayer().getSettingManager().getCheckBoxValue("showTime")) {
 			builder.addTimeOverlay();
 		}
-		if(game.getPlayer().getSettingManager().getCheckBoxValue("showFPS")) {
+		if (game.getPlayer().getSettingManager().getCheckBoxValue("showFPS")) {
 			builder.addFPSOverlay();
 		}
-		if(game.getPlayer().getSettingManager().getCheckBoxValue("showSteering")) {
+		if (game.getPlayer().getSettingManager().getCheckBoxValue("showSteering")) {
 			builder.addSteeringOverlay();
 		}
-		if(game.getPlayer().getSettingManager().getCheckBoxValue("showGateIndicator")) {
-			builder.addGateIndicator();
+		if (game.getPlayer().getSettingManager().getCheckBoxValue("showLevelInfo")) {
+			//builder.addLevelInfoOverlay();
+			// not working yet
 		}
 		
 		game.gameController = builder.build();
-		
-		addLoadingProgress();
 	}
 
 	/**

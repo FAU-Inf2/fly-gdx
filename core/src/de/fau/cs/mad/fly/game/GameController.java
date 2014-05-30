@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.Player;
+import de.fau.cs.mad.fly.features.IFeatureFinishLevel;
 import de.fau.cs.mad.fly.features.IFeatureGatePassed;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
@@ -202,6 +203,7 @@ public class GameController {
 		private static ArrayList<IFeatureInit> optionalFeaturesToInit = new ArrayList<IFeatureInit>();
 		private static ArrayList<IFeatureRender> optionalFeaturesToRender = new ArrayList<IFeatureRender>();
 		private static ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
+		private static ArrayList<IFeatureFinishLevel> optionalFeaturesLevelFinished = new ArrayList<IFeatureFinishLevel>();
 		private static LevelProgress levelProgress = new LevelProgress();
 
 		/**
@@ -219,7 +221,6 @@ public class GameController {
 			Builder.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			Builder.level = player.getLastLevel();
 			useSensorData = !player.getSettingManager().getCheckBoxValue("useTouch");
-			System.out.println(useSensorData);
 			Builder.cameraController = new CameraController(useSensorData, player);
 			return this;
 		}
@@ -283,7 +284,9 @@ public class GameController {
 		 */
 		public Builder addLevelInfoOverlay() {
 			LevelInfoOverlay levelInfoOverlay = new LevelInfoOverlay(game, stage);
+			optionalFeaturesToInit.add(levelInfoOverlay);
 			optionalFeaturesToRender.add(levelInfoOverlay);
+			optionalFeaturesLevelFinished.add(levelInfoOverlay);
 			return this;
 		}
 
