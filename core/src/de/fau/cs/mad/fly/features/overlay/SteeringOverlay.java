@@ -60,10 +60,7 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender {
 	}
 
 	@Override
-	public void render(float delta) {
-		stage.act(delta);
-		stage.draw();
-		
+	public void render(float delta) {		
 		shapeRenderer.setProjectionMatrix(camera.combined);
 	      
 		shapeRenderer.begin(ShapeType.Filled);

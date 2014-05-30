@@ -137,7 +137,6 @@ public class GameController {
 
 	public void render(float delta) {
 		stage.act(delta);
-		stage.draw();
 		
 		if (!isRunning)
 			return;
@@ -177,6 +176,8 @@ public class GameController {
 			optionalFeature.render(delta);
 		}
 		batch.end();
+		
+		stage.draw();
 		
 		time += delta;
 	}

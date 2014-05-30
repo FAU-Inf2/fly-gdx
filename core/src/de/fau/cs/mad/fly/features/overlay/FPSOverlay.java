@@ -59,7 +59,5 @@ public class FPSOverlay implements IFeatureRender {
 		int framesPerSecond = (int) (1.0 / delta);
 
 		fpsCounter.setText(String.valueOf(framesPerSecond));
-		stage.act(delta);
-		stage.draw();
 	}
 }

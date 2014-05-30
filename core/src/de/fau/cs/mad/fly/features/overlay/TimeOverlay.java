@@ -59,8 +59,6 @@ public class TimeOverlay implements IFeatureInit, IFeatureRender {
 	@Override
 	public void render(float delta) {
 		timeCounter.setText(String.valueOf((long) time));
-		stage.act(delta);
-		stage.draw();
 
 		time += delta;
 	}
