@@ -1,4 +1,7 @@
-package de.fau.cs.mad.fly.game;
+package de.fau.cs.mad.fly.features;
+
+import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.res.Gate;
 
 /**
  * Implement this interface when you want to be noticed when a gate is passed.
@@ -13,5 +16,5 @@ public interface IFeatureGatePassed {
 	 * 
 	 * @param gameController
 	 */
-	public void gatePassed(GameController gameController);
+	public void gatePassed(Gate passedGate);
 }

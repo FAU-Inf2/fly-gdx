@@ -1,7 +1,6 @@
 package de.fau.cs.mad.fly.game;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -13,6 +12,11 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.Assets;
+import de.fau.cs.mad.fly.features.IFeatureFinishLevel;
+import de.fau.cs.mad.fly.features.IFeatureGatePassed;
+import de.fau.cs.mad.fly.features.IFeatureInit;
+import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.res.Gate;
 
 /**
  * This class implements the function to show in the game small arrows that
@@ -22,41 +26,34 @@ import de.fau.cs.mad.fly.Assets;
  * 
  */
 public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
-		IRenderableFeature, IFeatureGatePassed {
+		IFeatureRender, IFeatureGatePassed {
 
 	private ModelInstance arrowModel;
 	/** visualize current target point */
 	private ModelInstance cube;
 	private GameController gameController;
 	private ModelBuilder modelBuilder;
+	private ModelBatch batch; 
 
-	@Override
-	public void finish(GameController game) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void init(GameController game) {
 		this.gameController = game;
 		Assets.loadArrow();
 		arrowModel = new ModelInstance(Assets.manager.get(Assets.arrow));
-
-		modelBuilder = new ModelBuilder();
+		batch = game.batch;
+		
+		//TODO: remove this if arrow is working
+		this.modelBuilder = new ModelBuilder();
 		cube = new ModelInstance(modelBuilder.createBox(0.1f, 0.1f, 0.1f,
 				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
 				Usage.Position | Usage.Normal));
 		cube.transform.setToTranslation(1, 1, 10);
 	}
 
-	@Override
-	public void gatePassed(GameController gameController) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
-	public void render(ModelBatch batch, Environment environment, float delta) {
+	public void render(float delta) {
 		Vector3 targetPosition = new Vector3(1, 1, 10);
 		Vector3 cameraPosition = gameController.getCamera().position.cpy();
 		Vector3 cameraDirection = gameController.getCamera().direction.cpy();
@@ -81,5 +78,17 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		batch.render(arrowModel);
 		batch.render(cube);
 
+	}
+
+	@Override
+	public void gatePassed(Gate passedGate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		
 	}
 }

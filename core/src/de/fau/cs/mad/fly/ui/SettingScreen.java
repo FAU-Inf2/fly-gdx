@@ -2,14 +2,13 @@ package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import de.fau.cs.mad.fly.BackProcessor;
 import de.fau.cs.mad.fly.Fly;
 
 /**
@@ -17,23 +16,25 @@ import de.fau.cs.mad.fly.Fly;
  *
  * @author Tobias Zangl
  */
-public class SettingScreen implements Screen, InputProcessor {
+public class SettingScreen implements Screen {
 	private final Fly game;
 	private final SettingManager settingManager;
 
 	private Skin skin;
 	private Stage stage;
 
-	private InputMultiplexer inputMultiplexer;
+	private InputMultiplexer inputProcessor;
 	
 	public SettingScreen(final Fly game) {
 		this.game = game;
 		skin = game.getSkin();
+		
+		// TODO: not updated if player changes while app is running
 		settingManager = game.getPlayer().getSettingManager();
 		
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		
-		inputMultiplexer = new InputMultiplexer(this, stage);
+
+		inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
 		
 		settingManager.display(stage, skin);
 	}
@@ -54,14 +55,13 @@ public class SettingScreen implements Screen, InputProcessor {
 
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(inputMultiplexer);
 		Gdx.input.setCatchBackKey(true);
+		Gdx.input.setInputProcessor(inputProcessor);
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		
+		settingManager.saveSettings();
 	}
 
 	@Override
@@ -78,57 +78,6 @@ public class SettingScreen implements Screen, InputProcessor {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-		if(keycode == Keys.BACK || keycode == Keys.ESCAPE) {
-			settingManager.saveSettings();
-			game.setMainMenuScreen();
-		}
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

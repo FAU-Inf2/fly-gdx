@@ -48,8 +48,26 @@ public class LoadingScreen implements Screen {
 				Gdx.graphics.getHeight()));
 
 		Assets.load();
-		game.gameController = new GameController.Builder().basicGameController(
-				game.getPlayer()).addGateIndicator().build();
+
+		GameController.Builder builder = new GameController.Builder();
+		builder.init(game);
+		if(game.getPlayer().getSettingManager().getCheckBoxValue("showGateIndicator")) {
+			builder.addGateIndicator();
+		}
+		if(game.getPlayer().getSettingManager().getCheckBoxValue("showTime")) {
+			builder.addTimeOverlay();
+		}
+		if(game.getPlayer().getSettingManager().getCheckBoxValue("showFPS")) {
+			builder.addFPSOverlay();
+		}
+		if(game.getPlayer().getSettingManager().getCheckBoxValue("showSteering")) {
+			builder.addSteeringOverlay();
+		}
+		
+		builder.addGateIndicator();
+		
+		game.gameController = builder.build();
+		
 		addLoadingProgress();
 	}
 

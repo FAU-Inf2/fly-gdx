@@ -42,11 +42,7 @@ public class MainMenuScreen implements Screen {
 
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		
-		inputProcessor = new InputMultiplexer();
-		// create an InputProcess to handle the back key
-		InputProcessor backProcessor = new BackProcessor();
-		inputProcessor.addProcessor(stage);
-		inputProcessor.addProcessor(backProcessor);
+		inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
 
 		addMenu();
 	}

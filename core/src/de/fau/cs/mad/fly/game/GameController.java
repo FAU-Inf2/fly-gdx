@@ -7,54 +7,55 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.Player;
+import de.fau.cs.mad.fly.features.IFeatureGatePassed;
+import de.fau.cs.mad.fly.features.IFeatureInit;
+import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
+import de.fau.cs.mad.fly.features.overlay.LevelInfoOverlay;
+import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
+import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
 import de.fau.cs.mad.fly.res.Level;
 
-/**
- * Controller that handles all components that are related to the 3D game
- * itself. You can create an instance of {@link GameController} by the
- * {@link Builder}.
- * 
- * @author Lukas Hahmann
- * 
- */
 public class GameController {
+	private Fly game;
 	private Player player;
-	// private GameOverlay gameOverlay; will be added as an optional feature
+	private Stage stage;
 	private ArrayList<IFeatureInit> optionalFeaturesToInit;
-	private ArrayList<IRenderableFeature> optionalFeaturesToRender;
+	private ArrayList<IFeatureRender> optionalFeaturesToRender;
 	private CameraController camController;
 	private boolean useSensorData;
 	PerspectiveCamera camera;
 	private LevelProgress levelProgress;
+	public Environment environment;
+	public ModelBatch batch;
 
 	private Level level;
+	
+	private float time;
 
 	private boolean isRunning;
-	
-	private Environment environment;
 
-	private ModelBatch batch;
-
-	/**
-	 * You can only create an instance of GameController by the Builder.
-	 * 
-	 * @param gameControllerBuilder
-	 */
-	private GameController(Builder gameControllerBuilder) {
-		setUpEnvironment();
-		batch = new ModelBatch();
-		
+	public GameController(Builder gameControllerBuilder) {
+		this.game = Builder.game;
 		this.player = Builder.player;
+		this.stage = Builder.stage;		
 		this.useSensorData = Builder.useSensorData;
 		this.camController = Builder.cameraController;
 		this.optionalFeaturesToInit = Builder.optionalFeaturesToInit;
 		this.optionalFeaturesToRender = Builder.optionalFeaturesToRender;
 		this.levelProgress = Builder.levelProgress;
 		this.level = Builder.level;
+		
+		this.batch = new ModelBatch();
+	}
+	
+	public Stage getStage() {
+		return stage;
 	}
 
 	public CameraController getCameraController() {
@@ -85,14 +86,15 @@ public class GameController {
 				.getCheckBoxValue("useTouch");
 		camController.setUseSensorData(useSensorData);
 
-		boolean useRolling = player.getSettingManager().getCheckBoxValue(
-				"useRoll");
+		boolean useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
 		camController.setUseRolling(useRolling);
 
 		camController.setUpCamera();
 		camera = camController.getCamera();
 
 		levelProgress.init(this);
+		
+		time = 0.0f;
 
 		// level = new Level("Level XYZ");
 		// Level-Constructor includes:
@@ -106,8 +108,6 @@ public class GameController {
 		// mix/connect with camera controller ?
 		// create 3D objects for the player
 		// stores position and other attributes of player
-
-		// gameOverlay.initOverlay()
 
 		// initializes all optional features
 		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
@@ -133,6 +133,9 @@ public class GameController {
 	}
 
 	public void render(float delta) {
+		stage.act(delta);
+		stage.draw();
+		
 		if (!isRunning)
 			return;
 
@@ -155,22 +158,18 @@ public class GameController {
 		// do collision stuff, level internal and with player
 		// level.checkCollision(player);
 
-		// render level (static + dynamic -> split render method?)
-		// level.render();
-
-		// render player
-		// player.render();
-
 		// update time, points, fuel, whatever.. (here, in level or in player
 		// class?)
+
 		batch.begin(camera);
-		player.getLastLevel().render(environment, camera, batch, delta);
-		
+		level.render(camera);
 		// render optional features, for example game overlay
-		for (IRenderableFeature optionalFeature : optionalFeaturesToRender) {
-			optionalFeature.render(batch, environment, delta);
+		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
+			optionalFeature.render(delta);
 		}
 		batch.end();
+		
+		time += delta;
 	}
 
 	public void endGame() {
@@ -186,31 +185,34 @@ public class GameController {
 	 */
 	public static class Builder {
 
+		private static Fly game;
 		private static Player player;
+		private static Stage stage;
 		private static Level level;
 		private static boolean useSensorData;
 		private static CameraController cameraController;
 		private static ArrayList<IFeatureInit> optionalFeaturesToInit = new ArrayList<IFeatureInit>();
-		private static ArrayList<IRenderableFeature> optionalFeaturesToRender = new ArrayList<IRenderableFeature>();
+		private static ArrayList<IFeatureRender> optionalFeaturesToRender = new ArrayList<IFeatureRender>();
 		private static ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
 		private static LevelProgress levelProgress = new LevelProgress();
 
 		/**
-		 * Creates a basic {@link GameController} with a certain player, its
-		 * last level and the selected level of the player.
+		 * Creates a basic {@link GameController} with a certain level, linked
+		 * to the current player, its settings and the selected level.
 		 * 
-		 * @param player
-		 *            needed to get the current settings and the level
+		 * @param game
+		 *            needed to get the player for the current settings and the level
 		 * @return new GameController with the current selected level and the
 		 *         selected settings
 		 */
-		public Builder basicGameController(Player player) {
-			Builder.player = player;
+		public Builder init(Fly game) {
+			Builder.game = game;
+			Builder.player = game.getPlayer();
+			Builder.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			Builder.level = player.getLastLevel();
-			useSensorData = !player.getSettingManager().getCheckBoxValue(
-					"useTouch");
-			Builder.cameraController = new CameraController(useSensorData,
-					player);
+			useSensorData = !player.getSettingManager().getCheckBoxValue("useTouch");
+			System.out.println(useSensorData);
+			Builder.cameraController = new CameraController(useSensorData, player);
 			return this;
 		}
 
@@ -227,27 +229,64 @@ public class GameController {
 			optionalFeaturesGatePassed.add(gateIndicator);
 			return this;
 		}
+		
+		/**
+		 * Adds a {@link TimeOverlay} to the GameController, that is
+		 * initialized and updated every frame.
+		 * 
+		 * @return Builder instance with TimeOverlay
+		 */
+		public Builder addTimeOverlay() {
+			TimeOverlay timeOverlay = new TimeOverlay(game, stage);
+			optionalFeaturesToInit.add(timeOverlay);
+			optionalFeaturesToRender.add(timeOverlay);
+			return this;
+		}
+		
+		/**
+		 * Adds a {@link FPSOverlay} to the GameController, that is
+		 * updated every frame.
+		 * 
+		 * @return Builder instance with FPSOverlay
+		 */
+		public Builder addFPSOverlay() {
+			FPSOverlay fpsOverlay = new FPSOverlay(game, stage);
+			optionalFeaturesToRender.add(fpsOverlay);
+			return this;
+		}
+		
+		/**
+		 * Adds a {@link SteeringOverlay} to the GameController, that is
+		 * updated every frame.
+		 * 
+		 * @return Builder instance with SteeringOverlay
+		 */
+		public Builder addSteeringOverlay() {
+			SteeringOverlay steeringOverlay = new SteeringOverlay(game, stage);
+			optionalFeaturesToRender.add(steeringOverlay);
+			return this;
+		}
+		
+		/**
+		 * Adds a {@link LevelInfoOverlay} to the GameController, that is
+		 * initialized, updated every frame and updated when the game is finished.
+		 * 
+		 * @return Builder instance with SteeringOverlay
+		 */
+		public Builder addLevelInfoOverlay() {
+			LevelInfoOverlay levelInfoOverlay = new LevelInfoOverlay(game, stage);
+			optionalFeaturesToRender.add(levelInfoOverlay);
+			return this;
+		}
 
 		/**
-		 * Creates a new GameController instance out of your defined preferences
-		 * in the other methods before.
+		 * Creates a new GameController out of your defined preferences in the
+		 * other methods before.
 		 * 
 		 * @return new GameController
 		 */
 		public GameController build() {
 			return new GameController(this);
 		}
-	}
-	
-	/**
-	 * Sets up the environment for the level with its light.
-	 */
-	private void setUpEnvironment() {
-		// setting up the environment
-		environment = new Environment();
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
-				0.4f, 0.4f, 1f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
-				-0.8f, -0.2f));
 	}
 }
