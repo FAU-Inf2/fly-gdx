@@ -63,8 +63,9 @@ public class LoadingScreen implements Screen {
 		if(game.getPlayer().getSettingManager().getCheckBoxValue("showSteering")) {
 			builder.addSteeringOverlay();
 		}
-		
-		builder.addGateIndicator();
+		if(game.getPlayer().getSettingManager().getCheckBoxValue("showGateIndicator")) {
+			builder.addGateIndicator();
+		}
 		
 		game.gameController = builder.build();
 		
