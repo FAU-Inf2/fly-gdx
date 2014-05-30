@@ -8,6 +8,11 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.GameController;
 
+/**
+ * Optional Feature to display a start and a finish message to the player.
+ * 
+ * @author Tobias Zangl
+ */
 public class LevelInfoOverlay implements IFeatureInit, IFeatureRender, IFeatureFinishLevel {
 	private final Fly game;
 

@@ -109,6 +109,8 @@ public class GameController {
 		// create 3D objects for the player
 		// stores position and other attributes of player
 
+		// gameOverlay.initOverlay()
+
 		// initializes all optional features
 		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
 			optionalFeature.init(this);
@@ -146,7 +148,7 @@ public class GameController {
 
 		camera = camController.recomputeCamera(delta);
 
-		
+		player.getLastLevel().render(camera);
 
 		// check if game is finished
 		// stopGame();
@@ -157,6 +159,12 @@ public class GameController {
 
 		// do collision stuff, level internal and with player
 		// level.checkCollision(player);
+
+		// render level (static + dynamic -> split render method?)
+		// level.render();
+
+		// render player
+		// player.render();
 
 		// update time, points, fuel, whatever.. (here, in level or in player
 		// class?)

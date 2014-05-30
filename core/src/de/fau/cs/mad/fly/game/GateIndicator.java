@@ -91,4 +91,5 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		// TODO Auto-generated method stub
 		
 	}
+
 }

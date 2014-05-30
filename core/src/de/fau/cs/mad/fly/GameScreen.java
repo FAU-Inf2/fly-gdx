@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 
 /**
@@ -9,7 +10,7 @@ import com.badlogic.gdx.Screen;
  * 
  * @author Tobias Zangl
  */
-public class GameScreen implements Screen {
+public class GameScreen implements Screen{
 	private final Fly game;
 	
 	private InputMultiplexer inputProcessor;
