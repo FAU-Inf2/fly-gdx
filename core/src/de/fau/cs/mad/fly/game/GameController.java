@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -20,6 +21,7 @@ import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.LevelInfoOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
+import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.Level;
 
 public class GameController {
@@ -150,8 +152,8 @@ public class GameController {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camera = camController.recomputeCamera(delta);
-
-		player.getLastLevel().render(camera);
+		
+		checkCollision();
 
 		// check if game is finished
 		// stopGame();
@@ -189,6 +191,22 @@ public class GameController {
 
 	public void endGame() {
 
+	}
+	
+	/**
+	 * Simple version of collision testing.
+	 */
+	private boolean checkCollision() {
+		// TODO: own class? feature?
+		
+		for(Gate g : level.gates) {
+			if(camera.position.dst(g.transformMatrix[12], g.transformMatrix[13], g.transformMatrix[14]) < 2.0f) {
+				System.out.println("GATE: " + g.id);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	/**
