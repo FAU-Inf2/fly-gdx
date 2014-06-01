@@ -89,6 +89,9 @@ public class GameController {
 
 		boolean useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
 		camController.setUseRolling(useRolling);
+		
+		boolean useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
+		camController.setUseLowPass(useLowPass);
 
 		camController.setUpCamera();
 		camera = camController.getCamera();

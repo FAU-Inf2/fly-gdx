@@ -52,6 +52,7 @@ public class Player {
 		settingManager.addSetting("color", "Color:", 0, selection);
 		settingManager.addSetting("useTouch", "Use TouchScreen:", false);
 		settingManager.addSetting("useRoll", "Use Rolling:", false);
+		settingManager.addSetting("useLowPass", "Use LowPassFilter:", false);
 		settingManager.addSetting("showGateIndicator", "Show next Gate:", true);
 		settingManager.addSetting("showLevelInfo", "Show Level Info:", false);
 		settingManager.addSetting("showSteering", "Show Steering:", false);

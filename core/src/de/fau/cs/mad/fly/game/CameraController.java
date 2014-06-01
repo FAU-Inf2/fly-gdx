@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.game;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Buttons;
@@ -14,23 +16,39 @@ public class CameraController implements InputProcessor {
 	
 	private boolean useSensorData;
 	private boolean useRolling;
+	private boolean useLowPass;
 	
 	private Player player;
 	private PerspectiveCamera camera;
 
 	private float startRoll, startAzimuth;
-	private float cameraSpeed = 2.0f;
 
 	private float rollDir = 0.0f;
 	private float azimuthDir = 0.0f;
 
 	private int currentEvent = -1;
 	
+	//should come from spaceship
+	private float maximumSteeringSpeed = 5.0f;
+	private float cameraSpeed = 2.0f;
+	
+	// variables for Sensor input smoothing
+	private int bufferSize;
+	private ArrayList<Float> rollInput;
+	private ArrayList<Float> rollOutput;
+	private ArrayList<Float> pitchInput;
+	private ArrayList<Float> pitchOutput;
+	private ArrayList<Float> azimuthInput;
+	private ArrayList<Float> azimuthOutput;
+	
 	public CameraController(boolean useSensorData, Player player){
 		this.useSensorData = useSensorData;
 		this.player = player;
 		
 		useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
+		useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
+		
+		bufferSize = 30;
 		
 		setUpCamera();
 	}
@@ -47,6 +65,16 @@ public class CameraController implements InputProcessor {
 		this.useRolling = useRolling;
 	}
 	
+	public void setUseLowPass(boolean useLowPass){
+		this.useLowPass = useLowPass;
+	}
+	
+	/**
+	 * recomputes camera position and rotation
+	 * 
+	 * @param delta - time since last frame
+	 * @return
+	 */
 	public PerspectiveCamera recomputeCamera(float delta){
 		// rotating the camera according to UserInput
 		if (useSensorData) {
@@ -92,37 +120,83 @@ public class CameraController implements InputProcessor {
 		camera.far = player.getLastLevel().radius * 2;
 		camera.update();
 
+		resetBuffers();
+	}
+	
+	private void resetBuffers(){
+		rollInput = new ArrayList<Float>();
+		rollOutput = new ArrayList<Float>();
+		pitchInput = new ArrayList<Float>();
+		pitchOutput = new ArrayList<Float>();
+		azimuthInput = new ArrayList<Float>();
+		azimuthOutput = new ArrayList<Float>();
 	}
 
 	/**
-	 * Interprets the rotation of the smartphone and rotates the camera
-	 * accordingly
+	 * Interprets the rotation of the smartphone and calls camera rotation
 	 */
 	private void interpretSensorInput() {
 		float roll = Gdx.input.getRoll();
 		float pitch = Gdx.input.getPitch();
 		float azimuth = Gdx.input.getAzimuth();
 		
+		//Gdx.app.log("myApp", "roll: " + roll + "; pitch: " + pitch + "; azimuth: " + azimuth);
+		
+		// removing oldest element in buffers
+		if(rollInput.size() >= bufferSize){
+			rollInput.remove(0);
+			pitchInput.remove(0);
+			azimuthInput.remove(0);
+		}
+		
+		// adding newest sensor-data to buffers
+		rollInput.add(roll);
+		pitchInput.add(pitch);
+		azimuthInput.add(azimuth);
+		
+		if(useLowPass) {
+			rollOutput = lowPassFilter(rollInput, rollOutput, 0.15f);
+			pitchOutput = lowPassFilter(pitchInput, pitchOutput, 0.15f);
+			azimuthOutput = lowPassFilter(azimuthInput, azimuthOutput, 0.15f);
+			
+			roll = average(rollOutput);
+			pitch = average(pitchOutput);
+			azimuth = average(azimuthOutput);
+		} else {
+			roll = average(rollInput);
+			pitch = average(pitchInput);
+			azimuth = average(azimuthInput);
+		}
+		
 		azimuth = computeAzimuth(roll, pitch, azimuth);
 
 		float difRoll = roll - startRoll;
 		float difAzimuth = azimuth - startAzimuth;
+		
+		// capping the rotation to a maximum of 90 degrees
+		if(Math.abs(difRoll) > 90) {
+			difRoll = 90 * Math.signum(difRoll);
+		} 
+		
+		if(Math.abs(difAzimuth) > 90) {
+			difRoll = 90 * Math.signum(difAzimuth);
+		}
 
 		rollDir = 0.0f;
 		azimuthDir = 0.0f;
 
 		// camera rotation according to smartphone rotation
-		rollDir = difRoll * -0.1f;
-		azimuthDir = difAzimuth * -0.1f;
+		rollDir = maximumSteeringSpeed *  difRoll / -90.0f;
+		azimuthDir = maximumSteeringSpeed * difAzimuth / -90.0f;
 	}
 
 	/**
 	 * Rotates the camera according to rollDir and pitchDir
 	 * 
 	 * @param rollDir
-	 *            defines if the camera should be rotated up or down
-	 * @param pitchDir
-	 *            defines if the camera should be rotated left or right
+	 *            - defines if the camera should be rotated up or down
+	 * @param azimuthDir
+	 *            - defines if the camera should be rotated left or right
 	 */
 	private void rotateCamera(float rollDir, float azimuthDir) {
 		// rotation up or down
@@ -133,11 +207,18 @@ public class CameraController implements InputProcessor {
 			camera.rotate(camera.direction, 1.0f * -azimuthDir);
 		} else {
 			// rotation around camera.up (turning left/right)
-			//camera.rotate(camera.up, 1.0f * pitchDir);
 			camera.rotate(camera.up, 1.0f * azimuthDir);
 		}
 	}
 	
+	/**
+	 * computes the rotation around z-Axis relative to the smartphone
+	 * 
+	 * @param roll
+	 * @param pitch
+	 * @param azimuth
+	 * @return
+	 */
 	private float computeAzimuth(float roll, float pitch, float azimuth){
 		Matrix3 mX = new Matrix3();
 		Matrix3 mY = new Matrix3();
@@ -171,6 +252,40 @@ public class CameraController implements InputProcessor {
 		
 		return (float) Math.acos(z.dot(new Vector3(newFront.x, newFront.y, newFront.z)) / (float) Math.sqrt(newFront.x * newFront.x + newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f/ (float) Math.PI;
 	}
+	
+	private ArrayList<Float> lowPassFilter(ArrayList<Float> input, ArrayList<Float> output, float alpha){
+		float result = 0.0f;
+		
+		/*if(output.size() <= 2){
+			return input;
+		}*/
+		
+		if(output.size() < bufferSize){
+			output.add(0.0f);
+			output.set(output.size() - 1, input.get(output.size() - 1));
+		}
+		
+		for(int i = 1; i < output.size(); i++){
+			result = output.get(i) + alpha * (input.get(i) - output.get(i));
+			output.set(i, result);
+		}
+		
+		if(output.size() > bufferSize){
+			output.remove(0);
+		}
+		
+		return output;
+	}
+	
+	private float average(ArrayList<Float> input){
+		float result = 0.0f;
+		
+		for(int i = 0; i < input.size(); i++){
+			result += input.get(i);
+		}
+		
+		return result / (float) input.size();
+	}
 
 	@Override
 	public boolean keyDown(int keycode) {
@@ -192,8 +307,7 @@ public class CameraController implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		
+		// using the touchscreen to rotate camera
 		if (button == Buttons.LEFT && !useSensorData) {
 
 			float width = (float) Gdx.graphics.getWidth();
@@ -214,7 +328,7 @@ public class CameraController implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
+		// set camera rotation to 0 when finger is lifted from touchscreen
 		if (button == Buttons.LEFT) {
 			rollDir = 0;
 			azimuthDir = 0;
@@ -224,7 +338,7 @@ public class CameraController implements InputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
+		// changing camera rotation when finger is dragged on the touchscreen
 		if (pointer == currentEvent) {
 
 			float width = (float) Gdx.graphics.getWidth();
@@ -233,8 +347,8 @@ public class CameraController implements InputProcessor {
 			float xPosition = ((float) screenX) / width;
 			float yPosition = ((float) screenY) / height;
 			
-			azimuthDir = 5 * (0.5f - xPosition);
-			rollDir = 5 * (0.5f - yPosition);
+			azimuthDir = maximumSteeringSpeed * (0.5f - xPosition);
+			rollDir = maximumSteeringSpeed * (0.5f - yPosition);
 		}
 		return false;
 	}
