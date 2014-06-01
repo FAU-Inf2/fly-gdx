@@ -174,11 +174,13 @@ public class GameController {
 
 		batch.begin(camera);
 		level.render(camera);
+		batch.end();
+		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer etc., split render up?
+		
 		// render optional features, for example game overlay
 		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
 			optionalFeature.render(delta);
 		}
-		batch.end();
 		
 		stage.draw();
 		
@@ -275,7 +277,7 @@ public class GameController {
 		 * @return Builder instance with SteeringOverlay
 		 */
 		public Builder addSteeringOverlay() {
-			SteeringOverlay steeringOverlay = new SteeringOverlay(game, stage);
+			SteeringOverlay steeringOverlay = new SteeringOverlay(game, stage, cameraController);
 			optionalFeaturesToRender.add(steeringOverlay);
 			return this;
 		}

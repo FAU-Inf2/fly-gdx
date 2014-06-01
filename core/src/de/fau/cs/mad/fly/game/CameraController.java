@@ -68,6 +68,14 @@ public class CameraController implements InputProcessor {
 	public void setUseLowPass(boolean useLowPass){
 		this.useLowPass = useLowPass;
 	}
+
+	public float getRollDir() {
+		return rollDir;
+	}
+	
+	public float getAzimuthDir() {
+		return azimuthDir;
+	}
 	
 	/**
 	 * recomputes camera position and rotation

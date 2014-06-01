@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.game.CameraController;
 import de.fau.cs.mad.fly.game.GameController;
 
 /**
@@ -30,6 +31,7 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender {
 	private final Fly game;
 
 	private Stage stage;
+	private CameraController cameraController;
 
 	private OrthographicCamera camera;
 	private ShapeRenderer shapeRenderer;
@@ -38,9 +40,10 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender {
 	
 	private float steeringX, steeringY;
 	
-	public SteeringOverlay(final Fly game, Stage stage) {
+	public SteeringOverlay(final Fly game, Stage stage, CameraController cameraController) {
 		this.game = game;
 		this.stage = stage;
+		this.cameraController = cameraController;
 		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
@@ -60,14 +63,20 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender {
 	}
 
 	@Override
-	public void render(float delta) {		
+	public void render(float delta) {
+		steeringX = -20 * cameraController.getAzimuthDir();
+		steeringY = 20 * cameraController.getRollDir();
+		
 		shapeRenderer.setProjectionMatrix(camera.combined);
 	      
 		shapeRenderer.begin(ShapeType.Filled);
-
-		shapeRenderer.setColor(1.0f, 0.2f, 0.2f, 1.0f);
+		shapeRenderer.setColor(1.0f, 0.84f, 0.0f, 1.0f);
 		shapeRenderer.circle(game.getAbsoluteX(0.01f) * steeringX, game.getAbsoluteY(0.01f) * steeringY, game.getAbsoluteX(0.01f), 20);
-
+		shapeRenderer.end();
+		
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(1.0f, 0.84f, 0.0f, 1.0f);
+		shapeRenderer.circle(0, 0, game.getAbsoluteX(0.05f), 40);
 		shapeRenderer.end();
 	}
 

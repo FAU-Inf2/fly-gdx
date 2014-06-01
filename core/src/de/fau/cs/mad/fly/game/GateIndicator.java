@@ -76,8 +76,7 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		up.crs(vectorToTarget).crs(vectorToTarget);
 		up.scl(-1);
 		
-		arrowModel.transform = transformationMatrix.setToLookAt(vectorToTarget,
-				up).trn(translationVector);
+		arrowModel.transform = transformationMatrix.setToLookAt(vectorToTarget, up).trn(translationVector);
 		
 		
 		
