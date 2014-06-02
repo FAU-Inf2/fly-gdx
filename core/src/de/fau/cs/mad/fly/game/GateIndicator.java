@@ -1,5 +1,8 @@
 package de.fau.cs.mad.fly.game;
 
+import java.util.Arrays;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
@@ -45,67 +48,54 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		Assets.loadArrow();
 		arrowModel = new ModelInstance(Assets.manager.get(Assets.arrow));
 		batch = game.batch;
-		
-		//TODO: remove this if arrow is working
-		this.modelBuilder = new ModelBuilder();
-		cube = new ModelInstance(modelBuilder.createBox(0.1f, 0.1f, 0.1f,
-				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-				Usage.Position | Usage.Normal));
-		cube.transform.setToTranslation(1, 1, 10);
 	}
-
 
 	@Override
 	public void render(float delta) {
 		Vector3 targetPosition = new Vector3(1, 1, 10);
-		Vector3 cameraPosition = gameController.getCamera().position.cpy();
 		Vector3 cameraDirection = gameController.getCamera().direction.cpy();
 		Vector3 up = gameController.getCamera().up.cpy();
 		Vector3 down = up.cpy().scl(-1);
 
-		Vector3 translationVector = cameraDirection.scl(3).add(cameraPosition)
-				.add(down);
+		// The arrow should be in the middle of the screen, a little before the
+		// camera, that it is always visible and below the vertical midpoint.
+		Vector3 gatePositionRelativeToCamera = cameraDirection.scl(3)
+				.add(gameController.getCamera().position).add(down);
 
 		Vector3 vectorToTarget = targetPosition.cpy();
 
-		vectorToTarget = vectorToTarget.sub(translationVector).nor();
-		
-		// calculate orthogonal up vector
-		up.crs(vectorToTarget).crs(vectorToTarget);
-		
-		Vector3 cross = vectorToTarget.scl(-1).cpy().crs(up);
+		vectorToTarget = vectorToTarget.sub(gatePositionRelativeToCamera).nor();
 
-		float[] values = { up.x, up.y, up.z, 0f, cross.x, cross.y, cross.z, 0f,	vectorToTarget.x, vectorToTarget.y, vectorToTarget.z, 0f, 0f, 0f, 0f, 1f };
-		
+		// calculate orthogonal up vector
+		up.crs(vectorToTarget).crs(vectorToTarget).nor();
+
+		Vector3 cross = vectorToTarget.scl(-1).cpy().crs(up).nor();
+		vectorToTarget.nor();
+
+		// create local coordinate system for the arrow. All axes have to be
+		// normalized, otherwise, the arrow is scaled.
+		float[] values = { up.x, up.y, up.z, 0f, cross.x, cross.y, cross.z, 0f,
+				vectorToTarget.x, vectorToTarget.y, vectorToTarget.z, 0f, 0f,
+				0f, 0f, 1f };
+
 		Matrix4 transformationMatrix = new Matrix4(values);
 
-		arrowModel.transform = transformationMatrix.trn(translationVector);
-
-		/*modelBuilder.begin();
-		MeshPartBuilder partBuilder = modelBuilder.part("lines", GL20.GL_LINES, Usage.Position, new Material(ColorAttribute.createDiffuse(Color.GREEN)));
-		Vector3 linePos = translationVector.cpy();
-		//partBuilder.line(targetPosition, linePos);
-		partBuilder.line(linePos.cpy().add(vectorToTarget), linePos);
-		partBuilder.line(linePos.cpy().add(up), linePos);
-		
-		debugModel = new ModelInstance(modelBuilder.end());*/
-		
+		arrowModel.transform = transformationMatrix
+				.trn(gatePositionRelativeToCamera);
 
 		batch.render(arrowModel);
-		batch.render(cube);
-		//batch.render(debugModel);
 	}
 
 	@Override
 	public void gatePassed(Gate passedGate) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
