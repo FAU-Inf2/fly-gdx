@@ -69,30 +69,31 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		Vector3 vectorToTarget = targetPosition.cpy();
 
 		vectorToTarget = vectorToTarget.sub(translationVector).nor();
-
-		Matrix4 transformationMatrix = new Matrix4();
 		
 		// calculate orthogonal up vector
 		up.crs(vectorToTarget).crs(vectorToTarget);
-		up.scl(-1);
 		
-		arrowModel.transform = transformationMatrix.setToLookAt(vectorToTarget, up).trn(translationVector);
+		Vector3 cross = vectorToTarget.scl(-1).cpy().crs(up);
+
+		float[] values = { up.x, up.y, up.z, 0f, cross.x, cross.y, cross.z, 0f,	vectorToTarget.x, vectorToTarget.y, vectorToTarget.z, 0f, 0f, 0f, 0f, 1f };
 		
-		
-		
-		modelBuilder.begin();
+		Matrix4 transformationMatrix = new Matrix4(values);
+
+		arrowModel.transform = transformationMatrix.trn(translationVector);
+
+		/*modelBuilder.begin();
 		MeshPartBuilder partBuilder = modelBuilder.part("lines", GL20.GL_LINES, Usage.Position, new Material(ColorAttribute.createDiffuse(Color.GREEN)));
 		Vector3 linePos = translationVector.cpy();
 		//partBuilder.line(targetPosition, linePos);
 		partBuilder.line(linePos.cpy().add(vectorToTarget), linePos);
 		partBuilder.line(linePos.cpy().add(up), linePos);
 		
-		debugModel = new ModelInstance(modelBuilder.end());
+		debugModel = new ModelInstance(modelBuilder.end());*/
 		
 
 		batch.render(arrowModel);
 		batch.render(cube);
-		batch.render(debugModel);
+		//batch.render(debugModel);
 	}
 
 	@Override
