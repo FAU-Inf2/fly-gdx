@@ -14,7 +14,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.Assets;
-import de.fau.cs.mad.fly.features.IFeatureFinishLevel;
+import de.fau.cs.mad.fly.features.IFeatureDispose;
+import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureGatePassed;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
@@ -27,7 +28,7 @@ import de.fau.cs.mad.fly.res.Gate;
  * @author Lukas Hahmann
  * 
  */
-public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
+public class GateIndicator implements IFeatureInit, IFeatureFinish,
 		IFeatureRender, IFeatureGatePassed {
 
 	private ModelInstance arrowModel;
@@ -36,8 +37,6 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 	private GameController gameController;
 	private ModelBuilder modelBuilder;
 	private ModelBatch batch;
-
-	private ModelInstance debugModel;
 
 	@Override
 	public void init(GameController game) {
@@ -76,7 +75,7 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		Vector3 cross = vectorToTarget.scl(-1).cpy().crs(up);
 
 		float[] values = { up.x, up.y, up.z, 0f, cross.x, cross.y, cross.z, 0f,	vectorToTarget.x, vectorToTarget.y, vectorToTarget.z, 0f, 0f, 0f, 0f, 1f };
-		
+
 		Matrix4 transformationMatrix = new Matrix4(values);
 
 		arrowModel.transform = transformationMatrix.trn(translationVector);
@@ -93,7 +92,6 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 
 		batch.render(arrowModel);
 		batch.render(cube);
-		//batch.render(debugModel);
 	}
 
 	@Override
@@ -107,5 +105,4 @@ public class GateIndicator implements IFeatureInit, IFeatureFinishLevel,
 		// TODO Auto-generated method stub
 		
 	}
-
 }
