@@ -48,7 +48,6 @@ public class FPSOverlay implements IFeatureRender {
 	 */
 	public Label addLabel(String text, LabelStyle labelStyle, float x, float y) {
 		Label label = new Label(text, labelStyle);
-		label.setPosition(20.0f, 0.0f);
 		label.setPosition(game.getAbsoluteX(x), game.getAbsoluteY(y));
 		stage.addActor(label);
 		return label;
