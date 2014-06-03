@@ -6,10 +6,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import de.fau.cs.mad.fly.game.CameraController;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameController.Builder;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -34,10 +37,13 @@ public class Fly extends Game {
 	private GameScreen gameScreen;
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
+	
 	private Player player;
+	private CameraController cameraController;
 	public GameController gameController;
 
 	private Skin skin;
+	private ShapeRenderer shapeRenderer;
 	
 	private float screenWidth, screenHeight;
 
@@ -48,11 +54,14 @@ public class Fly extends Game {
 		
 		Assets.init();
 		createSkin();
+		shapeRenderer = new ShapeRenderer();
 
 		Bullet.init();
 		
 		player = new Player();
 		player.createSettings(skin);
+
+		cameraController = new CameraController(true, player);
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
@@ -102,6 +111,14 @@ public class Fly extends Game {
 	 */
 	public Skin getSkin() {
 		return skin;
+	}
+	
+	public ShapeRenderer getShapeRenderer() {
+		return shapeRenderer;
+	}
+	
+	public CameraController getCameraController() {
+		return cameraController;
 	}
 
 	/**

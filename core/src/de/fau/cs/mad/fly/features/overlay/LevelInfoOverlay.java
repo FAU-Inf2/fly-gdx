@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.features.IFeatureFinishLevel;
+import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.GameController;
@@ -21,7 +21,7 @@ import de.fau.cs.mad.fly.game.GameController;
  * 
  * @author Tobias Zangl
  */
-public class LevelInfoOverlay implements IFeatureInit, IFeatureRender, IFeatureFinishLevel {
+public class LevelInfoOverlay implements IFeatureInit, IFeatureRender, IFeatureFinish {
 	private final Fly game;
 	private GameController gameController;
 

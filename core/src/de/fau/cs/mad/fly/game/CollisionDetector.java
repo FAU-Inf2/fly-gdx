@@ -19,12 +19,12 @@ import com.badlogic.gdx.physics.bullet.collision.btShapeHull;
 import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
 import com.badlogic.gdx.utils.Array;
 
-import de.fau.cs.mad.fly.features.IFeatureFinishLevel;
+import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 
 public class CollisionDetector implements IFeatureInit, IFeatureRender,
-		IFeatureFinishLevel {
+		IFeatureFinish {
 
 	final static short GROUND_FLAG = 1 << 8;
 	final static short OBJECT_FLAG = 1 << 9;

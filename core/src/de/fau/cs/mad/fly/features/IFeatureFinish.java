@@ -1,5 +1,5 @@
 package de.fau.cs.mad.fly.features;
 
-public interface IFeatureFinishLevel {
+public interface IFeatureFinish {
 	public void finish();
 }

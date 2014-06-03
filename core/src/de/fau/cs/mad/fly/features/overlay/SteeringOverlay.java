@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.CameraController;
@@ -27,7 +28,7 @@ import de.fau.cs.mad.fly.game.GameController;
  * 
  * @author Tobias Zangl
  */
-public class SteeringOverlay implements IFeatureInit, IFeatureRender {
+public class SteeringOverlay implements IFeatureInit, IFeatureRender, IFeatureDispose {
 	private final Fly game;
 
 	private Stage stage;
@@ -40,14 +41,14 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender {
 	
 	private float steeringX, steeringY;
 	
-	public SteeringOverlay(final Fly game, Stage stage, CameraController cameraController) {
+	public SteeringOverlay(final Fly game, Stage stage) {
 		this.game = game;
 		this.stage = stage;
-		this.cameraController = cameraController;
+		this.cameraController = game.getCameraController();
+		
+		shapeRenderer = game.getShapeRenderer();
 		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-		shapeRenderer = new ShapeRenderer();
 	}
 	
 	/**
@@ -63,12 +64,12 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta) {		
 		steeringX = -20 * cameraController.getAzimuthDir();
 		steeringY = 20 * cameraController.getRollDir();
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
-	      
+		
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(1.0f, 0.84f, 0.0f, 1.0f);
 		shapeRenderer.circle(game.getAbsoluteX(0.01f) * steeringX, game.getAbsoluteY(0.01f) * steeringY, game.getAbsoluteX(0.01f), 20);
@@ -84,5 +85,11 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender {
 	public void init(GameController gameController) {
 		steeringX = 0.0f;
 		steeringY = 0.0f;
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
 	}
 }

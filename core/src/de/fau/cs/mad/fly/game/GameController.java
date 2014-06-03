@@ -3,19 +3,23 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.Player;
-import de.fau.cs.mad.fly.features.IFeatureFinishLevel;
+import de.fau.cs.mad.fly.features.IFeatureDispose;
+import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureGatePassed;
 import de.fau.cs.mad.fly.features.IFeatureInit;
+import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.LevelInfoOverlay;
@@ -28,8 +32,11 @@ public class GameController {
 	private Fly game;
 	private Player player;
 	private Stage stage;
+	private ArrayList<IFeatureLoad> optionalFeaturesToLoad;
 	private ArrayList<IFeatureInit> optionalFeaturesToInit;
 	private ArrayList<IFeatureRender> optionalFeaturesToRender;
+	private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
+	private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
 	private CameraController camController;
 	private boolean useSensorData;
 	PerspectiveCamera camera;
@@ -48,11 +55,15 @@ public class GameController {
 		this.player = Builder.player;
 		this.stage = Builder.stage;		
 		this.useSensorData = Builder.useSensorData;
-		this.camController = Builder.cameraController;
+		this.optionalFeaturesToLoad = Builder.optionalFeaturesToLoad;
 		this.optionalFeaturesToInit = Builder.optionalFeaturesToInit;
 		this.optionalFeaturesToRender = Builder.optionalFeaturesToRender;
+		this.optionalFeaturesToFinish = Builder.optionalFeaturesToFinish;
+		this.optionalFeaturesToDispose = Builder.optionalFeaturesToDispose;
 		this.levelProgress = Builder.levelProgress;
 		this.level = Builder.level;
+		
+		this.camController = game.getCameraController();
 		
 		this.batch = new ModelBatch();
 	}
@@ -75,6 +86,16 @@ public class GameController {
 
 	public void setLevel(Level level) {
 		this.level = level;
+	}
+	
+	/**
+	 * This method is called, when the level is loaded. It loads everything
+	 * the default functions need and calls all the optional feature loading methods.
+	 */
+	public void loadGame() {
+		for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
+			optionalFeature.load(this);
+		}
 	}
 
 	/**
@@ -189,8 +210,28 @@ public class GameController {
 		time += delta;
 	}
 
+	/**
+	 * This method is called, when the Game is over.
+	 */
 	public void endGame() {
-
+		for (IFeatureFinish optionalFeature : optionalFeaturesToFinish) {
+			optionalFeature.finish();
+		}
+	}
+	
+	/**
+	 * This method is called, when the GameScreen is left. It disposes everything
+	 * the default functions needed and calls all the optional feature dispose methods.
+	 */
+	public void disposeGame() {
+		for (IFeatureDispose optionalFeature : optionalFeaturesToDispose) {
+			optionalFeature.dispose();
+		}
+		
+		stage.dispose();
+		//level.dispose();
+		
+		optionalFeaturesToRender.clear();
 	}
 	
 	/**
@@ -201,7 +242,8 @@ public class GameController {
 		
 		for(Gate g : level.gates) {
 			if(camera.position.dst(g.transformMatrix[12], g.transformMatrix[13], g.transformMatrix[14]) < 2.0f) {
-				System.out.println("GATE: " + g.id);
+				//System.out.println("GATE: " + g.id);
+				//level.gateModels.get(0).materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
 				return true;
 			}
 		}
@@ -223,11 +265,12 @@ public class GameController {
 		private static Stage stage;
 		private static Level level;
 		private static boolean useSensorData;
-		private static CameraController cameraController;
+		private static ArrayList<IFeatureLoad> optionalFeaturesToLoad = new ArrayList<IFeatureLoad>();
 		private static ArrayList<IFeatureInit> optionalFeaturesToInit = new ArrayList<IFeatureInit>();
 		private static ArrayList<IFeatureRender> optionalFeaturesToRender = new ArrayList<IFeatureRender>();
+		private static ArrayList<IFeatureFinish> optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
+		private static ArrayList<IFeatureDispose> optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
 		private static ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
-		private static ArrayList<IFeatureFinishLevel> optionalFeaturesLevelFinished = new ArrayList<IFeatureFinishLevel>();
 		private static LevelProgress levelProgress = new LevelProgress();
 
 		/**
@@ -240,12 +283,18 @@ public class GameController {
 		 *         selected settings
 		 */
 		public Builder init(Fly game) {
+			// clear everything in the builder from a possible earlier call
+			optionalFeaturesToLoad.clear();
+			optionalFeaturesToInit.clear();
+			optionalFeaturesToRender.clear();
+			optionalFeaturesToFinish.clear();
+			optionalFeaturesToDispose.clear();
+			optionalFeaturesGatePassed.clear();
+			
 			Builder.game = game;
 			Builder.player = game.getPlayer();
 			Builder.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			Builder.level = player.getLastLevel();
-			useSensorData = !player.getSettingManager().getCheckBoxValue("useTouch");
-			Builder.cameraController = new CameraController(useSensorData, player);
 			return this;
 		}
 
@@ -295,8 +344,9 @@ public class GameController {
 		 * @return Builder instance with SteeringOverlay
 		 */
 		public Builder addSteeringOverlay() {
-			SteeringOverlay steeringOverlay = new SteeringOverlay(game, stage, cameraController);
+			SteeringOverlay steeringOverlay = new SteeringOverlay(game, stage);
 			optionalFeaturesToRender.add(steeringOverlay);
+			optionalFeaturesToDispose.add(steeringOverlay);
 			return this;
 		}
 		
@@ -310,7 +360,7 @@ public class GameController {
 			LevelInfoOverlay levelInfoOverlay = new LevelInfoOverlay(game, stage);
 			optionalFeaturesToInit.add(levelInfoOverlay);
 			optionalFeaturesToRender.add(levelInfoOverlay);
-			optionalFeaturesLevelFinished.add(levelInfoOverlay);
+			optionalFeaturesToFinish.add(levelInfoOverlay);
 			return this;
 		}
 
