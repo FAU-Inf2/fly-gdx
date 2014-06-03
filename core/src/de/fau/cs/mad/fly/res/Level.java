@@ -82,7 +82,9 @@ public class Level extends Resource {
 			mi.transform = new Matrix4(g.transformMatrix);
 			gateModels.add(mi);
 			BoundingBox bbox = new BoundingBox();
-			gateBoundingBoxes.add(mi.calculateBoundingBox(bbox));
+			mi.calculateBoundingBox(bbox);
+			bbox.getDimensions().scl(2.0f);
+			gateBoundingBoxes.add(bbox);
 		}
 	}
 
