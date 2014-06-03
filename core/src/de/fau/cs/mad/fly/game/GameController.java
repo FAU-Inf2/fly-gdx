@@ -24,7 +24,6 @@ import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
 import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.ui.SettingManager;
 
 public class GameController {
 	private Fly game;
@@ -153,9 +152,8 @@ public class GameController {
 	public void stopGame() {
 		isRunning = false;
 
-		// level.dispose();
-		// player.dispose();
-		// ...
+		endGame();
+		disposeGame();
 	}
 
 	public void setRunning(boolean running) {
@@ -163,11 +161,12 @@ public class GameController {
 	}
 
 	public void render(float delta) {
-		stage.act(delta);
-
+		
 		if (!isRunning)
 			return;
-
+		
+		stage.act(delta);
+		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
@@ -176,25 +175,6 @@ public class GameController {
 		camera = camController.recomputeCamera(delta);
 
 		checkCollision();
-
-		// check if game is finished
-		// stopGame();
-
-		// fetch input from camera controller
-
-		// calculate new positions, camera etc.
-
-		// do collision stuff, level internal and with player
-		// level.checkCollision(player);
-
-		// render level (static + dynamic -> split render method?)
-		// level.render();
-
-		// render player
-		// player.render();
-
-		// update time, points, fuel, whatever.. (here, in level or in player
-		// class?)
 
 		batch.begin(camera);
 		level.render(camera);
@@ -213,7 +193,8 @@ public class GameController {
 	}
 
 	/**
-	 * This method is called, when the Game is over.
+	 * This method is called, when the Game is over. It calls the .finish()
+	 * method of all {@link #optionalFeaturesToFinish}.
 	 */
 	public void endGame() {
 		for (IFeatureFinish optionalFeature : optionalFeaturesToFinish) {
