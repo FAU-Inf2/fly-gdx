@@ -62,22 +62,6 @@ public class LoadingScreen implements Screen {
 
 		GameController.Builder builder = new GameController.Builder();
 		builder.init(game);
-		if (game.getPlayer().getSettingManager().getCheckBoxValue("showGateIndicator")) {
-			builder.addGateIndicator();
-		}
-		if (game.getPlayer().getSettingManager().getCheckBoxValue("showTime")) {
-			builder.addTimeOverlay();
-		}
-		if (game.getPlayer().getSettingManager().getCheckBoxValue("showFPS")) {
-			builder.addFPSOverlay();
-		}
-		if (game.getPlayer().getSettingManager().getCheckBoxValue("showSteering")) {
-			builder.addSteeringOverlay();
-		}
-		if (game.getPlayer().getSettingManager().getCheckBoxValue("showLevelInfo")) {
-			//builder.addLevelInfoOverlay();
-			// not working yet
-		}
 		
 		game.gameController = builder.build();
 	}

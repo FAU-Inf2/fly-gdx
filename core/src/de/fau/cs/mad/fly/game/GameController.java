@@ -3,13 +3,10 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -27,6 +24,7 @@ import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
 import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.ui.SettingManager;
 
 public class GameController {
 	private Fly game;
@@ -45,7 +43,7 @@ public class GameController {
 	public ModelBatch batch;
 
 	private Level level;
-	
+
 	private float time;
 
 	private boolean isRunning;
@@ -53,7 +51,7 @@ public class GameController {
 	public GameController(Builder gameControllerBuilder) {
 		this.game = Builder.game;
 		this.player = Builder.player;
-		this.stage = Builder.stage;		
+		this.stage = Builder.stage;
 		this.useSensorData = Builder.useSensorData;
 		this.optionalFeaturesToLoad = Builder.optionalFeaturesToLoad;
 		this.optionalFeaturesToInit = Builder.optionalFeaturesToInit;
@@ -62,12 +60,12 @@ public class GameController {
 		this.optionalFeaturesToDispose = Builder.optionalFeaturesToDispose;
 		this.levelProgress = Builder.levelProgress;
 		this.level = Builder.level;
-		
+
 		this.camController = game.getCameraController();
-		
+
 		this.batch = new ModelBatch();
 	}
-	
+
 	public Stage getStage() {
 		return stage;
 	}
@@ -87,10 +85,11 @@ public class GameController {
 	public void setLevel(Level level) {
 		this.level = level;
 	}
-	
+
 	/**
-	 * This method is called, when the level is loaded. It loads everything
-	 * the default functions need and calls all the optional feature loading methods.
+	 * This method is called, when the level is loaded. It loads everything the
+	 * default functions need and calls all the optional feature loading
+	 * methods.
 	 */
 	public void loadGame() {
 		for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
@@ -110,17 +109,19 @@ public class GameController {
 				.getCheckBoxValue("useTouch");
 		camController.setUseSensorData(useSensorData);
 
-		boolean useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
+		boolean useRolling = player.getSettingManager().getCheckBoxValue(
+				"useRoll");
 		camController.setUseRolling(useRolling);
-		
-		boolean useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
+
+		boolean useLowPass = player.getSettingManager().getCheckBoxValue(
+				"useLowPass");
 		camController.setUseLowPass(useLowPass);
 
 		camController.setUpCamera();
 		camera = camController.getCamera();
 
 		levelProgress.init(this);
-		
+
 		time = 0.0f;
 
 		// level = new Level("Level XYZ");
@@ -163,7 +164,7 @@ public class GameController {
 
 	public void render(float delta) {
 		stage.act(delta);
-		
+
 		if (!isRunning)
 			return;
 
@@ -173,7 +174,7 @@ public class GameController {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camera = camController.recomputeCamera(delta);
-		
+
 		checkCollision();
 
 		// check if game is finished
@@ -198,15 +199,16 @@ public class GameController {
 		batch.begin(camera);
 		level.render(camera);
 		batch.end();
-		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer etc., split render up?
-		
+		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer
+		// etc., split render up?
+
 		// render optional features, for example game overlay
 		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
 			optionalFeature.render(delta);
 		}
-		
+
 		stage.draw();
-		
+
 		time += delta;
 	}
 
@@ -218,36 +220,38 @@ public class GameController {
 			optionalFeature.finish();
 		}
 	}
-	
+
 	/**
-	 * This method is called, when the GameScreen is left. It disposes everything
-	 * the default functions needed and calls all the optional feature dispose methods.
+	 * This method is called, when the GameScreen is left. It disposes
+	 * everything the default functions needed and calls all the optional
+	 * feature dispose methods.
 	 */
 	public void disposeGame() {
 		for (IFeatureDispose optionalFeature : optionalFeaturesToDispose) {
 			optionalFeature.dispose();
 		}
-		
+
 		stage.dispose();
-		//level.dispose();
-		
+		// level.dispose();
+
 		optionalFeaturesToRender.clear();
 	}
-	
+
 	/**
 	 * Simple version of collision testing.
 	 */
 	private boolean checkCollision() {
 		// TODO: own class? feature?
-		
-		for(Gate g : level.gates) {
-			if(camera.position.dst(g.transformMatrix[12], g.transformMatrix[13], g.transformMatrix[14]) < 2.0f) {
-				//System.out.println("GATE: " + g.id);
-				//level.gateModels.get(0).materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
+
+		for (Gate g : level.gates) {
+			if (camera.position.dst(g.transformMatrix[12],
+					g.transformMatrix[13], g.transformMatrix[14]) < 2.0f) {
+				// System.out.println("GATE: " + g.id);
+				// level.gateModels.get(0).materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -275,10 +279,13 @@ public class GameController {
 
 		/**
 		 * Creates a basic {@link GameController} with a certain level, linked
-		 * to the current player, its settings and the selected level.
+		 * to the current player, its settings and the selected level. It
+		 * interprets the setting of the player and and creates based on the
+		 * settings optional features.
 		 * 
 		 * @param game
-		 *            needed to get the player for the current settings and the level
+		 *            needed to get the player for the current settings and the
+		 *            level
 		 * @return new GameController with the current selected level and the
 		 *         selected settings
 		 */
@@ -290,11 +297,31 @@ public class GameController {
 			optionalFeaturesToFinish.clear();
 			optionalFeaturesToDispose.clear();
 			optionalFeaturesGatePassed.clear();
-			
+
 			Builder.game = game;
 			Builder.player = game.getPlayer();
-			Builder.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			Builder.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
+					Gdx.graphics.getHeight()));
 			Builder.level = player.getLastLevel();
+
+			if (player.getSettingManager()
+					.getCheckBoxValue("showGateIndicator")) {
+				addGateIndicator();
+			}
+			if (player.getSettingManager().getCheckBoxValue("showTime")) {
+				addTimeOverlay();
+			}
+			if (player.getSettingManager().getCheckBoxValue("showFPS")) {
+				addFPSOverlay();
+			}
+			if (player.getSettingManager().getCheckBoxValue("showSteering")) {
+				addSteeringOverlay();
+			}
+			if (player.getSettingManager().getCheckBoxValue("showLevelInfo")) {
+				// builder.addLevelInfoOverlay();
+				// not working yet
+			}
+
 			return this;
 		}
 
@@ -311,10 +338,10 @@ public class GameController {
 			optionalFeaturesGatePassed.add(gateIndicator);
 			return this;
 		}
-		
+
 		/**
-		 * Adds a {@link TimeOverlay} to the GameController, that is
-		 * initialized and updated every frame.
+		 * Adds a {@link TimeOverlay} to the GameController, that is initialized
+		 * and updated every frame.
 		 * 
 		 * @return Builder instance with TimeOverlay
 		 */
@@ -324,10 +351,10 @@ public class GameController {
 			optionalFeaturesToRender.add(timeOverlay);
 			return this;
 		}
-		
+
 		/**
-		 * Adds a {@link FPSOverlay} to the GameController, that is
-		 * updated every frame.
+		 * Adds a {@link FPSOverlay} to the GameController, that is updated
+		 * every frame.
 		 * 
 		 * @return Builder instance with FPSOverlay
 		 */
@@ -336,10 +363,10 @@ public class GameController {
 			optionalFeaturesToRender.add(fpsOverlay);
 			return this;
 		}
-		
+
 		/**
-		 * Adds a {@link SteeringOverlay} to the GameController, that is
-		 * updated every frame.
+		 * Adds a {@link SteeringOverlay} to the GameController, that is updated
+		 * every frame.
 		 * 
 		 * @return Builder instance with SteeringOverlay
 		 */
@@ -349,15 +376,17 @@ public class GameController {
 			optionalFeaturesToDispose.add(steeringOverlay);
 			return this;
 		}
-		
+
 		/**
 		 * Adds a {@link LevelInfoOverlay} to the GameController, that is
-		 * initialized, updated every frame and updated when the game is finished.
+		 * initialized, updated every frame and updated when the game is
+		 * finished.
 		 * 
 		 * @return Builder instance with SteeringOverlay
 		 */
 		public Builder addLevelInfoOverlay() {
-			LevelInfoOverlay levelInfoOverlay = new LevelInfoOverlay(game, stage);
+			LevelInfoOverlay levelInfoOverlay = new LevelInfoOverlay(game,
+					stage);
 			optionalFeaturesToInit.add(levelInfoOverlay);
 			optionalFeaturesToRender.add(levelInfoOverlay);
 			optionalFeaturesToFinish.add(levelInfoOverlay);
