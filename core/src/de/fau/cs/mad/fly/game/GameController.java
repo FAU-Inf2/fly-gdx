@@ -250,13 +250,13 @@ public class GameController {
 		private static Stage stage;
 		private static Level level;
 		private static boolean useSensorData;
-		private static ArrayList<IFeatureLoad> optionalFeaturesToLoad = new ArrayList<IFeatureLoad>();
-		private static ArrayList<IFeatureInit> optionalFeaturesToInit = new ArrayList<IFeatureInit>();
-		private static ArrayList<IFeatureRender> optionalFeaturesToRender = new ArrayList<IFeatureRender>();
-		private static ArrayList<IFeatureFinish> optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
-		private static ArrayList<IFeatureDispose> optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
-		private static ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
-		private static LevelProgress levelProgress = new LevelProgress();
+		private static ArrayList<IFeatureLoad> optionalFeaturesToLoad;
+		private static ArrayList<IFeatureInit> optionalFeaturesToInit;
+		private static ArrayList<IFeatureRender> optionalFeaturesToRender;
+		private static ArrayList<IFeatureFinish> optionalFeaturesToFinish;
+		private static ArrayList<IFeatureDispose> optionalFeaturesToDispose;
+		private static ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed;
+		private static LevelProgress levelProgress;
 
 		/**
 		 * Creates a basic {@link GameController} with a certain level, linked
@@ -272,12 +272,13 @@ public class GameController {
 		 */
 		public Builder init(Fly game) {
 			// clear everything in the builder from a possible earlier call
-			optionalFeaturesToLoad.clear();
-			optionalFeaturesToInit.clear();
-			optionalFeaturesToRender.clear();
-			optionalFeaturesToFinish.clear();
-			optionalFeaturesToDispose.clear();
-			optionalFeaturesGatePassed.clear();
+			optionalFeaturesToLoad = new ArrayList<IFeatureLoad>();
+			optionalFeaturesToInit = new ArrayList<IFeatureInit>();
+			optionalFeaturesToRender = new ArrayList<IFeatureRender>();
+			optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
+			optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
+			optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
+			levelProgress =  new LevelProgress();
 
 			Builder.game = game;
 			Builder.player = game.getPlayer();
