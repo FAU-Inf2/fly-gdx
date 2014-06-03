@@ -331,7 +331,7 @@ public class GameController {
 		 * 
 		 * @return Builder instance with GateIndicator
 		 */
-		public Builder addGateIndicator() {
+		private Builder addGateIndicator() {
 			GateIndicator gateIndicator = new GateIndicator();
 			optionalFeaturesToInit.add(gateIndicator);
 			optionalFeaturesToRender.add(gateIndicator);
@@ -345,7 +345,7 @@ public class GameController {
 		 * 
 		 * @return Builder instance with TimeOverlay
 		 */
-		public Builder addTimeOverlay() {
+		private Builder addTimeOverlay() {
 			TimeOverlay timeOverlay = new TimeOverlay(game, stage);
 			optionalFeaturesToInit.add(timeOverlay);
 			optionalFeaturesToRender.add(timeOverlay);
@@ -358,7 +358,7 @@ public class GameController {
 		 * 
 		 * @return Builder instance with FPSOverlay
 		 */
-		public Builder addFPSOverlay() {
+		private Builder addFPSOverlay() {
 			FPSOverlay fpsOverlay = new FPSOverlay(game, stage);
 			optionalFeaturesToRender.add(fpsOverlay);
 			return this;
@@ -370,7 +370,7 @@ public class GameController {
 		 * 
 		 * @return Builder instance with SteeringOverlay
 		 */
-		public Builder addSteeringOverlay() {
+		private Builder addSteeringOverlay() {
 			SteeringOverlay steeringOverlay = new SteeringOverlay(game, stage);
 			optionalFeaturesToRender.add(steeringOverlay);
 			optionalFeaturesToDispose.add(steeringOverlay);
@@ -384,7 +384,7 @@ public class GameController {
 		 * 
 		 * @return Builder instance with SteeringOverlay
 		 */
-		public Builder addLevelInfoOverlay() {
+		private Builder addLevelInfoOverlay() {
 			LevelInfoOverlay levelInfoOverlay = new LevelInfoOverlay(game,
 					stage);
 			optionalFeaturesToInit.add(levelInfoOverlay);
