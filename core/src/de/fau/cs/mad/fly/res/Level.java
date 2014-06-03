@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.game.GameController;
@@ -52,6 +54,9 @@ public class Level extends Resource {
 	private ModelInstance levelBorderModel;
 	
 	public List<ModelInstance> gateModels;
+	public List<BoundingBox> gateBoundingBoxes;
+	
+	private Vector3 cullingPosition = new Vector3();
 	
 	public void initLevel(GameController gameController) {
 		setUpEnvironment();
@@ -68,6 +73,7 @@ public class Level extends Resource {
 		}
 		
 		gateModels = new ArrayList<ModelInstance>();
+		gateBoundingBoxes = new ArrayList<BoundingBox>();
 		
 		for (Gate g : gates) {
 			ModelResource m = (ModelResource) dependencies.get(g.model);
@@ -75,6 +81,8 @@ public class Level extends Resource {
 					Assets.manager.get(m.descriptor));
 			mi.transform = new Matrix4(g.transformMatrix);
 			gateModels.add(mi);
+			BoundingBox bbox = new BoundingBox();
+			gateBoundingBoxes.add(mi.calculateBoundingBox(bbox));
 		}
 	}
 
@@ -99,9 +107,28 @@ public class Level extends Resource {
 			batch.render(levelBorderModel);
 		}
 		// render gates
+		int x = 0;
+		
+		int i = 0;
 		for (ModelInstance mi : gateModels) {
-			batch.render(mi, environment);
+			if(isVisible(camera, mi, gateBoundingBoxes.get(i))) {
+				batch.render(mi, environment);
+				x++;
+			}
+			i++;
 		}
+		
+		// debug of the count of rendered gates
+		//System.out.println(x);
+	}
+
+	private boolean isVisible(PerspectiveCamera camera, ModelInstance instance, BoundingBox bbox) {
+		// TODO: add BoundingBox to ModelInstance
+	    //return camera.frustum.pointInFrustum(cullingPosition);
+
+	    instance.transform.getTranslation(cullingPosition);
+	    cullingPosition.add(bbox.getCenter());
+	    return camera.frustum.boundsInFrustum(cullingPosition, bbox.getDimensions());
 	}
 
 	/**
