@@ -38,6 +38,7 @@ public class GameController {
 	private boolean useSensorData;
 	PerspectiveCamera camera;
 	private LevelProgress levelProgress;
+
 	public Environment environment;
 	public ModelBatch batch;
 
@@ -67,6 +68,15 @@ public class GameController {
 
 	public Stage getStage() {
 		return stage;
+	}
+
+	/**
+	 * Getter of the level Progress.
+	 * 
+	 * @return {@link #levelProgress}
+	 */
+	public LevelProgress getLevelProgress() {
+		return levelProgress;
 	}
 
 	public CameraController getCameraController() {
@@ -161,12 +171,12 @@ public class GameController {
 	}
 
 	public void render(float delta) {
-		
+
 		if (!isRunning)
 			return;
-		
+
 		stage.act(delta);
-		
+
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
@@ -278,7 +288,7 @@ public class GameController {
 			optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
 			optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
 			optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
-			levelProgress =  new LevelProgress();
+			levelProgress = new LevelProgress();
 
 			Builder.game = game;
 			Builder.player = game.getPlayer();
@@ -374,10 +384,11 @@ public class GameController {
 			optionalFeaturesToFinish.add(levelInfoOverlay);
 			return this;
 		}
-		
+
 		/**
 		 * Adds a {@link CollisionDetector} to the GameController, that is
-		 * initialized, checked collision every frame and disposed when the game is finished.
+		 * initialized, checked collision every frame and disposed when the game
+		 * is finished.
 		 * 
 		 * @return Builder instance with collisionDetector
 		 */
