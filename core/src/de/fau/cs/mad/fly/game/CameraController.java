@@ -192,10 +192,29 @@ public class CameraController implements InputProcessor {
 		azimuthDir = 0.0f;
 
 		// camera rotation according to smartphone rotation
-		azimuthDir = limitSpeed((difAzimuth / -90.0f), player.getPlane()
-				.getAzimuthSpeed());
+		setAzimuthDir(difAzimuth / -90.0f);
+		setRollDir(difRoll / -90.0f);
+	}
 
-		rollDir = limitSpeed((difRoll / -90.0f), player.getPlane()
+	/**
+	 * Setter for the {@link #azimuthDir}. Values greater than the azimuthSpeed
+	 * of the plane are reduced to the azimuth speed of the plane.
+	 * 
+	 * @param azimuthDir
+	 */
+	private void setAzimuthDir(float azimuthDir) {
+		this.azimuthDir = limitSpeed(azimuthDir, player.getPlane()
+				.getAzimuthSpeed());
+	}
+	
+	/**
+	 * Setter for the {@link #rollDir}. Values greater than the rollingSpeed
+	 * of the plane are reduced to the azimuth speed of the plane.
+	 * 
+	 * @param rollDir
+	 */
+	private void setRollDir(float rollDir) {
+		this.rollDir = limitSpeed(rollDir, player.getPlane()
 				.getRollingSpeed());
 	}
 
@@ -330,11 +349,8 @@ public class CameraController implements InputProcessor {
 			float xPosition = ((float) screenX) / width;
 			float yPosition = ((float) screenY) / height;
 
-			azimuthDir = limitSpeed((0.5f - xPosition), player.getPlane()
-					.getAzimuthSpeed());
-
-			rollDir = limitSpeed((0.5f - yPosition), player.getPlane()
-					.getRollingSpeed());
+			setAzimuthDir(0.5f - xPosition);
+			setRollDir(0.5f - yPosition);
 
 			currentEvent = pointer;
 		}
@@ -363,11 +379,8 @@ public class CameraController implements InputProcessor {
 			float xPosition = ((float) screenX) / width;
 			float yPosition = ((float) screenY) / height;
 
-			azimuthDir = limitSpeed((0.5f - xPosition), player.getPlane()
-					.getAzimuthSpeed());
-
-			rollDir = limitSpeed((0.5f - yPosition), player.getPlane()
-					.getRollingSpeed());
+			setAzimuthDir(0.5f - xPosition);
+			setRollDir(0.5f - yPosition);
 		}
 		return false;
 	}
