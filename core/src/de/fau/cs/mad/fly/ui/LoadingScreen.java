@@ -63,6 +63,8 @@ public class LoadingScreen implements Screen {
 		GameController.Builder builder = new GameController.Builder();
 		builder.init(game);
 		
+		builder.addCollisionDetector();
+		
 		game.gameController = builder.build();
 	}
 

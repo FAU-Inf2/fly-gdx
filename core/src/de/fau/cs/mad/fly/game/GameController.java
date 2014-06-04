@@ -374,6 +374,20 @@ public class GameController {
 			optionalFeaturesToFinish.add(levelInfoOverlay);
 			return this;
 		}
+		
+		/**
+		 * Adds a {@link CollisionDetector} to the GameController, that is
+		 * initialized, checked collision every frame and disposed when the game is finished.
+		 * 
+		 * @return Builder instance with collisionDetector
+		 */
+		public Builder addCollisionDetector() {
+			CollisionDetector collisionDetector = new CollisionDetector();
+			optionalFeaturesToInit.add(collisionDetector);
+			optionalFeaturesToRender.add(collisionDetector);
+			optionalFeaturesToDispose.add(collisionDetector);
+			return this;
+		}
 
 		/**
 		 * Creates a new GameController out of your defined preferences in the

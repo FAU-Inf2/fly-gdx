@@ -42,9 +42,12 @@ public class GameScreen implements Screen{
 		// delegate all inputs to the #inputProcessor
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		game.gameController.initGame();
+		//game.gameController.initGame();
 		
 		game.getPlayer().getLastLevel().initLevel(game.gameController);
+		
+		game.gameController.initGame();
+		
 	}
 
 	@Override

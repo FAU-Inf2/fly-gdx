@@ -2,8 +2,15 @@ package de.fau.cs.mad.fly.game;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
 import com.badlogic.gdx.physics.bullet.collision.btBroadphaseInterface;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionConfiguration;
@@ -19,12 +26,12 @@ import com.badlogic.gdx.physics.bullet.collision.btShapeHull;
 import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
 import com.badlogic.gdx.utils.Array;
 
-import de.fau.cs.mad.fly.features.IFeatureFinish;
+import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 
 public class CollisionDetector implements IFeatureInit, IFeatureRender,
-		IFeatureFinish {
+IFeatureDispose {
 
 	final static short GROUND_FLAG = 1 << 8;
 	final static short OBJECT_FLAG = 1 << 9;
@@ -36,7 +43,12 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		public boolean onContactAdded(int userValue0, int partId0, int index0,
 				int userValue1, int partId1, int index1) {
 			collisionFlag = true;
-			System.out.print("collision happened!");
+			Gdx.app.log("CollisionDetector.onContactAdded",
+					"collision happened!");
+			Gdx.app.log("CollisionDetector.onContactAdded", "userValue0: "
+					+  userValue0 + "; userValue1: " + userValue1 + "; partId0: "
+					+  partId0 + "; partId1: " + partId1 + "; index0:" + index0
+					+ "; index1: " + index1);
 			return true;
 		}
 	}
@@ -61,35 +73,54 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 
 	Array<btCollisionShape> collisionShapes = new Array<btCollisionShape>();
 	Array<btCollisionObject> collisionObjects = new Array<btCollisionObject>();
-	btCollisionObject playerCollisionObject;
+	
+	btCollisionObject spaceshipCollisionObject;
+	ModelInstance spaceshipInstance;
+	Model spaceshipModel;
 
 	private void InitCollision() {
 
+		Gdx.app.log("InitCollision", "collision init begin");
 		collisionConfig = new btDefaultCollisionConfiguration();
 		dispatcher = new btCollisionDispatcher(collisionConfig);
 		broadphase = new btDbvtBroadphase();
 		collisionWorld = new btCollisionWorld(dispatcher, broadphase,
 				collisionConfig);
 		contactListener = new MyContactListener();
-
-		btCollisionShape playerShape;
-		playerShape = new btSphereShape(0.5f);
-		playerCollisionObject = new btCollisionObject();
-		playerCollisionObject.setCollisionShape(playerShape);
-		playerCollisionObject.setCollisionFlags(playerCollisionObject
+		
+		//build the spaceship objects
+		ModelBuilder modelBuilder = new ModelBuilder();
+        spaceshipModel = modelBuilder.createSphere(0.1f, 0.1f, 0.1f, 2,2,
+            new Material(ColorAttribute.createDiffuse(Color.GREEN)),
+            Usage.Position | Usage.Normal);
+        spaceshipInstance = new ModelInstance(spaceshipModel);
+        spaceshipInstance.transform.setToTranslation( gameController.getCamera().position);
+        
+		// init and add the spaceship collision object to collision world
+		btCollisionShape spaceshipShape;
+		spaceshipShape = new btSphereShape(0.1f);
+		spaceshipCollisionObject = new btCollisionObject();
+		spaceshipCollisionObject.setCollisionShape(spaceshipShape);
+		spaceshipCollisionObject.setCollisionFlags(spaceshipCollisionObject
 				.getCollisionFlags()
 				| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
-		playerCollisionObject
-				.setWorldTransform(gameController.getCamera().combined);
-		collisionShapes.add(playerShape);
-		collisionObjects.add(playerCollisionObject);
+		spaceshipCollisionObject
+				.setWorldTransform(spaceshipInstance.transform);
+		Gdx.app.log("collision", "camera init:"
+				+ gameController.getCamera().position.toString());
+		spaceshipCollisionObject.setUserValue(0);
 
-		collisionWorld.addCollisionObject(playerCollisionObject, GROUND_FLAG,
+		collisionShapes.add(spaceshipShape);
+		collisionObjects.add(spaceshipCollisionObject);
+
+		collisionWorld.addCollisionObject(spaceshipCollisionObject, GROUND_FLAG,
 				ALL_FLAG);
 
+		// init and add each gates to the collision world
 		List<ModelInstance> instances = gameController.getLevel().gateModels;
-		for (final ModelInstance instance : instances) {
+		for (int n = 0; n < instances.size(); n++) {
 
+			final ModelInstance instance = instances.get(n);
 			btCollisionObject hullObject;
 
 			final Mesh mesh = instance.model.meshes.get(0);
@@ -107,28 +138,38 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 			hullObject
 					.setCollisionFlags(hullObject.getCollisionFlags()
 							| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
+		
 			hullObject.setWorldTransform(instance.transform);
+			//Gdx.app.log("collision", "Gate" + n + ":" + instance.transform);
+			hullObject.setUserValue(100 + n);
 
-			collisionWorld.addCollisionObject(playerCollisionObject,
+			collisionWorld.addCollisionObject(hullObject,
 					OBJECT_FLAG, GROUND_FLAG);
 			collisionShapes.add(hullShapeFinal);
-			collisionObjects.add(playerCollisionObject);
+			collisionObjects.add(hullObject);
 
 			// delete the temporary shape
 			hullShape.dispose();
 			hull.dispose();
 		}
+		Gdx.app.log("InitCollision", "collision init end");
 	}
 
 	@Override
 	public void render(float delta) {
-		playerCollisionObject
-				.setWorldTransform(gameController.getCamera().combined);
+		spaceshipInstance.transform.setToTranslation(gameController.getCamera().position);
+		spaceshipCollisionObject
+				.setWorldTransform(spaceshipInstance.transform);
+		//Gdx.app.log("collision.render", "camera:"
+			//	+ gameController.getCamera().position.toString());
 		collisionWorld.performDiscreteCollisionDetection();
 	}
 
 	@Override
-	public void finish() {
+	public void dispose() {
+		Gdx.app.log("Collision.dispose", "collision dispose");
+		spaceshipModel.dispose();
+		
 		for (btCollisionShape obj : collisionShapes)
 			obj.dispose();
 		collisionShapes.clear();
@@ -143,4 +184,6 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		collisionConfig.dispose();
 		contactListener.dispose();
 	}
+
+	
 }
