@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
@@ -88,6 +87,8 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 	btCollisionWorld collisionWorld;
 
 	private GameController gameController;
+	
+	private GameObject playerInstance;
 
 	public CollisionDetector(final Fly game, Stage stage) {
 		this.game = game;
@@ -98,6 +99,7 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 	@Override
 	public void init(GameController gameCon) {
 		gameController = gameCon;
+		playerInstance = game.getPlayer().getPlane().getInstance();
 		InitCollision();
 
 		collisionCounter = 0;
@@ -119,9 +121,7 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 	Array<btCollisionShape> collisionShapes = new Array<btCollisionShape>();
 	Array<btCollisionObject> collisionObjects = new Array<btCollisionObject>();
 
-	btCollisionObject spaceshipCollisionObject;
-	ModelInstance spaceshipInstance;
-	Model spaceshipModel;
+	btCollisionObject playerCollisionObject;
 
 	private void InitCollision() {
 
@@ -133,39 +133,30 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 				collisionConfig);
 		contactListener = new MyContactListener();
 
-		// build the spaceship objects
-		ModelBuilder modelBuilder = new ModelBuilder();
-		spaceshipModel = modelBuilder.createSphere(0.1f, 0.1f, 0.1f, 2, 2,
-				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-				Usage.Position | Usage.Normal);
-		spaceshipInstance = new ModelInstance(spaceshipModel);
-		spaceshipInstance.transform
-				.setToTranslation(gameController.getCamera().position);
-
-		// init and add the spaceship collision object to collision world
-		btCollisionShape spaceshipShape;
-		spaceshipShape = new btSphereShape(0.1f);
-		spaceshipCollisionObject = new btCollisionObject();
-		spaceshipCollisionObject.setCollisionShape(spaceshipShape);
-		spaceshipCollisionObject.setCollisionFlags(spaceshipCollisionObject
+		// init and add the player collision object to collision world
+		btCollisionShape playerShape;
+		playerShape = new btSphereShape(0.1f);
+		playerCollisionObject = new btCollisionObject();
+		playerCollisionObject.setCollisionShape(playerShape);
+		playerCollisionObject.setCollisionFlags(playerCollisionObject
 				.getCollisionFlags()
 				| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
-		spaceshipCollisionObject.setWorldTransform(spaceshipInstance.transform);
+		playerCollisionObject.setWorldTransform(playerInstance.transform);
 		Gdx.app.log("collision", "camera init:"
 				+ gameController.getCamera().position.toString());
-		spaceshipCollisionObject.setUserValue(0);
+		playerCollisionObject.setUserValue(0);
 
-		collisionShapes.add(spaceshipShape);
-		collisionObjects.add(spaceshipCollisionObject);
+		collisionShapes.add(playerShape);
+		collisionObjects.add(playerCollisionObject);
 
-		collisionWorld.addCollisionObject(spaceshipCollisionObject,
+		collisionWorld.addCollisionObject(playerCollisionObject,
 				GROUND_FLAG, ALL_FLAG);
 
 		// init and add each gates to the collision world
-		List<ModelInstance> instances = gameController.getLevel().gateModels;
+		List<GameObject> instances = gameController.getLevel().gateModels;
 		for (int n = 0; n < instances.size(); n++) {
 
-			final ModelInstance instance = instances.get(n);
+			final GameObject instance = instances.get(n);
 			btCollisionObject hullObject;
 
 			final Mesh mesh = instance.model.meshes.get(0);
@@ -202,9 +193,9 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 
 	@Override
 	public void render(float delta) {
-		spaceshipInstance.transform
+		playerInstance.transform
 				.setToTranslation(gameController.getCamera().position);
-		spaceshipCollisionObject.setWorldTransform(spaceshipInstance.transform);
+		playerCollisionObject.setWorldTransform(playerInstance.transform);
 		// Gdx.app.log("collision.render", "camera:"
 		// + gameController.getCamera().position.toString());
 		collisionWorld.performDiscreteCollisionDetection();
@@ -213,7 +204,6 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 	@Override
 	public void dispose() {
 		Gdx.app.log("Collision.dispose", "collision dispose");
-		spaceshipModel.dispose();
 
 		for (btCollisionShape obj : collisionShapes)
 			obj.dispose();

@@ -43,7 +43,6 @@ public class GameScreen implements Screen{
 		Gdx.input.setInputProcessor(inputProcessor);
 		
 		game.gameController.initGame();
-		
 	}
 
 	@Override

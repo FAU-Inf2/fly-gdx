@@ -154,9 +154,9 @@ public class Fly extends Game {
 		GameController.Builder builder = new GameController.Builder();
 		builder.init(this);
 		
-		builder.addCollisionDetector();
-		
 		gameController = builder.build();
+		
+		gameController.loadGame();
 	}
 
 	/**

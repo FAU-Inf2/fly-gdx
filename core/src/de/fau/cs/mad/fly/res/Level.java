@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Matrix4;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.geo.Perspective;
 
 import java.util.ArrayList;
@@ -51,10 +51,9 @@ public class Level extends Resource {
 
 	private ModelBatch batch;
 
-	private ModelInstance levelBorderModel;
+	private GameObject levelBorderModel;
 	
-	public List<ModelInstance> gateModels;
-	public List<BoundingBox> gateBoundingBoxes;
+	public List<GameObject> gateModels;
 	
 	private Vector3 cullingPosition = new Vector3();
 	
@@ -65,26 +64,21 @@ public class Level extends Resource {
 		
 
 		if (levelBorder != null) {
-			levelBorderModel = new ModelInstance(
+			levelBorderModel = new GameObject(
 					Assets.manager.get(new AssetDescriptor<Model>(levelBorder,
 							Model.class)));
 		} else {
 			// CRASH
 		}
 		
-		gateModels = new ArrayList<ModelInstance>();
-		gateBoundingBoxes = new ArrayList<BoundingBox>();
+		gateModels = new ArrayList<GameObject>();
 		
 		for (Gate g : gates) {
 			ModelResource m = (ModelResource) dependencies.get(g.model);
-			ModelInstance mi = new ModelInstance(
+			GameObject mi = new GameObject(
 					Assets.manager.get(m.descriptor));
 			mi.transform = new Matrix4(g.transformMatrix);
 			gateModels.add(mi);
-			BoundingBox bbox = new BoundingBox();
-			mi.calculateBoundingBox(bbox);
-			bbox.getDimensions().scl(2.0f);
-			gateBoundingBoxes.add(bbox);
 		}
 	}
 
@@ -93,7 +87,7 @@ public class Level extends Resource {
 	 * 
 	 * @return level border
 	 */
-	public ModelInstance getLevelBorder() {
+	public GameObject getLevelBorder() {
 		return levelBorderModel;
 	}
 
@@ -109,28 +103,17 @@ public class Level extends Resource {
 			batch.render(levelBorderModel);
 		}
 		// render gates
-		int x = 0;
 		
-		int i = 0;
-		for (ModelInstance mi : gateModels) {
-			if(isVisible(camera, mi, gateBoundingBoxes.get(i))) {
+		int x = 0;
+		for (GameObject mi : gateModels) {
+			if(mi.isVisible(camera)) {
 				batch.render(mi, environment);
 				x++;
 			}
-			i++;
 		}
 		
 		// debug of the count of rendered gates
 		//System.out.println(x);
-	}
-
-	private boolean isVisible(PerspectiveCamera camera, ModelInstance instance, BoundingBox bbox) {
-		// TODO: add BoundingBox to ModelInstance
-	    //return camera.frustum.pointInFrustum(cullingPosition);
-
-	    instance.transform.getTranslation(cullingPosition);
-	    cullingPosition.add(bbox.getCenter());
-	    return camera.frustum.boundsInFrustum(cullingPosition, bbox.getDimensions());
 	}
 
 	/**
@@ -151,80 +134,3 @@ public class Level extends Resource {
 				+ " gates=" + gates;
 	}
 }
-
-/**
- * Converts the {@link RawLevel} to a {@link Level} where all information is
- * generated to create the 3D world.
- * 
- * @see #check() for level completion check
- * @throws ParseException
- *             when level is not complete
- */
-/*
- * public void refactor() throws ParseException { if (check()) {
- * calculateGatePositions(); } else { throw new ParseException("Level " +
- * this.name + " is not complete:" + this.toString(), 0); } }
- */
-
-/**
- * Decides if all necessary information is loaded to create a level out of it.
- * 
- * @return true level is completely loaded
- * @return false some information is missing
- */
-/*
- * public boolean check() { boolean complete = true; if (id != null &&
- * !name.isEmpty() && firstSection != null && sections != null &&
- * firstSection.isComplete()) { int i = 0; while (i < sections.size() &&
- * complete) { complete = sections.get(i).isComplete(); i++; } } else {
- * Gdx.app.log("Level.isComplete()", "first comparison wrong"); complete =
- * false; } return complete; }
- */
-
-/**
- * Converts the relative positions defined as sections to absolute positions.
- * These positions are saved in the
- */
-/*
- * private void calculateGatePositions() { // get the end of first section as
- * first possible position for a gate Vector3 currentPosition =
- * getCameraLookAt(); Matrix4 rotationMatrix; Matrix4 translationMatrix = new
- * Matrix4(); ModelInstance lastGateInstance = null; float horizontalAngle;
- * float verticalAngle; Vector3 currentVector = new
- * Vector3(firstSection.directionX, firstSection.directionY,
- * firstSection.directionZ); Vector3 verticalTurningAxis = new Vector3(0, 1, 0);
- * Vector3 horizontalTurningAxis = new Vector3(firstSection.directionX,
- * firstSection.directionY, firstSection.directionZ); horizontalTurningAxis =
- * horizontalTurningAxis.crs(verticalTurningAxis) .nor();
- * 
- * if (firstSection.gateID != Gate.NO_GATE) { Gate newGate = new
- * Gate(firstSection.gateID); lastGateInstance = new ModelInstance(
- * Assets.manager.get(Assets.torus)); lastGateInstance.transform =
- * translationMatrix .translate(getCameraLookAt()) .rotate(verticalTurningAxis,
- * getCameraLookAt()).cpy(); newGate.modelInstance = lastGateInstance;
- * gates.put(newGate.getId(), newGate); } for (Section s : sections) {
- * rotationMatrix = new Matrix4(); horizontalAngle =
- * calculateAngle(s.minHorizontalAngle, s.maxHorizontalAngle); if
- * (horizontalAngle != 0) { rotationMatrix = rotationMatrix.setToRotation(
- * horizontalTurningAxis, horizontalAngle); } verticalAngle =
- * calculateAngle(s.minVerticalAngle, s.maxVerticalAngle); if (verticalAngle !=
- * 0) { rotationMatrix = rotationMatrix.setToRotation( verticalTurningAxis,
- * verticalAngle); } currentVector = currentVector.rot(rotationMatrix);
- * verticalTurningAxis = verticalTurningAxis.rot(rotationMatrix);
- * 
- * currentVector = currentVector.nor(); currentPosition.mulAdd(currentVector,
- * s.length); if (s.gateID != Gate.NO_GATE) { Gate newGate = new Gate(s.gateID);
- * newGate.modelInstance = lastGateInstance.copy();
- * newGate.modelInstance.transform = translationMatrix .trn(new
- * Vector3().mulAdd(currentVector, s.length)) .rotate(verticalTurningAxis,
- * verticalAngle) .rotate(horizontalTurningAxis, horizontalAngle).cpy();
- * gates.put(newGate.getId(), newGate); lastGateInstance =
- * newGate.modelInstance; } } }
- */
-/**
- * Calculates a random number between @param min and @param max.
- */
-/*
- * private float calculateAngle(float min, float max) { return (float) (min +
- * (Math.random() * (max - min))); }
- */

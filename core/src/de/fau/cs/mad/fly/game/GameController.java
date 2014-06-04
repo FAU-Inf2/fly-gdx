@@ -101,6 +101,8 @@ public class GameController {
 	 * methods.
 	 */
 	public void loadGame() {
+		player.getPlane().load(this);
+		
 		for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
 			optionalFeature.load(this);
 		}
@@ -297,6 +299,8 @@ public class GameController {
 			Builder.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
 					Gdx.graphics.getHeight()));
 			Builder.level = player.getLastLevel();
+			
+			addCollisionDetector();
 
 			if (player.getSettingManager()
 					.getCheckBoxValue("showGateIndicator")) {
@@ -394,7 +398,7 @@ public class GameController {
 		 * 
 		 * @return Builder instance with collisionDetector
 		 */
-		public Builder addCollisionDetector() {
+		private Builder addCollisionDetector() {
 			CollisionDetector collisionDetector = new CollisionDetector(game, 
 					stage);
 			optionalFeaturesToInit.add(collisionDetector);

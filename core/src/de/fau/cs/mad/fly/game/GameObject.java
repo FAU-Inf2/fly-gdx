@@ -26,18 +26,18 @@ public class GameObject extends ModelInstance implements Disposable {
 	private final static BoundingBox bounds = new BoundingBox();
 
 	private final btCollisionObject body;
+	
+	// TODO: create more constructors to match the ModelInstance constructors
 
 	/**
 	 * Creates a new GameObject with btBoxShape with the size of the
 	 * BoundingBox.
 	 */
-	public GameObject(Model model, String rootNode, boolean mergeTransform) {
-		super(model, rootNode, mergeTransform);
+	public GameObject(Model model) {
+		super(model);
 
-		calculateBoundingBox(bounds);
-		center.set(bounds.getCenter());
-		dimensions.set(bounds.getDimensions());
-
+		initBoundingBox();
+		
 		body = new btCollisionObject();
 		body.setCollisionShape(new btBoxShape(bounds.getDimensions().cpy()
 				.scl(0.5f)));
@@ -46,16 +46,19 @@ public class GameObject extends ModelInstance implements Disposable {
 	/**
 	 * Creates a new GameObject with given btCollisionShape.
 	 */
-	public GameObject(Model model, String rootNode, btCollisionShape shape,
-			boolean mergeTransform) {
-		super(model, rootNode, mergeTransform);
-
-		calculateBoundingBox(bounds);
-		center.set(bounds.getCenter());
-		dimensions.set(bounds.getDimensions());
+	public GameObject(Model model, btCollisionShape shape) {
+		super(model);
+		
+		initBoundingBox();
 
 		body = new btCollisionObject();
 		body.setCollisionShape(shape);
+	}
+	
+	private void initBoundingBox() {
+		calculateBoundingBox(bounds);
+		center.set(bounds.getCenter());
+		dimensions.set(bounds.getDimensions().cpy().scl(2.0f));
 	}
 
 	/**
@@ -69,6 +72,7 @@ public class GameObject extends ModelInstance implements Disposable {
 		transform.getTranslation(position);
 		position.add(center);
 		return camera.frustum.boundsInFrustum(position, dimensions);
+		//return camera.frustum.pointInFrustum(position);
 	}
 
 	/**
@@ -77,6 +81,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * @return {@link #position}
 	 */
 	public Vector3 getPosition() {
+		transform.getTranslation(position);
 		return position;
 	}
 
