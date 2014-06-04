@@ -24,19 +24,32 @@ import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration
 import com.badlogic.gdx.physics.bullet.collision.btDispatcher;
 import com.badlogic.gdx.physics.bullet.collision.btShapeHull;
 import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 
+import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 
 public class CollisionDetector implements IFeatureInit, IFeatureRender,
-IFeatureDispose {
+		IFeatureDispose {
 
 	final static short GROUND_FLAG = 1 << 8;
 	final static short OBJECT_FLAG = 1 << 9;
 	final static short ALL_FLAG = -1;
 	boolean collisionFlag = false;
+
+	private final Fly game;
+	private Stage gameStage;
+	private Skin skin;
+	private Label collisionCounterLabel;
+	private int collisionCounter = 0;
+	private int collisionObj0 = -1;
+	private int collisionObj1 = -1;
 
 	class MyContactListener extends ContactListener {
 		@Override
@@ -46,10 +59,25 @@ IFeatureDispose {
 			Gdx.app.log("CollisionDetector.onContactAdded",
 					"collision happened!");
 			Gdx.app.log("CollisionDetector.onContactAdded", "userValue0: "
-					+  userValue0 + "; userValue1: " + userValue1 + "; partId0: "
-					+  partId0 + "; partId1: " + partId1 + "; index0:" + index0
-					+ "; index1: " + index1);
+					+ userValue0 + "; userValue1: " + userValue1
+					+ "; partId0: " + partId0 + "; partId1: " + partId1
+					+ "; index0:" + index0 + "; index1: " + index1);
+			
+			if (!(checkObj(userValue0) && checkObj(userValue1)))
+			{
+				collisionObj0 = userValue0;
+				collisionObj1 = userValue1;
+				collisionCounter++;
+				collisionCounterLabel.setText("" + collisionCounter);
+			}
 			return true;
+		}
+
+		private boolean checkObj(int obj) {
+			if (obj == collisionObj0 || obj == collisionObj1)
+				return true;
+			else
+				return false;
 		}
 	}
 
@@ -61,19 +89,36 @@ IFeatureDispose {
 
 	private GameController gameController;
 
-	public CollisionDetector() {
-
+	public CollisionDetector(final Fly game, Stage stage) {
+		this.game = game;
+		gameStage = stage;
+		skin = game.getSkin();
 	}
 
 	@Override
-	public void init(GameController game) {
-		gameController = game;
+	public void init(GameController gameCon) {
+		gameController = gameCon;
 		InitCollision();
+
+		collisionCounter = 0;
+
+		//init collision stage
+		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"),
+				Color.RED);
+		Label label = new Label("Collision:", labelStyle);
+		label.setPosition(game.getAbsoluteX(0.35f), game.getAbsoluteY(0.0f));
+		gameStage.addActor(label);
+
+		label = new Label(collisionCounter + "", labelStyle);
+		label.setPosition(game.getAbsoluteX(0.55f), game.getAbsoluteY(0.0f));
+		gameStage.addActor(label);
+		collisionCounterLabel = label;
+
 	}
 
 	Array<btCollisionShape> collisionShapes = new Array<btCollisionShape>();
 	Array<btCollisionObject> collisionObjects = new Array<btCollisionObject>();
-	
+
 	btCollisionObject spaceshipCollisionObject;
 	ModelInstance spaceshipInstance;
 	Model spaceshipModel;
@@ -87,15 +132,16 @@ IFeatureDispose {
 		collisionWorld = new btCollisionWorld(dispatcher, broadphase,
 				collisionConfig);
 		contactListener = new MyContactListener();
-		
-		//build the spaceship objects
+
+		// build the spaceship objects
 		ModelBuilder modelBuilder = new ModelBuilder();
-        spaceshipModel = modelBuilder.createSphere(0.1f, 0.1f, 0.1f, 2,2,
-            new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-            Usage.Position | Usage.Normal);
-        spaceshipInstance = new ModelInstance(spaceshipModel);
-        spaceshipInstance.transform.setToTranslation( gameController.getCamera().position);
-        
+		spaceshipModel = modelBuilder.createSphere(0.1f, 0.1f, 0.1f, 2, 2,
+				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
+				Usage.Position | Usage.Normal);
+		spaceshipInstance = new ModelInstance(spaceshipModel);
+		spaceshipInstance.transform
+				.setToTranslation(gameController.getCamera().position);
+
 		// init and add the spaceship collision object to collision world
 		btCollisionShape spaceshipShape;
 		spaceshipShape = new btSphereShape(0.1f);
@@ -104,8 +150,7 @@ IFeatureDispose {
 		spaceshipCollisionObject.setCollisionFlags(spaceshipCollisionObject
 				.getCollisionFlags()
 				| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
-		spaceshipCollisionObject
-				.setWorldTransform(spaceshipInstance.transform);
+		spaceshipCollisionObject.setWorldTransform(spaceshipInstance.transform);
 		Gdx.app.log("collision", "camera init:"
 				+ gameController.getCamera().position.toString());
 		spaceshipCollisionObject.setUserValue(0);
@@ -113,8 +158,8 @@ IFeatureDispose {
 		collisionShapes.add(spaceshipShape);
 		collisionObjects.add(spaceshipCollisionObject);
 
-		collisionWorld.addCollisionObject(spaceshipCollisionObject, GROUND_FLAG,
-				ALL_FLAG);
+		collisionWorld.addCollisionObject(spaceshipCollisionObject,
+				GROUND_FLAG, ALL_FLAG);
 
 		// init and add each gates to the collision world
 		List<ModelInstance> instances = gameController.getLevel().gateModels;
@@ -138,13 +183,13 @@ IFeatureDispose {
 			hullObject
 					.setCollisionFlags(hullObject.getCollisionFlags()
 							| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
-		
+
 			hullObject.setWorldTransform(instance.transform);
-			//Gdx.app.log("collision", "Gate" + n + ":" + instance.transform);
+			// Gdx.app.log("collision", "Gate" + n + ":" + instance.transform);
 			hullObject.setUserValue(100 + n);
 
-			collisionWorld.addCollisionObject(hullObject,
-					OBJECT_FLAG, GROUND_FLAG);
+			collisionWorld.addCollisionObject(hullObject, OBJECT_FLAG,
+					GROUND_FLAG);
 			collisionShapes.add(hullShapeFinal);
 			collisionObjects.add(hullObject);
 
@@ -157,11 +202,11 @@ IFeatureDispose {
 
 	@Override
 	public void render(float delta) {
-		spaceshipInstance.transform.setToTranslation(gameController.getCamera().position);
-		spaceshipCollisionObject
-				.setWorldTransform(spaceshipInstance.transform);
-		//Gdx.app.log("collision.render", "camera:"
-			//	+ gameController.getCamera().position.toString());
+		spaceshipInstance.transform
+				.setToTranslation(gameController.getCamera().position);
+		spaceshipCollisionObject.setWorldTransform(spaceshipInstance.transform);
+		// Gdx.app.log("collision.render", "camera:"
+		// + gameController.getCamera().position.toString());
 		collisionWorld.performDiscreteCollisionDetection();
 	}
 
@@ -169,7 +214,7 @@ IFeatureDispose {
 	public void dispose() {
 		Gdx.app.log("Collision.dispose", "collision dispose");
 		spaceshipModel.dispose();
-		
+
 		for (btCollisionShape obj : collisionShapes)
 			obj.dispose();
 		collisionShapes.clear();
@@ -185,5 +230,4 @@ IFeatureDispose {
 		contactListener.dispose();
 	}
 
-	
 }

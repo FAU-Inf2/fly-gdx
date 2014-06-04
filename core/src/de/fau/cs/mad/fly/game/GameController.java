@@ -395,7 +395,8 @@ public class GameController {
 		 * @return Builder instance with collisionDetector
 		 */
 		public Builder addCollisionDetector() {
-			CollisionDetector collisionDetector = new CollisionDetector();
+			CollisionDetector collisionDetector = new CollisionDetector(game, 
+					stage);
 			optionalFeaturesToInit.add(collisionDetector);
 			optionalFeaturesToRender.add(collisionDetector);
 			optionalFeaturesToDispose.add(collisionDetector);
