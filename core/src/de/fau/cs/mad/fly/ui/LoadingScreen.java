@@ -39,7 +39,6 @@ public class LoadingScreen implements Screen {
 	public LoadingScreen(final Fly game) {
 		this.game = game;
 		skin = game.getSkin();
-		Assets.loadAssetsForLoadingScreen();
 
 		batch = new SpriteBatch();
 		splashImg = Assets.manager.get(Assets.flyTextureLoadingScreen);
@@ -48,26 +47,8 @@ public class LoadingScreen implements Screen {
 				Gdx.graphics.getHeight()));
 		
 		addLoadingProgress();
-		
-		loadNewGame();
 	}
 	
-	/**
-	 * Loads everything needed for a new game.
-	 */
-	private void loadNewGame() {
-		// TODO: run asynchronous to the screen
-
-		Assets.load();
-
-		GameController.Builder builder = new GameController.Builder();
-		builder.init(game);
-		
-		builder.addCollisionDetector();
-		
-		game.gameController = builder.build();
-	}
-
 	/**
 	 * Adds the progress bar to the loading screen.
 	 */

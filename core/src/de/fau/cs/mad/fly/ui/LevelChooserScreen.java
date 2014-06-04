@@ -112,7 +112,7 @@ public class LevelChooserScreen implements Screen {
 						((Fly) Gdx.app.getApplicationListener())
 								.getPlayer().setLastLevel(level);
 						((Fly) Gdx.app.getApplicationListener())
-								.setLoadingScreen();
+								.loadLevel();
 					}
 				});
 				scrollableTable.add(button).width(buttonWidth)

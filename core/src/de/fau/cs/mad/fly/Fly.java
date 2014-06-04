@@ -144,13 +144,19 @@ public class Fly extends Game {
 	/**
 	 * Switches the current Screen to the LoadingScreen.
 	 */
-	public void setLoadingScreen() {
-		// TODO: Wrong Way ! we have to find a better solution than creating new loading screens everytime
-		
-		//if (loadingScreen == null) {
+	public void loadLevel() {		
+		if (loadingScreen == null) {
 			loadingScreen = new LoadingScreen(this);
-		//}
+		}
 		setScreen(loadingScreen);
+		Assets.load();
+
+		GameController.Builder builder = new GameController.Builder();
+		builder.init(this);
+		
+		builder.addCollisionDetector();
+		
+		gameController = builder.build();
 	}
 
 	/**

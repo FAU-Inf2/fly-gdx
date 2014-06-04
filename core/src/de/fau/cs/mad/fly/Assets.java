@@ -19,12 +19,10 @@ public class Assets {
 
 	public static void init() {
 		manager = new AssetManager();
-	}
-
-	public static void loadAssetsForLoadingScreen() {
 		manager.load(flyTextureLoadingScreen);
 		manager.finishLoading();
 	}
+
 
 	public static void load() {
 		manager.load(space);
