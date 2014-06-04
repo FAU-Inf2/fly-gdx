@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.game.CameraController;
 import de.fau.cs.mad.fly.game.GameController;
-import de.fau.cs.mad.fly.game.GameController.Builder;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -149,6 +148,7 @@ public class Fly extends Game {
 			loadingScreen = new LoadingScreen(this);
 		}
 		setScreen(loadingScreen);
+		// TODO: this should be level dependent in the future
 		Assets.load();
 
 		GameController.Builder builder = new GameController.Builder();

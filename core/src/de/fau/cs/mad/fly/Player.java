@@ -23,6 +23,7 @@ public class Player {
 	
 	public Player() {
 		this.lastLevel = ResourceManager.getLevelList().get(0);
+		this.plane = new Spaceship();
 	}
 
 	public Level getLastLevel() {

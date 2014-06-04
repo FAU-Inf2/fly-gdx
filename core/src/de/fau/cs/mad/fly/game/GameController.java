@@ -132,6 +132,8 @@ public class GameController {
 		levelProgress.init(this);
 
 		time = 0.0f;
+		
+		player.getLastLevel().initLevel(this);
 
 		// level = new Level("Level XYZ");
 		// Level-Constructor includes:

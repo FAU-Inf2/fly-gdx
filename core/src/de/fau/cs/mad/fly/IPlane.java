@@ -8,4 +8,6 @@ package de.fau.cs.mad.fly;
  */
 public interface IPlane {
 	public float getSpeed();
+	public float getAzimuthSpeed();
+	public float getRollingSpeed();
 }

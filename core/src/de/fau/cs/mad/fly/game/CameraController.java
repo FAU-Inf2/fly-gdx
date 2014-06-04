@@ -13,11 +13,11 @@ import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.Player;
 
 public class CameraController implements InputProcessor {
-	
+
 	private boolean useSensorData;
 	private boolean useRolling;
 	private boolean useLowPass;
-	
+
 	private Player player;
 	private PerspectiveCamera camera;
 
@@ -27,11 +27,7 @@ public class CameraController implements InputProcessor {
 	private float azimuthDir = 0.0f;
 
 	private int currentEvent = -1;
-	
-	//should come from spaceship
-	private float maximumSteeringSpeed = 5.0f;
-	private float cameraSpeed = 2.0f;
-	
+
 	// variables for Sensor input smoothing
 	private int bufferSize;
 	private ArrayList<Float> rollInput;
@@ -40,50 +36,51 @@ public class CameraController implements InputProcessor {
 	private ArrayList<Float> pitchOutput;
 	private ArrayList<Float> azimuthInput;
 	private ArrayList<Float> azimuthOutput;
-	
-	public CameraController(boolean useSensorData, Player player){
+
+	public CameraController(boolean useSensorData, Player player) {
 		this.useSensorData = useSensorData;
 		this.player = player;
-		
+
 		useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
 		useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
-		
+
 		bufferSize = 30;
-		
+
 		setUpCamera();
 	}
-	
-	public PerspectiveCamera getCamera(){
+
+	public PerspectiveCamera getCamera() {
 		return camera;
 	}
-	
-	public void setUseSensorData(boolean useSensorData){
+
+	public void setUseSensorData(boolean useSensorData) {
 		this.useSensorData = useSensorData;
 	}
-	
-	public void setUseRolling(boolean useRolling){
+
+	public void setUseRolling(boolean useRolling) {
 		this.useRolling = useRolling;
 	}
-	
-	public void setUseLowPass(boolean useLowPass){
+
+	public void setUseLowPass(boolean useLowPass) {
 		this.useLowPass = useLowPass;
 	}
 
 	public float getRollDir() {
 		return rollDir;
 	}
-	
+
 	public float getAzimuthDir() {
 		return azimuthDir;
 	}
-	
+
 	/**
 	 * recomputes camera position and rotation
 	 * 
-	 * @param delta - time since last frame
+	 * @param delta
+	 *            - time since last frame
 	 * @return
 	 */
-	public PerspectiveCamera recomputeCamera(float delta){
+	public PerspectiveCamera recomputeCamera(float delta) {
 		// rotating the camera according to UserInput
 		if (useSensorData) {
 			interpretSensorInput();
@@ -96,9 +93,9 @@ public class CameraController implements InputProcessor {
 		// move the camera (first person flight)
 		Vector3 dir = new Vector3(camera.direction.x, camera.direction.y,
 				camera.direction.z);
-		camera.translate(dir.scl(cameraSpeed * delta));
+		camera.translate(dir.scl(player.getPlane().getSpeed() * delta));
 		camera.update();
-				
+
 		return camera;
 	}
 
@@ -111,7 +108,7 @@ public class CameraController implements InputProcessor {
 		float roll = Gdx.input.getRoll();
 		float pitch = Gdx.input.getPitch();
 		float azimuth = Gdx.input.getAzimuth();
-		
+
 		startAzimuth = computeAzimuth(roll, pitch, azimuth);
 		startRoll = Gdx.input.getRoll();
 
@@ -130,8 +127,8 @@ public class CameraController implements InputProcessor {
 
 		resetBuffers();
 	}
-	
-	private void resetBuffers(){
+
+	private void resetBuffers() {
 		rollInput = new ArrayList<Float>();
 		rollOutput = new ArrayList<Float>();
 		pitchInput = new ArrayList<Float>();
@@ -147,26 +144,27 @@ public class CameraController implements InputProcessor {
 		float roll = Gdx.input.getRoll();
 		float pitch = Gdx.input.getPitch();
 		float azimuth = Gdx.input.getAzimuth();
-		
-		//Gdx.app.log("myApp", "roll: " + roll + "; pitch: " + pitch + "; azimuth: " + azimuth);
-		
+
+		// Gdx.app.log("myApp", "roll: " + roll + "; pitch: " + pitch +
+		// "; azimuth: " + azimuth);
+
 		// removing oldest element in buffers
-		if(rollInput.size() >= bufferSize){
+		if (rollInput.size() >= bufferSize) {
 			rollInput.remove(0);
 			pitchInput.remove(0);
 			azimuthInput.remove(0);
 		}
-		
+
 		// adding newest sensor-data to buffers
 		rollInput.add(roll);
 		pitchInput.add(pitch);
 		azimuthInput.add(azimuth);
-		
-		if(useLowPass) {
+
+		if (useLowPass) {
 			rollOutput = lowPassFilter(rollInput, rollOutput, 0.15f);
 			pitchOutput = lowPassFilter(pitchInput, pitchOutput, 0.15f);
 			azimuthOutput = lowPassFilter(azimuthInput, azimuthOutput, 0.15f);
-			
+
 			roll = average(rollOutput);
 			pitch = average(pitchOutput);
 			azimuth = average(azimuthOutput);
@@ -175,18 +173,18 @@ public class CameraController implements InputProcessor {
 			pitch = average(pitchInput);
 			azimuth = average(azimuthInput);
 		}
-		
+
 		azimuth = computeAzimuth(roll, pitch, azimuth);
 
 		float difRoll = roll - startRoll;
 		float difAzimuth = azimuth - startAzimuth;
-		
+
 		// capping the rotation to a maximum of 90 degrees
-		if(Math.abs(difRoll) > 90) {
+		if (Math.abs(difRoll) > 90) {
 			difRoll = 90 * Math.signum(difRoll);
-		} 
-		
-		if(Math.abs(difAzimuth) > 90) {
+		}
+
+		if (Math.abs(difAzimuth) > 90) {
 			difRoll = 90 * Math.signum(difAzimuth);
 		}
 
@@ -194,8 +192,11 @@ public class CameraController implements InputProcessor {
 		azimuthDir = 0.0f;
 
 		// camera rotation according to smartphone rotation
-		rollDir = maximumSteeringSpeed *  difRoll / -90.0f;
-		azimuthDir = maximumSteeringSpeed * difAzimuth / -90.0f;
+		azimuthDir = limitSpeed((difAzimuth / -90.0f), player.getPlane()
+				.getAzimuthSpeed());
+
+		rollDir = limitSpeed((difRoll / -90.0f), player.getPlane()
+				.getRollingSpeed());
 	}
 
 	/**
@@ -211,14 +212,14 @@ public class CameraController implements InputProcessor {
 		camera.rotate(camera.direction.cpy().crs(camera.up), 1.0f * rollDir);
 
 		// rotation around camera.direction/viewDirection (roll)
-		if(useRolling) {
+		if (useRolling) {
 			camera.rotate(camera.direction, 1.0f * -azimuthDir);
 		} else {
 			// rotation around camera.up (turning left/right)
 			camera.rotate(camera.up, 1.0f * azimuthDir);
 		}
 	}
-	
+
 	/**
 	 * computes the rotation around z-Axis relative to the smartphone
 	 * 
@@ -227,71 +228,76 @@ public class CameraController implements InputProcessor {
 	 * @param azimuth
 	 * @return
 	 */
-	private float computeAzimuth(float roll, float pitch, float azimuth){
+	private float computeAzimuth(float roll, float pitch, float azimuth) {
 		Matrix3 mX = new Matrix3();
 		Matrix3 mY = new Matrix3();
 		Matrix3 mZ = new Matrix3();
-		
+
 		roll = roll * (float) Math.PI / 180.f;
 		pitch = pitch * (float) Math.PI / 180.f;
 		azimuth = azimuth * (float) Math.PI / 180.f;
-		
+
 		float cos = (float) Math.cos(pitch);
 		float sin = (float) Math.sin(pitch);
-		
-		float[] values = {1.f,0.f,0.f,   0.f, cos, sin,   0.f, -sin, cos};
+
+		float[] values = { 1.f, 0.f, 0.f, 0.f, cos, sin, 0.f, -sin, cos };
 		mY.set(values);
-		
+
 		cos = (float) Math.cos(roll);
 		sin = (float) Math.sin(roll);
-		float[] values2 = {cos,0.f,-sin,   0.f, 1.f, 0.f,   sin, 0.f, cos};
+		float[] values2 = { cos, 0.f, -sin, 0.f, 1.f, 0.f, sin, 0.f, cos };
 		mX.set(values2);
-		
+
 		cos = (float) Math.cos(azimuth);
 		sin = (float) Math.sin(azimuth);
-		float[] values3 = {cos,sin,0.f,   -sin, cos, 0.f,   0.f, 0.f, 1.f};
+		float[] values3 = { cos, sin, 0.f, -sin, cos, 0.f, 0.f, 0.f, 1.f };
 		mZ.set(values3);
-		
+
 		Matrix3 mat = mZ.mul(mY.mul(mX));
-		
-		Vector3 newFront = new Vector3(0.f,1.f,0.f).mul(mat);
-		
-		Vector3 z = new Vector3(0.f,0.f,1.f);
-		
-		return (float) Math.acos(z.dot(new Vector3(newFront.x, newFront.y, newFront.z)) / (float) Math.sqrt(newFront.x * newFront.x + newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f/ (float) Math.PI;
+
+		Vector3 newFront = new Vector3(0.f, 1.f, 0.f).mul(mat);
+
+		Vector3 z = new Vector3(0.f, 0.f, 1.f);
+
+		return (float) Math.acos(z.dot(new Vector3(newFront.x, newFront.y,
+				newFront.z))
+				/ (float) Math.sqrt(newFront.x * newFront.x + newFront.y
+						* newFront.y + newFront.z * newFront.z))
+				* 180.f / (float) Math.PI;
 	}
-	
-	private ArrayList<Float> lowPassFilter(ArrayList<Float> input, ArrayList<Float> output, float alpha){
+
+	private ArrayList<Float> lowPassFilter(ArrayList<Float> input,
+			ArrayList<Float> output, float alpha) {
 		float result = 0.0f;
-		
-		/*if(output.size() <= 2){
-			return input;
-		}*/
-		
-		if(output.size() < bufferSize){
+
+		/*
+		 * if(output.size() <= 2){ return input; }
+		 */
+
+		if (output.size() < bufferSize) {
 			output.add(0.0f);
 			output.set(output.size() - 1, input.get(output.size() - 1));
 		}
-		
-		for(int i = 1; i < output.size(); i++){
+
+		for (int i = 1; i < output.size(); i++) {
 			result = output.get(i) + alpha * (input.get(i) - output.get(i));
 			output.set(i, result);
 		}
-		
-		if(output.size() > bufferSize){
+
+		if (output.size() > bufferSize) {
 			output.remove(0);
 		}
-		
+
 		return output;
 	}
-	
-	private float average(ArrayList<Float> input){
+
+	private float average(ArrayList<Float> input) {
 		float result = 0.0f;
-		
-		for(int i = 0; i < input.size(); i++){
+
+		for (int i = 0; i < input.size(); i++) {
 			result += input.get(i);
 		}
-		
+
 		return result / (float) input.size();
 	}
 
@@ -324,13 +330,15 @@ public class CameraController implements InputProcessor {
 			float xPosition = ((float) screenX) / width;
 			float yPosition = ((float) screenY) / height;
 
-			azimuthDir = 5 * (0.5f - xPosition);
-			rollDir = 5 * (0.5f - yPosition);
-			
+			azimuthDir = limitSpeed((0.5f - xPosition), player.getPlane()
+					.getAzimuthSpeed());
+
+			rollDir = limitSpeed((0.5f - yPosition), player.getPlane()
+					.getRollingSpeed());
+
 			currentEvent = pointer;
 		}
 
-		
 		return false;
 	}
 
@@ -354,11 +362,21 @@ public class CameraController implements InputProcessor {
 
 			float xPosition = ((float) screenX) / width;
 			float yPosition = ((float) screenY) / height;
-			
-			azimuthDir = maximumSteeringSpeed * (0.5f - xPosition);
-			rollDir = maximumSteeringSpeed * (0.5f - yPosition);
+
+			azimuthDir = limitSpeed((0.5f - xPosition), player.getPlane()
+					.getAzimuthSpeed());
+
+			rollDir = limitSpeed((0.5f - yPosition), player.getPlane()
+					.getRollingSpeed());
 		}
 		return false;
+	}
+
+	private float limitSpeed(float wantedSpeed, float speedLimit) {
+		if (wantedSpeed > 0) {
+			return Math.min(wantedSpeed, speedLimit);
+		}
+		return Math.max(wantedSpeed, (-1 * speedLimit));
 	}
 
 	@Override

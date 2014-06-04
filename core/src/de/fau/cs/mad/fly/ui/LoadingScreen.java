@@ -102,11 +102,11 @@ public class LoadingScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 
-		incProgress(2f);
+		incProgress(100f);
 
 		if (progress >= 100f) {
 			game.setGameScreen();
-			// setProgress(0f);
+			setProgress(0f);
 		}
 	}
 
