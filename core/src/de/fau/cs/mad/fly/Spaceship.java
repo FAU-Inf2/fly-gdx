@@ -57,12 +57,12 @@ public class Spaceship implements IPlane {
 
 	@Override
 	public float getAzimuthSpeed() {
-		return 0.9f;
+		return 1.0f;
 	}
 
 	@Override
 	public float getRollingSpeed() {
-		return 0.9f;
+		return 1.0f;
 	}
 	
 	@Override

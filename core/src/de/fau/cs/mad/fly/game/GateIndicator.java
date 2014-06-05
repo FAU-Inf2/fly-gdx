@@ -41,6 +41,8 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 	@Override
 	public void render(float delta) {
 		Vector3 targetPosition = new Vector3(1, 1, 10);
+		Vector3 vectorToTarget = new Vector3();
+		Vector3 cross = new Vector3();
 		Vector3 cameraDirection = gameController.getCamera().direction.cpy();
 		Vector3 up = gameController.getCamera().up.cpy();
 		Vector3 down = up.cpy().scl(-1);
@@ -48,17 +50,14 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 		// The arrow should be in the middle of the screen, a little before the
 		// camera, that it is always visible and below the vertical midpoint.
 		Vector3 gatePositionRelativeToCamera = cameraDirection.scl(3)
-				.add(gameController.getCamera().position).add(down);
+				.add(gameController.getCamera().position).add(down.scl(1.4f));
 
-		Vector3 vectorToTarget = targetPosition.cpy();
-
-		vectorToTarget = vectorToTarget.sub(gatePositionRelativeToCamera).nor();
+		vectorToTarget.set(targetPosition.cpy().sub(gatePositionRelativeToCamera).scl(-1).nor());
 
 		// calculate orthogonal up vector
 		up.crs(vectorToTarget).crs(vectorToTarget).nor();
 
-		Vector3 cross = vectorToTarget.scl(-1).cpy().crs(up).nor();
-		vectorToTarget.nor();
+		cross.set(vectorToTarget.cpy().crs(up).nor());
 
 		// create local coordinate system for the arrow. All axes have to be
 		// normalized, otherwise, the arrow is scaled.
@@ -66,12 +65,10 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 				vectorToTarget.x, vectorToTarget.y, vectorToTarget.z, 0f, 0f,
 				0f, 0f, 1f };
 
-		Matrix4 transformationMatrix = new Matrix4(values);
-
-		arrowModel.transform = transformationMatrix
-				.trn(gatePositionRelativeToCamera);
-
+		arrowModel.transform.set(values).trn(gatePositionRelativeToCamera);
+		//batch.begin(gameController.getCamera());
 		batch.render(arrowModel);
+		//batch.end();
 	}
 
 	@Override
