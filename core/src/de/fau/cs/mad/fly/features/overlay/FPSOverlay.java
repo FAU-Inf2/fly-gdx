@@ -31,8 +31,8 @@ public class FPSOverlay implements IFeatureRender {
 
 		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
 		
-		fpsDescription = addLabel("FPS:", labelStyle, 0.05f, 0.92f);
-		fpsCounter = addLabel("0", labelStyle, 0.15f, 0.92f);
+		fpsDescription = addLabel("FPS:", labelStyle, 0.01f, 0.92f);
+		fpsCounter = addLabel("0", labelStyle, 0.12f, 0.92f);
 	}
 
 	/**

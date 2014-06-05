@@ -68,7 +68,8 @@ public class LevelInfoOverlay implements IFeatureInit, IFeatureRender, IFeatureF
 		continueButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
-				game.gameController.startGame();
+				//game.gameController.startGame();
+				System.out.println("Pressed!");
 			}
 		});
 	}

@@ -21,6 +21,7 @@ import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.LevelInfoOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
+import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
 import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.Level;
@@ -200,7 +201,7 @@ public class GameController {
 		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
 			optionalFeature.render(delta);
 		}
-
+		
 		stage.draw();
 
 		time += delta;
@@ -307,7 +308,8 @@ public class GameController {
 				addGateIndicator();
 			}
 			if (player.getSettingManager().getCheckBoxValue("showTime")) {
-				addTimeOverlay();
+				//addTimeOverlay();
+				addTimeLeftOverlay(60);
 			}
 			if (player.getSettingManager().getCheckBoxValue("showFPS")) {
 				addFPSOverlay();
@@ -316,7 +318,7 @@ public class GameController {
 				addSteeringOverlay();
 			}
 			if (player.getSettingManager().getCheckBoxValue("showLevelInfo")) {
-				// builder.addLevelInfoOverlay();
+				//addLevelInfoOverlay();
 				// not working yet
 			}
 
@@ -347,6 +349,19 @@ public class GameController {
 			TimeOverlay timeOverlay = new TimeOverlay(game, stage);
 			optionalFeaturesToInit.add(timeOverlay);
 			optionalFeaturesToRender.add(timeOverlay);
+			return this;
+		}
+		
+		/**
+		 * Adds a {@link TimeOverlay} to the GameController, that is initialized
+		 * and updated every frame.
+		 * 
+		 * @return Builder instance with TimeOverlay
+		 */
+		private Builder addTimeLeftOverlay(float time) {
+			TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game, stage, time);
+			optionalFeaturesToInit.add(timeLeftOverlay);
+			optionalFeaturesToRender.add(timeLeftOverlay);
 			return this;
 		}
 

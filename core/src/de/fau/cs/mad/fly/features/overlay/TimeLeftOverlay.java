@@ -18,7 +18,7 @@ import de.fau.cs.mad.fly.game.GameController;
  * 
  * @author Tobias Zangl
  */
-public class TimeOverlay implements IFeatureInit, IFeatureRender {
+public class TimeLeftOverlay implements IFeatureInit, IFeatureRender {
 	private final Fly game;
 	
 	private Skin skin;
@@ -26,20 +26,21 @@ public class TimeOverlay implements IFeatureInit, IFeatureRender {
 	private Label timeDescription, timeCounter;
 	private float time;
 	
-	public TimeOverlay(final Fly game, Stage stage) {
+	public TimeLeftOverlay(final Fly game, Stage stage, float timeMax) {
 		this.game = game;
 		this.stage = stage;
 		skin = game.getSkin();
+		
+		time = timeMax;
 
 		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
 		
-		timeDescription = addLabel("Time:", labelStyle, 0.01f, 0.0f);
-		timeCounter = addLabel("0", labelStyle, 0.13f, 0.0f);
+		timeDescription = addLabel("Time left:", labelStyle, 0.01f, 0.0f);
+		timeCounter = addLabel(String.valueOf((long) time), labelStyle, 0.20f, 0.0f);
 	}
 
 	/**
 	 * Adds a Label to the screen.
-	 * 
 	 * @param text
 	 *            the default text for the Label
 	 * @param labelStyle
@@ -60,11 +61,13 @@ public class TimeOverlay implements IFeatureInit, IFeatureRender {
 	public void render(float delta) {
 		timeCounter.setText(String.valueOf((long) time));
 
-		time += delta;
+		time -= delta;
+		if(time < 0.0f) {
+			time = 0.0f;
+		}
 	}
 
 	@Override
-	public void init(GameController gameController) {
-		time = 0.0f;
+	public void init(GameController gameController) {		
 	}
 }
