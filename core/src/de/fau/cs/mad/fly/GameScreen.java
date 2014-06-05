@@ -37,7 +37,7 @@ public class GameScreen implements Screen{
 		//Gdx.input.setInputProcessor(this);
 		Gdx.input.setCatchBackKey(true);
 		
-		inputProcessor.addProcessor(game.gameController.getStage());
+		inputProcessor.addProcessor(0, game.gameController.getStage());
 		
 		// delegate all inputs to the #inputProcessor
 		Gdx.input.setInputProcessor(inputProcessor);

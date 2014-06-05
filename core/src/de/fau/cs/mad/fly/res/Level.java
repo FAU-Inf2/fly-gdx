@@ -50,14 +50,10 @@ public class Level extends Resource {
 
 	private GameObject levelBorderModel;
 	
-	//For what is this member needed?
-	//private Vector3 cullingPosition = new Vector3();
-	
 	public void initLevel(GameController gameController) {
 		setUpEnvironment();
 
 		batch = gameController.batch;
-		
 
 		if (levelBorder != null) {
 			levelBorderModel = new GameObject(
@@ -67,23 +63,33 @@ public class Level extends Resource {
 			// CRASH
 		}
 		
-		//gateModels = new ArrayList<GameObject>();
-		
-		for (Gate g : gates) {
-			ModelResource m = (ModelResource) dependencies.get(g.modelId);
-			g.model = new GameObject(
+		for (Gate gate : gates) {
+			// TODO: use Gate constructor for this
+			ModelResource m = (ModelResource) dependencies.get(gate.modelId);
+			gate.model = new GameObject(
 					Assets.manager.get(m.descriptor));
-			g.model.transform = new Matrix4(g.transformMatrix);
+			gate.model.transform = new Matrix4(gate.transformMatrix);
 		}
 	}
 
 	/**
-	 * Object that is used as level border
+	 * Object that is used as level border.
 	 * 
 	 * @return level border
 	 */
 	public GameObject getLevelBorder() {
 		return levelBorderModel;
+	}
+	
+	/**
+	 * Environment in the level.
+	 * <p>
+	 * Includes ambient and directional lights.
+	 * 
+	 * @return environment
+	 */
+	public Environment getEnvironment() {
+		return environment;
 	}
 
 	/**
@@ -98,16 +104,9 @@ public class Level extends Resource {
 			batch.render(levelBorderModel);
 		}
 		// render gates
-		int x = 0;
 		for (Gate gate : gates) {
-			if(gate.model.isVisible(camera)) {
-				batch.render(gate.model, environment);
-				x++;
-			}
+			gate.render(batch, camera, environment);
 		}
-		
-		// debug of the count of rendered gates
-		//System.out.println(x);
 	}
 
 	/**

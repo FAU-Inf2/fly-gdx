@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.game;
 
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
@@ -21,11 +22,13 @@ import de.fau.cs.mad.fly.res.Gate;
 public class GateIndicator implements IFeatureInit, IFeatureFinish,
 		IFeatureRender, IFeatureGatePassed {
 
-	private GameObject arrowModel;
-	/** visualize current target point */
+	
 	private GameController gameController;
-	private ModelBuilder modelBuilder;
 	private ModelBatch batch;
+	private Environment environment;
+
+	private ModelBuilder modelBuilder;
+	private GameObject arrowModel;
 
 	@Override
 	public void init(GameController game) {
@@ -33,6 +36,8 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 		Assets.loadArrow();
 		arrowModel = new GameObject(Assets.manager.get(Assets.arrow));
 		batch = game.batch;
+		
+		environment = gameController.getLevel().getEnvironment();
 	}
 
 	@Override
@@ -71,7 +76,7 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 
 			arrowModel.transform.set(values).trn(gatePositionRelativeToCamera);
 			// batch.begin(gameController.getCamera());
-			batch.render(arrowModel);
+			batch.render(arrowModel, environment);
 			// batch.end();
 		}
 	}
