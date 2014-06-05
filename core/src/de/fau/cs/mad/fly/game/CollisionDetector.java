@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
 import com.badlogic.gdx.physics.bullet.collision.btBroadphaseInterface;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionConfiguration;
@@ -85,6 +86,11 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 	private GameController gameController;
 	
 	private GameObject playerInstance;
+	
+	Array<btCollisionShape> collisionShapes = new Array<btCollisionShape>();
+	Array<btCollisionObject> collisionObjects = new Array<btCollisionObject>();
+
+	btCollisionObject playerCollisionObject;
 
 	public CollisionDetector(final Fly game, Stage stage) {
 		this.game = game;
@@ -113,11 +119,54 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		collisionCounterLabel = label;
 
 	}
+	
+	private void add(btCollisionShape shape, btCollisionObject object) {
+		collisionShapes.add(shape);
+		collisionObjects.add(object);
+		collisionWorld.addCollisionObject(object,
+				GROUND_FLAG, ALL_FLAG);
+	}
 
-	Array<btCollisionShape> collisionShapes = new Array<btCollisionShape>();
-	Array<btCollisionObject> collisionObjects = new Array<btCollisionObject>();
+	private btCollisionObject addShape(int userValue, btCollisionShape shape, GameObject instance) {
+		btCollisionObject collisionObject = new btCollisionObject();
+		collisionObject.setCollisionShape(shape);
+		collisionObject.setCollisionFlags(collisionObject.getCollisionFlags()
+				| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
+		collisionObject.setWorldTransform(instance.transform);
+		collisionObject.setUserValue(userValue);
+		
+		add(shape, collisionObject);
+		
+		return collisionObject;
+	}
 
-	btCollisionObject playerCollisionObject;
+	private btCollisionObject addConvexHull(int userValue, GameObject instance) {
+		final Mesh mesh = instance.model.meshes.get(0);
+		final btConvexHullShape hullShape = new btConvexHullShape(
+				mesh.getVerticesBuffer(), mesh.getNumVertices(),
+				mesh.getVertexSize());
+
+		// now optimize the shape
+		final btShapeHull hull = new btShapeHull(hullShape);
+		hull.buildHull(hullShape.getMargin());
+		final btConvexHullShape hullShapeFinal = new btConvexHullShape(hull);
+
+		btCollisionObject collisionObject = new btCollisionObject();
+		collisionObject.setCollisionShape(hullShapeFinal);
+		collisionObject.setCollisionFlags(collisionObject.getCollisionFlags()
+						| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
+
+		collisionObject.setWorldTransform(instance.transform);
+		collisionObject.setUserValue(userValue);
+
+		add(hullShapeFinal, collisionObject);
+
+		// delete the temporary shape
+		hullShape.dispose();
+		hull.dispose();
+		
+		return collisionObject;
+	}
 
 	private void InitCollision() {
 
@@ -128,61 +177,14 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		collisionWorld = new btCollisionWorld(dispatcher, broadphase,
 				collisionConfig);
 		contactListener = new MyContactListener();
-
+		
 		// init and add the player collision object to collision world
-		btCollisionShape playerShape;
-		playerShape = new btSphereShape(0.1f);
-		playerCollisionObject = new btCollisionObject();
-		playerCollisionObject.setCollisionShape(playerShape);
-		playerCollisionObject.setCollisionFlags(playerCollisionObject
-				.getCollisionFlags()
-				| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
-		playerCollisionObject.setWorldTransform(playerInstance.transform);
-		Gdx.app.log("collision", "camera init:"
-				+ gameController.getCamera().position.toString());
-		playerCollisionObject.setUserValue(0);
-
-		collisionShapes.add(playerShape);
-		collisionObjects.add(playerCollisionObject);
-
-		collisionWorld.addCollisionObject(playerCollisionObject,
-				GROUND_FLAG, ALL_FLAG);
+		playerCollisionObject = addShape(0, new btSphereShape(0.1f), playerInstance);
 
 		// init and add each gates to the collision world
 		List<Gate> gates = gameController.getLevel().gates;
 		for (int n = 0; n < gates.size(); n++) {
-
-			final GameObject instance = gates.get(n).model;
-			btCollisionObject hullObject;
-
-			final Mesh mesh = instance.model.meshes.get(0);
-			final btConvexHullShape hullShape = new btConvexHullShape(
-					mesh.getVerticesBuffer(), mesh.getNumVertices(),
-					mesh.getVertexSize());
-
-			// now optimize the shape
-			final btShapeHull hull = new btShapeHull(hullShape);
-			hull.buildHull(hullShape.getMargin());
-			final btConvexHullShape hullShapeFinal = new btConvexHullShape(hull);
-
-			hullObject = new btCollisionObject();
-			hullObject.setCollisionShape(hullShapeFinal);
-			hullObject
-					.setCollisionFlags(hullObject.getCollisionFlags()
-							| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
-
-			hullObject.setWorldTransform(instance.transform);
-			// Gdx.app.log("collision", "Gate" + n + ":" + instance.transform);
-			hullObject.setUserValue(100 + n);
-
-			collisionWorld.addCollisionObject(hullObject, OBJECT_FLAG,
-					GROUND_FLAG);
-			collisionShapes.add(hullShapeFinal);
-			collisionObjects.add(hullObject);
-
-			// delete the temporary shape
-			hullShape.dispose();
-			hull.dispose();
+			addConvexHull(100 + n, gates.get(n).model);
 		}
 		Gdx.app.log("InitCollision", "collision init end");
 	}
