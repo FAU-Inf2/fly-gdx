@@ -1,8 +1,7 @@
 package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.utils.Disposable;
-
+import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.GameObject;
@@ -13,7 +12,7 @@ import de.fau.cs.mad.fly.game.GameObject;
  * @author Lukas Hahmann
  * 
  */
-public interface IPlane extends IFeatureLoad, IFeatureRender, Disposable {
+public interface IPlane extends IFeatureLoad, IFeatureRender, IFeatureDispose {
 	public GameObject getInstance();
 	public Model getModel();
 	

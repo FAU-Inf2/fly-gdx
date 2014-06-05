@@ -7,10 +7,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Disposable;
 
-import de.fau.cs.mad.fly.features.IFeatureLoad;
-import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 
@@ -64,6 +61,7 @@ public class Spaceship implements IPlane {
 	public float getRollingSpeed() {
 		return 1.0f;
 	}
+	
 	
 	@Override
 	public void dispose() {

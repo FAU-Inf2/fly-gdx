@@ -25,8 +25,9 @@ public class GameObject extends ModelInstance implements Disposable {
 
 	private final static BoundingBox bounds = new BoundingBox();
 
-	private final btCollisionObject body;
+	private final btCollisionObject collisionObject;
 	
+
 	// TODO: create more constructors to match the ModelInstance constructors
 
 	/**
@@ -37,10 +38,10 @@ public class GameObject extends ModelInstance implements Disposable {
 		super(model);
 
 		initBoundingBox();
-		
-		body = new btCollisionObject();
-		body.setCollisionShape(new btBoxShape(bounds.getDimensions().cpy()
+		collisionObject=new btCollisionObject();
+		collisionObject.setCollisionShape(new btBoxShape(bounds.getDimensions().cpy()
 				.scl(0.5f)));
+		
 	}
 
 	/**
@@ -51,8 +52,8 @@ public class GameObject extends ModelInstance implements Disposable {
 		
 		initBoundingBox();
 
-		body = new btCollisionObject();
-		body.setCollisionShape(shape);
+		collisionObject = new btCollisionObject();
+		collisionObject.setCollisionShape(shape);
 	}
 	
 	private void initBoundingBox() {
@@ -74,6 +75,12 @@ public class GameObject extends ModelInstance implements Disposable {
 		return camera.frustum.boundsInFrustum(position, dimensions);
 		//return camera.frustum.pointInFrustum(position);
 	}
+	
+	
+	public btCollisionObject GetCollisionObject()
+	{
+		return collisionObject;
+	}
 
 	/**
 	 * Getter of the position in 3D space of the object.
@@ -87,6 +94,7 @@ public class GameObject extends ModelInstance implements Disposable {
 
 	@Override
 	public void dispose() {
-		body.dispose();
+		collisionObject.getCollisionShape().dispose();
+		collisionObject.dispose();		
 	}
 }

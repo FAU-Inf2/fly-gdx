@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.IPlane;
 import de.fau.cs.mad.fly.Player;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
@@ -301,7 +302,9 @@ public class GameController {
 					Gdx.graphics.getHeight()));
 			Builder.level = player.getLastLevel();
 			
+			addPlayerPlane();
 			addCollisionDetector();
+			
 
 			if (player.getSettingManager()
 					.getCheckBoxValue("showGateIndicator")) {
@@ -421,6 +424,23 @@ public class GameController {
 			optionalFeaturesToDispose.add(collisionDetector);
 			return this;
 		}
+		
+		/**
+		 * Adds a {@link IPlane} to the GameController, that is
+		 * initialized, updated every frame and updated when the game is
+		 * finished.
+		 * 
+		 * @return Builder instance with collisionDetector
+		 */
+		private Builder addPlayerPlane() {
+			IPlane plane = player.getPlane();			
+			optionalFeaturesToLoad.add(plane);
+			optionalFeaturesToRender.add(plane);
+			optionalFeaturesToDispose.add(plane);
+			return this;
+		}
+		
+		
 
 		/**
 		 * Creates a new GameController out of your defined preferences in the
