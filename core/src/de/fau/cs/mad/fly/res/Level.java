@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.res;
 
+import java.util.List;
+
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -8,16 +10,11 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 
 import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.geo.Perspective;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 
@@ -53,9 +50,8 @@ public class Level extends Resource {
 
 	private GameObject levelBorderModel;
 	
-	public List<GameObject> gateModels;
-	
-	private Vector3 cullingPosition = new Vector3();
+	//For what is this member needed?
+	//private Vector3 cullingPosition = new Vector3();
 	
 	public void initLevel(GameController gameController) {
 		setUpEnvironment();
@@ -71,14 +67,13 @@ public class Level extends Resource {
 			// CRASH
 		}
 		
-		gateModels = new ArrayList<GameObject>();
+		//gateModels = new ArrayList<GameObject>();
 		
 		for (Gate g : gates) {
-			ModelResource m = (ModelResource) dependencies.get(g.model);
-			GameObject mi = new GameObject(
+			ModelResource m = (ModelResource) dependencies.get(g.modelId);
+			g.model = new GameObject(
 					Assets.manager.get(m.descriptor));
-			mi.transform = new Matrix4(g.transformMatrix);
-			gateModels.add(mi);
+			g.model.transform = new Matrix4(g.transformMatrix);
 		}
 	}
 
@@ -103,11 +98,10 @@ public class Level extends Resource {
 			batch.render(levelBorderModel);
 		}
 		// render gates
-		
 		int x = 0;
-		for (GameObject mi : gateModels) {
-			if(mi.isVisible(camera)) {
-				batch.render(mi, environment);
+		for (Gate gate : gates) {
+			if(gate.model.isVisible(camera)) {
+				batch.render(gate.model, environment);
 				x++;
 			}
 		}

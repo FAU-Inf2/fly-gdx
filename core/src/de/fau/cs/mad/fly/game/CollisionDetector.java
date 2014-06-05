@@ -5,11 +5,6 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
 import com.badlogic.gdx.physics.bullet.collision.btBroadphaseInterface;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionConfiguration;
@@ -25,14 +20,15 @@ import com.badlogic.gdx.physics.bullet.collision.btShapeHull;
 import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.res.Gate;
 
 public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		IFeatureDispose {
@@ -153,10 +149,10 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 				GROUND_FLAG, ALL_FLAG);
 
 		// init and add each gates to the collision world
-		List<GameObject> instances = gameController.getLevel().gateModels;
-		for (int n = 0; n < instances.size(); n++) {
+		List<Gate> gates = gameController.getLevel().gates;
+		for (int n = 0; n < gates.size(); n++) {
 
-			final GameObject instance = instances.get(n);
+			final GameObject instance = gates.get(n).model;
 			btCollisionObject hullObject;
 
 			final Mesh mesh = instance.model.meshes.get(0);
