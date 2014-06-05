@@ -3,12 +3,16 @@ package de.fau.cs.mad.fly.res;
 import java.util.List;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Matrix4;
 
 import de.fau.cs.mad.fly.Assets;
@@ -63,12 +67,17 @@ public class Level extends Resource {
 			// CRASH
 		}
 		
+		ModelBuilder modelBuilder = new ModelBuilder();
+		
 		for (Gate gate : gates) {
 			// TODO: use Gate constructor for this
 			ModelResource m = (ModelResource) dependencies.get(gate.modelId);
 			gate.model = new GameObject(
 					Assets.manager.get(m.descriptor));
 			gate.model.transform = new Matrix4(gate.transformMatrix);
+
+			gate.goalModel = new GameObject(modelBuilder.createBox(1.0f, 0.05f, 1.0f, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal));
+			gate.goalModel.transform = new Matrix4(gate.transformMatrix);
 		}
 	}
 

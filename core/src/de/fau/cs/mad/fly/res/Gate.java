@@ -28,6 +28,8 @@ public class Gate {
 	
 	public GameObject model = null;
 	
+	public GameObject goalModel = null;
+	
 	private ModelBatch batch;
 	//private PerspectiveCamera camera;
 	private Environment environment;
@@ -51,6 +53,7 @@ public class Gate {
 	public void render(ModelBatch batch, PerspectiveCamera camera, Environment env) {
 		if(visible && model.isVisible(camera)) {
 			batch.render(model, env);
+			batch.render(goalModel, env);
 		}
 	}
 	
