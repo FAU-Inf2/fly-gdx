@@ -43,7 +43,7 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 	@Override
 	public void render(float delta) {
 		for (Gate gate : gameController.getLevelProgress().getNextGates()) {
-			System.out.println("nextGates" + gameController.getLevelProgress().getNextGates().size());
+			//System.out.println("nextGates" + gameController.getLevelProgress().getNextGates().size());
 			Vector3 targetPosition = gate.model.getPosition();
 			Vector3 vectorToTarget = new Vector3();
 			Vector3 cross = new Vector3();

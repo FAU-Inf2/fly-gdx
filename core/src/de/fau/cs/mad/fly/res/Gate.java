@@ -40,13 +40,29 @@ public class Gate {
 		// DUMMY
 	}
 	
-	public Gate(AssetDescriptor<Model> modelAsset, Matrix4 transformMatrix, ModelBatch batch, Environment environment) {
+	public Gate(int id, ArrayList<Integer> successors, AssetDescriptor<Model> modelAsset, Matrix4 transformMatrix, ModelBatch batch, Environment environment) {
+		this.id = id;
+		this.successors = successors;
 		this.batch = batch;
 		//this.camera = camera;
 		this.environment = environment;
 
 		model = new GameObject(Assets.manager.get(modelAsset));
 		model.transform = transformMatrix;
+		
+		init();
+	}
+	
+	public void init() {
+		if(id == 0) {
+			setColor(Color.RED);
+		} else {
+			setColor(Color.GRAY);
+		}
+	}
+	
+	public ArrayList<Integer> getSuccessors() {
+		return successors;
 	}
 	
 	// TODO: use batch and environment from constructor
