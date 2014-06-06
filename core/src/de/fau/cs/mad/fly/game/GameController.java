@@ -27,6 +27,12 @@ import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
 import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.Level;
 
+/**
+ * Manages the Player, the Level, the UI, the CameraController and all the optional Features
+ * and calls the load(), init(), render(), finish() and dispose() methods of those.
+ * 
+ * @author Lukas Hahmann
+ */
 public class GameController {
 	private Fly game;
 	private Player player;

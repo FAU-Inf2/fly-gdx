@@ -15,6 +15,14 @@ import com.badlogic.gdx.math.Matrix4;
 import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.game.GameObject;
 
+/**
+ * Represents a gate in the game.
+ * <p>
+ * Stores and renders the model of the gate and stores the information about
+ * the successor gates of it.
+ * 
+ * @author Lukas Hahmann
+ */
 public class Gate {
 
 	public static final int NO_GATE = -1;
@@ -56,12 +64,20 @@ public class Gate {
 		init();
 	}
 	
+	/**
+	 * Fills the successor gate list with the before created gate instances.
+	 */
 	public void fillSuccessorGateList(List<Gate> allGates) {
 		for(Integer i : successors) {
 			successorGates.add(allGates.get(i));
 		}
 	}
 	
+	/**
+	 * Initializes the gate.
+	 * <p>
+	 * Sets the color dependent if its the first gate and a target or not.
+	 */
 	public void init() {
 		if(id == 0) {
 			setTarget();
@@ -70,6 +86,11 @@ public class Gate {
 		}
 	}
 	
+	/**
+	 * Getter for the successor gate list.
+	 * 
+	 * @return successorGates
+	 */
 	public ArrayList<Gate> getSuccessors() {
 		return successorGates;
 	}
@@ -82,18 +103,30 @@ public class Gate {
 		}
 	}
 	
+	/**
+	 * Called if the gate is currently a target for the player.
+	 */
 	public void setTarget() {
 		setColor(Color.RED);
 	}
 	
+	/**
+	 * Called if the gate is not or no longer a target for the player.
+	 */
 	public void setNoTarget() {
 		setColor(Color.GRAY);
 	}
 	
+	/**
+	 * Sets the diffuse color of the gate model.
+	 */
 	public void setColor(Color color) {
 		model.materials.get(0).set(ColorAttribute.createDiffuse(color));
 	}
 	
+	/**
+	 * Sets the visibility of the gate model.
+	 */
 	public void setVisibility(boolean visible) {
 		this.visible = visible;
 	}
@@ -109,5 +142,10 @@ public class Gate {
 	@Override
 	public boolean equals(Object obj) {
 		return this == obj || obj != null && obj instanceof Gate && id == ((Gate) obj).id;
+	}
+	
+	@Override
+	public String toString() {
+		return "<Gate " + id + ">";
 	}
 }

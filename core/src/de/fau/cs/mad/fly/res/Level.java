@@ -83,6 +83,8 @@ public class Level extends Resource {
 			
 			gate.init();
 		}
+		
+		System.out.println(this);
 	}
 
 	/**
@@ -136,7 +138,6 @@ public class Level extends Resource {
 
 	@Override
 	public String toString() {
-		return "#<Level:" + id + " name=" + name + " startingPoint=" + start
-				+ " gates=" + gates;
+		return "#<Level " + id + ": name='" + name + "' gates=" + gates + ">";
 	}
 }
