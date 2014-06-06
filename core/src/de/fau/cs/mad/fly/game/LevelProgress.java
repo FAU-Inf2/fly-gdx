@@ -50,7 +50,22 @@ public class LevelProgress implements IFeatureInit {
 	public void gatePassed(Gate gate) {
 		if (nextGates != null && nextGates.contains(gate)) {
 			nextGates.remove(gate);
-			if (gate.successors.size() == 0) {
+			gate.setNoTarget();
+			
+			for (Gate g : gate.getSuccessors()) {
+				// add successors of currently passed gate to the nextGate list if not already inside
+				if (!nextGates.contains(g)) {
+					nextGates.add(g);
+					g.setTarget();
+				}
+			}
+			
+			if (nextGates.isEmpty()) {
+				// no more gates to pass
+				gameController.endGame();
+			}
+			
+			/*if (gate.getSuccessors().size() == 0) {
 				// last gate is passed
 				gameController.endGame();
 			} else {
@@ -62,7 +77,7 @@ public class LevelProgress implements IFeatureInit {
 						nextGates.add(allGates.get(allGates.indexOf(g)));
 					}
 				}
-			}
+			}*/
 		}
 	}
 

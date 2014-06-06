@@ -79,6 +79,8 @@ public class Level extends Resource {
 			gate.goalModel = new GameObject(modelBuilder.createBox(1.0f, 0.05f, 1.0f, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal));
 			gate.goalModel.transform = new Matrix4(gate.transformMatrix);
 			
+			gate.fillSuccessorGateList(gates);
+			
 			gate.init();
 		}
 	}

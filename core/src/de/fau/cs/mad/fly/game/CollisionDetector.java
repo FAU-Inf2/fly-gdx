@@ -43,6 +43,34 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 	private int collisionCounter = 0;
 	private int collisionObj0 = -1;
 	private int collisionObj1 = -1;
+	
+	/*
+	// constants to represent the begin of the userValues for specific types of collision objects
+	final static long USERVALUE_PLAYER = 0;
+	final static long USERVALUE_GATES = 100;
+	final static long USERVALUE_GATE_GOALS = 200;
+	final static long USERVALUE_MISC = 1000;
+	
+	// TODO: finish main listener who passes the events through the feature listeners
+
+	class CollisionContactListener extends ContactListener {
+		private ArrayList<ICollisionListener> listeners;
+		
+		public CollisionContactListener() {
+			
+		}
+		
+		public void addListener(ICollisionListener listener) {
+			listeners.add(listener);
+		}
+		
+		@Override
+		public boolean onContactAdded(int userValue0, int partId0, int index0,
+				int userValue1, int partId1, int index1) {
+		}
+	}
+	//*/
+	
 
 	class MyContactListener extends ContactListener {
 		@Override

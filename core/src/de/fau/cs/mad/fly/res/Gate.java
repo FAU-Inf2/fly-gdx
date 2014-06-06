@@ -1,6 +1,7 @@
 package de.fau.cs.mad.fly.res;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Color;
@@ -25,6 +26,7 @@ public class Gate {
 	public float[] transformMatrix;
 	
 	public ArrayList<Integer> successors = new ArrayList<Integer>();
+	public ArrayList<Gate> successorGates = new ArrayList<Gate>();
 	
 	public GameObject model = null;
 	
@@ -41,6 +43,7 @@ public class Gate {
 	}
 	
 	public Gate(int id, ArrayList<Integer> successors, AssetDescriptor<Model> modelAsset, Matrix4 transformMatrix, ModelBatch batch, Environment environment) {
+		// TODO: use this constructor instead of Gate() called by JSON-to-Class
 		this.id = id;
 		this.successors = successors;
 		this.batch = batch;
@@ -53,16 +56,22 @@ public class Gate {
 		init();
 	}
 	
-	public void init() {
-		if(id == 0) {
-			setColor(Color.RED);
-		} else {
-			setColor(Color.GRAY);
+	public void fillSuccessorGateList(List<Gate> allGates) {
+		for(Integer i : successors) {
+			successorGates.add(allGates.get(i));
 		}
 	}
 	
-	public ArrayList<Integer> getSuccessors() {
-		return successors;
+	public void init() {
+		if(id == 0) {
+			setTarget();
+		} else {
+			setNoTarget();
+		}
+	}
+	
+	public ArrayList<Gate> getSuccessors() {
+		return successorGates;
 	}
 	
 	// TODO: use batch and environment from constructor
@@ -71,6 +80,14 @@ public class Gate {
 			batch.render(model, env);
 			batch.render(goalModel, env);
 		}
+	}
+	
+	public void setTarget() {
+		setColor(Color.RED);
+	}
+	
+	public void setNoTarget() {
+		setColor(Color.GRAY);
 	}
 	
 	public void setColor(Color color) {
