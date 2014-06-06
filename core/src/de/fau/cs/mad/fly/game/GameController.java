@@ -61,6 +61,7 @@ public class GameController {
 		this.game = Builder.game;
 		this.player = Builder.player;
 		this.stage = Builder.stage;
+		this.collisionDetector = Builder.collisionDetector;
 		this.useSensorData = Builder.useSensorData;
 		this.optionalFeaturesToLoad = Builder.optionalFeaturesToLoad;
 		this.optionalFeaturesToInit = Builder.optionalFeaturesToInit;
@@ -91,6 +92,10 @@ public class GameController {
 	public CameraController getCameraController() {
 		return camController;
 	}
+	
+	public CollisionDetector getCollisionDetector() {
+		return collisionDetector;
+	}
 
 	public Level getLevel() {
 		return level;
@@ -110,7 +115,10 @@ public class GameController {
 	 * methods.
 	 */
 	public void loadGame() {
-		player.getPlane().load(this);
+		collisionDetector.init(this);
+		
+		// currently an optional feature
+		//player.getPlane().load(this);
 		
 		for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
 			optionalFeature.load(this);
@@ -197,7 +205,7 @@ public class GameController {
 
 		camera = camController.recomputeCamera(delta);
 
-		checkCollision();
+		collisionDetector.perform();
 
 		batch.begin(camera);
 		level.render(camera);
@@ -234,29 +242,13 @@ public class GameController {
 		for (IFeatureDispose optionalFeature : optionalFeaturesToDispose) {
 			optionalFeature.dispose();
 		}
+		
+		collisionDetector.dispose();
 
 		stage.dispose();
 		// level.dispose();
 
 		optionalFeaturesToRender.clear();
-	}
-
-	/**
-	 * Simple version of collision testing.
-	 */
-	private boolean checkCollision() {
-		// TODO: own class? feature?
-
-		for (Gate g : level.gates) {
-			if (camera.position.dst(g.transformMatrix[12],
-					g.transformMatrix[13], g.transformMatrix[14]) < 2.0f) {
-				// System.out.println("GATE: " + g.id);
-				// level.gateModels.get(0).materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	/**
@@ -428,9 +420,6 @@ public class GameController {
 		private Builder addCollisionDetector() {
 			collisionDetector = new CollisionDetector(game, 
 					stage);
-			optionalFeaturesToInit.add(collisionDetector);
-			optionalFeaturesToRender.add(collisionDetector);
-			optionalFeaturesToDispose.add(collisionDetector);
 			return this;
 		}
 		

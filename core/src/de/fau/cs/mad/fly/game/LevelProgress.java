@@ -87,7 +87,10 @@ public class LevelProgress implements IFeatureInit, ICollisionListener {
 
 	@Override
 	public void listen(int eventType, int userValue0, int userValue1) {
-		gatePassed(allGates.get(userValue1 - CollisionDetector.USERVALUE_GATES));
+		if(userValue1 < CollisionDetector.USERVALUE_GATE_GOALS)
+			return;
+		
+		gatePassed(allGates.get(userValue1 - CollisionDetector.USERVALUE_GATE_GOALS));
 	}
 
 }

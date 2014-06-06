@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Disposable;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.ICollisionListener;
@@ -31,8 +32,7 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.res.Gate;
 
-public class CollisionDetector implements IFeatureInit, IFeatureRender,
-		IFeatureDispose {
+public class CollisionDetector implements Disposable {
 
 	final static short GROUND_FLAG = 1 << 8;
 	final static short OBJECT_FLAG = 1 << 9;
@@ -46,10 +46,10 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 	private int collisionCounter = 0;
 
 	// constants to represent the begin of the userValues for specific types of collision objects
-	final static int USERVALUE_PLAYER = 0;
-	final static int USERVALUE_GATES = 100;
-	final static int USERVALUE_GATE_GOALS = 200;
-	final static int USERVALUE_MISC = 1000;
+	public final static int USERVALUE_PLAYER = 0;
+	public final static int USERVALUE_GATES = 100;
+	public final static int USERVALUE_GATE_GOALS = 200;
+	public final static int USERVALUE_MISC = 1000;
 	
 	// TODO: finish main listener who passes the events through the feature listeners
 
@@ -71,6 +71,11 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		public boolean onContactAdded(int userValue0, int partId0, int index0,
 				int userValue1, int partId1, int index1) {
 							collisionFlag = true;
+							
+			/*Gdx.app.log("CollisionDetector.onContactAdded", "userValue0: "
+					+ userValue0 + "; userValue1: " + userValue1
+					+ "; partId0: " + partId0 + "; partId1: " + partId1
+					+ "; index0:" + index0 + "; index1: " + index1);*/
 
 			if (!(checkObj(userValue0) && checkObj(userValue1))) {
 				collisionObj0 = userValue0;
@@ -130,10 +135,6 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 
 	private GameController gameController;
 
-	private GameObject planeInstance;
-
-	btCollisionObject planeCollisionObject;
-
 	public CollisionDetector(final Fly game, Stage stage) {
 		this.game = game;
 		gameStage = stage;
@@ -147,11 +148,8 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		contactListener = new CollisionContactListener();
 	}
 
-	@Override
 	public void init(GameController gameCon) {
 		gameController = gameCon;
-		planeInstance = game.getPlayer().getPlane().getInstance();
-		InitCollision();
 
 		collisionCounter = 0;
 
@@ -167,9 +165,10 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		gameStage.addActor(label);
 		collisionCounterLabel = label;
 
+		Gdx.app.log("CollisionDetector", "Collision initialized");
 	}
 
-	private btCollisionObject initPlaneCollision(int userValue,
+	public btCollisionObject createShape(int userValue,
 			btCollisionShape shape, GameObject instance) {
 		btCollisionObject collisionObject = instance.GetCollisionObject();// new
 																			// btCollisionObject();
@@ -182,10 +181,12 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		collisionWorld.addCollisionObject(collisionObject, GROUND_FLAG,
 				ALL_FLAG);
 
+		Gdx.app.log("CollisionDetector", "Added shape: " + userValue);
+		
 		return collisionObject;
 	}
 
-	private btCollisionObject initGateCollision(int userValue, GameObject instance) {
+	public btCollisionObject createConvexHull(int userValue, GameObject instance) {
 		final Mesh mesh = instance.model.meshes.get(0);
 		final btConvexHullShape hullShape = new btConvexHullShape(
 				mesh.getVerticesBuffer(), mesh.getNumVertices(),
@@ -210,33 +211,17 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		// delete the temporary shape
 		hullShape.dispose();
 		hull.dispose();
+		
+		Gdx.app.log("CollisionDetector", "Added convex hull: " + userValue);
 
 		return collisionObject;
-	}
-
-	private void InitCollision() {
-		Gdx.app.log("InitCollision", "collision init begin");
-		// init and add the player collision object to collision world
-		planeCollisionObject = initPlaneCollision(USERVALUE_PLAYER, new btSphereShape(0.1f),
-				planeInstance);
-
-		// init and add each gates to the collision world
-		List<Gate> gates = gameController.getLevel().gates;
-		for (int n = 0; n < gates.size(); n++) {
-			initGateCollision(USERVALUE_GATES + n, gates.get(n).model);
-		}
-		Gdx.app.log("InitCollision", "collision init end");
 	}
 	
 	public CollisionContactListener getCollisionContactListener() {
 		return contactListener;
 	}
 
-	@Override
-	public void render(float delta) {
-		//planeInstance.transform
-		//		.setToTranslation(gameController.getCamera().position);
-		planeCollisionObject.setWorldTransform(planeInstance.transform);
+	public void perform() {
 		// Gdx.app.log("collision.render", "camera:"
 		// + gameController.getCamera().position.toString());
 		collisionWorld.performDiscreteCollisionDetection();
@@ -244,12 +229,11 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 
 	@Override
 	public void dispose() {
-		Gdx.app.log("Collision.dispose", "collision dispose");
 		collisionWorld.dispose();
 		broadphase.dispose();
 		dispatcher.dispose();
 		collisionConfig.dispose();
 		contactListener.dispose();
+		Gdx.app.log("CollisionDetector", "Collision disposed");
 	}
-
 }

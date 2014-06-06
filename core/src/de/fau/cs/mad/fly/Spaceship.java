@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
+import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
 
+import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 
@@ -15,6 +18,8 @@ public class Spaceship implements IPlane {
 	private GameController gameController;
 	private GameObject instance;
 	private Model model;
+	
+	public btCollisionObject collisionObject;
 	
 	public Spaceship() {
 
@@ -30,11 +35,15 @@ public class Spaceship implements IPlane {
             Usage.Position | Usage.Normal);
         instance = new GameObject(model);
         instance.transform.setToTranslation(new Vector3(0, 0, 0));
+        
+        collisionObject = gameController.getCollisionDetector().createShape(CollisionDetector.USERVALUE_PLAYER, new btSphereShape(0.1f), instance);
 	}
 	
 	@Override
 	public void render(float delta) {
 		instance.transform.setToTranslation(gameController.getCamera().position);
+
+		collisionObject.setWorldTransform(instance.transform);
 	}
 	
 	@Override

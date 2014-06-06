@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 
 import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.game.GameObject;
@@ -37,8 +38,10 @@ public class Gate {
 	public ArrayList<Gate> successorGates = new ArrayList<Gate>();
 	
 	public GameObject model = null;
-	
 	public GameObject goalModel = null;
+	
+	public btCollisionObject collisionObject;
+	public btCollisionObject collisionGoal;
 	
 	private ModelBatch batch;
 	//private PerspectiveCamera camera;
@@ -99,7 +102,7 @@ public class Gate {
 	public void render(ModelBatch batch, PerspectiveCamera camera, Environment env) {
 		if(visible && model.isVisible(camera)) {
 			batch.render(model, env);
-			batch.render(goalModel, env);
+			//batch.render(goalModel, env);
 		}
 	}
 	
