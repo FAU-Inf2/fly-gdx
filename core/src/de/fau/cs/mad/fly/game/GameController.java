@@ -37,6 +37,7 @@ public class GameController {
 	private Fly game;
 	private Player player;
 	private Stage stage;
+	private CollisionDetector collisionDetector;
 	private ArrayList<IFeatureLoad> optionalFeaturesToLoad;
 	private ArrayList<IFeatureInit> optionalFeaturesToInit;
 	private ArrayList<IFeatureRender> optionalFeaturesToRender;
@@ -272,6 +273,7 @@ public class GameController {
 		private static Stage stage;
 		private static Level level;
 		private static boolean useSensorData;
+		private static CollisionDetector collisionDetector;
 		private static ArrayList<IFeatureLoad> optionalFeaturesToLoad;
 		private static ArrayList<IFeatureInit> optionalFeaturesToInit;
 		private static ArrayList<IFeatureRender> optionalFeaturesToRender;
@@ -311,6 +313,7 @@ public class GameController {
 			addPlayerPlane();
 			addCollisionDetector();
 			
+			collisionDetector.getCollisionContactListener().addListener(levelProgress);
 
 			if (player.getSettingManager()
 					.getCheckBoxValue("showGateIndicator")) {
@@ -423,7 +426,7 @@ public class GameController {
 		 * @return Builder instance with collisionDetector
 		 */
 		private Builder addCollisionDetector() {
-			CollisionDetector collisionDetector = new CollisionDetector(game, 
+			collisionDetector = new CollisionDetector(game, 
 					stage);
 			optionalFeaturesToInit.add(collisionDetector);
 			optionalFeaturesToRender.add(collisionDetector);

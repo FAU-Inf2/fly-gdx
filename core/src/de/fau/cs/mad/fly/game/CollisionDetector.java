@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
@@ -22,7 +23,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
@@ -41,23 +44,23 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 	private Skin skin;
 	private Label collisionCounterLabel;
 	private int collisionCounter = 0;
-	private int collisionObj0 = -1;
-	private int collisionObj1 = -1;
-	
-	/*
+
 	// constants to represent the begin of the userValues for specific types of collision objects
-	final static long USERVALUE_PLAYER = 0;
-	final static long USERVALUE_GATES = 100;
-	final static long USERVALUE_GATE_GOALS = 200;
-	final static long USERVALUE_MISC = 1000;
+	final static int USERVALUE_PLAYER = 0;
+	final static int USERVALUE_GATES = 100;
+	final static int USERVALUE_GATE_GOALS = 200;
+	final static int USERVALUE_MISC = 1000;
 	
 	// TODO: finish main listener who passes the events through the feature listeners
 
 	class CollisionContactListener extends ContactListener {
 		private ArrayList<ICollisionListener> listeners;
 		
+		private int collisionObj0 = -1;
+		private int collisionObj1 = -1;
+		
 		public CollisionContactListener() {
-			
+			listeners = new ArrayList<ICollisionListener>();
 		}
 		
 		public void addListener(ICollisionListener listener) {
@@ -67,12 +70,30 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		@Override
 		public boolean onContactAdded(int userValue0, int partId0, int index0,
 				int userValue1, int partId1, int index1) {
+							collisionFlag = true;
+
+			if (!(checkObj(userValue0) && checkObj(userValue1))) {
+				collisionObj0 = userValue0;
+				collisionObj1 = userValue1;
+				collisionCounter++;
+				collisionCounterLabel.setText("" + collisionCounter);
+				
+				for(ICollisionListener listener : listeners) {
+					listener.listen(0, userValue0, userValue1);
+				}
+			}
+			return true;
+		}
+
+		private boolean checkObj(int obj) {
+			if (obj == collisionObj0 || obj == collisionObj1)
+				return true;
+			return false;
 		}
 	}
-	//*/
 	
 
-	class MyContactListener extends ContactListener {
+	/*class MyContactListener extends ContactListener {
 		@Override
 		public boolean onContactAdded(int userValue0, int partId0, int index0,
 				int userValue1, int partId1, int index1) {
@@ -99,11 +120,11 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 			else
 				return false;
 		}
-	}
+	}*/
 
 	btCollisionConfiguration collisionConfig;
 	btDispatcher dispatcher;
-	MyContactListener contactListener;
+	CollisionContactListener contactListener;
 	btBroadphaseInterface broadphase;
 	btCollisionWorld collisionWorld;
 
@@ -117,6 +138,13 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 		this.game = game;
 		gameStage = stage;
 		skin = game.getSkin();
+		
+		collisionConfig = new btDefaultCollisionConfiguration();
+		dispatcher = new btCollisionDispatcher(collisionConfig);
+		broadphase = new btDbvtBroadphase();
+		collisionWorld = new btCollisionWorld(dispatcher, broadphase,
+				collisionConfig);
+		contactListener = new CollisionContactListener();
 	}
 
 	@Override
@@ -187,25 +215,21 @@ public class CollisionDetector implements IFeatureInit, IFeatureRender,
 	}
 
 	private void InitCollision() {
-
 		Gdx.app.log("InitCollision", "collision init begin");
-		collisionConfig = new btDefaultCollisionConfiguration();
-		dispatcher = new btCollisionDispatcher(collisionConfig);
-		broadphase = new btDbvtBroadphase();
-		collisionWorld = new btCollisionWorld(dispatcher, broadphase,
-				collisionConfig);
-		contactListener = new MyContactListener();
-
 		// init and add the player collision object to collision world
-		planeCollisionObject = initPlaneCollision(0, new btSphereShape(0.1f),
+		planeCollisionObject = initPlaneCollision(USERVALUE_PLAYER, new btSphereShape(0.1f),
 				planeInstance);
 
 		// init and add each gates to the collision world
 		List<Gate> gates = gameController.getLevel().gates;
 		for (int n = 0; n < gates.size(); n++) {
-			initGateCollision(100 + n, gates.get(n).model);
+			initGateCollision(USERVALUE_GATES + n, gates.get(n).model);
 		}
 		Gdx.app.log("InitCollision", "collision init end");
+	}
+	
+	public CollisionContactListener getCollisionContactListener() {
+		return contactListener;
 	}
 
 	@Override

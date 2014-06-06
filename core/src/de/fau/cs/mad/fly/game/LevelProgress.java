@@ -2,6 +2,9 @@ package de.fau.cs.mad.fly.game;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+
+import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.res.Gate;
 
@@ -12,7 +15,7 @@ import de.fau.cs.mad.fly.res.Gate;
  * @author Lukas Hahmann
  * 
  */
-public class LevelProgress implements IFeatureInit {
+public class LevelProgress implements IFeatureInit, ICollisionListener {
 
 	/** list of all gates that can be passed next */
 	private ArrayList<Gate> nextGates;
@@ -62,7 +65,8 @@ public class LevelProgress implements IFeatureInit {
 			
 			if (nextGates.isEmpty()) {
 				// no more gates to pass
-				gameController.endGame();
+				//gameController.endGame();
+				Gdx.app.log("FLY", "Game finished!");
 			}
 			
 			/*if (gate.getSuccessors().size() == 0) {
@@ -79,6 +83,11 @@ public class LevelProgress implements IFeatureInit {
 				}
 			}*/
 		}
+	}
+
+	@Override
+	public void listen(int eventType, int userValue0, int userValue1) {
+		gatePassed(allGates.get(userValue1 - CollisionDetector.USERVALUE_GATES));
 	}
 
 }
