@@ -85,7 +85,8 @@ public class Level extends Resource {
 			gate.goalModel.transform = new Matrix4(gate.transformMatrix);
 
 			//gate.collisionObject = gameController.getCollisionDetector().createConvexHull(CollisionDetector.USERVALUE_GATES + n, gates.get(n).model);
-			gate.collisionGoal = gameController.getCollisionDetector().createShape(CollisionDetector.USERVALUE_GATE_GOALS + n, new btBoxShape(new Vector3(1.0f, 0.05f, 1.0f)), gates.get(n).model);
+			gate.boxShape = new btBoxShape(new Vector3(1.0f, 0.05f, 1.0f));
+			gate.collisionGoal = gameController.getCollisionDetector().createShape(CollisionDetector.USERVALUE_GATE_GOALS + n, gate.boxShape, gates.get(n).model);
 			
 			gate.fillSuccessorGateList(gates);
 			

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 
 import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.game.GameObject;
@@ -42,6 +43,7 @@ public class Gate {
 	
 	public btCollisionObject collisionObject;
 	public btCollisionObject collisionGoal;
+	public btCollisionShape boxShape;
 	
 	private ModelBatch batch;
 	//private PerspectiveCamera camera;
