@@ -131,7 +131,7 @@ public class CollisionDetector implements Disposable {
 		contactListener = new CollisionContactListener();
 	}
 
-	public void init(GameController gameCon) {
+	public void load(GameController gameCon) {
 		gameController = gameCon;
 		collisionCounter = 0;
 		Gdx.app.log("CollisionDetector", "Collision initialized");

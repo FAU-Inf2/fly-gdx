@@ -30,6 +30,18 @@ import de.fau.cs.mad.fly.res.Level;
 /**
  * Manages the Player, the Level, the UI, the CameraController and all the optional Features
  * and calls the load(), init(), render(), finish() and dispose() methods of those.
+ * <p>
+ * Optional Feature Interfaces:
+ * 		load(): 	- called before the game starts while the loading screen is shown
+ * 					- should be stuff like loading models, creating instances, which takes a while
+ * 		init():		- called the moment the game starts after switchting to the game screen
+ * 					- should be stuff like setting values, resetting counter
+ * 		render():	- called every frame while the game is running or paused, in pause the delta time is 0
+ * 					- should be stuff like rendering models, showing overlays, calculating and updating values
+ * 		finish():	- called at the moment the game is over, still in game screen
+ * 					- should be stuff like showing points, saving the highscore
+ * 		dispose():	- called when the game screen is left
+ * 					- should be stuff like disposing models
  * 
  * @author Lukas Hahmann
  */
@@ -144,10 +156,23 @@ public class GameController {
 	 * loaded.
 	 */
 	public void loadGame() {
-		collisionDetector.init(this);
+		collisionDetector.load(this);
 		
 		// currently an optional feature
 		//player.getPlane().load(this);
+		
+		// level = new Level("Level XYZ");
+		// Level-Constructor includes:
+		// load level from file
+		// load models, textures, ... needed for this level from files
+		// create 3D objects for the level
+		// stores List of Rings, Lists of other stuff in the level
+
+		// player = new Player();
+		// Player-Constructor includes:
+		// mix/connect with camera controller ?
+		// create 3D objects for the player
+		// stores position and other attributes of player
 		
 		for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
 			optionalFeature.load(this);
@@ -162,6 +187,7 @@ public class GameController {
 	 */
 	public void initGame() {
 
+		// TODO: put in cameraController.init()
 		useSensorData = !player.getSettingManager()
 				.getCheckBoxValue("useTouch");
 		camController.setUseSensorData(useSensorData);
@@ -177,31 +203,17 @@ public class GameController {
 		camController.setUpCamera();
 		camera = camController.getCamera();
 
-		levelProgress.init(this);
-
-		time = 0.0f;
-		
 		player.getLastLevel().initLevel(this);
-
-		// level = new Level("Level XYZ");
-		// Level-Constructor includes:
-		// load level from file
-		// load models, textures, ... needed for this level from files
-		// create 3D objects for the level
-		// stores List of Rings, Lists of other stuff in the level
-
-		// player = new Player();
-		// Player-Constructor includes:
-		// mix/connect with camera controller ?
-		// create 3D objects for the player
-		// stores position and other attributes of player
-
-		// gameOverlay.initOverlay()
+		levelProgress.init(this);
 
 		// initializes all optional features
 		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
 			optionalFeature.init(this);
 		}
+		
+
+		time = 0.0f;
+		
 		startGame();
 	}
 
@@ -285,7 +297,7 @@ public class GameController {
 	}
 
 	/**
-	 * This class implements the builder patter to create a GameController with
+	 * This class implements the builder pattern to create a GameController with
 	 * all of its dependent components.
 	 * 
 	 * @author Lukas Hahmann
@@ -456,8 +468,6 @@ public class GameController {
 			optionalFeaturesToDispose.add(plane);
 			return this;
 		}
-		
-		
 
 		/**
 		 * Creates a new GameController out of your defined preferences in the
