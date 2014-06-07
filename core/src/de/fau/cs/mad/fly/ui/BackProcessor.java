@@ -1,10 +1,10 @@
-package de.fau.cs.mad.fly;
+package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 
-import de.fau.cs.mad.fly.ui.MainMenuScreen;
+import de.fau.cs.mad.fly.Fly;
 
 /**
  * Handles the Back-Button of the Smartphone and the Escape-Button of the Desktop

@@ -17,8 +17,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
 import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
+import com.badlogic.gdx.utils.Disposable;
 
-import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
@@ -29,7 +29,7 @@ import de.fau.cs.mad.fly.geo.Perspective;
  * @author Lukas Hahmann
  * 
  */
-public class Level extends Resource {
+public class Level extends Resource implements Disposable {
 
 	/**
 	 * Name of the level which is displayed to the user when choosing levels
@@ -87,6 +87,7 @@ public class Level extends Resource {
 			//gate.collisionObject = gameController.getCollisionDetector().createConvexHull(CollisionDetector.USERVALUE_GATES + n, gates.get(n).model);
 			gate.boxShape = new btBoxShape(new Vector3(1.0f, 0.05f, 1.0f));
 			gate.collisionGoal = gameController.getCollisionDetector().createShape(CollisionDetector.USERVALUE_GATE_GOALS + n, gate.boxShape, gates.get(n).model);
+			// TODO: dispose boxShape? or needed by collisionGoal?
 			
 			gate.fillSuccessorGateList(gates);
 			
@@ -149,5 +150,16 @@ public class Level extends Resource {
 	@Override
 	public String toString() {
 		return "#<Level " + id + ": name='" + name + "' gates=" + gates + ">";
+	}
+
+	@Override
+	public void dispose() {
+		for (Gate gate : gates) {
+			gate.dispose();
+		}
+		
+		gates.clear();
+		
+		levelBorderModel.dispose();
 	}
 }

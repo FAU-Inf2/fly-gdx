@@ -8,6 +8,7 @@ import de.fau.cs.mad.fly.ui.SettingManager;
 
 /**
  * Stores all player-specific information.
+ * 
  * @author Lukas Hahmann
  *
  */

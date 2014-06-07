@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import de.fau.cs.mad.fly.BackProcessor;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.res.ResourceManager;

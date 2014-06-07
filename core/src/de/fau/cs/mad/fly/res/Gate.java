@@ -13,8 +13,8 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.utils.Disposable;
 
-import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.game.GameObject;
 
 /**
@@ -25,7 +25,7 @@ import de.fau.cs.mad.fly.game.GameObject;
  * 
  * @author Lukas Hahmann
  */
-public class Gate {
+public class Gate implements Disposable {
 
 	public static final int NO_GATE = -1;
 
@@ -56,7 +56,7 @@ public class Gate {
 	}
 	
 	public Gate(int id, ArrayList<Integer> successors, AssetDescriptor<Model> modelAsset, Matrix4 transformMatrix, ModelBatch batch, Environment environment) {
-		// TODO: use this constructor instead of Gate() called by JSON-to-Class
+		// TODO: use this constructor instead of Gate() called by JSON-to-Class and Level.initLevel()
 		this.id = id;
 		this.successors = successors;
 		this.batch = batch;
@@ -152,5 +152,17 @@ public class Gate {
 	@Override
 	public String toString() {
 		return "<Gate " + id + ">";
+	}
+
+	@Override
+	public void dispose() {
+		model.dispose();
+		goalModel.dispose();
+		
+		successors.clear();
+		successorGates.clear();
+		
+		collisionObject.dispose();
+		collisionGoal.dispose();
 	}
 }
