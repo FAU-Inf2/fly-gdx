@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly;
+package de.fau.cs.mad.fly.player;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import de.fau.cs.mad.fly.features.IFeatureDispose;

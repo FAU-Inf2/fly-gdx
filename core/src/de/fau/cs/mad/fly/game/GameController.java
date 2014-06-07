@@ -11,20 +11,20 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.IPlane;
-import de.fau.cs.mad.fly.Player;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureGatePassed;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.LevelInfoOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
-import de.fau.cs.mad.fly.res.Gate;
+import de.fau.cs.mad.fly.player.IPlane;
+import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Level;
 
 /**
@@ -76,12 +76,17 @@ public class GameController {
 		this.batch = new ModelBatch();
 	}
 
+	/**
+	 * Getter for the stage.
+	 * 
+	 * @return {@link #stage}
+	 */
 	public Stage getStage() {
 		return stage;
 	}
 
 	/**
-	 * Getter of the level Progress.
+	 * Getter for the level Progress.
 	 * 
 	 * @return {@link #levelProgress}
 	 */
@@ -89,30 +94,54 @@ public class GameController {
 		return levelProgress;
 	}
 
+	/**
+	 * Getter for the camera controller.
+	 * 
+	 * @return {@link #camController}
+	 */
 	public CameraController getCameraController() {
 		return camController;
 	}
+
+	/**
+	 * Getter for the camera.
+	 * 
+	 * @return {@link #camera}
+	 */
+	public PerspectiveCamera getCamera() {
+		return camera;
+	}
 	
+	/**
+	 * Getter for the collision detector.
+	 * 
+	 * @return {@link #collisionDetector}
+	 */
 	public CollisionDetector getCollisionDetector() {
 		return collisionDetector;
 	}
 
+	/**
+	 * Getter for the level.
+	 * 
+	 * @return {@link #level}
+	 */
 	public Level getLevel() {
 		return level;
 	}
 
-	public PerspectiveCamera getCamera() {
-		return camera;
-	}
-
+	/**
+	 * Setter for the level.
+	 */
 	public void setLevel(Level level) {
 		this.level = level;
 	}
 
 	/**
-	 * This method is called, when the level is loaded. It loads everything the
-	 * default functions need and calls all the optional feature loading
-	 * methods.
+	 * This method is called, while the level is loading. It loads everything the
+	 * default functions need.
+	 * Furthermore all optional features in {@link #optionalFeaturesToLoad} are
+	 * loaded.
 	 */
 	public void loadGame() {
 		collisionDetector.init(this);
@@ -126,7 +155,7 @@ public class GameController {
 	}
 
 	/**
-	 * This method is called, when the level is loaded. It initializes all
+	 * This method is called, when the level is initialized. It initializes all
 	 * default functions that are needed in all levels, like render the level.
 	 * Furthermore all optional features in {@link #optionalFeaturesToInit} are
 	 * initialized.
@@ -184,14 +213,18 @@ public class GameController {
 		isRunning = false;
 
 		endGame();
-		disposeGame();
 	}
 
 	public void setRunning(boolean running) {
 		isRunning = running;
 	}
 
-	public void render(float delta) {
+	/**
+	 * This method is called every frame.
+	 * Furthermore all optional features in {@link #optionalFeaturesToRender} are
+	 * updated and rendered.
+	 */
+	public void renderGame(float delta) {
 
 		if (!isRunning)
 			return;
@@ -199,8 +232,7 @@ public class GameController {
 		stage.act(delta);
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight());
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camera = camController.recomputeCamera(delta);
@@ -224,8 +256,9 @@ public class GameController {
 	}
 
 	/**
-	 * This method is called, when the Game is over. It calls the .finish()
-	 * method of all {@link #optionalFeaturesToFinish}.
+	 * This method is called when the game is over.
+	 * Furthermore all optional features in {@link #optionalFeaturesToFinish} are
+	 * finished.
 	 */
 	public void endGame() {
 		for (IFeatureFinish optionalFeature : optionalFeaturesToFinish) {
@@ -234,9 +267,9 @@ public class GameController {
 	}
 
 	/**
-	 * This method is called, when the GameScreen is left. It disposes
-	 * everything the default functions needed and calls all the optional
-	 * feature dispose methods.
+	 * This method is called when the game is over.
+	 * Furthermore all optional features in {@link #optionalFeaturesToDispose} are
+	 * disposed.
 	 */
 	public void disposeGame() {
 		for (IFeatureDispose optionalFeature : optionalFeaturesToDispose) {
@@ -259,7 +292,6 @@ public class GameController {
 	 * 
 	 */
 	public static class Builder {
-
 		private static Fly game;
 		private static Player player;
 		private static Stage stage;
@@ -303,7 +335,7 @@ public class GameController {
 			Builder.level = player.getLastLevel();
 			
 			addPlayerPlane();
-			addCollisionDetector();
+			collisionDetector = new CollisionDetector(game);
 			
 			collisionDetector.getCollisionContactListener().addListener(levelProgress);
 
@@ -407,19 +439,6 @@ public class GameController {
 			optionalFeaturesToInit.add(levelInfoOverlay);
 			optionalFeaturesToRender.add(levelInfoOverlay);
 			optionalFeaturesToFinish.add(levelInfoOverlay);
-			return this;
-		}
-
-		/**
-		 * Adds a {@link CollisionDetector} to the GameController, that is
-		 * initialized, checked collision every frame and disposed when the game
-		 * is finished.
-		 * 
-		 * @return Builder instance with collisionDetector
-		 */
-		private Builder addCollisionDetector() {
-			collisionDetector = new CollisionDetector(game, 
-					stage);
 			return this;
 		}
 		

@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.geo;
 
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 /**

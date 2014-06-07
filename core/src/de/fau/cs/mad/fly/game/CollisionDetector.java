@@ -1,10 +1,8 @@
 package de.fau.cs.mad.fly.game;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
 import com.badlogic.gdx.physics.bullet.collision.btBroadphaseInterface;
@@ -18,19 +16,10 @@ import com.badlogic.gdx.physics.bullet.collision.btDbvtBroadphase;
 import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration;
 import com.badlogic.gdx.physics.bullet.collision.btDispatcher;
 import com.badlogic.gdx.physics.bullet.collision.btShapeHull;
-import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.ICollisionListener;
-import de.fau.cs.mad.fly.features.IFeatureDispose;
-import de.fau.cs.mad.fly.features.IFeatureInit;
-import de.fau.cs.mad.fly.features.IFeatureRender;
-import de.fau.cs.mad.fly.res.Gate;
 
 public class CollisionDetector implements Disposable {
 
@@ -40,9 +29,6 @@ public class CollisionDetector implements Disposable {
 	boolean collisionFlag = false;
 
 	private final Fly game;
-	private Stage gameStage;
-	private Skin skin;
-	private Label collisionCounterLabel;
 	private int collisionCounter = 0;
 
 	// constants to represent the begin of the userValues for specific types of collision objects
@@ -81,7 +67,6 @@ public class CollisionDetector implements Disposable {
 				collisionObj0 = userValue0;
 				collisionObj1 = userValue1;
 				collisionCounter++;
-				collisionCounterLabel.setText("" + collisionCounter);
 				
 				for(ICollisionListener listener : listeners) {
 					listener.listen(0, userValue0, userValue1);
@@ -135,10 +120,8 @@ public class CollisionDetector implements Disposable {
 
 	private GameController gameController;
 
-	public CollisionDetector(final Fly game, Stage stage) {
+	public CollisionDetector(final Fly game) {
 		this.game = game;
-		gameStage = stage;
-		skin = game.getSkin();
 		
 		collisionConfig = new btDefaultCollisionConfiguration();
 		dispatcher = new btCollisionDispatcher(collisionConfig);
@@ -150,21 +133,7 @@ public class CollisionDetector implements Disposable {
 
 	public void init(GameController gameCon) {
 		gameController = gameCon;
-
 		collisionCounter = 0;
-
-		// init collision stage
-		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"),
-				Color.RED);
-		Label label = new Label("Collision:", labelStyle);
-		label.setPosition(game.getAbsoluteX(0.35f), game.getAbsoluteY(0.0f));
-		gameStage.addActor(label);
-
-		label = new Label(collisionCounter + "", labelStyle);
-		label.setPosition(game.getAbsoluteX(0.55f), game.getAbsoluteY(0.0f));
-		gameStage.addActor(label);
-		collisionCounterLabel = label;
-
 		Gdx.app.log("CollisionDetector", "Collision initialized");
 	}
 

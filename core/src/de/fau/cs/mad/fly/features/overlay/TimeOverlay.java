@@ -1,12 +1,10 @@
 package de.fau.cs.mad.fly.features.overlay;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureInit;

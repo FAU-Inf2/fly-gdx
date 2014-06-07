@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.game;
+package de.fau.cs.mad.fly.features.game;
 
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -10,6 +10,8 @@ import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureGatePassed;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.Gate;
 
 /**
@@ -21,7 +23,6 @@ import de.fau.cs.mad.fly.res.Gate;
  */
 public class GateIndicator implements IFeatureInit, IFeatureFinish,
 		IFeatureRender, IFeatureGatePassed {
-
 	
 	private GameController gameController;
 	private ModelBatch batch;

@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly;
+package de.fau.cs.mad.fly.player;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;

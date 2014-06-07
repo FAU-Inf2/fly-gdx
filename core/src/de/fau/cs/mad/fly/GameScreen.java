@@ -2,11 +2,10 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 
 /**
- * Displays the 3D-world.
+ * Provides a screen for the game itself.
  * 
  * @author Tobias Zangl
  */
@@ -24,7 +23,7 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void render(float delta) {
-		game.gameController.render(delta);
+		game.gameController.renderGame(delta);
 	}
 
 	@Override
@@ -34,12 +33,9 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void show() {
-		//Gdx.input.setInputProcessor(this);
-		Gdx.input.setCatchBackKey(true);
-		
-		inputProcessor.addProcessor(0, game.gameController.getStage());
-		
 		// delegate all inputs to the #inputProcessor
+		inputProcessor.addProcessor(0, game.gameController.getStage());
+		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(inputProcessor);
 		
 		game.gameController.initGame();

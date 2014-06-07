@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Assets;
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.game.GameController;
 
 /**
  * Displays the loading screen with a progress bar.

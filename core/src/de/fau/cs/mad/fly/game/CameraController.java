@@ -9,8 +9,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector3;
 
-import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.Player;
+import de.fau.cs.mad.fly.player.Player;
 
 public class CameraController implements InputProcessor {
 

@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.game.CameraController;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -51,12 +52,11 @@ public class Fly extends Game {
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
 		
+		Bullet.init();
 		Assets.init();
 		createSkin();
 		shapeRenderer = new ShapeRenderer();
 
-		Bullet.init();
-		
 		player = new Player();
 		player.createSettings(skin);
 
@@ -104,6 +104,20 @@ public class Fly extends Game {
 	public int getAbsoluteY(float percentY) {
 		return (int) (screenHeight * percentY);
 	}
+	
+	/**
+	 * Getter for the Player.
+	 */
+	public Player getPlayer() {
+		return player;
+	}
+
+	/**
+	 * Setter for the Player.
+	 */
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 
 	/**
 	 * Getter for the Skin.
@@ -112,10 +126,16 @@ public class Fly extends Game {
 		return skin;
 	}
 	
+	/**
+	 * Getter for the ShapeRenderer.
+	 */
 	public ShapeRenderer getShapeRenderer() {
 		return shapeRenderer;
 	}
 	
+	/**
+	 * Getter for the CameraController.
+	 */
 	public CameraController getCameraController() {
 		return cameraController;
 	}
@@ -187,13 +207,5 @@ public class Fly extends Game {
 			settingScreen = new SettingScreen(this);
 		}
 		setScreen(settingScreen);
-	}
-	
-	public Player getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 }
