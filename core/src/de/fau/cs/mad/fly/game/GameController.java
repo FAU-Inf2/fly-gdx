@@ -46,6 +46,10 @@ import de.fau.cs.mad.fly.res.Level;
  * @author Lukas Hahmann
  */
 public class GameController {
+	public enum GameState {
+	    RUNNING, PAUSED, FINISHED
+	}
+	
 	private Fly game;
 	private Player player;
 	private Stage stage;
@@ -67,7 +71,7 @@ public class GameController {
 
 	private float time;
 
-	private boolean isRunning;
+	private GameState gameState;
 
 	public GameController(Builder gameControllerBuilder) {
 		this.game = Builder.game;
@@ -218,17 +222,25 @@ public class GameController {
 	}
 
 	public void startGame() {
-		isRunning = true;
+		gameState = GameState.RUNNING;
+	}
+	
+	public void pauseGame() {
+		gameState = GameState.PAUSED;
 	}
 
 	public void stopGame() {
-		isRunning = false;
+		gameState = GameState.FINISHED;
 
 		endGame();
 	}
 
-	public void setRunning(boolean running) {
-		isRunning = running;
+	public void setGameState(GameState state) {
+		gameState = state;
+	}
+	
+	public GameState getGameState() {
+		return gameState;
 	}
 
 	/**
@@ -238,7 +250,7 @@ public class GameController {
 	 */
 	public void renderGame(float delta) {
 
-		if (!isRunning)
+		if (gameState != GameState.RUNNING)
 			return;
 
 		stage.act(delta);
