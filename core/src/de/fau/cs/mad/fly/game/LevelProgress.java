@@ -65,7 +65,7 @@ public class LevelProgress implements IFeatureInit, ICollisionListener {
 			
 			if (nextGates.isEmpty()) {
 				// no more gates to pass
-				//gameController.endGame();
+				gameController.finishGame();
 				Gdx.app.log("FLY", "Game finished!");
 			}
 			

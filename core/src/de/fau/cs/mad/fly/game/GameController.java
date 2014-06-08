@@ -19,7 +19,7 @@ import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
-import de.fau.cs.mad.fly.features.overlay.LevelInfoOverlay;
+import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
@@ -90,6 +90,15 @@ public class GameController {
 		this.camController = game.getCameraController();
 
 		this.batch = new ModelBatch();
+	}
+	
+	/**
+	 * Getter for the game.
+	 * 
+	 * @return {@link #fly}
+	 */
+	public Fly getGame() {
+		return game;
 	}
 
 	/**
@@ -229,7 +238,7 @@ public class GameController {
 		gameState = GameState.PAUSED;
 	}
 
-	public void stopGame() {
+	public void finishGame() {
 		gameState = GameState.FINISHED;
 
 		endGame();
@@ -250,8 +259,8 @@ public class GameController {
 	 */
 	public void renderGame(float delta) {
 
-		if (gameState != GameState.RUNNING)
-			return;
+		//if (gameState != GameState.RUNNING)
+		//	return;
 
 		stage.act(delta);
 
@@ -377,9 +386,8 @@ public class GameController {
 			if (player.getSettingManager().getCheckBoxValue("showSteering")) {
 				addSteeringOverlay();
 			}
-			if (player.getSettingManager().getCheckBoxValue("showLevelInfo")) {
-				//addLevelInfoOverlay();
-				// not working yet
+			if (player.getSettingManager().getCheckBoxValue("showGameFinished")) {
+				addGameFinishedOverlay();
 			}
 
 			return this;
@@ -457,12 +465,12 @@ public class GameController {
 		 * 
 		 * @return Builder instance with SteeringOverlay
 		 */
-		private Builder addLevelInfoOverlay() {
-			LevelInfoOverlay levelInfoOverlay = new LevelInfoOverlay(game,
+		private Builder addGameFinishedOverlay() {
+			GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(game,
 					stage);
-			optionalFeaturesToInit.add(levelInfoOverlay);
-			optionalFeaturesToRender.add(levelInfoOverlay);
-			optionalFeaturesToFinish.add(levelInfoOverlay);
+			optionalFeaturesToInit.add(gameFinishedOverlay);
+			optionalFeaturesToRender.add(gameFinishedOverlay);
+			optionalFeaturesToFinish.add(gameFinishedOverlay);
 			return this;
 		}
 		

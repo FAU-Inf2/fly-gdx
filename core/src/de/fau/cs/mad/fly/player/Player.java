@@ -56,7 +56,7 @@ public class Player {
 		settingManager.addSetting("useRoll", "Use Rolling:", false);
 		settingManager.addSetting("useLowPass", "Use LowPassFilter:", false);
 		settingManager.addSetting("showGateIndicator", "Show next Gate:", true);
-		settingManager.addSetting("showLevelInfo", "Show Level Info:", false);
+		settingManager.addSetting("showGameFinished", "Show Game finished:", false);
 		settingManager.addSetting("showSteering", "Show Steering:", false);
 		settingManager.addSetting("showTime", "Show Time:", false);
 		settingManager.addSetting("showFPS", "Show FPS:", false);

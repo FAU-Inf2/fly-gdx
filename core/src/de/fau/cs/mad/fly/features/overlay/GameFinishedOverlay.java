@@ -21,7 +21,7 @@ import de.fau.cs.mad.fly.game.GameController;
  * 
  * @author Tobias Zangl
  */
-public class LevelInfoOverlay implements IFeatureInit, IFeatureRender, IFeatureFinish {
+public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatureFinish {
 	private final Fly game;
 	private GameController gameController;
 
@@ -31,7 +31,7 @@ public class LevelInfoOverlay implements IFeatureInit, IFeatureRender, IFeatureF
 	
 	private TextButton continueButton;
 	
-	public LevelInfoOverlay(final Fly game, Stage stage) {
+	public GameFinishedOverlay(final Fly game, Stage stage) {
 		this.game = game;
 		this.stage = stage;
 		skin = game.getSkin();
@@ -39,11 +39,10 @@ public class LevelInfoOverlay implements IFeatureInit, IFeatureRender, IFeatureF
 		table = new Table();
 		table.pad(Gdx.graphics.getWidth() * 0.2f);
 		table.setFillParent(true);
-		stage.addActor(table);
 		
-		final String infoString = "Level started!\n\nHave fun! :)";
+		final String infoString = "Congratulations! :)";
 		final Label infoLabel = new Label(infoString, skin);
-		continueButton = new TextButton("GO!", skin, "default");
+		continueButton = new TextButton("Back to Menu!", skin, "default");
 		
 		final Table infoTable = new Table();
 		final ScrollPane pane = new ScrollPane(infoTable, skin);
@@ -63,21 +62,19 @@ public class LevelInfoOverlay implements IFeatureInit, IFeatureRender, IFeatureF
 	}
 
 	@Override
-	public void init(GameController gameController) {
+	public void init(GameController gameController) {		
 		this.gameController = gameController;
 		continueButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
-				//game.gameController.startGame();
-				System.out.println("Pressed!");
+				game.setMainMenuScreen();
 			}
 		});
 	}
 
 	@Override
 	public void finish() {
-		// TODO Auto-generated method stub
-		
+		stage.addActor(table);
 	}
 
 }
