@@ -87,7 +87,7 @@ public class GameController {
 		this.levelProgress = Builder.levelProgress;
 		this.level = Builder.level;
 
-		this.camController = game.getCameraController();
+		this.camController = Builder.cameraController;
 
 		this.batch = new ModelBatch();
 	}
@@ -338,6 +338,7 @@ public class GameController {
 		private static ArrayList<IFeatureDispose> optionalFeaturesToDispose;
 		private static ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed;
 		private static LevelProgress levelProgress;
+		private static CameraController cameraController;
 
 		/**
 		 * Creates a basic {@link GameController} with a certain level, linked
@@ -363,6 +364,7 @@ public class GameController {
 
 			Builder.game = game;
 			Builder.player = game.getPlayer();
+			Builder.cameraController = new CameraController(true, player);
 			Builder.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
 					Gdx.graphics.getHeight()));
 			Builder.level = player.getLastLevel();
@@ -452,7 +454,7 @@ public class GameController {
 		 * @return Builder instance with SteeringOverlay
 		 */
 		private Builder addSteeringOverlay() {
-			SteeringOverlay steeringOverlay = new SteeringOverlay(game, stage);
+			SteeringOverlay steeringOverlay = new SteeringOverlay(cameraController, game.getShapeRenderer(), stage);
 			optionalFeaturesToRender.add(steeringOverlay);
 			optionalFeaturesToDispose.add(steeringOverlay);
 			return this;

@@ -19,35 +19,39 @@ import de.fau.cs.mad.fly.game.GameController;
  * 
  * @author Tobias Zangl
  */
-public class SteeringOverlay implements IFeatureInit, IFeatureRender, IFeatureDispose {
-	private final Fly game;
+public class SteeringOverlay implements IFeatureInit, IFeatureRender,
+		IFeatureDispose {
 
 	private Stage stage;
 	private CameraController cameraController;
 
 	private OrthographicCamera camera;
 	private ShapeRenderer shapeRenderer;
-	
+
 	private SpriteBatch batch;
-	
+
 	private float steeringX, steeringY;
-	
-	public SteeringOverlay(final Fly game, Stage stage) {
-		this.game = game;
+
+	public SteeringOverlay(final CameraController cameraController,
+			final ShapeRenderer shapeRenderer, Stage stage) {
 		this.stage = stage;
-		this.cameraController = game.getCameraController();
-		
-		shapeRenderer = game.getShapeRenderer();
-		
-		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		this.cameraController = cameraController;
+
+		this.shapeRenderer = shapeRenderer;
+
+		camera = new OrthographicCamera(Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
 	}
-	
+
 	/**
 	 * Setter for the Steering.
+	 * 
 	 * @param x
-	 *            the value in x direction of the steering, should be between -30.0, +30.0
+	 *            the value in x direction of the steering, should be between
+	 *            -30.0, +30.0
 	 * @param y
-	 *            the value in  direction of the steering, should be between -30.0, +30.0
+	 *            the value in direction of the steering, should be between
+	 *            -30.0, +30.0
 	 */
 	public void setSteering(float x, float y) {
 		steeringX = x;
@@ -55,20 +59,22 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender, IFeatureDi
 	}
 
 	@Override
-	public void render(float delta) {		
+	public void render(float delta) {
 		steeringX = -20 * cameraController.getAzimuthDir();
 		steeringY = 20 * cameraController.getRollDir();
-		
+
 		shapeRenderer.setProjectionMatrix(camera.combined);
-		
+
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(1.0f, 0.84f, 0.0f, 1.0f);
-		shapeRenderer.circle(game.getAbsoluteX(0.01f) * steeringX, game.getAbsoluteY(0.01f) * steeringY, game.getAbsoluteX(0.01f), 20);
+		shapeRenderer.circle(Gdx.graphics.getWidth() *0.01f * steeringX,
+				Gdx.graphics.getHeight() * 0.01f * steeringY, Gdx.graphics.getWidth() * 0.01f,
+				20);
 		shapeRenderer.end();
-		
+
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(1.0f, 0.84f, 0.0f, 1.0f);
-		shapeRenderer.circle(0, 0, game.getAbsoluteX(0.05f), 40);
+		shapeRenderer.circle(0, 0, Gdx.graphics.getWidth() * 0.05f, 40);
 		shapeRenderer.end();
 	}
 
@@ -81,6 +87,6 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender, IFeatureDi
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

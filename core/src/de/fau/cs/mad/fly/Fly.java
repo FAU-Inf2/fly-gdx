@@ -40,7 +40,6 @@ public class Fly extends Game {
 	private SettingScreen settingScreen;
 	
 	private Player player;
-	private CameraController cameraController;
 	public GameController gameController;
 
 	private Skin skin;
@@ -60,8 +59,6 @@ public class Fly extends Game {
 
 		player = new Player();
 		player.createSettings(skin);
-
-		cameraController = new CameraController(true, player);
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
@@ -132,13 +129,6 @@ public class Fly extends Game {
 	 */
 	public ShapeRenderer getShapeRenderer() {
 		return shapeRenderer;
-	}
-	
-	/**
-	 * Getter for the CameraController.
-	 */
-	public CameraController getCameraController() {
-		return cameraController;
 	}
 
 	/**
