@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.features.overlay;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -45,7 +46,7 @@ public class FPSOverlay implements IFeatureRender {
 	 */
 	public Label addLabel(String text, LabelStyle labelStyle, float x, float y) {
 		Label label = new Label(text, labelStyle);
-		label.setPosition(game.getAbsoluteX(x), game.getAbsoluteY(y));
+		label.setPosition(Gdx.graphics.getWidth() * x, game.getAbsoluteY(y));
 		stage.addActor(label);
 		return label;
 	}

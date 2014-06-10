@@ -72,7 +72,7 @@ public class Fly extends Game {
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
 				Gdx.files.internal("OpenSans-Regular.ttf"));
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
-		fontParameter.size = (int) (screenWidth * 0.04);
+		fontParameter.size = (int) (Gdx.graphics.getWidth() * 0.04);
 		BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
 		fontGenerator.dispose();
 
@@ -81,16 +81,6 @@ public class Fly extends Game {
 		skin.add("default-font", bitmapFont);
 
 		skin.load(Gdx.files.internal("uiskin.json"));
-	}
-	
-	/**
-	 * Returns the absolute x-position calculated with the percent and the current screen width.
-	 * 
-	 * @param percentX the x-position on the screen in percent from 0-100.
-	 * @return the absolute x-position on the screen.
-	 */
-	public int getAbsoluteX(float percentX) {
-		return (int) (screenWidth * percentX);
 	}
 	
 	/**
