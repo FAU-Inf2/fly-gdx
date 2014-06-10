@@ -161,13 +161,10 @@ public class Fly extends Game {
 	}
 
 	/**
-	 * Lazy loading of game screen.
+	 * set game screen as current screen.
 	 */
 	public void setGameScreen() {
-		if (gameScreen == null) {
-			gameScreen = new GameScreen(this);
-		}
-		setScreen(gameScreen);
+		setScreen(new GameScreen(this));
 	}
 
 	/**

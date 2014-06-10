@@ -38,6 +38,7 @@ public class CameraController implements InputProcessor {
 
 	public CameraController(boolean useSensorData, Player player) {
 		this.useSensorData = useSensorData;
+		
 		this.player = player;
 
 		useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
@@ -340,8 +341,9 @@ public class CameraController implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		// using the touchscreen to rotate camera
+		
 		if (button == Buttons.LEFT && !useSensorData) {
-
+			Gdx.app.log("touchDown", "registered");
 			float width = (float) Gdx.graphics.getWidth();
 			float height = (float) Gdx.graphics.getHeight();
 
