@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
 import de.fau.cs.mad.fly.Fly;
 
 public class DesktopLauncher {
