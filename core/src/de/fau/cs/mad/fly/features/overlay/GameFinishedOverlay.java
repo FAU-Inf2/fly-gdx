@@ -76,5 +76,4 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 	public void finish() {
 		stage.addActor(table);
 	}
-
 }
