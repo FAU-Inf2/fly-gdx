@@ -16,6 +16,7 @@ public class CameraController implements InputProcessor {
 	private boolean useSensorData;
 	private boolean useRolling;
 	private boolean useLowPass;
+	private boolean useAveraging;
 
 	private Player player;
 	private PerspectiveCamera camera;
@@ -28,6 +29,7 @@ public class CameraController implements InputProcessor {
 	private int currentEvent = -1;
 
 	// variables for Sensor input smoothing
+	private float alpha = 0.15f;
 	private int bufferSize;
 	private ArrayList<Float> rollInput;
 	private ArrayList<Float> rollOutput;
@@ -44,7 +46,7 @@ public class CameraController implements InputProcessor {
 		useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
 		useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
 
-		bufferSize = 30;
+		bufferSize = (int) player.getSettingManager().getSliderValue("bufferSlider");
 
 		setUpCamera();
 	}
@@ -63,6 +65,21 @@ public class CameraController implements InputProcessor {
 
 	public void setUseLowPass(boolean useLowPass) {
 		this.useLowPass = useLowPass;
+	}
+	
+	public void setUseAveraging(boolean useAveraging) {
+		this.useAveraging = useAveraging;
+	}
+	
+	public void setBufferSize(int bufferSize) {
+		resetBuffers();
+		
+		this.bufferSize = bufferSize;
+	
+	}
+	
+	public void setAlpha(float alpha) {
+		this.alpha = alpha;
 	}
 
 	public float getRollDir() {
@@ -161,23 +178,35 @@ public class CameraController implements InputProcessor {
 		azimuthInput.add(azimuth);
 
 		if (useLowPass) {
-			rollOutput = lowPassFilter(rollInput, rollOutput, 0.15f);
-			pitchOutput = lowPassFilter(pitchInput, pitchOutput, 0.15f);
-			azimuthOutput = lowPassFilter(azimuthInput, azimuthOutput, 0.15f);
-
-			roll = average(rollOutput);
-			pitch = average(pitchOutput);
-			azimuth = average(azimuthOutput);
+			rollOutput = lowPassFilter(rollInput, rollOutput, alpha);
+			pitchOutput = lowPassFilter(pitchInput, pitchOutput, alpha);
+			azimuthOutput = lowPassFilter(azimuthInput, azimuthOutput, alpha);
+			
+			if (useAveraging) {
+				roll = average(rollOutput);
+				pitch = average(pitchOutput);
+				azimuth = average(azimuthOutput);
+			}
 		} else {
-			roll = average(rollInput);
-			pitch = average(pitchInput);
-			azimuth = average(azimuthInput);
+			if (useAveraging) {
+				roll = average(rollInput);
+				pitch = average(pitchInput);
+				azimuth = average(azimuthInput);
+			}
 		}
 
 		azimuth = computeAzimuth(roll, pitch, azimuth);
 
 		float difRoll = roll - startRoll;
+		if (Math.abs(difRoll) > 180) {
+			difRoll -=  Math.signum(difRoll) * 360;
+		}
+		
 		float difAzimuth = azimuth - startAzimuth;
+		if (Math.abs(difAzimuth) > 180) {
+			difAzimuth -=  Math.signum(difAzimuth) * 360;
+		}
+		
 
 		// capping the rotation to a maximum of 90 degrees
 		if (Math.abs(difRoll) > 90) {

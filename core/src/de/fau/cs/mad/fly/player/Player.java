@@ -55,12 +55,15 @@ public class Player {
 		settingManager.addSetting("useTouch", "Use TouchScreen:", false);
 		settingManager.addSetting("useRoll", "Use Rolling:", false);
 		settingManager.addSetting("useLowPass", "Use LowPassFilter:", false);
+		settingManager.addSetting("useAveraging", "Use Averaging of Sensordata:", false);
 		settingManager.addSetting("showGateIndicator", "Show next Gate:", true);
 		settingManager.addSetting("showGameFinished", "Show Game finished:", false);
 		settingManager.addSetting("showSteering", "Show Steering:", false);
 		settingManager.addSetting("showTime", "Show Time:", false);
 		settingManager.addSetting("showFPS", "Show FPS:", false);
 		settingManager.addSetting("sliderTest", "Slider:", 10.0f, 0.0f, 100.0f, 1.0f);
+		settingManager.addSetting("alphaSlider", "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
+		settingManager.addSetting("bufferSlider", "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
 	}
 	
 	/**

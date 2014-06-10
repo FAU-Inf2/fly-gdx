@@ -213,6 +213,15 @@ public class GameController {
 		boolean useLowPass = player.getSettingManager().getCheckBoxValue(
 				"useLowPass");
 		camController.setUseLowPass(useLowPass);
+		
+		boolean useAveraging = player.getSettingManager().getCheckBoxValue("useAveraging");
+		camController.setUseAveraging(useAveraging);
+		
+		int buffersize = (int) player.getSettingManager().getSliderValue("bufferSlider");
+		camController.setBufferSize(buffersize);
+		
+		float alpha = player.getSettingManager().getSliderValue("alphaSlider") / 100.f;
+		camController.setAlpha(alpha);
 
 		camController.setUpCamera();
 		camera = camController.getCamera();
