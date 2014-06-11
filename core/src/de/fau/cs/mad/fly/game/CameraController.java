@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector3;
 
+import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.player.Player;
 
 public class CameraController implements InputProcessor {
@@ -41,11 +42,15 @@ public class CameraController implements InputProcessor {
 	public CameraController(Player player) {
 		this.player = player;
 		
+		Debug.log("new Settings!");
+		
 		this.useSensorData = !player.getSettingManager().getCheckBoxValue("useTouch");
 		this.useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
 		this.useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
+		this.useAveraging = player.getSettingManager().getCheckBoxValue("useAveraging");
 
 		this.bufferSize = (int) player.getSettingManager().getSliderValue("bufferSlider");
+		this.alpha = player.getSettingManager().getSliderValue("alphaSlider") / 100.f;
 
 		setUpCamera();
 	}
@@ -371,7 +376,6 @@ public class CameraController implements InputProcessor {
 		// using the touchscreen to rotate camera
 		
 		if (button == Buttons.LEFT && !useSensorData) {
-			Gdx.app.log("touchDown", "registered");
 			float width = (float) Gdx.graphics.getWidth();
 			float height = (float) Gdx.graphics.getHeight();
 

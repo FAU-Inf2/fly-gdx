@@ -20,8 +20,6 @@ public class GameScreen implements Screen{
 
 	public GameScreen(final Fly game) {
 		this.game = game;
-
-		inputProcessor = new InputMultiplexer(game.gameController.getCameraController(), new BackProcessor());
 	}
 
 	@Override
@@ -37,7 +35,8 @@ public class GameScreen implements Screen{
 	@Override
 	public void show() {
 		// delegate all inputs to the #inputProcessor
-		inputProcessor.addProcessor(0, game.gameController.getStage());
+		// TODO: put stage in GameScreen and new InputMultiplexer back to the constructor
+		inputProcessor = new InputMultiplexer(game.gameController.getStage(), game.gameController.getCameraController(), new BackProcessor());
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(inputProcessor);
 		

@@ -36,6 +36,7 @@ public class Fly extends Game {
 	private LevelChooserScreen levelChooserScreen;
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
+	private GameScreen gameScreen;
 	
 	private Player player;
 	public GameController gameController;
@@ -147,7 +148,10 @@ public class Fly extends Game {
 	 * set game screen as current screen.
 	 */
 	public void setGameScreen() {
-		setScreen(new GameScreen(this));
+		if (gameScreen == null) {
+			gameScreen = new GameScreen(this);
+		}
+		setScreen(gameScreen);
 	}
 
 	/**

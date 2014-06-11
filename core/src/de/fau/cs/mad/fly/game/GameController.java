@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.GameScreen;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
@@ -200,30 +201,6 @@ public class GameController {
 	 * initialized.
 	 */
 	public void initGame() {
-
-		// TODO: put in cameraController.init()
-		useSensorData = !player.getSettingManager()
-				.getCheckBoxValue("useTouch");
-		camController.setUseSensorData(useSensorData);
-
-		boolean useRolling = player.getSettingManager().getCheckBoxValue(
-				"useRoll");
-		camController.setUseRolling(useRolling);
-
-		boolean useLowPass = player.getSettingManager().getCheckBoxValue(
-				"useLowPass");
-		camController.setUseLowPass(useLowPass);
-		
-		boolean useAveraging = player.getSettingManager().getCheckBoxValue("useAveraging");
-		camController.setUseAveraging(useAveraging);
-		
-		int buffersize = (int) player.getSettingManager().getSliderValue("bufferSlider");
-		camController.setBufferSize(buffersize);
-		
-		float alpha = player.getSettingManager().getSliderValue("alphaSlider") / 100.f;
-		camController.setAlpha(alpha);
-
-		camController.setUpCamera();
 		camera = camController.getCamera();
 
 		player.getLastLevel().initLevel(this);
