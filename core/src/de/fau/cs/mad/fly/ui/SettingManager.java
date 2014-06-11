@@ -31,7 +31,7 @@ public class SettingManager {
 
 	public SettingManager(String file, Skin skin) {
 		prefs = Gdx.app.getPreferences(file);
-		
+		this.skin = skin;
 		settingMap = new HashMap<String, Setting>();
 		settingList = new ArrayList<String>();
 	}

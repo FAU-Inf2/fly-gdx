@@ -39,6 +39,9 @@ public final class UI {
 		 */
 		public static final float percentageOfSpaceHeight = .15f;
 
+		public static final float spaceWidth = window.percentageOfSpaceWidth / 6 * Gdx.graphics.getWidth();
+		public static final float spaceHeight = window.percentageOfSpaceHeight / 6 * Gdx.graphics.getHeight();
+		
 		/** Background color of the windows */
 		public static final Color backgroundColor = Color.BLACK;
 	}
@@ -50,10 +53,10 @@ public final class UI {
 
 		public static final int buttonsInAColumn = 3;
 
-		public static final float buttonWidth = window.percentageOfButtonsWitdth / buttonsInARow * Gdx.graphics.getWidth();
-		public static final float buttonHeight = window.percentageOfButtonsHeight / buttonsInAColumn * Gdx.graphics.getHeight();
+		public static final float buttonWidth = window.percentageOfButtonsWitdth / (float) buttonsInARow * (float) Gdx.graphics.getWidth();
+		public static final float buttonHeight = window.percentageOfButtonsHeight / (float) buttonsInAColumn * (float) Gdx.graphics.getHeight();
 
-		public static final float spaceWidth = window.percentageOfSpaceWidth / (buttonsInARow * 2) * Gdx.graphics.getWidth();
-		public static final float spaceHeight = window.percentageOfSpaceHeight / (buttonsInARow * 2) * Gdx.graphics.getHeight();
+		public static final float spaceWidth = window.spaceWidth;
+		public static final float spaceHeight = window.spaceHeight;
 	}
 }
