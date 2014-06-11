@@ -38,15 +38,14 @@ public class CameraController implements InputProcessor {
 	private ArrayList<Float> azimuthInput;
 	private ArrayList<Float> azimuthOutput;
 
-	public CameraController(boolean useSensorData, Player player) {
-		this.useSensorData = useSensorData;
-		
+	public CameraController(Player player) {
 		this.player = player;
+		
+		this.useSensorData = !player.getSettingManager().getCheckBoxValue("useTouch");
+		this.useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
+		this.useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
 
-		useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
-		useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
-
-		bufferSize = (int) player.getSettingManager().getSliderValue("bufferSlider");
+		this.bufferSize = (int) player.getSettingManager().getSliderValue("bufferSlider");
 
 		setUpCamera();
 	}

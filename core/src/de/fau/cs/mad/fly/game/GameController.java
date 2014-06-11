@@ -374,7 +374,7 @@ public class GameController {
 
 			Builder.game = game;
 			Builder.player = game.getPlayer();
-			Builder.cameraController = new CameraController(true, player);
+			Builder.cameraController = new CameraController(player);
 			Builder.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
 					Gdx.graphics.getHeight()));
 			Builder.level = player.getLastLevel();
