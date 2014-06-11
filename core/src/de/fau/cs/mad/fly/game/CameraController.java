@@ -3,13 +3,12 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector3;
 
-import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.player.Player;
 
 public class CameraController implements InputProcessor {
@@ -41,7 +40,7 @@ public class CameraController implements InputProcessor {
 
 	public CameraController(Player player) {
 		this.player = player;
-		
+
 		this.useSensorData = !player.getSettingManager().getCheckBoxValue("useTouch");
 		this.useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
 		this.useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
@@ -68,18 +67,18 @@ public class CameraController implements InputProcessor {
 	public void setUseLowPass(boolean useLowPass) {
 		this.useLowPass = useLowPass;
 	}
-	
+
 	public void setUseAveraging(boolean useAveraging) {
 		this.useAveraging = useAveraging;
 	}
-	
+
 	public void setBufferSize(int bufferSize) {
 		resetBuffers();
-		
+
 		this.bufferSize = bufferSize;
-	
+
 	}
-	
+
 	public void setAlpha(float alpha) {
 		this.alpha = alpha;
 	}
@@ -110,8 +109,7 @@ public class CameraController implements InputProcessor {
 		camera.update();
 
 		// move the camera (first person flight)
-		Vector3 dir = new Vector3(camera.direction.x, camera.direction.y,
-				camera.direction.z);
+		Vector3 dir = new Vector3(camera.direction.x, camera.direction.y, camera.direction.z);
 		camera.translate(dir.scl(player.getPlane().getSpeed() * delta));
 		camera.update();
 
@@ -183,7 +181,7 @@ public class CameraController implements InputProcessor {
 			rollOutput = lowPassFilter(rollInput, rollOutput, alpha);
 			pitchOutput = lowPassFilter(pitchInput, pitchOutput, alpha);
 			azimuthOutput = lowPassFilter(azimuthInput, azimuthOutput, alpha);
-			
+
 			if (useAveraging) {
 				roll = average(rollOutput);
 				pitch = average(pitchOutput);
@@ -201,14 +199,13 @@ public class CameraController implements InputProcessor {
 
 		float difRoll = roll - startRoll;
 		if (Math.abs(difRoll) > 180) {
-			difRoll -=  Math.signum(difRoll) * 360;
+			difRoll -= Math.signum(difRoll) * 360;
 		}
-		
+
 		float difAzimuth = azimuth - startAzimuth;
 		if (Math.abs(difAzimuth) > 180) {
-			difAzimuth -=  Math.signum(difAzimuth) * 360;
+			difAzimuth -= Math.signum(difAzimuth) * 360;
 		}
-		
 
 		// capping the rotation to a maximum of 90 degrees
 		if (Math.abs(difRoll) > 90) {
@@ -234,19 +231,17 @@ public class CameraController implements InputProcessor {
 	 * @param azimuthDir
 	 */
 	private void setAzimuthDir(float azimuthDir) {
-		this.azimuthDir = limitSpeed(azimuthDir, player.getPlane()
-				.getAzimuthSpeed());
+		this.azimuthDir = limitSpeed(azimuthDir, player.getPlane().getAzimuthSpeed());
 	}
-	
+
 	/**
-	 * Setter for the {@link #rollDir}. Values greater than the rollingSpeed
-	 * of the plane are reduced to the azimuth speed of the plane.
+	 * Setter for the {@link #rollDir}. Values greater than the rollingSpeed of
+	 * the plane are reduced to the azimuth speed of the plane.
 	 * 
 	 * @param rollDir
 	 */
 	private void setRollDir(float rollDir) {
-		this.rollDir = limitSpeed(rollDir, player.getPlane()
-				.getRollingSpeed());
+		this.rollDir = limitSpeed(rollDir, player.getPlane().getRollingSpeed());
 	}
 
 	/**
@@ -309,15 +304,10 @@ public class CameraController implements InputProcessor {
 
 		Vector3 z = new Vector3(0.f, 0.f, 1.f);
 
-		return (float) Math.acos(z.dot(new Vector3(newFront.x, newFront.y,
-				newFront.z))
-				/ (float) Math.sqrt(newFront.x * newFront.x + newFront.y
-						* newFront.y + newFront.z * newFront.z))
-				* 180.f / (float) Math.PI;
+		return (float) Math.acos(z.dot(new Vector3(newFront.x, newFront.y, newFront.z)) / (float) Math.sqrt(newFront.x * newFront.x + newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f / (float) Math.PI;
 	}
 
-	private ArrayList<Float> lowPassFilter(ArrayList<Float> input,
-			ArrayList<Float> output, float alpha) {
+	private ArrayList<Float> lowPassFilter(ArrayList<Float> input, ArrayList<Float> output, float alpha) {
 		float result = 0.0f;
 
 		/*
@@ -372,7 +362,7 @@ public class CameraController implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		// using the touchscreen to rotate camera
-		
+
 		if (button == Buttons.LEFT && !useSensorData) {
 			float width = (float) Gdx.graphics.getWidth();
 			float height = (float) Gdx.graphics.getHeight();
