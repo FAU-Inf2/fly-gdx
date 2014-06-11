@@ -47,7 +47,8 @@ public class SettingManager {
 		
 		final Table settingTable = new Table();
 		final ScrollPane settingPane = new ScrollPane(settingTable, skin);
-		settingPane.setFadeScrollBars(true);
+		settingPane.setFadeScrollBars(false);
+	 	settingPane.setScrollingDisabled(true, false);
 
 		for(String s : settingList) {
 			settingTable.row().expand();
