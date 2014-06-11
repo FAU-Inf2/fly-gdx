@@ -10,9 +10,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.GameScreen;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureGatePassed;
@@ -75,29 +73,12 @@ public class GameController {
 
 	private GameState gameState;
 
-	public GameController(Builder gameControllerBuilder) {
-		this.game = Builder.game;
-		this.player = Builder.player;
-		this.stage = Builder.stage;
-		this.collisionDetector = Builder.collisionDetector;
-		this.useSensorData = Builder.useSensorData;
-		this.optionalFeaturesToLoad = Builder.optionalFeaturesToLoad;
-		this.optionalFeaturesToInit = Builder.optionalFeaturesToInit;
-		this.optionalFeaturesToRender = Builder.optionalFeaturesToRender;
-		this.optionalFeaturesToFinish = Builder.optionalFeaturesToFinish;
-		this.optionalFeaturesToDispose = Builder.optionalFeaturesToDispose;
-		this.levelProgress = Builder.levelProgress;
-		this.level = Builder.level;
-
-		this.camController = Builder.cameraController;
-
-		this.batch = new ModelBatch();
-	}
+	public GameController() {}
 	
 	/**
 	 * Getter for the game.
 	 * 
-	 * @return {@link #fly}
+	 * @return {@link #game}
 	 */
 	public Fly getGame() {
 		return game;
@@ -312,20 +293,20 @@ public class GameController {
 	 * 
 	 */
 	public static class Builder {
-		private static Fly game;
-		private static Player player;
-		private static Stage stage;
-		private static Level level;
-		private static boolean useSensorData;
-		private static CollisionDetector collisionDetector;
-		private static ArrayList<IFeatureLoad> optionalFeaturesToLoad;
-		private static ArrayList<IFeatureInit> optionalFeaturesToInit;
-		private static ArrayList<IFeatureRender> optionalFeaturesToRender;
-		private static ArrayList<IFeatureFinish> optionalFeaturesToFinish;
-		private static ArrayList<IFeatureDispose> optionalFeaturesToDispose;
-		private static ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed;
-		private static LevelProgress levelProgress;
-		private static CameraController cameraController;
+		private Fly game;
+		private Player player;
+		private Stage stage;
+		private Level level;
+		private boolean useSensorData;
+		private CollisionDetector collisionDetector;
+		private ArrayList<IFeatureLoad> optionalFeaturesToLoad;
+		private ArrayList<IFeatureInit> optionalFeaturesToInit;
+		private ArrayList<IFeatureRender> optionalFeaturesToRender;
+		private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
+		private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
+		private ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed;
+		private LevelProgress levelProgress;
+		private CameraController cameraController;
 
 		/**
 		 * Creates a basic {@link GameController} with a certain level, linked
@@ -349,12 +330,12 @@ public class GameController {
 			optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
 			levelProgress = new LevelProgress();
 
-			Builder.game = game;
-			Builder.player = game.getPlayer();
-			Builder.cameraController = new CameraController(player);
-			Builder.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
+			this.game = game;
+			this.player = game.getPlayer();
+			this.cameraController = new CameraController(player);
+			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
 					Gdx.graphics.getHeight()));
-			Builder.level = player.getLastLevel();
+			this.level = player.getLastLevel();
 			
 			addPlayerPlane();
 			collisionDetector = new CollisionDetector(game);
@@ -448,7 +429,7 @@ public class GameController {
 		}
 
 		/**
-		 * Adds a {@link LevelInfoOverlay} to the GameController, that is
+		 * Adds a {@link GameFinishedOverlay} to the GameController, that is
 		 * initialized, updated every frame and updated when the game is
 		 * finished.
 		 * 
@@ -485,7 +466,23 @@ public class GameController {
 		 * @return new GameController
 		 */
 		public GameController build() {
-			return new GameController(this);
+			GameController gc = new GameController();
+			gc.game = game;
+			gc.player = player;
+			gc.stage = stage;
+			gc.collisionDetector = collisionDetector;
+			gc.useSensorData = useSensorData;
+			gc.optionalFeaturesToLoad = optionalFeaturesToLoad;
+			gc.optionalFeaturesToInit = optionalFeaturesToInit;
+			gc.optionalFeaturesToRender = optionalFeaturesToRender;
+			gc.optionalFeaturesToFinish = optionalFeaturesToFinish;
+			gc.optionalFeaturesToDispose = optionalFeaturesToDispose;
+			gc.levelProgress = levelProgress;
+			gc.level = level;
+			gc.camController = cameraController;
+			gc.batch = new ModelBatch();
+
+			return gc;
 		}
 	}
 }
