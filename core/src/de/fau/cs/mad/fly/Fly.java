@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import de.fau.cs.mad.fly.game.CameraController;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Assets;
@@ -44,14 +43,9 @@ public class Fly extends Game {
 
 	private Skin skin;
 	private ShapeRenderer shapeRenderer;
-	
-	private float screenWidth, screenHeight;
 
 	@Override
 	public void create() {
-		screenWidth = Gdx.graphics.getWidth();
-		screenHeight = Gdx.graphics.getHeight();
-		
 		Bullet.init();
 		Assets.init();
 		createSkin();
@@ -81,16 +75,6 @@ public class Fly extends Game {
 		skin.add("default-font", bitmapFont);
 
 		skin.load(Gdx.files.internal("uiskin.json"));
-	}
-	
-	/**
-	 * Returns the absolute y-position calculated with the percent and the current screen height.
-	 * 
-	 * @param percentY the y-position on the screen in percent from 0-100.
-	 * @return the absolute y-position on the screen.
-	 */
-	public int getAbsoluteY(float percentY) {
-		return (int) (screenHeight * percentY);
 	}
 	
 	/**

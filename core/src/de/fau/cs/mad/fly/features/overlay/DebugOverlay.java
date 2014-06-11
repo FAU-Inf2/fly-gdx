@@ -64,7 +64,7 @@ public class DebugOverlay {
 	 */
 	public Label addLabel(String text, LabelStyle labelStyle, float x, float y) {
 		Label label = new Label(text, labelStyle);
-		label.setPosition(Gdx.graphics.getWidth() * x, game.getAbsoluteY(y));
+		label.setPosition(Gdx.graphics.getWidth() * x, Gdx.graphics.getHeight()*y);
 		stage.addActor(label);
 		return label;
 	}
