@@ -132,6 +132,8 @@ public class Fly extends Game {
 		if (loadingScreen == null) {
 			loadingScreen = new LoadingScreen(this);
 		}
+		// TODO: make loading asynchronous to the loading screen and display the progress
+		
 		setScreen(loadingScreen);
 		// TODO: this should be level dependent in the future
 		Assets.load();

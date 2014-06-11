@@ -42,8 +42,6 @@ public class CameraController implements InputProcessor {
 	public CameraController(Player player) {
 		this.player = player;
 		
-		Debug.log("new Settings!");
-		
 		this.useSensorData = !player.getSettingManager().getCheckBoxValue("useTouch");
 		this.useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
 		this.useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
