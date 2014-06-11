@@ -4,12 +4,8 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -30,7 +26,6 @@ import de.fau.cs.mad.fly.res.ResourceManager;
  */
 public class LevelChooserScreen implements Screen {
 
-	private Batch batch;
 	private Skin skin;
 	private Stage stage;
 
@@ -41,14 +36,9 @@ public class LevelChooserScreen implements Screen {
 	private InputMultiplexer inputProcessor;
 
 	public LevelChooserScreen() {
-		batch = new SpriteBatch();
 		skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		inputProcessor = new InputMultiplexer();
-		// create an InputProcess to handle the back key
-		InputProcessor backProcessor = new BackProcessor();
-		inputProcessor.addProcessor(backProcessor);
-		inputProcessor.addProcessor(stage);
+		inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
 
 		showLevels();
 	}
@@ -138,7 +128,6 @@ public class LevelChooserScreen implements Screen {
 		// everything that implements the interface Disposable should be
 		// disposed, because Java garbage collections does not care about such
 		// objects
-		batch.dispose();
 		skin.dispose();
 		stage.dispose();
 	}
