@@ -171,7 +171,7 @@ public class Fly extends Game {
 	 */
 	public void setSettingScreen() {
 		if (settingScreen == null) {
-			settingScreen = new SettingScreen(this);
+			settingScreen = new SettingScreen();
 		}
 		setScreen(settingScreen);
 	}
