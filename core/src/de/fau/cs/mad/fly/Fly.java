@@ -161,7 +161,7 @@ public class Fly extends Game {
 	 */
 	public void setMainMenuScreen() {
 		if (mainMenuScreen == null) {
-			mainMenuScreen = new MainMenuScreen(this);
+			mainMenuScreen = new MainMenuScreen();
 		}
 		setScreen(mainMenuScreen);
 	}
