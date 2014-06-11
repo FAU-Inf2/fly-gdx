@@ -6,10 +6,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 /**
  * Stores all the settings in a HashMap
@@ -22,43 +19,23 @@ public class SettingManager {
 	private Preferences prefs;
 	private HashMap<String, Setting> settingMap;
 	
+	public HashMap<String, Setting> getSettingMap() {
+		return settingMap;
+	}
+
 	private ArrayList<String> settingList;
 	
+	public ArrayList<String> getSettingList() {
+		return settingList;
+	}
+
 	public SettingManager(String file, Skin skin) {
-		this.skin = skin;
 		prefs = Gdx.app.getPreferences(file);
 		
 		settingMap = new HashMap<String, Setting>();
 		settingList = new ArrayList<String>();
 	}
-	
-	/**
-	 * Creates the table with the widgets and adds it to the Stage.
-	 * @param stage
-	 *            the parent Stage
-	 * @param skin
-	 *            the used Skin
-	 */
-	public void display(Stage stage, Skin skin) {
-		Table table = new Table();
-		table.pad(Gdx.graphics.getWidth() * 0.1f);
-		table.setFillParent(true);
-		stage.addActor(table);
-		
-		final Table settingTable = new Table();
-		final ScrollPane settingPane = new ScrollPane(settingTable, skin);
-		settingPane.setFadeScrollBars(false);
-	 	settingPane.setScrollingDisabled(true, false);
 
-		for(String s : settingList) {
-			settingTable.row().expand();
-			settingTable.add(settingMap.get(s).getLabel()).pad(6f).uniform();
-			settingTable.add(settingMap.get(s).getActor()).pad(6f).uniform();
-		}
-
-		table.row().expand();
-		table.add(settingPane);
-	}
 	
 	/**
 	 * Adds a new Setting with a TextField and a String value.
