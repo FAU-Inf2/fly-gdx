@@ -34,7 +34,6 @@ public class Fly extends Game {
 	private SplashScreen splashScreen;
 	private LoadingScreen loadingScreen;
 	private LevelChooserScreen levelChooserScreen;
-	private GameScreen gameScreen;
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
 	
