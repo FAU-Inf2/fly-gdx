@@ -3,50 +3,28 @@ package de.fau.cs.mad.fly.ui;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.res.ResourceManager;
 
 /**
- * Offers a selections of Levels to start
+ * Offers a selection of Levels to start
  * 
  * @author Lukas Hahmann
  */
-public class LevelChooserScreen implements Screen {
+public class LevelChooserScreen extends BasicScreen {
 
-	private Skin skin;
-	private Stage stage;
-
-	/**
-	 * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the
-	 * multiplexer offers the possibility to add several InputProcessors
-	 */
-	private InputMultiplexer inputProcessor;
-
-	public LevelChooserScreen() {
-		skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
-		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
-
-		showLevels();
-	}
 
 	/**
 	 * Shows a list of all available levels.
 	 */
-	public void showLevels() {
+	public void generateContent() {
 		// calculate width and height of buttons and the space in between
 
 		ArrayList<Level> allLevels = ResourceManager.getLevelList();
@@ -84,51 +62,5 @@ public class LevelChooserScreen implements Screen {
 		stage.addActor(levelScrollPane);
 	}
 
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		stage.act(delta);
-		stage.draw();
-	}
 
-	@Override
-	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, true);
-	}
-
-	@Override
-	public void show() {
-		// allow this screen to catch the back key
-		Gdx.input.setCatchBackKey(true);
-		// delegate all inputs to the #inputProcessor
-		Gdx.input.setInputProcessor(inputProcessor);
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void dispose() {
-		// everything that implements the interface Disposable should be
-		// disposed, because Java garbage collections does not care about such
-		// objects
-		skin.dispose();
-		stage.dispose();
-	}
 }
