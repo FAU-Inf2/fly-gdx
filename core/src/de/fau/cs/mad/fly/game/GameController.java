@@ -1,6 +1,7 @@
 package de.fau.cs.mad.fly.game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -54,18 +55,20 @@ public class GameController {
 	private Player player;
 	private Stage stage;
 	private CollisionDetector collisionDetector;
-	private ArrayList<IFeatureLoad> optionalFeaturesToLoad;
-	private ArrayList<IFeatureInit> optionalFeaturesToInit;
-	private ArrayList<IFeatureRender> optionalFeaturesToRender;
-	private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
-	private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
+	private List<IFeatureLoad> optionalFeaturesToLoad;
+	private List<IFeatureInit> optionalFeaturesToInit;
+	private List<IFeatureRender> optionalFeaturesToRender;
+	private List<IFeatureDispose> optionalFeaturesToDispose;
+	private List<IFeatureFinish> optionalFeaturesToFinish;
 	private CameraController camController;
-	private boolean useSensorData;
 	PerspectiveCamera camera;
 	private LevelProgress levelProgress;
 
-	public Environment environment;
-	public ModelBatch batch;
+	private ModelBatch batch;
+
+	public ModelBatch getBatch() {
+		return batch;
+	}
 
 	private Level level;
 
@@ -297,7 +300,6 @@ public class GameController {
 		private Player player;
 		private Stage stage;
 		private Level level;
-		private boolean useSensorData;
 		private CollisionDetector collisionDetector;
 		private ArrayList<IFeatureLoad> optionalFeaturesToLoad;
 		private ArrayList<IFeatureInit> optionalFeaturesToInit;
@@ -471,7 +473,6 @@ public class GameController {
 			gc.player = player;
 			gc.stage = stage;
 			gc.collisionDetector = collisionDetector;
-			gc.useSensorData = useSensorData;
 			gc.optionalFeaturesToLoad = optionalFeaturesToLoad;
 			gc.optionalFeaturesToInit = optionalFeaturesToInit;
 			gc.optionalFeaturesToRender = optionalFeaturesToRender;

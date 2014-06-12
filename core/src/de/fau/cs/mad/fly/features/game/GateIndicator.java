@@ -36,7 +36,7 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 		this.gameController = game;
 		Assets.loadArrow();
 		arrowModel = new GameObject(Assets.manager.get(Assets.arrow));
-		batch = game.batch;
+		batch = game.getBatch();
 		
 		environment = gameController.getLevel().getEnvironment();
 	}
