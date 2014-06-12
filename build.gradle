@@ -13,8 +13,10 @@ apply plugin: "sonar-runner"
 
 sonarRunner {
     sonarProperties {
-        property "sonar.host.url", "http://mad.cs.fau.de/sonar/"
-        property "sonar.jdbc.url", "jdbc:mysql://mad.cs.fau.de/sonar"
+        property "sonar.projectKey", "FLY"
+
+        property "sonar.host.url", "http://localhost/sonar/"
+        property "sonar.jdbc.url", "jdbc:mysql://localhost/sonar"
         property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
 
         property "sonar.jdbc.username", "unknown"
@@ -118,12 +120,6 @@ project(":ios") {
 
 project(":core") {
     apply plugin: "java"
-
-    sonarRunner {
-      sonarProperties {
-        property 'sonar.projectName', 'Fly-Core'
-      }
-    }
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
