@@ -9,9 +9,42 @@ buildscript {
     }
 }
 
+apply plugin: "sonar-runner"
+
+sonarRunner {
+    sonarProperties {
+        property "sonar.host.url", "http://mad.cs.fau.de/sonar/"
+        property "sonar.jdbc.url", "jdbc:mysql://mad.cs.fau.de/sonar"
+        property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
+
+        property "sonar.jdbc.username", "unknown"
+        property "sonar.jdbc.password", "unknown"
+        property "sonar.login", "unknown"
+        property "sonar.password", "unknown"
+
+
+        if (file('sonar.properties').exists()) {
+            print 'sonar.properties found, replacing with real values'
+            def propsFile = file('sonar.properties')
+            def props = new Properties()
+            propsFile.withInputStream { 
+                stream -> props.load(stream) 
+            }
+
+            def config = new ConfigSlurper().parse(props)
+            property "sonar.jdbc.username", config.dbusername
+            property "sonar.jdbc.password", config.dbpassword
+            property "sonar.login", config.sonarlogin
+            property "sonar.password", config.sonarpassword
+        }
+    }
+}
+
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
+
+
 
     version = '1.0'
     ext {
@@ -29,7 +62,6 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java"
-
 
     dependencies {
         compile project(":core")
@@ -86,6 +118,12 @@ project(":ios") {
 
 project(":core") {
     apply plugin: "java"
+
+    sonarRunner {
+      sonarProperties {
+        property 'sonar.projectName', 'Fly-Core'
+      }
+    }
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
