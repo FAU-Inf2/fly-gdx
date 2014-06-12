@@ -1,6 +1,7 @@
 package de.fau.cs.mad.fly.game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -31,12 +32,12 @@ public class CameraController implements InputProcessor {
 	// variables for Sensor input smoothing
 	private float alpha = 0.15f;
 	private int bufferSize;
-	private ArrayList<Float> rollInput;
-	private ArrayList<Float> rollOutput;
-	private ArrayList<Float> pitchInput;
-	private ArrayList<Float> pitchOutput;
-	private ArrayList<Float> azimuthInput;
-	private ArrayList<Float> azimuthOutput;
+	private List<Float> rollInput;
+	private List<Float> rollOutput;
+	private List<Float> pitchInput;
+	private List<Float> pitchOutput;
+	private List<Float> azimuthInput;
+	private List<Float> azimuthOutput;
 
 	public CameraController(Player player) {
 		this.player = player;
@@ -119,7 +120,7 @@ public class CameraController implements InputProcessor {
 	/**
 	 * Sets up the camera for the initial view.
 	 */
-	public void setUpCamera() {
+	public final void setUpCamera() {
 
 		// initializing Roll- and Pitch-Values for later comparison
 		float roll = Gdx.input.getRoll();
@@ -307,7 +308,7 @@ public class CameraController implements InputProcessor {
 		return (float) Math.acos(z.dot(new Vector3(newFront.x, newFront.y, newFront.z)) / (float) Math.sqrt(newFront.x * newFront.x + newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f / (float) Math.PI;
 	}
 
-	private ArrayList<Float> lowPassFilter(ArrayList<Float> input, ArrayList<Float> output, float alpha) {
+	private List<Float> lowPassFilter(List<Float> input, List<Float> output, float alpha) {
 		float result = 0.0f;
 
 		/*
@@ -331,7 +332,7 @@ public class CameraController implements InputProcessor {
 		return output;
 	}
 
-	private float average(ArrayList<Float> input) {
+	private float average(List<Float> input) {
 		float result = 0.0f;
 
 		for (int i = 0; i < input.size(); i++) {
@@ -410,7 +411,7 @@ public class CameraController implements InputProcessor {
 		if (wantedSpeed > 0) {
 			return Math.min(wantedSpeed, speedLimit);
 		}
-		return Math.max(wantedSpeed, (-1 * speedLimit));
+		return Math.max(wantedSpeed, -speedLimit);
 	}
 
 	@Override
