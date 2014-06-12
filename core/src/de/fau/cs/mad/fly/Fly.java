@@ -39,7 +39,7 @@ public class Fly extends Game {
 	private GameScreen gameScreen;
 	
 	private Player player;
-	public GameController gameController;
+	private GameController gameController;
 
 	private Skin skin;
 	private ShapeRenderer shapeRenderer;
@@ -82,6 +82,10 @@ public class Fly extends Game {
 	 */
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public GameController getGameController() {
+		return gameController;
 	}
 
 	/**

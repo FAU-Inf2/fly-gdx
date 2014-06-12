@@ -24,28 +24,28 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void render(float delta) {
-		game.gameController.renderGame(delta);
+		game.getGameController().renderGame(delta);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		game.gameController.getStage().getViewport().update(width, height, true);
+		game.getGameController().getStage().getViewport().update(width, height, true);
 	}
 
 	@Override
 	public void show() {
 		// delegate all inputs to the #inputProcessor
 		// TODO: put stage in GameScreen and new InputMultiplexer back to the constructor
-		inputProcessor = new InputMultiplexer(game.gameController.getStage(), game.gameController.getCameraController(), new BackProcessor());
+		inputProcessor = new InputMultiplexer(game.getGameController().getStage(), game.getGameController().getCameraController(), new BackProcessor());
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		game.gameController.initGame();
+		game.getGameController().initGame();
 	}
 
 	@Override
 	public void hide() {
-		game.gameController.disposeGame();
+		game.getGameController().disposeGame();
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class MainMenuScreen extends BasicScreen {
 	 */
 	protected void generateContent() {
 		Table table = new Table();
-		table.pad(UI.window.spaceHeight, UI.window.spaceWidth, UI.window.spaceHeight, UI.window.spaceWidth).setFillParent(true);
+		table.pad(UI.Window.SINGLE_SPACE_HEIGHT, UI.Window.SINGLE_SPACE_WIDTH, UI.Window.SINGLE_SPACE_HEIGHT, UI.Window.SINGLE_SPACE_WIDTH).setFillParent(true);
 		stage.addActor(table);
 
 		final TextButton continueButton = new TextButton("Continue", skin, "default");
@@ -32,10 +32,10 @@ public class MainMenuScreen extends BasicScreen {
 		final TextButton optionButton = new TextButton("Settings", skin, "default");
 
 		table.row().expand();
-		table.add(continueButton).fill().pad(UI.smallButtons.spaceHeight, UI.smallButtons.spaceWidth, UI.smallButtons.spaceHeight, UI.smallButtons.spaceWidth).colspan(2);
+		table.add(continueButton).fill().pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).colspan(2);
 		table.row().expand();
-		table.add(chooseLevelButton).fill().pad(UI.smallButtons.spaceHeight, UI.smallButtons.spaceWidth, UI.smallButtons.spaceHeight, UI.smallButtons.spaceWidth).uniform();
-		table.add(optionButton).fill().pad(UI.smallButtons.spaceHeight, UI.smallButtons.spaceWidth, UI.smallButtons.spaceHeight, UI.smallButtons.spaceWidth).uniform();
+		table.add(chooseLevelButton).fill().pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).uniform();
+		table.add(optionButton).fill().pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).uniform();
 		table.row().expand();
 		
 		

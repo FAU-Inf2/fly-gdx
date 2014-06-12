@@ -28,7 +28,6 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 	private ModelBatch batch;
 	private Environment environment;
 
-	private ModelBuilder modelBuilder;
 	private GameObject arrowModel;
 
 	@Override
