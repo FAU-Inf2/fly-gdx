@@ -34,12 +34,12 @@ public class LevelChooserScreen extends BasicScreen {
 		scrollableTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		// create a button for each level
-		int maxRows = ((int) Math.ceil(((double) allLevels.size()) / ((double) UI.smallButtons.buttonsInARow)));
+		int maxRows = ((int) Math.ceil(((double) allLevels.size()) / ((double) UI.SmallButtons.BUTTONS_IN_A_ROW)));
 		for (int row = 0; row < maxRows; row++) {
-			int max = Math.min(allLevels.size() - (row * UI.smallButtons.buttonsInARow), UI.smallButtons.buttonsInARow);
+			int max = Math.min(allLevels.size() - (row * UI.SmallButtons.BUTTONS_IN_A_ROW), UI.SmallButtons.BUTTONS_IN_A_ROW);
 			// fill a row with buttons
 			for (int i = 0; i < max; i++) {
-				final Level level = allLevels.get(row * UI.smallButtons.buttonsInARow + i);
+				final Level level = allLevels.get(row * UI.SmallButtons.BUTTONS_IN_A_ROW + i);
 				final TextButton button = new TextButton(level.name, skin, "default");
 				button.addListener(new ClickListener() {
 					@Override
@@ -48,7 +48,7 @@ public class LevelChooserScreen extends BasicScreen {
 						((Fly) Gdx.app.getApplicationListener()).loadLevel();
 					}
 				});
-				scrollableTable.add(button).width(UI.smallButtons.buttonWidth).height(UI.smallButtons.buttonHeight).pad(UI.smallButtons.spaceHeight, UI.smallButtons.spaceWidth, UI.smallButtons.spaceHeight, UI.smallButtons.spaceWidth).center();
+				scrollableTable.add(button).width(UI.SmallButtons.BUTTON_WIDTH).height(UI.SmallButtons.BUTTON_HEIGHT).pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).center();
 			}
 			scrollableTable.row();
 		}
@@ -58,7 +58,7 @@ public class LevelChooserScreen extends BasicScreen {
 		ScrollPane levelScrollPane = new ScrollPane(scrollableTable, skin);
 		levelScrollPane.setScrollingDisabled(true, false);
 		levelScrollPane.setFillParent(true);
-		levelScrollPane.setColor(UI.window.backgroundColor);
+		levelScrollPane.setColor(UI.Window.BACKGROUND_COLOR);
 		stage.addActor(levelScrollPane);
 	}
 

@@ -10,53 +10,63 @@ import com.badlogic.gdx.graphics.Color;
  * 
  */
 public final class UI {
+	
+	/** This class should not be instantiated */
+	private UI () {}
 
 	/** This class contains basic parameter for creating windows */
-	public static final class window {
+	public static final class Window {
+		
+		/** This class should not be instantiated */
+		private Window () {}
 
 		/** This percentage of the screen width is covered with button surface */
-		public static final float percentageOfButtonsWitdth = .8f;
+		public static final float RELATIVE_WIDTH_OF_ALL_BUTTONS = .8f;
 
 		/**
 		 * This percentage of the screen width is covered with space between
 		 * buttons
 		 */
-		public static final float percentageOfSpaceWidth = 1 - percentageOfButtonsWitdth;
+		public static final float RELATIVE_WIDTH_OF_ALL_SPACE = 1 - RELATIVE_WIDTH_OF_ALL_BUTTONS;
 
 		/**
 		 * This percentage of the screen height is covered with button surface.
 		 * <p>
 		 * If more levels exist, than there is place for buttons, show a row
 		 * with halve buttons to indicate that there are more levels left. Hence
-		 * {@link #percentageOfButtonsHeight} + {@link #percentageOfSpaceHeight}
+		 * {@link #RELATIVE_HEIGHT_OF_ALL_BUTTONS} + {@link #RELATIVE_HEIGHT_OF_ALL_SPACE}
 		 * < 1.0.
 		 */
-		public static final float percentageOfButtonsHeight = .7f;
+		public static final float RELATIVE_HEIGHT_OF_ALL_BUTTONS = .7f;
 
 		/**
 		 * This percentage of the screen width is covered with space between
 		 * buttons
 		 */
-		public static final float percentageOfSpaceHeight = .15f;
+		public static final float RELATIVE_HEIGHT_OF_ALL_SPACE = .15f;
 
-		public static final float spaceWidth = window.percentageOfSpaceWidth / 6 * Gdx.graphics.getWidth();
-		public static final float spaceHeight = window.percentageOfSpaceHeight / 6 * Gdx.graphics.getHeight();
+		public static final float SINGLE_SPACE_WIDTH = Window.RELATIVE_WIDTH_OF_ALL_SPACE / 6 * Gdx.graphics.getWidth();
+		public static final float SINGLE_SPACE_HEIGHT = Window.RELATIVE_HEIGHT_OF_ALL_SPACE / 6 * Gdx.graphics.getHeight();
 		
 		/** Background color of the windows */
-		public static final Color backgroundColor = Color.BLACK;
+		public static final Color BACKGROUND_COLOR = Color.BLACK;
 	}
 
 	/** This class contains all parameters related to smaller buttons. */
-	public static final class smallButtons {
+	public static final class SmallButtons {
+		
+		/** This class should not be instantiated */
+		private SmallButtons () {}
+		
 		/** Max. number of buttons for level to show in a row */
-		public static final int buttonsInARow = 3;
+		public static final int BUTTONS_IN_A_ROW = 3;
 
-		public static final int buttonsInAColumn = 3;
+		public static final int BUTTONS_IN_A_COLUMN = 3;
 
-		public static final float buttonWidth = window.percentageOfButtonsWitdth / (float) buttonsInARow * (float) Gdx.graphics.getWidth();
-		public static final float buttonHeight = window.percentageOfButtonsHeight / (float) buttonsInAColumn * (float) Gdx.graphics.getHeight();
+		public static final float BUTTON_WIDTH = Window.RELATIVE_WIDTH_OF_ALL_BUTTONS / (float) BUTTONS_IN_A_ROW * (float) Gdx.graphics.getWidth();
+		public static final float BUTTON_HEIGHT = Window.RELATIVE_HEIGHT_OF_ALL_BUTTONS / (float) BUTTONS_IN_A_COLUMN * (float) Gdx.graphics.getHeight();
 
-		public static final float spaceWidth = window.spaceWidth;
-		public static final float spaceHeight = window.spaceHeight;
+		public static final float SPACE_WIDTH = Window.SINGLE_SPACE_WIDTH;
+		public static final float SPACE_HEIGHT = Window.SINGLE_SPACE_HEIGHT;
 	}
 }

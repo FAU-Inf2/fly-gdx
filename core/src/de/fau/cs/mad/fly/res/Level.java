@@ -62,7 +62,7 @@ public class Level extends Resource implements Disposable {
 	public void initLevel(GameController gameController) {
 		setUpEnvironment();
 
-		batch = gameController.batch;
+		batch = gameController.getBatch();
 
 		if (levelBorder != null) {
 			levelBorderModel = new GameObject(
