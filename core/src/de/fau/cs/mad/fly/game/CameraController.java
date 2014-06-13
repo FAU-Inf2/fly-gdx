@@ -28,6 +28,9 @@ public class CameraController implements InputProcessor {
 	private float azimuthDir = 0.0f;
 
 	private int currentEvent = -1;
+	
+	private float screenHeight = Gdx.graphics.getHeight();
+	private float screenWidth = Gdx.graphics.getWidth();
 
 	// variables for Sensor input smoothing
 	private float alpha = 0.15f;
@@ -131,8 +134,6 @@ public class CameraController implements InputProcessor {
 		startRoll = Gdx.input.getRoll();
 
 		// setting up the camera
-		float screenHeight = Gdx.graphics.getHeight();
-		float screenWidth = Gdx.graphics.getWidth();
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
 		camera.position.set(player.getLastLevel().start.position);
@@ -359,22 +360,31 @@ public class CameraController implements InputProcessor {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	
+	private float centerX = screenWidth * 1/6;
+	private float centerY = screenHeight * 5/6;
+	private float radius = screenWidth * 0.075f;
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		// using the touchscreen to rotate camera
-
+		
 		if (button == Buttons.LEFT && !useSensorData) {
-			float width = (float) Gdx.graphics.getWidth();
-			float height = (float) Gdx.graphics.getHeight();
-
-			float xPosition = ((float) screenX) / width;
-			float yPosition = ((float) screenY) / height;
-
-			setAzimuthDir(0.5f - xPosition);
-			setRollDir(0.5f - yPosition);
-
+			
+			float xDif = screenX - centerX;
+			float yDif = screenY - centerY;
+			float length = (float) Math.sqrt(xDif * xDif + yDif * yDif);
+			
+			if (length <= radius) {
+				setAzimuthDir(-xDif / screenWidth / 0.075f);
+				setRollDir(-yDif / screenHeight / 0.075f);
+			}
+			
 			currentEvent = pointer;
+		} else {
+			setAzimuthDir(0);
+			setRollDir(0);
 		}
 
 		return false;
@@ -394,15 +404,19 @@ public class CameraController implements InputProcessor {
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		// changing camera rotation when finger is dragged on the touchscreen
 		if (pointer == currentEvent) {
-
-			float width = (float) Gdx.graphics.getWidth();
-			float height = (float) Gdx.graphics.getHeight();
-
-			float xPosition = ((float) screenX) / width;
-			float yPosition = ((float) screenY) / height;
-
-			setAzimuthDir(0.5f - xPosition);
-			setRollDir(0.5f - yPosition);
+			
+			float xDif = screenX - centerX;
+			float yDif = screenY - centerY;
+			float length = (float) Math.sqrt(xDif * xDif + yDif * yDif);
+			
+			if (length <= radius) {
+				setAzimuthDir(-xDif / screenWidth / 0.075f);
+				setRollDir(-yDif / screenHeight / 0.075f);
+			} else {
+				setAzimuthDir(0);
+				setRollDir(0);
+			}
+			
 		}
 		return false;
 	}

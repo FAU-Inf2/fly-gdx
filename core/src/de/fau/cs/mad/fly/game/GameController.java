@@ -23,6 +23,7 @@ import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
+import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Level;
@@ -356,6 +357,9 @@ public class GameController {
 			if (player.getSettingManager().getCheckBoxValue("showSteering")) {
 				addSteeringOverlay();
 			}
+			if (player.getSettingManager().getCheckBoxValue("useTouch")) {
+				addTouchScreenOverlay();
+			}
 			if (player.getSettingManager().getCheckBoxValue("showGameFinished")) {
 				addGameFinishedOverlay();
 			}
@@ -425,6 +429,19 @@ public class GameController {
 			SteeringOverlay steeringOverlay = new SteeringOverlay(cameraController, game.getShapeRenderer(), stage);
 			optionalFeaturesToRender.add(steeringOverlay);
 			optionalFeaturesToDispose.add(steeringOverlay);
+			return this;
+		}
+		
+		/**
+		 * Adds a {@link TouchScreenOverlay} to the GameController, that is updated
+		 * every frame.
+		 * 
+		 * @return Builder instance with TouchScreenOverlay
+		 */
+		private Builder addTouchScreenOverlay() {
+			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(cameraController, game.getShapeRenderer(), stage);
+			optionalFeaturesToRender.add(touchScreenOverlay);
+			optionalFeaturesToDispose.add(touchScreenOverlay);
 			return this;
 		}
 
