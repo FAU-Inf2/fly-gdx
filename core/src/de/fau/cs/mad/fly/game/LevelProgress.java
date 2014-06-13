@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureInit;
@@ -86,11 +87,12 @@ public class LevelProgress implements IFeatureInit, ICollisionListener {
 	}
 
 	@Override
-	public void listen(int eventType, int userValue0, int userValue1) {
-		if(userValue1 < CollisionDetector.USERVALUE_GATE_GOALS)
-			return;
-		
-		gatePassed(allGates.get(userValue1 - CollisionDetector.USERVALUE_GATE_GOALS));
+	public void listen(int eventType, btCollisionObject colObj0, btCollisionObject colObj1) {
+		if(colObj1.userData instanceof Gate) {
+			Gate g = (Gate) colObj1.userData;
+			System.out.println(g);
+			
+			gatePassed((Gate) colObj1.userData);
+		}
 	}
-
 }

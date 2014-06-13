@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.features;
 
+import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
+
 /**
  * Implement this interface when you want to receive collision events.
  * 
@@ -11,8 +13,8 @@ public interface ICollisionListener {
 	 * collision event is received.
 	 * 
 	 * @param eventType
-	 * @param userValue0
-	 * @param userValue1
+	 * @param colObj0
+	 * @param colObj1
 	 */
-	public void listen(int eventType, int userValue0, int userValue1);
+	public void listen(int eventType, btCollisionObject colObj0, btCollisionObject colObj1);
 }

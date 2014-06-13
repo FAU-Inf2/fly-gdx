@@ -1,7 +1,10 @@
 package de.fau.cs.mad.fly.game;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -18,45 +21,42 @@ import com.badlogic.gdx.utils.Disposable;
  * 
  * @author Tobias Zangl
  */
-public class GameObject extends ModelInstance implements Disposable {
+public class GameObject extends ModelInstance implements Disposable {	
 	private final Vector3 center = new Vector3();
 	private final Vector3 dimensions = new Vector3();
 	private final Vector3 position = new Vector3();
 
 	private final static BoundingBox bounds = new BoundingBox();
 
-	private final btCollisionObject collisionObject;
+	private btCollisionObject collisionObject;
 	
 
 	// TODO: create more constructors to match the ModelInstance constructors
 
 	/**
-	 * Creates a new GameObject with btBoxShape with the size of the
-	 * BoundingBox.
+	 * Creates a new GameObject without any collision detection.
 	 */
 	public GameObject(Model model) {
 		super(model);
 
 		initBoundingBox();
-		collisionObject=new btCollisionObject();
-		collisionObject.setCollisionShape(new btBoxShape(bounds.getDimensions().cpy()
-				.scl(0.5f)));
-		
-	}
-
-	/**
-	 * Creates a new GameObject with given btCollisionShape.
-	 */
-	public GameObject(Model model, btCollisionShape shape) {
-		super(model);
-		
-		initBoundingBox();
-
-		collisionObject = new btCollisionObject();
-		collisionObject.setCollisionShape(shape);
 	}
 	
-	private void initBoundingBox() {
+	/**
+	 * Adds a collision object to the game object and adds it to the collision world.
+	 */
+	public void addCollisionObject(CollisionDetector collisionDetector, btCollisionShape shape, int userValue, Object userData) {
+		collisionObject = collisionDetector.createObject(this, shape, userValue, userData);
+	}
+	
+	public void addCollisionObject(CollisionDetector collisionDetector, btCollisionShape shape, int userValue, Object userData, short filterGroup, short filterMask) {
+		collisionObject = collisionDetector.createObject(this, shape, userValue, userData, filterGroup, filterMask);
+	}
+	
+	/**
+	 * Initializes the bounding box for the frustum culling.
+	 */
+	private void initBoundingBox() {		
 		calculateBoundingBox(bounds);
 		center.set(bounds.getCenter());
 		dimensions.set(bounds.getDimensions().cpy().scl(2.0f));
@@ -73,13 +73,55 @@ public class GameObject extends ModelInstance implements Disposable {
 		transform.getTranslation(position);
 		position.add(center);
 		return camera.frustum.boundsInFrustum(position, dimensions);
-		//return camera.frustum.pointInFrustum(position);
 	}
 	
+	/**
+	 * Setter for the collisionObject.userData of the GameObject.
+	 */
+	public void setCollisionTarget(Object object) {
+		if(collisionObject == null)
+			return;
+		
+		collisionObject.userData = object;
+	}
 	
-	public btCollisionObject GetCollisionObject()
-	{
+	/**
+	 * Setter for the collisionObject.userValue of the GameObject.
+	 */
+	public void setCollisionType(int userValue) {
+		if(collisionObject == null)
+			return;
+		
+		collisionObject.setUserValue(userValue);
+	}
+	
+	/**
+	 * Getter for the collision object.
+	 */
+	public btCollisionObject getCollisionObject() {
 		return collisionObject;
+	}
+	
+	/**
+	 * Renders the game object and updates the position of the collision object if one is defined.
+	 */
+	public void render(ModelBatch batch) {
+		if(collisionObject != null) {
+			collisionObject.setWorldTransform(transform);
+		}
+		
+		batch.render(this);
+	}
+	
+	/**
+	 * Renders the game object with environment and updates the position of the collision object if one is defined.
+	 */
+	public void render(ModelBatch batch, Environment environment) {
+		if(collisionObject != null) {
+			collisionObject.setWorldTransform(transform);
+		}
+		
+		batch.render(this, environment);
 	}
 
 	/**
@@ -94,7 +136,7 @@ public class GameObject extends ModelInstance implements Disposable {
 
 	@Override
 	public void dispose() {
-		collisionObject.getCollisionShape().dispose();
-		collisionObject.dispose();		
+		//collisionObject.getCollisionShape().dispose();
+		//collisionObject.dispose();		
 	}
 }

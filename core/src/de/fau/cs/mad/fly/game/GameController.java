@@ -342,8 +342,7 @@ public class GameController {
 			
 			collisionDetector.getCollisionContactListener().addListener(levelProgress);
 
-			if (player.getSettingManager()
-					.getCheckBoxValue("showGateIndicator")) {
+			if (player.getSettingManager().getCheckBoxValue("showGateIndicator")) {
 				addGateIndicator();
 			}
 			if (player.getSettingManager().getCheckBoxValue("showTime")) {

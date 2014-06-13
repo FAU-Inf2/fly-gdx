@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -77,16 +78,17 @@ public class Level extends Resource implements Disposable {
 		for (Gate gate : gates) {
 			// TODO: use Gate constructor for this
 			ModelResource m = (ModelResource) dependencies.get(gate.modelId);
-			gate.model = new GameObject(
-					Assets.manager.get(m.descriptor));
+			gate.model = new GameObject(Assets.manager.get(m.descriptor));
 			gate.model.transform = new Matrix4(gate.transformMatrix);
 
 			gate.goalModel = new GameObject(modelBuilder.createBox(1.0f, 0.05f, 1.0f, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal));
 			gate.goalModel.transform = new Matrix4(gate.transformMatrix);
 
-			//gate.collisionObject = gameController.getCollisionDetector().createConvexHull(CollisionDetector.USERVALUE_GATES + n, gates.get(n).model);
-			gate.boxShape = new btBoxShape(new Vector3(1.0f, 0.05f, 1.0f));
-			gate.collisionGoal = gameController.getCollisionDetector().createShape(CollisionDetector.USERVALUE_GATE_GOALS + n, gate.boxShape, gates.get(n).model);
+			//btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(gate.modelId, CollisionDetector.USERVALUE_GATES + n, gate.model, gameController.getCollisionDetector().OBJECT_FLAG, gameController.getCollisionDetector().ALL_FLAG);
+			//gate.model.addCollisionObject(gameController.getCollisionDetector(), shape, CollisionDetector.USERVALUE_GATES, gate.model);
+			
+			btCollisionShape goalShape = gameController.getCollisionDetector().getShapeManager().createBoxShape(gate.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
+			gate.goalModel.addCollisionObject(gameController.getCollisionDetector(), goalShape, CollisionDetector.USERVALUE_GATE_GOALS, gate, gameController.getCollisionDetector().DUMMY_FLAG, gameController.getCollisionDetector().ALL_FLAG);
 			// TODO: dispose boxShape? or needed by collisionGoal?
 			
 			gate.fillSuccessorGateList(gates);
@@ -127,7 +129,7 @@ public class Level extends Resource implements Disposable {
 	public void render(PerspectiveCamera camera) {
 		// rendering outer space
 		if (levelBorderModel != null) {
-			batch.render(levelBorderModel);
+			levelBorderModel.render(batch);
 		}
 		// render gates
 		for (Gate gate : gates) {

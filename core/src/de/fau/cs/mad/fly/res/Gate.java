@@ -103,8 +103,8 @@ public class Gate implements Disposable {
 	// TODO: use batch and environment from constructor
 	public void render(ModelBatch batch, PerspectiveCamera camera, Environment env) {
 		if(visible && model.isVisible(camera)) {
-			batch.render(model, env);
-			//batch.render(goalModel, env);
+			model.render(batch, env);
+			//goalModel.render(batch, env);
 		}
 	}
 	

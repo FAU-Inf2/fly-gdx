@@ -1,11 +1,16 @@
 package de.fau.cs.mad.fly.game;
 
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
+import com.badlogic.gdx.physics.bullet.collision.PHY_ScalarType;
 import com.badlogic.gdx.physics.bullet.collision.btBroadphaseInterface;
+import com.badlogic.gdx.physics.bullet.collision.btBvhTriangleMeshShape;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionConfiguration;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionDispatcher;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
@@ -15,35 +20,37 @@ import com.badlogic.gdx.physics.bullet.collision.btConvexHullShape;
 import com.badlogic.gdx.physics.bullet.collision.btDbvtBroadphase;
 import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration;
 import com.badlogic.gdx.physics.bullet.collision.btDispatcher;
+import com.badlogic.gdx.physics.bullet.collision.btIndexedMesh;
 import com.badlogic.gdx.physics.bullet.collision.btShapeHull;
+import com.badlogic.gdx.physics.bullet.collision.btTriangleIndexVertexArray;
+import com.badlogic.gdx.physics.bullet.collision.btTriangleMeshShape;
+import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Disposable;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 
 public class CollisionDetector implements Disposable {
+	
+	CollisionShapeManager shapeManager;
 
-	final static short GROUND_FLAG = 1 << 8;
-	final static short OBJECT_FLAG = 1 << 9;
-	final static short ALL_FLAG = -1;
+	public final static short DUMMY_FLAG = 1 << 7;
+	public final static short OBJECT_FLAG = 1 << 8;
+	public final static short PLAYER_FLAG = 1 << 9;
+	public final static short ALL_FLAG = -1;
+	//public final static short ALL_WITHOUT_DUMMY_FLAG = -1;
 	boolean collisionFlag = false;
 
 	private final Fly game;
-	private int collisionCounter = 0;
 
-	// constants to represent the begin of the userValues for specific types of collision objects
+	// constants to represent the userValues for specific types of collision objects
 	public final static int USERVALUE_PLAYER = 0;
 	public final static int USERVALUE_GATES = 100;
 	public final static int USERVALUE_GATE_GOALS = 200;
 	public final static int USERVALUE_MISC = 1000;
-	
-	// TODO: finish main listener who passes the events through the feature listeners
 
 	class CollisionContactListener extends ContactListener {
 		private ArrayList<ICollisionListener> listeners;
-		
-		private int collisionObj0 = -1;
-		private int collisionObj1 = -1;
 		
 		public CollisionContactListener() {
 			listeners = new ArrayList<ICollisionListener>();
@@ -54,134 +61,69 @@ public class CollisionDetector implements Disposable {
 		}
 		
 		@Override
-		public boolean onContactAdded(int userValue0, int partId0, int index0,
-				int userValue1, int partId1, int index1) {
-							collisionFlag = true;
+		public void onContactStarted(btCollisionObject colObj0, btCollisionObject colObj1) {
+			collisionFlag = true;
 							
 			/*Gdx.app.log("CollisionDetector.onContactAdded", "userValue0: "
 					+ userValue0 + "; userValue1: " + userValue1
 					+ "; partId0: " + partId0 + "; partId1: " + partId1
 					+ "; index0:" + index0 + "; index1: " + index1);*/
 
-			if (!(checkObj(userValue0) && checkObj(userValue1))) {
-				collisionObj0 = userValue0;
-				collisionObj1 = userValue1;
-				collisionCounter++;
 				
-				for(ICollisionListener listener : listeners) {
-					listener.listen(0, userValue0, userValue1);
-				}
+			for(ICollisionListener listener : listeners) {
+				listener.listen(0, colObj0, colObj1);
 			}
-			return true;
-		}
-
-		private boolean checkObj(int obj) {
-			if (obj == collisionObj0 || obj == collisionObj1)
-				return true;
-			return false;
 		}
 	}
-	
-
-	/*class MyContactListener extends ContactListener {
-		@Override
-		public boolean onContactAdded(int userValue0, int partId0, int index0,
-				int userValue1, int partId1, int index1) {
-			collisionFlag = true;
-			Gdx.app.log("CollisionDetector.onContactAdded",
-					"collision happened!");
-			Gdx.app.log("CollisionDetector.onContactAdded", "userValue0: "
-					+ userValue0 + "; userValue1: " + userValue1
-					+ "; partId0: " + partId0 + "; partId1: " + partId1
-					+ "; index0:" + index0 + "; index1: " + index1);
-
-			if (!(checkObj(userValue0) && checkObj(userValue1))) {
-				collisionObj0 = userValue0;
-				collisionObj1 = userValue1;
-				collisionCounter++;
-				collisionCounterLabel.setText("" + collisionCounter);
-			}
-			return true;
-		}
-
-		private boolean checkObj(int obj) {
-			if (obj == collisionObj0 || obj == collisionObj1)
-				return true;
-			else
-				return false;
-		}
-	}*/
 
 	btCollisionConfiguration collisionConfig;
 	btDispatcher dispatcher;
 	CollisionContactListener contactListener;
 	btBroadphaseInterface broadphase;
 	btCollisionWorld collisionWorld;
+	DebugDrawer debugDrawer;
 
 	private GameController gameController;
 
 	public CollisionDetector(final Fly game) {
 		this.game = game;
+		shapeManager = new CollisionShapeManager();
 		
 		collisionConfig = new btDefaultCollisionConfiguration();
 		dispatcher = new btCollisionDispatcher(collisionConfig);
 		broadphase = new btDbvtBroadphase();
-		collisionWorld = new btCollisionWorld(dispatcher, broadphase,
-				collisionConfig);
+		collisionWorld = new btCollisionWorld(dispatcher, broadphase, collisionConfig);
 		contactListener = new CollisionContactListener();
+		
+		debugDrawer = new DebugDrawer();
+		collisionWorld.setDebugDrawer(debugDrawer);
+		debugDrawer.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_MAX_DEBUG_DRAW_MODE);
 	}
 
 	public void load(GameController gameCon) {
 		gameController = gameCon;
-		collisionCounter = 0;
 		Gdx.app.log("CollisionDetector", "Collision initialized");
 	}
+	
+	public CollisionShapeManager getShapeManager() {
+		return shapeManager;
+	}
 
-	public btCollisionObject createShape(int userValue,
-			btCollisionShape shape, GameObject instance) {
-		btCollisionObject collisionObject = instance.GetCollisionObject();// new
-																			// btCollisionObject();
+	public btCollisionObject createObject(GameObject instance, btCollisionShape shape, int userValue, Object userData) {
+		return createObject(instance, shape, userValue, userData, OBJECT_FLAG, ALL_FLAG);
+	}
+	
+	public btCollisionObject createObject(GameObject instance, btCollisionShape shape, int userValue, Object userData, short filterGroup, short filterMask) {
+		btCollisionObject collisionObject = new btCollisionObject();
+		
 		collisionObject.setCollisionShape(shape);
 		collisionObject.setCollisionFlags(collisionObject.getCollisionFlags()
 				| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
 		collisionObject.setWorldTransform(instance.transform);
 		collisionObject.setUserValue(userValue);
+		collisionObject.userData = userData;
 
-		collisionWorld.addCollisionObject(collisionObject, GROUND_FLAG,
-				ALL_FLAG);
-
-		Gdx.app.log("CollisionDetector", "Added shape: " + userValue);
-		
-		return collisionObject;
-	}
-
-	public btCollisionObject createConvexHull(int userValue, GameObject instance) {
-		final Mesh mesh = instance.model.meshes.get(0);
-		final btConvexHullShape hullShape = new btConvexHullShape(
-				mesh.getVerticesBuffer(), mesh.getNumVertices(),
-				mesh.getVertexSize());
-
-		// now optimize the shape
-		final btShapeHull hull = new btShapeHull(hullShape);
-		hull.buildHull(hullShape.getMargin());
-		final btConvexHullShape hullShapeFinal = new btConvexHullShape(hull);
-
-		btCollisionObject collisionObject = instance.GetCollisionObject();
-		collisionObject.setCollisionShape(hullShapeFinal);
-		collisionObject.setCollisionFlags(collisionObject.getCollisionFlags()
-				| btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
-
-		collisionObject.setWorldTransform(instance.transform);
-		collisionObject.setUserValue(userValue);
-
-		collisionWorld.addCollisionObject(collisionObject,
-				OBJECT_FLAG, GROUND_FLAG);
-		
-		// delete the temporary shape
-		hullShape.dispose();
-		hull.dispose();
-		
-		Gdx.app.log("CollisionDetector", "Added convex hull: " + userValue);
+		collisionWorld.addCollisionObject(collisionObject, filterGroup, filterMask);
 
 		return collisionObject;
 	}
@@ -191,8 +133,10 @@ public class CollisionDetector implements Disposable {
 	}
 
 	public void perform() {
-		// Gdx.app.log("collision.render", "camera:"
-		// + gameController.getCamera().position.toString());
+		/*debugDrawer.begin(gameController.getCamera());
+		collisionWorld.debugDrawWorld();
+		debugDrawer.end();*/
+
 		collisionWorld.performDiscreteCollisionDetection();
 	}
 
