@@ -33,7 +33,7 @@ public abstract class BasicScreen implements Screen{
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+		Gdx.gl.glClearColor(UI.Window.BACKGROUND_COLOR.r, UI.Window.BACKGROUND_COLOR.g, UI.Window.BACKGROUND_COLOR.b, UI.Window.BACKGROUND_COLOR.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(delta);
 		stage.draw();

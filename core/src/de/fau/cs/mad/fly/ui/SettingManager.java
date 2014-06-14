@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,18 +16,16 @@ import java.util.Map;
  */
 public class SettingManager {	
 	private Skin skin;
-	
 	private Preferences prefs;
-	private HashMap<String, Setting> settingMap;
+	private Map<String, Setting> settingMap;
+	private List<String> settingList;
 	
-	public HashMap<String, Setting> getSettingMap() {
-		return settingMap;
-	}
-
-	private ArrayList<String> settingList;
-	
-	public ArrayList<String> getSettingList() {
+	public List<String> getSettingList() {
 		return settingList;
+	}
+	
+	public Map<String, Setting> getSettingMap() {
+		return settingMap;
 	}
 
 	public SettingManager(String file, Skin skin) {
