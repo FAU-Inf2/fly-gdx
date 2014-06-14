@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import de.fau.cs.mad.fly.features.overlay.DebugOverlay;
 
 /**

@@ -1,16 +1,15 @@
 package de.fau.cs.mad.fly.game;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector3;
-
 import de.fau.cs.mad.fly.player.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CameraController implements InputProcessor {
 

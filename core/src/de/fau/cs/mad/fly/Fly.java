@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -10,16 +9,20 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.ui.LevelChooserScreen;
-import de.fau.cs.mad.fly.ui.LoadingScreen;
-import de.fau.cs.mad.fly.ui.MainMenuScreen;
-import de.fau.cs.mad.fly.ui.SettingScreen;
-import de.fau.cs.mad.fly.ui.SplashScreen;
+import de.fau.cs.mad.fly.ui.*;
+import org.mozilla.javascript.CompilerEnvirons;
+import org.mozilla.javascript.IRFactory;
+import org.mozilla.javascript.ast.AstNode;
+import org.mozilla.javascript.ast.AstRoot;
+import org.mozilla.javascript.ast.FunctionCall;
+import org.mozilla.javascript.ast.NodeVisitor;
+
+import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * Manages the different game screens.
@@ -48,6 +51,40 @@ public class Fly extends Game {
 
 	@Override
 	public void create() {
+
+		String src = Gdx.files.internal("bla.js").readString();
+
+		CompilerEnvirons env = new CompilerEnvirons();
+		env.setRecoverFromErrors(true);
+		env.setGenerateDebugInfo(true);
+		env.setRecordingComments(true);
+
+		StringReader strReader = new StringReader(src);
+
+		IRFactory factory = new IRFactory(env);
+		try {
+			AstRoot root = factory.parse(strReader, null, 0);
+			System.out.println(root.debugPrint());
+			root.visit(new NodeVisitor() {
+				@Override
+				public boolean visit(AstNode node) {
+					if ( node.getType() == 38 ) { // Function
+						FunctionCall c = (FunctionCall) node;
+						for ( AstNode n : c.getArguments() )
+							System.out.println("shortname = " + n.shortName() + ", source = " + n.toSource());
+					} else if ( node.getType() == 39 ) { // Name
+						System.out.println(node.getScope());
+					}
+
+					return true;
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.exit(0);
+
 		Bullet.init();
 		Assets.init();
 

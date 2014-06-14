@@ -1,24 +1,15 @@
 package de.fau.cs.mad.fly.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.bullet.collision.*;
+import com.badlogic.gdx.utils.Disposable;
+
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.PHY_ScalarType;
-import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
-import com.badlogic.gdx.physics.bullet.collision.btBvhTriangleMeshShape;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.collision.btConvexHullShape;
-import com.badlogic.gdx.physics.bullet.collision.btIndexedMesh;
-import com.badlogic.gdx.physics.bullet.collision.btShapeHull;
-import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
-import com.badlogic.gdx.physics.bullet.collision.btTriangleIndexVertexArray;
-import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Manager for the btCollisionShapes.

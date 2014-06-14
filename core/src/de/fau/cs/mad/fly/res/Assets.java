@@ -3,9 +3,7 @@ package de.fau.cs.mad.fly.res;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g3d.Model;
 import de.fau.cs.mad.fly.game.GameModel;
-import de.fau.cs.mad.fly.game.GameObject;
 
 /**
  * Loads and stores the AssetManager who cares about the Assets.

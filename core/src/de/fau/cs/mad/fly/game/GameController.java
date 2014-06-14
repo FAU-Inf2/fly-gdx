@@ -1,8 +1,5 @@
 package de.fau.cs.mad.fly.game;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -11,23 +8,16 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.features.IFeatureDispose;
-import de.fau.cs.mad.fly.features.IFeatureFinish;
-import de.fau.cs.mad.fly.features.IFeatureInit;
-import de.fau.cs.mad.fly.features.IFeatureLoad;
-import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.*;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
-import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
-import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
-import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
-import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
-import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
-import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
+import de.fau.cs.mad.fly.features.overlay.*;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Level;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages the Player, the Level, the UI, the CameraController and all the optional Features

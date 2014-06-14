@@ -3,7 +3,6 @@ package de.fau.cs.mad.fly;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.BackProcessor;
 

@@ -3,7 +3,6 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
 import de.fau.cs.mad.fly.Fly;
 
 /**
