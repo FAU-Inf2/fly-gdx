@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -65,15 +66,15 @@ public class CollisionShapeManager implements Disposable {
 	}
 	
 	/**
-	 * Creates a new btBvhTriangleMeshShape out of the instance if the shape is not already created.
+	 * Creates a new static mesh shape out of the instance if the shape is not already created.
 	 */
-	public btCollisionShape createMeshShape(String shapeId, GameObject instance) {
+	public btCollisionShape createStaticMeshShape(String shapeId, GameObject instance) {
 		btCollisionShape shape = meshShapeMap.get(shapeId);
 		if(shape != null) {
 			return shape;
 		}
 		
-		Mesh mesh = instance.model.meshes.first();
+		/*Mesh mesh = instance.model.meshes.first();
 		
 		short[] indices = new short[mesh.getNumIndices()];
 		float[] vertices = new float[mesh.getNumVertices()*mesh.getVertexSize()/4];
@@ -94,9 +95,13 @@ public class CollisionShapeManager implements Disposable {
 
 		btTriangleIndexVertexArray meshInterface = new btTriangleIndexVertexArray();
 		meshInterface.addIndexedMesh(indexedMesh, PHY_ScalarType.PHY_SHORT);
-		btBvhTriangleMeshShape meshShape = new btBvhTriangleMeshShape(meshInterface, true);
+		btBvhTriangleMeshShape meshShape = new btBvhTriangleMeshShape(meshInterface, true);*/
 		
-		Gdx.app.log("CollisionShapeManager", "Created mesh shape " + shapeId);
+		//btBvhTriangleMeshShape meshShape = new btBvhTriangleMeshShape(true, instance.model.meshes.first());
+
+		btCollisionShape meshShape = Bullet.obtainStaticNodeShape(instance.model.nodes);		
+		
+		Gdx.app.log("CollisionShapeManager", "Created static mesh shape " + shapeId);
 		
 		meshShapeMap.put(shapeId, meshShape);
 		return meshShape;

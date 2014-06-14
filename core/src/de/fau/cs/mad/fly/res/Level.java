@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Disposable;
+
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
+import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.geo.Perspective;
@@ -197,8 +199,12 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 
 	@Override
 	public void onCollision(GameObject o1, GameObject o2) {
-		if ( !playerGateCollision(o1, o2) )
-			playerGateCollision(o2, o1);
+		if(CollisionDetector.Types.get(o1.getCollisionObject().getUserValue()) == CollisionDetector.Types.Goal || CollisionDetector.Types.get(o2.getCollisionObject().getUserValue()) == CollisionDetector.Types.Goal) {
+			if ( !playerGateCollision(o1, o2) )
+				playerGateCollision(o2, o1);
+		} else {
+			Gdx.app.log("Level.onCollision", "Collision with Gate!");
+		}
 	}
 
 	private boolean playerGateCollision(GameObject x, GameObject y) {

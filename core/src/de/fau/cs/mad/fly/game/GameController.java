@@ -321,13 +321,22 @@ public class GameController {
 			Gdx.app.log("Builder.init", "Setting up collision for level gates...");
 
 			for ( Level.Gate g : level.allGates() ) {
+				if ( g.display.getCollisionObject() == null ) {
+					Gdx.app.log("Builder.init", "Display CollisionObject == null");
+					btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
+					g.display.filterGroup = CollisionDetector.DUMMY_FLAG;
+					g.display.filterMask = CollisionDetector.ALL_FLAG;
+					g.display.setCollisionObject(displayShape, CollisionDetector.Types.Gate, g);
+				}
+				collisionDetector.addCollisionObject(g.display);
+				
 				if ( g.goal.getCollisionObject() == null ) {
-					Gdx.app.log("Builder.init", "CollisionObject == null");
+					Gdx.app.log("Builder.init", "Goal CollisionObject == null");
 					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
 					g.goal.hide();
 					g.goal.filterGroup = CollisionDetector.DUMMY_FLAG;
-					g.goal.filterMask = CollisionDetector.ALL_FLAG;
-					g.goal.setCollisionObject(goalShape, CollisionDetector.Types.Gate, g);
+					g.goal.filterMask = CollisionDetector.PLAYER_FLAG;
+					g.goal.setCollisionObject(goalShape, CollisionDetector.Types.Goal, g);
 				}
 				collisionDetector.addCollisionObject(g.goal);
 			}

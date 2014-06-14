@@ -31,6 +31,8 @@ public class Spaceship implements IPlane {
         instance = new GameObject(new GameModel(model));
         instance.transform.setToTranslation(new Vector3(0, 0, 0));
 
+		instance.filterGroup = CollisionDetector.PLAYER_FLAG;
+		instance.filterMask = CollisionDetector.ALL_FLAG;
 		instance.setCollisionObject(new btSphereShape(0.1f), CollisionDetector.Types.Player, this);
 		gameController.getCollisionDetector().addCollisionObject(instance);
 	}

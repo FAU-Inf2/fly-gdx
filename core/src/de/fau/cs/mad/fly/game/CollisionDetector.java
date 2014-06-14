@@ -19,7 +19,7 @@ public class CollisionDetector implements Disposable {
 	public final static short ALL_FLAG = -1;
 
 	public static enum Types {
-		Player, Gate, Other;
+		Player, Gate, Goal, Other;
 
 		public static Types get(int ord) { return values()[ord]; }
 	}
