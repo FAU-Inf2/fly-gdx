@@ -212,6 +212,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 			if ( !playerGateCollision(o1, o2) )
 				playerGateCollision(o2, o1);
 		} else {
+			Gdx.input.vibrate(500);
 			Debug.setOverlay(0, "DEAD!");
 		}
 	}
