@@ -40,6 +40,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	public short filterMask = CollisionDetector.ALL_FLAG;
 
 	public String id;
+	public String modelId;
 
 	// TODO: create more constructors to match the ModelInstance constructors
 

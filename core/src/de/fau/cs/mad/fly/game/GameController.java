@@ -323,7 +323,7 @@ public class GameController {
 			for ( Level.Gate g : level.allGates() ) {
 				if ( g.goal.getCollisionObject() == null ) {
 					Gdx.app.log("Builder.init", "CollisionObject == null");
-					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.id + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
+					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
 					g.goal.hide();
 					g.goal.filterGroup = CollisionDetector.DUMMY_FLAG;
 					g.goal.filterMask = CollisionDetector.ALL_FLAG;

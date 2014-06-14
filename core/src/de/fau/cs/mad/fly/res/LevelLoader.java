@@ -120,6 +120,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 				String ref = e.getString("ref");
 				GameModel m = manager.get(dependencies.get(ref), GameModel.class);
 				GameObject o = new GameObject(m);
+				o.modelId = ref;
 				o.id = id;
 				JsonValue transform = e.get("transformMatrix");
 				if ( transform != null )
