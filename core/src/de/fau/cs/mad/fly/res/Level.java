@@ -117,6 +117,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 	private final Gate startingGate;
 	private final Environment environment;
 	private List<EventListener> eventListeners = new ArrayList<EventListener>();
+	
+	private GameObject borderObject = null;
 
 	public Level(String name, Perspective start, Collection<GameObject> components, Gate startingGate) {
 		this.head = new Head();
@@ -127,6 +129,16 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 		this.start = start;
 		this.environment = new Environment();
 		setUpEnvironment();
+		
+		for (GameObject c : components) {
+			if(c.id.equals("space")) {
+				borderObject = c;
+			}
+		}
+		
+		if(borderObject == null) {
+			Gdx.app.log("Level.Level", "No border specified.");
+		}
 	}
 
 	public void gatePassed(Gate gate) {
@@ -175,7 +187,9 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 	 *            that displays the level
 	 */
 	public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
-		for (GameObject c : components) {
+		borderObject.transform.setToTranslation(camera.position);
+		
+		for (GameObject c : components) {			
 			// ROTATE GATES START
 			if(c.userData instanceof Gate) {
 				c.transform.rotate(new Vector3(0f, 0f, 1f), 0.5f);
