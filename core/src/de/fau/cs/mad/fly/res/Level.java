@@ -172,7 +172,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 	 */
 	public void render(ModelBatch batch, PerspectiveCamera camera) {
 		for (GameObject c : components)
-			c.render(batch);
+			c.render(batch, environment, camera);
 	}
 
 	/**

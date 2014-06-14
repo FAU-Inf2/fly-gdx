@@ -130,26 +130,25 @@ public class GameObject extends ModelInstance implements Disposable {
 	public btCollisionObject getCollisionObject() {
 		return collisionObject;
 	}
-	
+
 	/**
 	 * Renders the game object and updates the position of the collision object if one is defined.
 	 */
-	public void render(ModelBatch batch) {
-		if ( collisionObject != null )
-			collisionObject.setWorldTransform(transform);
-		if ( visible )
-			batch.render(this);
+	public void render(ModelBatch batch, PerspectiveCamera cam) {
+		render(batch, null, cam);
 	}
-	
+
 	/**
 	 * Renders the game object with environment and updates the position of the collision object if one is defined.
 	 */
-	public void render(ModelBatch batch, Environment environment) {
-		if(collisionObject != null) {
+	public void render(ModelBatch batch, Environment environment, PerspectiveCamera cam) {
+		if(collisionObject != null)
 			collisionObject.setWorldTransform(transform);
-		}
-		
-		batch.render(this, environment);
+		if ( visible && isVisible(cam) )
+			if ( environment == null )
+				batch.render(this);
+			else
+				batch.render(this, environment);
 	}
 
 	/**
