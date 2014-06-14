@@ -125,7 +125,7 @@ public class Fly extends Game {
 		setScreen(splashScreen);
 	}
 
-	public void loadLevel() {
+	public void continueLevel() {
 		Level l = player.getLastLevel();
 		if ( l == null )
 			loadLevel(LevelChooserScreen.getLevelList().get(0));
