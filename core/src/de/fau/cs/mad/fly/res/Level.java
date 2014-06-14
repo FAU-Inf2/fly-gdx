@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 
 import de.fau.cs.mad.fly.Debug;
@@ -173,9 +174,16 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 	 * @param camera
 	 *            that displays the level
 	 */
-	public void render(ModelBatch batch, PerspectiveCamera camera) {
-		for (GameObject c : components)
+	public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
+		for (GameObject c : components) {
+			// ROTATE GATES START
+			if(c.userData instanceof Gate) {
+				c.transform.rotate(new Vector3(0f, 0f, 1f), 0.5f);
+				c.getCollisionObject().setWorldTransform(c.transform);
+			}
+			// ROTATE GATES END
 			c.render(batch, environment, camera);
+		}
 	}
 
 	/**

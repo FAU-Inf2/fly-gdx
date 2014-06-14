@@ -224,7 +224,7 @@ public class GameController {
 		collisionDetector.perform();
 
 		batch.begin(camera);
-		level.render(batch, camera);
+		level.render(delta, batch, camera);
 		batch.end();
 		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer
 		// etc., split render up?
