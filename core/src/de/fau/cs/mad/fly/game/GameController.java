@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.*;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
@@ -354,6 +356,9 @@ public class GameController {
 			});
 
 			Gdx.app.log("Builder.init", "Final work for level done.");
+			
+			Debug.init(game, stage, 1);
+			Debug.setOverlay(0, "Alive");
 
 			if (player.getSettingManager().getCheckBoxValue("showGateIndicator")) {
 				addGateIndicator();

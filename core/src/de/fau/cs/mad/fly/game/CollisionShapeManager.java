@@ -66,6 +66,14 @@ public class CollisionShapeManager implements Disposable {
 	}
 	
 	/**
+	 * Creates a new dynamic mesh shape out of the instance if the shape is not already created.
+	 */
+	/*public btCollisionShape createDynamicMeshShape(String shapeId, GameObject instance) {
+		
+		return new btCollisionShape();
+	}*/
+	
+	/**
 	 * Creates a new static mesh shape out of the instance if the shape is not already created.
 	 */
 	public btCollisionShape createStaticMeshShape(String shapeId, GameObject instance) {
@@ -99,7 +107,7 @@ public class CollisionShapeManager implements Disposable {
 		
 		//btBvhTriangleMeshShape meshShape = new btBvhTriangleMeshShape(true, instance.model.meshes.first());
 
-		btCollisionShape meshShape = Bullet.obtainStaticNodeShape(instance.model.nodes);		
+		btCollisionShape meshShape = Bullet.obtainStaticNodeShape(instance.model.nodes);
 		
 		Gdx.app.log("CollisionShapeManager", "Created static mesh shape " + shapeId);
 		

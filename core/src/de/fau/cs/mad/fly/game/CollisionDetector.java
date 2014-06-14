@@ -91,6 +91,10 @@ public class CollisionDetector implements Disposable {
 	}
 
 	public void perform() {
+		/*debugDrawer.begin(gameController.getCamera());
+-		collisionWorld.debugDrawWorld();
+-		debugDrawer.end();*/
+		
 		collisionWorld.performDiscreteCollisionDetection();
 	}
 

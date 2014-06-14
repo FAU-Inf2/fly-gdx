@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Disposable;
 
+import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.game.CollisionDetector;
@@ -203,7 +204,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 			if ( !playerGateCollision(o1, o2) )
 				playerGateCollision(o2, o1);
 		} else {
-			Gdx.app.log("Level.onCollision", "Collision with Gate!");
+			Debug.setOverlay(0, "DEAD!");
 		}
 	}
 
