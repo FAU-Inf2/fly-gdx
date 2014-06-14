@@ -4,41 +4,65 @@
 	"start": {
 		"position": { "x": 0, "y": 0, "z": 0 }
 	},
+	"dependencies": {
+		"torus": "torus",
+		"hole": "torusHoleBox",
+		"space": "spacesphere"
+	},
 	"gates": [
 		{
+			"successors": [0]
+		},
+		{
 			"id": 0,
-			"model": "torus",
-			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 5.9604645e-08, 0.99999994, 0.0, 0.0, -0.99999994, 5.9604645e-08, 0.0, 0.0, 0.0, 10.0, 1.0 ],
+			"display": "gate1",
+			"goal": "gate1hole",
 			"successors": [1]
 		},
 		{
 			"id": 1,
-			"model": "torus",
-			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 5.9604645e-08, 0.99999994, 0.0, 0.0, -0.99999994, 5.9604645e-08, 0.0, 0.0, 0.0, 18.0, 1.0 ],
+			"display": "gate2",
+			"goal": "gate2hole",
 			"successors": [2]
 		},
 		{
 			"id": 2,
-			"model": "torus",
-			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.40727004, 0.9133077, 0.0, 0.0, -0.9133077, 0.40727004, 0.0, 0.0, 3.25816, 25.306461, 1.0 ],
-			"successors": [3, 4]
+			"display": "gate3",
+			"goal": "gate3hole",
+			"successors": []
+		}
+	],
+	"components": [
+		{
+			"id": "space",
+			"ref": "space"
 		},
 		{
-			"id": 3,
-			"model": "torus",
-			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.40727004, 0.9133077, 0.0, 0.0, -0.9133077, 0.40727004, 0.0, 0.0, 3.25816, 25.306461, 1.0 ],
-			"successors": [5]
+			"id": "gate1",
+			"ref": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 5.9604645e-08, 0.99999994, 0.0, 0.0, -0.99999994, 5.9604645e-08, 0.0, 0.0, 0.0, 10.0, 1.0 ]
 		},
 		{
-			"id": 4,
-			"model": "torus",
-			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.40727004, 0.9133077, 0.0, 0.0, -0.9133077, 0.40727004, 0.0, 0.0, 3.25816, 25.306461, 1.0 ],
-			"successors": [5]
+			"id": "gate1hole",
+			"ref": "hole"
 		},
 		{
-			"id": 5,
-			"model": "torus",
+			"id": "gate2",
+			"ref": "torus",
+			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 5.9604645e-08, 0.99999994, 0.0, 0.0, -0.99999994, 5.9604645e-08, 0.0, 0.0, 0.0, 18.0, 1.0 ]
+		},
+		{
+			"id": "gate2hole",
+			"ref": "hole"
+		},
+		{
+			"id": "gate3",
+			"ref": "torus",
 			"transformMatrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.40727004, 0.9133077, 0.0, 0.0, -0.9133077, 0.40727004, 0.0, 0.0, 3.25816, 25.306461, 1.0 ]
+		},
+		{
+			"id": "gate3hole",
+			"ref": "hole"
 		}
 	]
 }
