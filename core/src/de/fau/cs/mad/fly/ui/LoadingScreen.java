@@ -42,8 +42,7 @@ public class LoadingScreen implements Screen {
 		batch = new SpriteBatch();
 		splashImg = Assets.manager.get(Assets.flyTextureLoadingScreen);
 
-		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight()));
+		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		
 		addLoadingProgress();
 	}

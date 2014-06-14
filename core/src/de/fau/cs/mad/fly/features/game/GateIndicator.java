@@ -2,17 +2,13 @@ package de.fau.cs.mad.fly.features.game;
 
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
-
-import de.fau.cs.mad.fly.features.IFeatureFinish;
-import de.fau.cs.mad.fly.features.IFeatureGatePassed;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.Assets;
-import de.fau.cs.mad.fly.res.Gate;
+import de.fau.cs.mad.fly.res.Level;
 
 /**
  * This class implements the function to show in the game small arrows that
@@ -21,8 +17,7 @@ import de.fau.cs.mad.fly.res.Gate;
  * @author Lukas Hahmann
  * 
  */
-public class GateIndicator implements IFeatureInit, IFeatureFinish,
-		IFeatureRender, IFeatureGatePassed {
+public class GateIndicator implements IFeatureInit, IFeatureRender {
 	
 	private GameController gameController;
 	private ModelBatch batch;
@@ -42,13 +37,12 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 
 	@Override
 	public void render(float delta) {
-		for (Gate gate : gameController.getLevelProgress().getNextGates()) {
-			//System.out.println("nextGates" + gameController.getLevelProgress().getNextGates().size());
-			Vector3 targetPosition = gate.model.getPosition();
+		for (Level.Gate gate : gameController.getLevel().currentGates()) {
+			//System.out.println("nextGates" + gameController.getLevelProgress().currentGates().size());
+			Vector3 targetPosition = gate.goal.getPosition();
 			Vector3 vectorToTarget = new Vector3();
 			Vector3 cross = new Vector3();
-			Vector3 cameraDirection = gameController.getCamera().direction
-					.cpy();
+			Vector3 cameraDirection = gameController.getCamera().direction.cpy();
 			Vector3 up = gameController.getCamera().up.cpy();
 			Vector3 down = up.cpy().scl(-1);
 
@@ -70,9 +64,7 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 
 			// create local coordinate system for the arrow. All axes have to be
 			// normalized, otherwise, the arrow is scaled.
-			float[] values = { up.x, up.y, up.z, 0f, cross.x, cross.y, cross.z,
-					0f, vectorToTarget.x, vectorToTarget.y, vectorToTarget.z,
-					0f, 0f, 0f, 0f, 1f };
+			float[] values = { up.x, up.y, up.z, 0f, cross.x, cross.y, cross.z, 0f, vectorToTarget.x, vectorToTarget.y, vectorToTarget.z, 0f, 0f, 0f, 0f, 1f };
 
 			arrowModel.transform.set(values).trn(gatePositionRelativeToCamera);
 			// batch.begin(gameController.getCamera());
@@ -80,17 +72,4 @@ public class GateIndicator implements IFeatureInit, IFeatureFinish,
 			// batch.end();
 		}
 	}
-
-	@Override
-	public void gatePassed(Gate passedGate) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void finish() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

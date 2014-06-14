@@ -36,10 +36,12 @@ public class GameScreen implements Screen{
 	public void show() {
 		// delegate all inputs to the #inputProcessor
 		// TODO: put stage in GameScreen and new InputMultiplexer back to the constructor
+		Gdx.app.log("GameScreen.show", "Setting up Multiplexer!");
 		inputProcessor = new InputMultiplexer(game.getGameController().getStage(), game.getGameController().getCameraController(), new BackProcessor());
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(inputProcessor);
-		
+
+		Gdx.app.log("GameScreen.show", "Now, init your game!");
 		game.getGameController().initGame();
 	}
 

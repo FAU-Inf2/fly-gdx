@@ -19,4 +19,8 @@ public class Perspective {
 	public Perspective() {
 		this(new Vector3(), new Vector3(0, 0, 1), 0);
 	}
+
+	public String toString() {
+		return "#<Perspective position=" + position + " viewDirection=" + viewDirection + " angle=" + angle + ">";
+	}
 }

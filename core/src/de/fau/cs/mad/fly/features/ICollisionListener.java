@@ -1,6 +1,6 @@
 package de.fau.cs.mad.fly.features;
 
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
+import de.fau.cs.mad.fly.game.GameObject;
 
 /**
  * Implement this interface when you want to receive collision events.
@@ -9,12 +9,8 @@ import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
  */
 public interface ICollisionListener {	
 	/**
-	 * This method is called by the {@link CollisionContactListener} when a
+	 * This method is called by the {@link de.fau.cs.mad.fly.game.CollisionDetector.CollisionContactListener} when a
 	 * collision event is received.
-	 * 
-	 * @param eventType
-	 * @param colObj0
-	 * @param colObj1
 	 */
-	public void listen(int eventType, btCollisionObject colObj0, btCollisionObject colObj1);
+	public void onCollision(GameObject o1, GameObject o2);
 }

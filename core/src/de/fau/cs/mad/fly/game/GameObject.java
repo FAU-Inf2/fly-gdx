@@ -1,11 +1,13 @@
 package de.fau.cs.mad.fly.game;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
@@ -29,30 +31,41 @@ public class GameObject extends ModelInstance implements Disposable {
 	private final static BoundingBox bounds = new BoundingBox();
 
 	private btCollisionObject collisionObject;
-	
+
+	private final GameModel gmodel;
+
+	public Object userData;
+
+	private boolean visible = true;
+
+	public short filterGroup = CollisionDetector.OBJECT_FLAG;
+	public short filterMask = CollisionDetector.ALL_FLAG;
+
+	public String id;
 
 	// TODO: create more constructors to match the ModelInstance constructors
 
 	/**
 	 * Creates a new GameObject without any collision detection.
 	 */
-	public GameObject(Model model) {
-		super(model);
-
+	public GameObject(GameModel model) {
+		super(model.display);
+		this.gmodel = model;
 		initBoundingBox();
 	}
 	
 	/**
 	 * Adds a collision object to the game object and adds it to the collision world.
 	 */
-	public void addCollisionObject(CollisionDetector collisionDetector, btCollisionShape shape, int userValue, Object userData) {
-		collisionObject = collisionDetector.createObject(this, shape, userValue, userData);
+	public void setCollisionObject(btCollisionShape shape, CollisionDetector.Types type, Object userData) {
+		this.userData = userData;
+		setCollisionObject(CollisionDetector.createObject(this, shape, type, this));
 	}
-	
-	public void addCollisionObject(CollisionDetector collisionDetector, btCollisionShape shape, int userValue, Object userData, short filterGroup, short filterMask) {
-		collisionObject = collisionDetector.createObject(this, shape, userValue, userData, filterGroup, filterMask);
+
+	public void setCollisionObject(btCollisionObject o) {
+		collisionObject = o;
 	}
-	
+
 	/**
 	 * Initializes the bounding box for the frustum culling.
 	 */
@@ -61,6 +74,14 @@ public class GameObject extends ModelInstance implements Disposable {
 		center.set(bounds.getCenter());
 		dimensions.set(bounds.getDimensions().cpy().scl(2.0f));
 	}
+
+	public boolean isHidden() { return !visible; }
+
+	public boolean isVisible() { return visible; }
+
+	public void hide() { visible = false; }
+
+	public void show() { visible = true; }
 
 	/**
 	 * Checks if the object is visible for the given Camera.
@@ -84,6 +105,14 @@ public class GameObject extends ModelInstance implements Disposable {
 		
 		collisionObject.userData = object;
 	}
+
+	public void mark() {
+		materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
+	}
+
+	public void unmark() {
+		materials.get(0).set(ColorAttribute.createDiffuse(Color.GRAY));
+	}
 	
 	/**
 	 * Setter for the collisionObject.userValue of the GameObject.
@@ -106,11 +135,10 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * Renders the game object and updates the position of the collision object if one is defined.
 	 */
 	public void render(ModelBatch batch) {
-		if(collisionObject != null) {
+		if ( collisionObject != null )
 			collisionObject.setWorldTransform(transform);
-		}
-		
-		batch.render(this);
+		if ( visible )
+			batch.render(this);
 	}
 	
 	/**
@@ -137,6 +165,6 @@ public class GameObject extends ModelInstance implements Disposable {
 	@Override
 	public void dispose() {
 		//collisionObject.getCollisionShape().dispose();
-		//collisionObject.dispose();		
+		//collisionObject.dispose();
 	}
 }

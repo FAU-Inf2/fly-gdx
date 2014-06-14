@@ -1,9 +1,7 @@
 package de.fau.cs.mad.fly.player;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.res.ResourceManager;
 import de.fau.cs.mad.fly.ui.SettingManager;
 
 /**
@@ -19,11 +17,10 @@ public class Player {
 	
 	private Level lastLevel;
 	//TODO: Player name
-	
+
 	private SettingManager settingManager;
 	
 	public Player() {
-		this.lastLevel = ResourceManager.getLevelList().get(0);
 		this.plane = new Spaceship();
 	}
 

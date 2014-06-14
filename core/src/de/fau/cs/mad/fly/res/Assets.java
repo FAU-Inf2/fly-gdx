@@ -4,6 +4,8 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Model;
+import de.fau.cs.mad.fly.game.GameModel;
+import de.fau.cs.mad.fly.game.GameObject;
 
 /**
  * Loads and stores the AssetManager who cares about the Assets.
@@ -13,34 +15,24 @@ import com.badlogic.gdx.graphics.g3d.Model;
 public class Assets {
 	public static AssetManager manager;
 
-	public static final AssetDescriptor<Model> space = new AssetDescriptor<Model>(
-			"spacesphere.obj", Model.class);
-	public static final AssetDescriptor<Model> torus = new AssetDescriptor<Model>(
-			"torus.obj", Model.class);
-	public static final AssetDescriptor<Model> arrow = new AssetDescriptor<Model>(
-			"3dArrow/arrow.obj", Model.class);
-	public static final AssetDescriptor<Texture> flyTextureLoadingScreen = new AssetDescriptor<Texture>(
-			"Fly.png", Texture.class);
+	public static final AssetDescriptor<GameModel> arrow = new AssetDescriptor<GameModel>("3dArrow/arrow", GameModel.class);
+	public static final AssetDescriptor<Texture> flyTextureLoadingScreen = new AssetDescriptor<Texture>("Fly.png", Texture.class);
 
 	public static void init() {
 		manager = new AssetManager();
+		manager.setLoader(Level.class, new LevelLoader());
+		manager.setLoader(GameModel.class, new GameModelLoader());
 		manager.load(flyTextureLoadingScreen);
-		manager.finishLoading();
-	}
-
-
-	public static void load() {
-		manager.load(space);
-		manager.load(torus);
 		manager.finishLoading();
 	}
 
 	public static void dispose() {
 		manager.dispose();
 	}
-	
+
 	public static void loadArrow() {
-		manager.load(arrow);
+		if ( !manager.isLoaded(arrow.fileName, arrow.type) )
+			manager.load(arrow);
 		manager.finishLoading();
 	}
 }

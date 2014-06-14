@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -48,6 +50,7 @@ public class Fly extends Game {
 	public void create() {
 		Bullet.init();
 		Assets.init();
+
 		createSkin();
 		shapeRenderer = new ShapeRenderer();
 
@@ -129,25 +132,43 @@ public class Fly extends Game {
 		setScreen(splashScreen);
 	}
 
+	public void loadLevel() {
+		Level l = player.getLastLevel();
+		if ( l == null )
+			loadLevel(LevelChooserScreen.getLevelList().get(0));
+		else loadLevel(l);
+	}
+
 	/**
 	 * Switches the current Screen to the LoadingScreen.
 	 */
-	public void loadLevel() {		
+	public void loadLevel(Level.Head head) {
+		Gdx.app.log("Fly.loadLevel", "Telling AssetManager to load level...");
+		String f = head.file.path();
+		Assets.manager.load(f, Level.class);
+		Assets.manager.finishLoading();
+		Gdx.app.log("Fly.loadLevel", "Level ready. Displaying...");
+		loadLevel(Assets.manager.get(f, Level.class));
+	}
+
+	public void loadLevel(Level level) {
+		player.setLastLevel(level);
+
 		if (loadingScreen == null) {
 			loadingScreen = new LoadingScreen(this);
 		}
 		// TODO: make loading asynchronous to the loading screen and display the progress
-		
 		setScreen(loadingScreen);
+		Gdx.app.log("Fly.loadLevel", "LoadingScreen on.");
 		// TODO: this should be level dependent in the future
-		Assets.load();
 
 		GameController.Builder builder = new GameController.Builder();
 		builder.init(this);
-		
+
 		gameController = builder.build();
-		
+		Gdx.app.log("Fly.loadLevel", "Controller built.");
 		gameController.loadGame();
+		Gdx.app.log("Fly.loadLevel", "Game loaded.");
 	}
 
 	/**
@@ -157,6 +178,7 @@ public class Fly extends Game {
 		if (gameScreen == null) {
 			gameScreen = new GameScreen(this);
 		}
+		Gdx.app.log("Fly.setGameScreen", "Just a little bit more...");
 		setScreen(gameScreen);
 	}
 

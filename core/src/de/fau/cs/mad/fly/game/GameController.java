@@ -7,13 +7,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
-import de.fau.cs.mad.fly.features.IFeatureGatePassed;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
@@ -52,7 +53,6 @@ public class GameController {
 	}
 	
 	private Fly game;
-	private Player player;
 	private Stage stage;
 	private CollisionDetector collisionDetector;
 	private List<IFeatureLoad> optionalFeaturesToLoad;
@@ -62,7 +62,6 @@ public class GameController {
 	private List<IFeatureFinish> optionalFeaturesToFinish;
 	private CameraController camController;
 	PerspectiveCamera camera;
-	private LevelProgress levelProgress;
 
 	private ModelBatch batch;
 
@@ -94,15 +93,6 @@ public class GameController {
 	 */
 	public Stage getStage() {
 		return stage;
-	}
-
-	/**
-	 * Getter for the level Progress.
-	 * 
-	 * @return {@link #levelProgress}
-	 */
-	public LevelProgress getLevelProgress() {
-		return levelProgress;
 	}
 
 	/**
@@ -155,8 +145,6 @@ public class GameController {
 	 * loaded.
 	 */
 	public void loadGame() {
-		collisionDetector.load(this);
-		
 		// currently an optional feature
 		//player.getPlane().load(this);
 		
@@ -187,18 +175,17 @@ public class GameController {
 	public void initGame() {
 		camera = camController.getCamera();
 
-		player.getLastLevel().initLevel(this);
-		levelProgress.init(this);
-
 		// initializes all optional features
+		Gdx.app.log("GameController.initGame", "init.size = " + optionalFeaturesToInit.size());
 		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
+			Gdx.app.log("GameController.initGame", "init.class = " + optionalFeature.getClass());
 			optionalFeature.init(this);
 		}
-		
 
 		time = 0.0f;
-		
+
 		startGame();
+		Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
 	}
 
 	public void startGame() {
@@ -210,6 +197,7 @@ public class GameController {
 	}
 
 	public void finishGame() {
+		System.out.println("FINISHED");
 		gameState = GameState.FINISHED;
 
 		endGame();
@@ -244,7 +232,7 @@ public class GameController {
 		collisionDetector.perform();
 
 		batch.begin(camera);
-		level.render(camera);
+		level.render(batch, camera);
 		batch.end();
 		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer
 		// etc., split render up?
@@ -306,8 +294,6 @@ public class GameController {
 		private ArrayList<IFeatureRender> optionalFeaturesToRender;
 		private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
 		private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
-		private ArrayList<IFeatureGatePassed> optionalFeaturesGatePassed;
-		private LevelProgress levelProgress;
 		private CameraController cameraController;
 
 		/**
@@ -329,20 +315,46 @@ public class GameController {
 			optionalFeaturesToRender = new ArrayList<IFeatureRender>();
 			optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
 			optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
-			optionalFeaturesGatePassed = new ArrayList<IFeatureGatePassed>();
-			levelProgress = new LevelProgress();
 
 			this.game = game;
 			this.player = game.getPlayer();
 			this.cameraController = new CameraController(player);
-			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
-					Gdx.graphics.getHeight()));
+			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			this.level = player.getLastLevel();
-			
+			optionalFeaturesToLoad.add(level);
+
 			addPlayerPlane();
-			collisionDetector = new CollisionDetector(game);
+			collisionDetector = new CollisionDetector();
 			
-			collisionDetector.getCollisionContactListener().addListener(levelProgress);
+			collisionDetector.getCollisionContactListener().addListener(level);
+
+			Gdx.app.log("Builder.init", "Setting up collision for level gates...");
+
+			for ( Level.Gate g : level.allGates() ) {
+				if ( g.goal.getCollisionObject() == null ) {
+					Gdx.app.log("Builder.init", "CollisionObject == null");
+					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.id + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
+					g.goal.hide();
+					g.goal.filterGroup = CollisionDetector.DUMMY_FLAG;
+					g.goal.filterMask = CollisionDetector.ALL_FLAG;
+					g.goal.setCollisionObject(goalShape, CollisionDetector.Types.Gate, g);
+				}
+				collisionDetector.addCollisionObject(g.goal);
+			}
+
+			Gdx.app.log("Builder.init", "Registering EventListeners for level.");
+
+			level.addEventListener(new Level.EventAdapter() {
+				@Override
+				public void onGatePassed(Level.Gate passed, Iterable<Level.Gate> current) {
+					for (Level.Gate g : level.allGates())
+						g.unmark();
+					for (Level.Gate g : passed.successors)
+						g.mark();
+				}
+			});
+
+			Gdx.app.log("Builder.init", "Final work for level done.");
 
 			if (player.getSettingManager().getCheckBoxValue("showGateIndicator")) {
 				addGateIndicator();
@@ -377,7 +389,6 @@ public class GameController {
 			GateIndicator gateIndicator = new GateIndicator();
 			optionalFeaturesToInit.add(gateIndicator);
 			optionalFeaturesToRender.add(gateIndicator);
-			optionalFeaturesGatePassed.add(gateIndicator);
 			return this;
 		}
 
@@ -483,9 +494,8 @@ public class GameController {
 		 * @return new GameController
 		 */
 		public GameController build() {
-			GameController gc = new GameController();
+			final GameController gc = new GameController();
 			gc.game = game;
-			gc.player = player;
 			gc.stage = stage;
 			gc.collisionDetector = collisionDetector;
 			gc.optionalFeaturesToLoad = optionalFeaturesToLoad;
@@ -493,11 +503,16 @@ public class GameController {
 			gc.optionalFeaturesToRender = optionalFeaturesToRender;
 			gc.optionalFeaturesToFinish = optionalFeaturesToFinish;
 			gc.optionalFeaturesToDispose = optionalFeaturesToDispose;
-			gc.levelProgress = levelProgress;
 			gc.level = level;
 			gc.camController = cameraController;
 			gc.batch = new ModelBatch();
 
+			level.addEventListener(new Level.EventAdapter() {
+				@Override
+				public void onFinished() {
+					gc.finishGame();
+				}
+			});
 			return gc;
 		}
 	}

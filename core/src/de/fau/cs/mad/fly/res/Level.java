@@ -1,114 +1,158 @@
 package de.fau.cs.mad.fly.res;
 
-import java.util.List;
-
-import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
 import com.badlogic.gdx.utils.Disposable;
-
-import de.fau.cs.mad.fly.game.CollisionDetector;
+import de.fau.cs.mad.fly.features.ICollisionListener;
+import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.geo.Perspective;
+import de.fau.cs.mad.fly.player.Spaceship;
+
+import java.util.*;
 
 /**
  * 
  * @author Lukas Hahmann
  * 
  */
-public class Level extends Resource implements Disposable {
+public class Level implements Disposable, IFeatureLoad, ICollisionListener {
+	public static class Gate implements Iterable<Gate> {
+		public final int id;
+		public GameObject display;
+		public GameObject goal;
+		public Collection<Gate> successors;
 
-	/**
-	 * Name of the level which is displayed to the user when choosing levels
-	 */
-	public String name = "";
+		public Gate(Integer id) {
+			this.id = id;
+		}
 
-	/**
-	 * Name of the object which is used as level border. Default is outer space.
-	 */
-	public String levelBorder = "spacesphere.obj";
+		public void mark() {
+			if ( display != null )
+				display.mark();
+		}
+
+		public void unmark() {
+			if ( display != null )
+				display.unmark();
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			Gate gate = (Gate) o;
+			return id == gate.id;
+		}
+
+		@Override
+		public int hashCode() {
+			return id;
+		}
+
+		@Override
+		public String toString() {
+			return "#<Gate " + id + ">";
+		}
+
+		private void buildIterator(Collection<Gate> gs) {
+			for ( Gate g : successors )
+				if ( !gs.contains( g ) ) {
+					gs.add(g);
+					g.buildIterator(gs);
+				}
+		}
+
+		@Override
+		public Iterator<Gate> iterator() {
+			final Set<Gate> set = new HashSet<Gate>();
+			buildIterator(set);
+			return set.iterator();
+		}
+	}
+
+	public static class Head {
+		public String name;
+		public FileHandle file;
+	}
+
+	public static interface EventListener {
+		public void onFinished();
+		public void onGatePassed(Gate gate, Iterable<Gate> current);
+	}
+
+
+	public static class EventAdapter implements EventListener {
+		@Override
+		public void onFinished() {}
+		@Override
+		public void onGatePassed(Gate gate, Iterable<Gate> current) {}
+	}
+
+	@Override
+	public void load(GameController game) {
+		activeGatePassed(virtualGate);
+	}
 
 	/**
 	 * Radius of the Level which defines the outer boundary which should be
 	 * never reached by the user. The default level border defines a sphere with
 	 * radius 100.
 	 */
-	public float radius = 100.0f;
+	public final float radius = 100.0f;
+	public final Head head;
+	public final Collection<GameObject> components;
+	public final Perspective start;
+	private Gate virtualGate;
+	private final Gate startingGate;
+	private final Environment environment;
+	private List<EventListener> eventListeners = new ArrayList<EventListener>();
 
-	public List<Gate> gates;
-
-	public Perspective start;
-
-	private Environment environment;
-
-	private ModelBatch batch;
-
-	private GameObject levelBorderModel;
-	
-	public void initLevel(GameController gameController) {
+	public Level(String name, Perspective start, Collection<GameObject> components, Gate startingGate) {
+		this.head = new Head();
+		this.head.name = name;
+		this.virtualGate = startingGate;
+		this.startingGate = startingGate;
+		this.components = components;
+		this.start = start;
+		this.environment = new Environment();
 		setUpEnvironment();
-
-		batch = gameController.getBatch();
-
-		if (levelBorder != null) {
-			levelBorderModel = new GameObject(
-					Assets.manager.get(new AssetDescriptor<Model>(levelBorder,
-							Model.class)));
-		} else {
-			// CRASH
-		}
-		
-		ModelBuilder modelBuilder = new ModelBuilder();
-		
-		int n = 0;
-		for (Gate gate : gates) {
-			// TODO: use Gate constructor for this
-			ModelResource m = (ModelResource) dependencies.get(gate.modelId);
-			gate.model = new GameObject(Assets.manager.get(m.descriptor));
-			gate.model.transform = new Matrix4(gate.transformMatrix);
-
-			gate.goalModel = new GameObject(modelBuilder.createBox(1.0f, 0.05f, 1.0f, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal));
-			gate.goalModel.transform = new Matrix4(gate.transformMatrix);
-
-			//btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(gate.modelId, CollisionDetector.USERVALUE_GATES + n, gate.model, gameController.getCollisionDetector().OBJECT_FLAG, gameController.getCollisionDetector().ALL_FLAG);
-			//gate.model.addCollisionObject(gameController.getCollisionDetector(), shape, CollisionDetector.USERVALUE_GATES, gate.model);
-			
-			btCollisionShape goalShape = gameController.getCollisionDetector().getShapeManager().createBoxShape(gate.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-			gate.goalModel.addCollisionObject(gameController.getCollisionDetector(), goalShape, CollisionDetector.USERVALUE_GATE_GOALS, gate, gameController.getCollisionDetector().DUMMY_FLAG, gameController.getCollisionDetector().ALL_FLAG);
-			// TODO: dispose boxShape? or needed by collisionGoal?
-			
-			gate.fillSuccessorGateList(gates);
-			
-			gate.init();
-			n++;
-		}
-		
-		System.out.println(this);
 	}
 
-	/**
-	 * Object that is used as level border.
-	 * 
-	 * @return level border
-	 */
-	public GameObject getLevelBorder() {
-		return levelBorderModel;
+	public void gatePassed(Gate gate) {
+		if ( currentGates().contains(gate) )
+			activeGatePassed(gate);
 	}
-	
+
+	public void activeGatePassed(Gate gate) {
+		for ( EventListener s : eventListeners)
+			s.onGatePassed(gate, virtualGate.successors);
+		virtualGate = gate;
+		if ( gate.successors.isEmpty() )
+			for ( EventListener s : eventListeners)
+				s.onFinished();
+	}
+
+	public void addEventListener(EventListener listener) {
+		eventListeners.add(listener);
+	}
+
+	public Collection<Gate> currentGates() {
+		return Collections.unmodifiableCollection(virtualGate.successors);
+	}
+
+	public Iterable<Gate> allGates() {
+		return startingGate;
+	}
+
+	public Iterable<Gate> remainingGates() { return virtualGate; }
+
 	/**
 	 * Environment in the level.
 	 * <p>
@@ -126,42 +170,43 @@ public class Level extends Resource implements Disposable {
 	 * @param camera
 	 *            that displays the level
 	 */
-	public void render(PerspectiveCamera camera) {
-		// rendering outer space
-		if (levelBorderModel != null) {
-			levelBorderModel.render(batch);
-		}
-		// render gates
-		for (Gate gate : gates) {
-			gate.render(batch, camera, environment);
-		}
+	public void render(ModelBatch batch, PerspectiveCamera camera) {
+		for (GameObject c : components)
+			c.render(batch);
 	}
 
 	/**
 	 * Sets up the environment for the level with its light.
 	 */
 	private void setUpEnvironment() {
-		// setting up the environment
-		environment = new Environment();
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
-				0.4f, 0.4f, 1f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
-				-0.8f, -0.2f));
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
 	@Override
 	public String toString() {
-		return "#<Level " + id + ": name='" + name + "' gates=" + gates + ">";
+		return "#<Level name=" + head.name + " virtualGate=" + virtualGate + ">";
 	}
 
 	@Override
 	public void dispose() {
-		for (Gate gate : gates) {
-			gate.dispose();
+		Gdx.app.log("Level.dispose", "Disposing...");
+		for ( GameObject o : components )
+			o.dispose();
+	}
+
+	@Override
+	public void onCollision(GameObject o1, GameObject o2) {
+		if ( !playerGateCollision(o1, o2) )
+			playerGateCollision(o2, o1);
+	}
+
+	private boolean playerGateCollision(GameObject x, GameObject y) {
+		if ( x.userData instanceof Spaceship && y.userData instanceof Gate ) {
+			Gate gate = (Gate) y.userData;
+			gatePassed(gate);
+			return true;
 		}
-		
-		gates.clear();
-		
-		levelBorderModel.dispose();
+		return false;
 	}
 }
