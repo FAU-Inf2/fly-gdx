@@ -141,7 +141,9 @@ public class Fly extends Game {
 		Assets.manager.load(f, Level.class);
 		Assets.manager.finishLoading();
 		Gdx.app.log("Fly.loadLevel", "Level ready. Displaying...");
-		loadLevel(Assets.manager.get(f, Level.class));
+		Level l = Assets.manager.get(f, Level.class);
+		l.reset();
+		loadLevel(l);
 	}
 
 	public void loadLevel(Level level) {

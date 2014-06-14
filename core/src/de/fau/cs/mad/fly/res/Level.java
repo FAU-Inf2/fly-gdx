@@ -194,6 +194,10 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
+	public void reset() {
+		virtualGate = startingGate;
+	}
+
 	@Override
 	public String toString() {
 		return "#<Level name=" + head.name + " virtualGate=" + virtualGate + ">";
