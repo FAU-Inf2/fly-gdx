@@ -48,6 +48,8 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 
 	public Level fromJson() {
 		getJson();
+		for ( Map.Entry<String, String> e : dependencies.entrySet() )
+			models.put(e.getKey(), dependencyFor(e.getKey()));
 		getComponents();
 		int id = json.getInt("id");
 		String name = json.getString("name");
@@ -121,9 +123,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 			for (JsonValue e : json.get("components")) {
 				String id = e.getString("id");
 				String ref = e.getString("ref");
-				GameModel m = dependencyFor(ref);
-				models.put(ref, m);
-				GameObject o = new GameObject(m);
+				GameObject o = new GameObject(models.get(ref));
 				o.modelId = ref;
 				o.id = id;
 				JsonValue transform = e.get("transformMatrix");
@@ -152,6 +152,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 		fileName = null;
 		parameter = null;
 		manager = null;
+		models.clear();
 	}
 
 	@Override
