@@ -116,7 +116,7 @@ public class CollisionShapeManager implements Disposable {
 	/**
 	 * Creates a new btConvexHullShape out of the instance if the shape is not already created.
 	 */
-	public btCollisionShape createConvexShape(String shapeId, int userValue, final GameObject instance) {
+	public btCollisionShape createConvexShape(String shapeId, final GameObject instance) {
 		btCollisionShape shape = convexShapeMap.get(shapeId);
 		if(shape != null) {
 			return shape;

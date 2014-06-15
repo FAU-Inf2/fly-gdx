@@ -26,6 +26,9 @@ public class GameObject extends ModelInstance implements Disposable {
 	private final Vector3 dimensions = new Vector3();
 	private final Vector3 position = new Vector3();
 
+	private Vector3 movingDir = new Vector3(0.0f, 0.0f, 0.0f);
+	private float movingSpeed = 0.0f;
+
 	private final static BoundingBox bounds = new BoundingBox();
 
 	private btCollisionObject collisionObject;

@@ -15,6 +15,8 @@ public class Assets {
 
 	public static final AssetDescriptor<GameModel> arrow = new AssetDescriptor<GameModel>("3dArrow/arrow", GameModel.class);
 	public static final AssetDescriptor<Texture> flyTextureLoadingScreen = new AssetDescriptor<Texture>("Fly.png", Texture.class);
+	
+	public static final AssetDescriptor<GameModel> asteroid = new AssetDescriptor<GameModel>("asteroid", GameModel.class);
 
 	public static void init() {
 		manager = new AssetManager();
@@ -31,6 +33,12 @@ public class Assets {
 	public static void loadArrow() {
 		if ( !manager.isLoaded(arrow.fileName, arrow.type) )
 			manager.load(arrow);
+		manager.finishLoading();
+	}
+	
+	public static void loadAsteroid() {
+		if ( !manager.isLoaded(asteroid.fileName, asteroid.type) )
+			manager.load(asteroid);
 		manager.finishLoading();
 	}
 }
