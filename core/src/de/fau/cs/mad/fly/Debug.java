@@ -18,7 +18,7 @@ import de.fau.cs.mad.fly.features.overlay.DebugOverlay;
 public class Debug {
 	public static DebugOverlay debugOverlay;
 
-	public static void init(Fly game, Stage stage, int index) {
+	public static void init(final Fly game, final Stage stage, int index) {
 		debugOverlay = new DebugOverlay(game, stage, index);
 	}
 	

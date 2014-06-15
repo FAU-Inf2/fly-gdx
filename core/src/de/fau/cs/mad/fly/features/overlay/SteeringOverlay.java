@@ -20,25 +20,21 @@ import de.fau.cs.mad.fly.game.GameController;
 public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 		IFeatureDispose {
 
-	private Stage stage;
-	private FlightController flightController;
+	private final Stage stage;
+	private final FlightController flightController;
 
-	private OrthographicCamera camera;
-	private ShapeRenderer shapeRenderer;
-
-	private SpriteBatch batch;
+	private final OrthographicCamera camera;
+	private final ShapeRenderer shapeRenderer;
 
 	private float steeringX, steeringY;
 
-	public SteeringOverlay(final FlightController cameraController,
-			final ShapeRenderer shapeRenderer, Stage stage) {
+	public SteeringOverlay(final FlightController cameraController, final ShapeRenderer shapeRenderer, final Stage stage) {
 		this.stage = stage;
 		this.flightController = cameraController;
 
 		this.shapeRenderer = shapeRenderer;
 
-		camera = new OrthographicCamera(Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight());
+		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	/**
@@ -77,7 +73,7 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 	}
 
 	@Override
-	public void init(GameController gameController) {
+	public void init(final GameController gameController) {
 		steeringX = 0.0f;
 		steeringY = 0.0f;
 	}
@@ -85,6 +81,5 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-
 	}
 }

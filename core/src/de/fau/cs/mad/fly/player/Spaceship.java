@@ -23,10 +23,10 @@ public class Spaceship implements IPlane {
 	}
 	
 	@Override
-	public void load(GameController game) {
+	public void load(final GameController game) {
 		this.gameController = game;
 		
-		ModelBuilder modelBuilder = new ModelBuilder();
+		final ModelBuilder modelBuilder = new ModelBuilder();
         model = modelBuilder.createSphere(0.1f, 0.1f, 0.1f, 2,2, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
         instance = new GameObject(new GameModel(model));
         instance.transform.setToTranslation(new Vector3(0, 0, 0));
@@ -75,5 +75,4 @@ public class Spaceship implements IPlane {
 		instance.dispose();
 		model.dispose();
 	}
-
 }

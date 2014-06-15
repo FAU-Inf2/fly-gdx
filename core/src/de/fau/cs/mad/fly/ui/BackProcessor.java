@@ -20,7 +20,7 @@ public class BackProcessor extends InputAdapter {
 				game.getScreen().dispose();
 			else
 				game.setMainMenuScreen();
-			Gdx.app.log("BackProcessor.keyDown", "Bye!");
+			//Gdx.app.log("BackProcessor.keyDown", "Bye!");
 			return true;
 		}
 		return false;

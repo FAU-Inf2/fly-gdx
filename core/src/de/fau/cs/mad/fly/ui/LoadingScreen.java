@@ -23,11 +23,11 @@ import de.fau.cs.mad.fly.res.Assets;
 public class LoadingScreen implements Screen {
 	private final Fly game;
 
-	private SpriteBatch batch;
-	private Texture splashImg;
+	private final SpriteBatch batch;
+	private final Texture splashImg;
 
-	private Skin skin;
-	private Stage stage;
+	private final Skin skin;
+	private final Stage stage;
 	private Table table;
 
 	private ProgressBar progressBar;

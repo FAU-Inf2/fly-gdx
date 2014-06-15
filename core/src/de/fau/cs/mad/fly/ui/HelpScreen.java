@@ -20,8 +20,8 @@ import de.fau.cs.mad.fly.Fly;
 public class HelpScreen implements Screen {
 	private final Fly game;
 
-	private Skin skin;
-	private Stage stage;
+	private final Skin skin;
+	private final Stage stage;
 	private Table table;
 	
 	private InputMultiplexer inputProcessor;

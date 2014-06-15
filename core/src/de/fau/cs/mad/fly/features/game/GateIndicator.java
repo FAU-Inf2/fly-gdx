@@ -3,6 +3,8 @@ package de.fau.cs.mad.fly.features.game;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
+
+import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.GameController;
@@ -17,7 +19,7 @@ import de.fau.cs.mad.fly.res.Level;
  * @author Lukas Hahmann
  * 
  */
-public class GateIndicator implements IFeatureInit, IFeatureRender {
+public class GateIndicator implements IFeatureInit, IFeatureRender, IFeatureDispose {
 	
 	private GameController gameController;
 	private ModelBatch batch;
@@ -26,7 +28,7 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
 	private GameObject arrowModel;
 
 	@Override
-	public void init(GameController game) {
+	public void init(final GameController game) {
 		this.gameController = game;
 		Assets.loadArrow();
 		arrowModel = new GameObject(Assets.manager.get(Assets.arrow));
@@ -71,5 +73,10 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
 			batch.render(arrowModel, environment);
 			// batch.end();
 		}
+	}
+
+	@Override
+	public void dispose() {
+		arrowModel.dispose();
 	}
 }

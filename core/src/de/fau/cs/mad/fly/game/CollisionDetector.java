@@ -71,7 +71,7 @@ public class CollisionDetector implements Disposable {
 		return shapeManager;
 	}
 
-	public static btCollisionObject createObject(GameObject instance, btCollisionShape shape, Types t, GameObject userData) {
+	public static btCollisionObject createObject(final GameObject instance, final btCollisionShape shape, Types t, final GameObject userData) {
 		btCollisionObject collisionObject = new btCollisionObject();
 		collisionObject.setCollisionShape(shape);
 		collisionObject.setCollisionFlags(collisionObject.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
@@ -82,7 +82,7 @@ public class CollisionDetector implements Disposable {
 		return collisionObject;
 	}
 
-	public void addCollisionObject(GameObject o) {
+	public void addCollisionObject(final GameObject o) {
 		collisionWorld.addCollisionObject(o.getCollisionObject(), o.filterGroup, o.filterMask);
 	}
 
@@ -105,6 +105,7 @@ public class CollisionDetector implements Disposable {
 		dispatcher.dispose();
 		collisionConfig.dispose();
 		contactListener.dispose();
-		Gdx.app.log("CollisionDetector", "Collision disposed");
+		shapeManager.dispose();
+		Gdx.app.log("CollisionDetector", "Collision disposed.");
 	}
 }

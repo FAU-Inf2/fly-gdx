@@ -16,12 +16,12 @@ import de.fau.cs.mad.fly.Fly;
 public class DebugOverlay {
 	private final Fly game;
 	
-	private Skin skin;
-	private Stage stage;
+	private final Skin skin;
+	private final Stage stage;
 	private Label valueLabels[] = new Label[3];
 	private int count;
 	
-	public DebugOverlay(final Fly game, Stage stage, int count) {
+	public DebugOverlay(final Fly game, final Stage stage, int count) {
 		this.game = game;
 		this.stage = stage;
 		skin = game.getSkin();
@@ -58,14 +58,14 @@ public class DebugOverlay {
 	 * @param y
 	 *            the y position on the screen in percent, should be between -100.0, +100.0
 	 */
-	public Label addLabel(String text, LabelStyle labelStyle, float x, float y) {
+	public Label addLabel(final String text, final LabelStyle labelStyle, float x, float y) {
 		Label label = new Label(text, labelStyle);
 		label.setPosition(Gdx.graphics.getWidth() * x, Gdx.graphics.getHeight()*y);
 		stage.addActor(label);
 		return label;
 	}
 	
-	public void setValue(int index, String value) {
+	public void setValue(int index, final String value) {
 		if(index >= count)
 			return;
 

@@ -162,7 +162,6 @@ public class GameObject extends ModelInstance implements Disposable {
 
 	@Override
 	public void dispose() {
-		//collisionObject.getCollisionShape().dispose();
 		//collisionObject.dispose();
 	}
 }

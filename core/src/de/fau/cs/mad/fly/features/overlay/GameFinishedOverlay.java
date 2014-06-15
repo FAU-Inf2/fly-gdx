@@ -20,13 +20,13 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 	private final Fly game;
 	private GameController gameController;
 
-	private Skin skin;
-	private Stage stage;
-	private Table table;
+	private final Skin skin;
+	private final Stage stage;
+	private final Table table;
 	
 	private TextButton continueButton;
 	
-	public GameFinishedOverlay(final Fly game, Stage stage) {
+	public GameFinishedOverlay(final Fly game, final Stage stage) {
 		this.game = game;
 		this.stage = stage;
 		skin = game.getSkin();
@@ -57,7 +57,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 	}
 
 	@Override
-	public void init(GameController gameController) {		
+	public void init(final GameController gameController) {		
 		this.gameController = gameController;
 		continueButton.addListener(new ClickListener() {
 			@Override 

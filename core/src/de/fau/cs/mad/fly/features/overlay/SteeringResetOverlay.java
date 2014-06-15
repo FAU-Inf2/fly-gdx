@@ -18,15 +18,15 @@ import de.fau.cs.mad.fly.game.GameController;
 
 public class SteeringResetOverlay implements IFeatureInit, IFeatureRender, IFeatureDispose {
 
-	private FlightController flightController;
+	private final FlightController flightController;
 	
-	private Skin skin;
-	private Stage stage;
-	private Table table;
+	private final Skin skin;
+	private final Stage stage;
+	private final Table table;
 	
 	private TextButton resetButton;
 
-	public SteeringResetOverlay(final Fly game, final FlightController flightController, Stage stage) {
+	public SteeringResetOverlay(final Fly game, final FlightController flightController, final Stage stage) {
 		this.flightController = flightController;
 		this.stage = stage;
 		skin = game.getSkin();
@@ -59,8 +59,7 @@ public class SteeringResetOverlay implements IFeatureInit, IFeatureRender, IFeat
 	}
 
 	@Override
-	public void init(GameController gameController) {
-		// TODO Auto-generated method stub
+	public void init(final GameController gameController) {
 		resetButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {

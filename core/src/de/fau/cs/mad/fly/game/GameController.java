@@ -396,6 +396,7 @@ public class GameController {
 			GateIndicator gateIndicator = new GateIndicator();
 			optionalFeaturesToInit.add(gateIndicator);
 			optionalFeaturesToRender.add(gateIndicator);
+			optionalFeaturesToDispose.add(gateIndicator);
 			return this;
 		}
 

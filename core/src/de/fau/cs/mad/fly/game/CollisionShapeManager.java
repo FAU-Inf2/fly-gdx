@@ -16,6 +16,12 @@ import java.util.Map;
  * Manager for the btCollisionShapes.
  * <p>
  * Creates, stores and disposes all used collision shapes.
+ * <p>
+ * Available shape types:
+ * 		boxShape:    if a simple box around the object is enough
+ * 		sphereShape: if a simple sphere fits the object better a box
+ *      convexShape: if the object has a convex but not simple form
+ *      meshShape:   if the object has holes and they have to be identified by the collision detector
  * 
  * @author Tobias Zangl
  */
@@ -66,17 +72,9 @@ public class CollisionShapeManager implements Disposable {
 	}
 	
 	/**
-	 * Creates a new dynamic mesh shape out of the instance if the shape is not already created.
-	 */
-	/*public btCollisionShape createDynamicMeshShape(String shapeId, GameObject instance) {
-		
-		return new btCollisionShape();
-	}*/
-	
-	/**
 	 * Creates a new static mesh shape out of the instance if the shape is not already created.
 	 */
-	public btCollisionShape createStaticMeshShape(String shapeId, GameObject instance) {
+	public btCollisionShape createStaticMeshShape(String shapeId, final GameObject instance) {
 		btCollisionShape shape = meshShapeMap.get(shapeId);
 		if(shape != null) {
 			return shape;
@@ -109,7 +107,7 @@ public class CollisionShapeManager implements Disposable {
 
 		btCollisionShape meshShape = Bullet.obtainStaticNodeShape(instance.model.nodes);
 		
-		Gdx.app.log("CollisionShapeManager", "Created static mesh shape " + shapeId);
+		Gdx.app.log("CollisionShapeManager", "Created static mesh shape: " + shapeId);
 		
 		meshShapeMap.put(shapeId, meshShape);
 		return meshShape;
@@ -118,7 +116,7 @@ public class CollisionShapeManager implements Disposable {
 	/**
 	 * Creates a new btConvexHullShape out of the instance if the shape is not already created.
 	 */
-	public btCollisionShape createConvexShape(String shapeId, int userValue, GameObject instance) {
+	public btCollisionShape createConvexShape(String shapeId, int userValue, final GameObject instance) {
 		btCollisionShape shape = convexShapeMap.get(shapeId);
 		if(shape != null) {
 			return shape;
@@ -135,7 +133,7 @@ public class CollisionShapeManager implements Disposable {
 		hullShape.dispose();
 		hull.dispose();
 		
-		Gdx.app.log("CollisionShapeManager", "Created convex shape " + shapeId);
+		Gdx.app.log("CollisionShapeManager", "Created convex shape: " + shapeId);
 
 		convexShapeMap.put(shapeId, convexShape);
 		return convexShape;
@@ -152,7 +150,7 @@ public class CollisionShapeManager implements Disposable {
 		
 		btBoxShape boxShape = new btBoxShape(box);
 
-		Gdx.app.log("CollisionShapeManager", "Created box shape " + shapeId);
+		Gdx.app.log("CollisionShapeManager", "Created box shape: " + shapeId);
 		
 		boxShapeMap.put(shapeId, boxShape);
 		return boxShape;
@@ -169,7 +167,7 @@ public class CollisionShapeManager implements Disposable {
 		
 		btSphereShape sphereShape = new btSphereShape(radius);
 
-		Gdx.app.log("CollisionShapeManager", "Created sphere shape " + shapeId);
+		Gdx.app.log("CollisionShapeManager", "Created sphere shape: " + shapeId);
 		
 		sphereShapeMap.put(shapeId, sphereShape);
 		return sphereShape;
@@ -179,16 +177,6 @@ public class CollisionShapeManager implements Disposable {
 	public void dispose() {
 		for(Map.Entry<String, btCollisionShape> entry : meshShapeMap.entrySet()) {
 			entry.getValue().dispose();
-
-			/*
-				  meshShape.delete();
-				  meshShape = null;
-				  meshInterface.delete();
-				  meshInterface = null;
-				  indexedMesh.dispose();
-				  indexedMesh.delete();
-				  indexedMesh = null;
-			*/
 		}
 		for(Map.Entry<String, btCollisionShape> entry : convexShapeMap.entrySet()) {
 			entry.getValue().dispose();
@@ -200,6 +188,6 @@ public class CollisionShapeManager implements Disposable {
 			entry.getValue().dispose();
 		}
 
-		Gdx.app.log("CollisionShapeManager", "Collision shapes disposed");
+		Gdx.app.log("CollisionShapeManager", "Collision shapes disposed.");
 	}
 }

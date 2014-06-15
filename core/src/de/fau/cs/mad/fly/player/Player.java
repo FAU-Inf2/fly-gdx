@@ -43,7 +43,7 @@ public class Player {
 	/**
 	 * Creates the SettingManager and all the Settings.
 	 */
-	public void createSettings(Skin skin) {
+	public void createSettings(final Skin skin) {
 		settingManager = new SettingManager("fly_preferences", skin);
 
 		//settingManager.addSetting("name", "Playername:", "Test");
