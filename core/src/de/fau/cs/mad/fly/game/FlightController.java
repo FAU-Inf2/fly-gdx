@@ -101,7 +101,9 @@ public class FlightController implements InputProcessor {
 		float pitch = Gdx.input.getPitch();
 		float azimuth = Gdx.input.getAzimuth();
 
+		Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
 		startAzimuth = computeAzimuth(roll, pitch, azimuth);
+		Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
 		startRoll = Gdx.input.getRoll();
 	}
 
@@ -144,12 +146,12 @@ public class FlightController implements InputProcessor {
 		// setting up the camera
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
-		camera.position.set(player.getLastLevel().start.position);
-		camera.lookAt(player.getLastLevel().start.viewDirection);
+		camera.position.set(player.getLevel().start.position);
+		camera.lookAt(player.getLevel().start.viewDirection);
 		camera.near = 0.1f;
 		// within a sphere it should not happen that not everything of this
 		// sphere is displayed. Therefore use the diameter as far plane
-		camera.far = player.getLastLevel().radius * 2;
+		camera.far = player.getLevel().radius * 2;
 		camera.update();
 
 		resetBuffers();

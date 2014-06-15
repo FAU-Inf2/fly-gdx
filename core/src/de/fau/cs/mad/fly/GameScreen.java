@@ -15,7 +15,6 @@ public class GameScreen implements Screen{
 	private final Fly game;
 	
 	private InputMultiplexer inputProcessor;
-	
 
 	public GameScreen(final Fly game) {
 		this.game = game;
@@ -46,6 +45,7 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void hide() {
+		Gdx.app.log("GameScreen.hide", "huhu");
 		game.getGameController().disposeGame();
 	}
 
@@ -61,6 +61,8 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void dispose() {
+		Gdx.app.log("GameScreen.dispose", "Hihi");
 		Assets.dispose();
+		game.getGameController().disposeGame();
 	}
 }

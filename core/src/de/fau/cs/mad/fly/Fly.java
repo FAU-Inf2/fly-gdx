@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -42,7 +43,6 @@ public class Fly extends Game {
 	@Override
 	public void create() {
 		Bullet.init();
-		Assets.init();
 
 		createSkin();
 		shapeRenderer = new ShapeRenderer();
@@ -125,10 +125,10 @@ public class Fly extends Game {
 	}
 
 	public void continueLevel() {
-		Level l = player.getLastLevel();
+		Level.Head l = player.getLastLevel();
 		if ( l == null )
-			loadLevel(LevelChooserScreen.getLevelList().get(0));
-		else loadLevel(l);
+			l = LevelChooserScreen.getLevelList().get(0);
+		loadLevel(l);
 	}
 
 	/**
@@ -137,6 +137,7 @@ public class Fly extends Game {
 	public void loadLevel(Level.Head head) {
 		Gdx.app.log("Fly.loadLevel", "Telling AssetManager to load level...");
 		String f = head.file.path();
+		Assets.init();
 		Assets.manager.load(f, Level.class);
 		Assets.manager.finishLoading();
 		Gdx.app.log("Fly.loadLevel", "Level ready. Displaying...");
@@ -146,8 +147,6 @@ public class Fly extends Game {
 	}
 
 	public void loadLevel(Level level) {
-		player.setLastLevel(level);
-
 		if (loadingScreen == null) {
 			loadingScreen = new LoadingScreen(this);
 		}
@@ -155,6 +154,8 @@ public class Fly extends Game {
 		setScreen(loadingScreen);
 		Gdx.app.log("Fly.loadLevel", "LoadingScreen on.");
 		// TODO: this should be level dependent in the future
+
+		player.setLevel(level);
 
 		GameController.Builder builder = new GameController.Builder();
 		builder.init(this);

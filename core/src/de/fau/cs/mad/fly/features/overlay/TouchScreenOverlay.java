@@ -30,7 +30,7 @@ public class TouchScreenOverlay implements IFeatureInit, IFeatureRender, IFeatur
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

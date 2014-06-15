@@ -15,7 +15,8 @@ public class Player {
 	/** The plane the player is currently steering */
 	private IPlane plane;
 	
-	private Level lastLevel;
+	private Level.Head lastLevel;
+	private Level level;
 	//TODO: Player name
 
 	private SettingManager settingManager;
@@ -24,13 +25,17 @@ public class Player {
 		this.plane = new Spaceship();
 	}
 
-	public Level getLastLevel() {
+	public Level.Head getLastLevel() {
 		return lastLevel;
 	}
 
-	public void setLastLevel(Level lastLevel) {
+	public void setLastLevel(Level.Head lastLevel) {
 		this.lastLevel = lastLevel;
 	}
+
+	public void setLevel(Level l) { this.level = l; }
+
+	public Level getLevel() { return level; }
 
 	public IPlane getPlane() {
 		return plane;

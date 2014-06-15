@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -21,7 +22,7 @@ import com.badlogic.gdx.utils.Disposable;
  * 
  * @author Tobias Zangl
  */
-public class GameObject extends ModelInstance implements Disposable {	
+public class GameObject extends ModelInstance implements Disposable {
 	private final Vector3 center = new Vector3();
 	private final Vector3 dimensions = new Vector3();
 	private final Vector3 position = new Vector3();
@@ -162,6 +163,8 @@ public class GameObject extends ModelInstance implements Disposable {
 
 	@Override
 	public void dispose() {
-		//collisionObject.dispose();
+		Gdx.app.log("GameObject.dispose", "dispose " + id);
+		if ( collisionObject != null )
+			collisionObject.dispose();
 	}
 }
