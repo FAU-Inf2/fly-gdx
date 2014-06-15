@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 
 import de.fau.cs.mad.fly.features.IFeatureDispose;
@@ -19,19 +20,27 @@ import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.Assets;
 
+/**
+ * Creates an asteroid belt inside a given level size with a given asteroid model and a given count of asteroids.
+ * 
+ * @author Tobias Zangl
+ */
 public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureRender, IFeatureDispose {
 	private GameController gameController;
 	private ModelBatch batch;
 	private Environment environment;
 	private PerspectiveCamera camera;
 	
+	private Vector3 levelSize;
+	
 	private int asteroidCount = 0;
 	private String modelRef;
 	private List<GameObject> asteroids;
 
-	public AsteroidBelt(int asteroidCount, String modelRef) {
+	public AsteroidBelt(int asteroidCount, String modelRef, Vector3 levelSize) {
 		this.asteroidCount = asteroidCount;
 		this.modelRef = modelRef;
+		this.levelSize = levelSize;
 	}
 	
 	@Override
@@ -42,26 +51,37 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureRender,
 		camera = gameController.getCamera();
 		
 		asteroids = new ArrayList<GameObject>(asteroidCount);
-		
-		Assets.loadAsteroid();
-		
-		GameModel model = Assets.manager.get(modelRef, GameModel.class);
+
+		GameModel model = gameController.getLevel().getDependency(modelRef);
+		if(model == null) {
+			Gdx.app.log("AsteroidBelt.load", "Asteroid model " + modelRef + " not found in the level!");
+			return;
+		}
 		
 		for(GameObject asteroid : asteroids) {
 			asteroid = new GameObject(model);
-			
-			if (asteroid.getCollisionObject() == null) {
-				btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, asteroid);
-				asteroid.filterGroup = CollisionDetector.OBJECT_FLAG;
-				asteroid.filterMask = CollisionDetector.ALL_FLAG;
-				asteroid.setCollisionObject(shape);
-			}
+
+			btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, asteroid);
+			asteroid.filterGroup = CollisionDetector.OBJECT_FLAG;
+			asteroid.filterMask = CollisionDetector.ALL_FLAG;
+			asteroid.setCollisionObject(shape);
 			gameController.getCollisionDetector().addCollisionObject(asteroid);
+
+			asteroid.transform.setToTranslation(getRandomVector(levelSize));
 			
-			//asteroid.transform.
+			asteroid.movingDir = getRandomVector(new Vector3(2.0f, 2.0f, 2.0f)).nor();
+			asteroid.movingSpeed = 1.0f;
 		}
 
 		Gdx.app.log("AsteroidBelt.load", "Asteroid belt created: " + modelRef);
+	}
+	
+	private Vector3 getRandomVector(Vector3 size) {
+		Vector3 v = new Vector3();
+		v.x = (float) (Math.random() * size.x) / 2.0f;
+		v.y = (float) (Math.random() * size.y) / 2.0f;
+		v.z = (float) (Math.random() * size.z) / 2.0f;
+		return v;
 	}
 	
 	@Override
