@@ -95,6 +95,15 @@ public class FlightController implements InputProcessor {
 	public float getAzimuthDir() {
 		return azimuthDir;
 	}
+	
+	public void resetSteering() {
+		float roll = Gdx.input.getRoll();
+		float pitch = Gdx.input.getPitch();
+		float azimuth = Gdx.input.getAzimuth();
+
+		startAzimuth = computeAzimuth(roll, pitch, azimuth);
+		startRoll = Gdx.input.getRoll();
+	}
 
 	/**
 	 * recomputes camera position and rotation
@@ -130,12 +139,7 @@ public class FlightController implements InputProcessor {
 	public final void setUpCamera() {
 
 		// initializing Roll- and Pitch-Values for later comparison
-		float roll = Gdx.input.getRoll();
-		float pitch = Gdx.input.getPitch();
-		float azimuth = Gdx.input.getAzimuth();
-
-		startAzimuth = computeAzimuth(roll, pitch, azimuth);
-		startRoll = Gdx.input.getRoll();
+		resetSteering();
 
 		// setting up the camera
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);

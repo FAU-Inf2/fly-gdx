@@ -379,6 +379,9 @@ public class GameController {
 			if (player.getSettingManager().getCheckBoxValue("showGameFinished")) {
 				addGameFinishedOverlay();
 			}
+			if (!player.getSettingManager().getCheckBoxValue("useTouch")) {
+				addSteeringResetOverlay();
+			}
 
 			return this;
 		}
@@ -473,6 +476,21 @@ public class GameController {
 			optionalFeaturesToInit.add(gameFinishedOverlay);
 			optionalFeaturesToRender.add(gameFinishedOverlay);
 			optionalFeaturesToFinish.add(gameFinishedOverlay);
+			return this;
+		}
+
+		/**
+		 * Adds a {@link GameFinishedOverlay} to the GameController, that is
+		 * initialized, updated every frame and updated when the game is
+		 * finished.
+		 * 
+		 * @return Builder instance with SteeringOverlay
+		 */
+		private Builder addSteeringResetOverlay() {
+			SteeringResetOverlay steeringResetOverlay = new SteeringResetOverlay(game, flightController, stage);
+			optionalFeaturesToInit.add(steeringResetOverlay);
+			optionalFeaturesToRender.add(steeringResetOverlay);
+			optionalFeaturesToDispose.add(steeringResetOverlay);
 			return this;
 		}
 		
