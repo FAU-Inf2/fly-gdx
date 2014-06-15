@@ -271,7 +271,11 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		for ( EventListener l : eventListeners )
 			l.onRender();
 		for (GameObject c : components) {
-			c.render(batch, environment, camera);
+			if(c == borderObject) {
+				borderObject.render(batch, camera);
+			} else {
+				c.render(batch, environment, camera);
+			}
 		}
 		if( gameOver == false &&( leftTime <= 0 || leftCollisionTime <=0 ) )
 		{
