@@ -70,11 +70,9 @@ public class Spaceship implements IPlane {
 	public float getRollingSpeed() {
 		return 9.0f;
 	}
-	
-	
+
 	@Override
 	public void dispose() {
 		instance.dispose();
-		model.dispose();
 	}
 }

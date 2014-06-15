@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Disposable;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.geo.Perspective;
 import de.fau.cs.mad.fly.player.Spaceship;
@@ -117,10 +118,11 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	private final Gate startingGate;
 	private final Environment environment;
 	private List<EventListener> eventListeners = new ArrayList<EventListener>();
-	
+	private final Collection<GameModel> dependencies;
+
 	private GameObject borderObject = null;
 
-	public Level(String name, Perspective start, Collection<GameObject> components, Gate startingGate) {
+	public Level(String name, Perspective start, Collection<GameObject> components, Collection<GameModel> dependencies, Gate startingGate) {
 		this.head = new Head();
 		this.head.name = name;
 		this.virtualGate = startingGate;
@@ -128,6 +130,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		this.components = components;
 		this.start = start;
 		this.environment = new Environment();
+		this.dependencies = dependencies;
 		setUpEnvironment();
 		
 		for (GameObject c : components) {
@@ -151,8 +154,10 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 			s.onGatePassed(gate, virtualGate.successors);
 		virtualGate = gate;
 		if ( gate.successors.isEmpty() )
-			for ( EventListener s : eventListeners)
+			for ( EventListener s : eventListeners) {
+				Gdx.app.log("Level.activeGatePassed", "s=" + s);
 				s.onFinished();
+			}
 	}
 
 	public void addEventListener(EventListener listener) {
@@ -217,6 +222,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		Gdx.app.log("Level.dispose", "Disposing...");
 		for ( GameObject o : components )
 			o.dispose();
+//		for ( GameModel m : dependencies )
+//			m.dispose();
 	}
 
 	@Override

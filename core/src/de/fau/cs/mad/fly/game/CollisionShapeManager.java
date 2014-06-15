@@ -175,19 +175,9 @@ public class CollisionShapeManager implements Disposable {
 	
 	@Override
 	public void dispose() {
-		for(Map.Entry<String, btCollisionShape> entry : meshShapeMap.entrySet()) {
-			entry.getValue().dispose();
-		}
-		for(Map.Entry<String, btCollisionShape> entry : convexShapeMap.entrySet()) {
-			entry.getValue().dispose();
-		}
-		for(Map.Entry<String, btCollisionShape> entry : boxShapeMap.entrySet()) {
-			entry.getValue().dispose();
-		}
-		for(Map.Entry<String, btCollisionShape> entry : sphereShapeMap.entrySet()) {
-			entry.getValue().dispose();
-		}
-
-		Gdx.app.log("CollisionShapeManager", "Collision shapes disposed.");
+		meshShapeMap.clear();
+		convexShapeMap.clear();
+		boxShapeMap.clear();
+		sphereShapeMap.clear();
 	}
 }

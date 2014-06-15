@@ -56,6 +56,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 		JsonValue gates = json.get("gates");
 		Map<Integer, Level.Gate> ps = new HashMap<Integer, Level.Gate>();
 		Matrix4 identityMatrix = new Matrix4();
+		Gdx.app.log("LevelLoader.fromJson", "first iteration on gates");
 		for (JsonValue e : gates) {
 			JsonValue gid = e.get("id");
 			if ( gid != null ) {
@@ -68,10 +69,12 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 				ps.put(p.id, p);
 			}
 		}
-		System.out.println("Gates initialized");
+
+		Gdx.app.log("LevelLoader.fromJson", "second iteration on gates");
 		Level.Gate dummy = null;
 		for (JsonValue e : gates) {
 			JsonValue gid = e.get("id");
+			Gdx.app.log("LevelLoader.fromJson", "gid " + gid);
 			Level.Gate p;
 			if ( gid != null )
 				p = ps.get(gid.asInt());
@@ -85,11 +88,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 				successors.add(ps.get(s));
 			p.successors = successors;
 		}
-		System.out.println("Gates referenced");
 		if ( dummy == null )
-			throw new RuntimeException("In level.json, you need to specify at least one dummy gate.");
-
-		return new Level(name, start, components.values(), dummy);
+			throw new RuntimeException("No dummy gate found.");
+		Gdx.app.log("LevelLoader.fromJson", "Exit.");
+		return new Level(name, start, components.values(), models.values(), dummy);
 	}
 
 	private JsonValue json;
@@ -111,6 +113,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 	}
 
 	private Map<String, GameObject> components;
+	private Map<String, GameModel> models = new HashMap<String, GameModel>();
 	private void getComponents() {
 		if ( components == null ) {
 			getJson();
@@ -118,7 +121,8 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 			for (JsonValue e : json.get("components")) {
 				String id = e.getString("id");
 				String ref = e.getString("ref");
-				GameModel m = manager.get(dependencies.get(ref), GameModel.class);
+				GameModel m = dependencyFor(ref);
+				models.put(ref, m);
 				GameObject o = new GameObject(m);
 				o.modelId = ref;
 				o.id = id;
@@ -128,6 +132,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 				components.put(id, o);
 			}
 		}
+	}
+
+	private GameModel dependencyFor(String ref) {
+		return manager.get(dependencies.get(ref), GameModel.class);
 	}
 
 	private AssetManager manager;

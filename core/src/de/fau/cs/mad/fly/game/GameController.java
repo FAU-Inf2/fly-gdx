@@ -255,13 +255,11 @@ public class GameController {
 	 */
 	public void disposeGame() {
 		for (IFeatureDispose optionalFeature : optionalFeaturesToDispose) {
+			Gdx.app.log("GameController.disposeGame", "dispose: " + optionalFeature.getClass().getSimpleName());
 			optionalFeature.dispose();
 		}
-		
-		collisionDetector.dispose();
 
-		stage.dispose();
-		// level.dispose();
+		collisionDetector.dispose();
 
 		optionalFeaturesToRender.clear();
 	}
@@ -298,7 +296,7 @@ public class GameController {
 		 * @return new GameController with the current selected level and the
 		 *         selected settings
 		 */
-		public Builder init(Fly game) {
+		public Builder init(final Fly game) {
 			// clear everything in the builder from a possible earlier call
 			optionalFeaturesToLoad = new ArrayList<IFeatureLoad>();
 			optionalFeaturesToInit = new ArrayList<IFeatureInit>();
@@ -308,9 +306,9 @@ public class GameController {
 
 			this.game = game;
 			this.player = game.getPlayer();
+			this.level = player.getLevel();
 			this.flightController = new FlightController(player);
 			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-			this.level = player.getLastLevel();
 			optionalFeaturesToLoad.add(level);
 
 			addPlayerPlane();
@@ -328,6 +326,7 @@ public class GameController {
 			Gdx.app.log("Builder.init", "Setting up collision for level gates...");
 
 			for ( Level.Gate g : level.allGates() ) {
+				Gdx.app.log("Builder.init", "Gate " + g);
 				if ( g.display.getCollisionObject() == null ) {
 					Gdx.app.log("Builder.init", "Display CollisionObject == null");
 					btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
@@ -408,7 +407,6 @@ public class GameController {
 			GateIndicator gateIndicator = new GateIndicator();
 			optionalFeaturesToInit.add(gateIndicator);
 			optionalFeaturesToRender.add(gateIndicator);
-			optionalFeaturesToDispose.add(gateIndicator);
 			return this;
 		}
 
@@ -457,9 +455,11 @@ public class GameController {
 		 * @return Builder instance with SteeringOverlay
 		 */
 		private Builder addSteeringOverlay() {
+			Gdx.app.log("Builder.addSteeringOverlay", "enter");
 			SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, game.getShapeRenderer(), stage);
 			optionalFeaturesToRender.add(steeringOverlay);
 			optionalFeaturesToDispose.add(steeringOverlay);
+			Gdx.app.log("Builder.addSteeringOverlay", "exit");
 			return this;
 		}
 		
@@ -500,10 +500,12 @@ public class GameController {
 		 * @return Builder instance with SteeringOverlay
 		 */
 		private Builder addSteeringResetOverlay() {
+			Gdx.app.log("Builder.addSteeringResetOverlay", "enter");
 			SteeringResetOverlay steeringResetOverlay = new SteeringResetOverlay(game, flightController, stage);
 			optionalFeaturesToInit.add(steeringResetOverlay);
 			optionalFeaturesToRender.add(steeringResetOverlay);
 			optionalFeaturesToDispose.add(steeringResetOverlay);
+			Gdx.app.log("Builder.addSteeringResetOverlay", "exit");
 			return this;
 		}
 		
@@ -515,7 +517,7 @@ public class GameController {
 		 * @return Builder instance with collisionDetector
 		 */
 		private Builder addPlayerPlane() {
-			IPlane plane = player.getPlane();			
+			IPlane plane = player.getPlane();
 			optionalFeaturesToLoad.add(plane);
 			optionalFeaturesToRender.add(plane);
 			optionalFeaturesToDispose.add(plane);

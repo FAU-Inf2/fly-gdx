@@ -19,7 +19,7 @@ import de.fau.cs.mad.fly.res.Level;
  * @author Lukas Hahmann
  * 
  */
-public class GateIndicator implements IFeatureInit, IFeatureRender, IFeatureDispose {
+public class GateIndicator implements IFeatureInit, IFeatureRender {
 	
 	private GameController gameController;
 	private ModelBatch batch;
@@ -73,10 +73,5 @@ public class GateIndicator implements IFeatureInit, IFeatureRender, IFeatureDisp
 			batch.render(arrowModel, environment);
 			// batch.end();
 		}
-	}
-
-	@Override
-	public void dispose() {
-		arrowModel.dispose();
 	}
 }

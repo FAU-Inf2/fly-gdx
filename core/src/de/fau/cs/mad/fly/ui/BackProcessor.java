@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.GameScreen;
 
 /**
  * Handles the Back-Button of the Smartphone and the Escape-Button of the Desktop
@@ -16,11 +17,10 @@ public class BackProcessor extends InputAdapter {
 	public boolean keyDown(int keycode) {
 		if ( keycode == Keys.ESCAPE || keycode == Keys.BACK ) {
 			Fly game = (Fly) Gdx.app.getApplicationListener();
-			if ( game.getScreen() instanceof MainMenuScreen )
-				game.getScreen().dispose();
-			else
+			Gdx.app.log("BackProcessor.keyDown", "Back, screen.class=" + game.getScreen().getClass().getName());
+			game.getScreen().dispose();
+			if (!(game.getScreen() instanceof MainMenuScreen))
 				game.setMainMenuScreen();
-			//Gdx.app.log("BackProcessor.keyDown", "Bye!");
 			return true;
 		}
 		return false;
