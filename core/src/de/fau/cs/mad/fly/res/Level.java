@@ -118,11 +118,11 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	private final Gate startingGate;
 	private final Environment environment;
 	private List<EventListener> eventListeners = new ArrayList<EventListener>();
-	private final Collection<GameModel> dependencies;
+	private final Map<String, GameModel> dependencies;
 
 	private GameObject borderObject = null;
 
-	public Level(String name, Perspective start, Collection<GameObject> components, Collection<GameModel> dependencies, Gate startingGate) {
+	public Level(String name, Perspective start, Collection<GameObject> components, Map<String, GameModel> dependencies, Gate startingGate) {
 		this.head = new Head();
 		this.head.name = name;
 		this.virtualGate = startingGate;
@@ -147,6 +147,14 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	public void gatePassed(Gate gate) {
 		if ( currentGates().contains(gate) )
 			activeGatePassed(gate);
+	}
+
+	public GameModel getDependency(String id) {
+		return dependencies.get(id);
+	}
+
+	public Map<String, GameModel> getDependencies() {
+		return Collections.unmodifiableMap(dependencies);
 	}
 
 	public void activeGatePassed(Gate gate) {
