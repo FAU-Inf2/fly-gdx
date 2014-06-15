@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 
@@ -48,7 +49,6 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureRender,
 		this.gameController = game;
 		batch = gameController.getBatch();
 		environment = gameController.getLevel().getEnvironment();
-		camera = gameController.getCamera();
 		
 		asteroids = new ArrayList<GameObject>(asteroidCount);
 
@@ -58,8 +58,14 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureRender,
 			return;
 		}
 		
-		for(GameObject asteroid : asteroids) {
-			asteroid = new GameObject(model);
+		Matrix4 identityMatrix = new Matrix4();
+		
+		for(int i = 0; i < asteroidCount; i++) {
+			GameObject asteroid = new GameObject(model);
+			
+			asteroid.transform.setToTranslation(getRandomVector(levelSize));
+			//asteroid.movingDir = getRandomVector(new Vector3(2.0f, 2.0f, 2.0f)).nor();
+			//asteroid.movingSpeed = 1.0f;
 
 			btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, asteroid);
 			asteroid.filterGroup = CollisionDetector.OBJECT_FLAG;
@@ -67,27 +73,24 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureRender,
 			asteroid.setCollisionObject(shape);
 			gameController.getCollisionDetector().addCollisionObject(asteroid);
 
-			asteroid.transform.setToTranslation(getRandomVector(levelSize));
-			
-			asteroid.movingDir = getRandomVector(new Vector3(2.0f, 2.0f, 2.0f)).nor();
-			asteroid.movingSpeed = 1.0f;
+			asteroids.add(asteroid);
 		}
 
-		Gdx.app.log("AsteroidBelt.load", "Asteroid belt created: " + modelRef);
+		Gdx.app.log("AsteroidBelt.load", "Asteroid belt created.");
 	}
 	
 	private Vector3 getRandomVector(Vector3 size) {
 		Vector3 v = new Vector3();
-		v.x = (float) (Math.random() * size.x) / 2.0f;
-		v.y = (float) (Math.random() * size.y) / 2.0f;
-		v.z = (float) (Math.random() * size.z) / 2.0f;
+		v.x = (float) (Math.random() * size.x) - size.x / 2.0f;
+		v.y = (float) (Math.random() * size.y) - size.y / 2.0f;
+		v.z = (float) (Math.random() * size.z) - size.z / 2.0f;
+		System.out.println(v.x + " " + v.y + " " + v.z);
 		return v;
 	}
 	
 	@Override
 	public void init(GameController game) {
-		// TODO Auto-generated method stub
-		
+		camera = gameController.getCamera();
 	}
 	
 	@Override

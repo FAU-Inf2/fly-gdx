@@ -8,9 +8,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
 import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.*;
+import de.fau.cs.mad.fly.features.game.AsteroidBelt;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.*;
 import de.fau.cs.mad.fly.player.IPlane;
@@ -361,8 +363,8 @@ public class GameController {
 
 				@Override
 				public void onRender() {
-					for (Level.Gate g : level.allGates())
-						g.display.transform.rotate(new Vector3(0f, 0f, 1f), 0.5f);
+					/*for (Level.Gate g : level.allGates())
+						g.display.transform.rotate(new Vector3(0f, 0f, 1f), 0.5f);*/
 				}
 			});
 
@@ -370,6 +372,8 @@ public class GameController {
 			
 			Debug.init(game, stage, 1);
 			Debug.setOverlay(0, "Alive");
+			
+			addAsteroidBelt();
 
 			if (player.getSettingManager().getCheckBoxValue("showGateIndicator")) {
 				addGateIndicator();
@@ -410,6 +414,21 @@ public class GameController {
 			return this;
 		}
 
+		/**
+		 * Adds a {@link AsteroidBelt} to the GameController, that is loaded, 
+		 * initialized, updated every frame and disposed.
+		 * 
+		 * @return Builder instance with GateIndicator
+		 */
+		private Builder addAsteroidBelt() {
+			AsteroidBelt asteroidBelt = new AsteroidBelt(10, "asteroid", new Vector3(50.0f, 50.0f, 50.0f));
+			optionalFeaturesToLoad.add(asteroidBelt);
+			optionalFeaturesToInit.add(asteroidBelt);
+			optionalFeaturesToRender.add(asteroidBelt);
+			optionalFeaturesToDispose.add(asteroidBelt);
+			return this;
+		}
+		
 		/**
 		 * Adds a {@link TimeOverlay} to the GameController, that is initialized
 		 * and updated every frame.
