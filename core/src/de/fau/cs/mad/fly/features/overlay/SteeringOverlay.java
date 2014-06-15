@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
-import de.fau.cs.mad.fly.game.CameraController;
+import de.fau.cs.mad.fly.game.FlightController;
 import de.fau.cs.mad.fly.game.GameController;
 
 /**
@@ -21,7 +21,7 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 		IFeatureDispose {
 
 	private Stage stage;
-	private CameraController cameraController;
+	private FlightController flightController;
 
 	private OrthographicCamera camera;
 	private ShapeRenderer shapeRenderer;
@@ -30,10 +30,10 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 
 	private float steeringX, steeringY;
 
-	public SteeringOverlay(final CameraController cameraController,
+	public SteeringOverlay(final FlightController cameraController,
 			final ShapeRenderer shapeRenderer, Stage stage) {
 		this.stage = stage;
-		this.cameraController = cameraController;
+		this.flightController = cameraController;
 
 		this.shapeRenderer = shapeRenderer;
 
@@ -58,8 +58,8 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 
 	@Override
 	public void render(float delta) {
-		steeringX = -20 * cameraController.getAzimuthDir();
-		steeringY = 20 * cameraController.getRollDir();
+		steeringX = -20 * flightController.getAzimuthDir();
+		steeringY = 20 * flightController.getRollDir();
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 

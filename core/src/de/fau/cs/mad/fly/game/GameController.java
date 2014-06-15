@@ -52,7 +52,7 @@ public class GameController {
 	private List<IFeatureRender> optionalFeaturesToRender;
 	private List<IFeatureDispose> optionalFeaturesToDispose;
 	private List<IFeatureFinish> optionalFeaturesToFinish;
-	private CameraController camController;
+	private FlightController flightController;
 	PerspectiveCamera camera;
 
 	private ModelBatch batch;
@@ -92,8 +92,8 @@ public class GameController {
 	 * 
 	 * @return {@link #camController}
 	 */
-	public CameraController getCameraController() {
-		return camController;
+	public FlightController getCameraController() {
+		return flightController;
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class GameController {
 	 * initialized.
 	 */
 	public void initGame() {
-		camera = camController.getCamera();
+		camera = flightController.getCamera();
 
 		// initializes all optional features
 		Gdx.app.log("GameController.initGame", "init.size = " + optionalFeaturesToInit.size());
@@ -219,7 +219,7 @@ public class GameController {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		camera = camController.recomputeCamera(delta);
+		camera = flightController.recomputeCamera(delta);
 
 		collisionDetector.perform();
 
@@ -286,7 +286,7 @@ public class GameController {
 		private ArrayList<IFeatureRender> optionalFeaturesToRender;
 		private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
 		private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
-		private CameraController cameraController;
+		private FlightController flightController;
 
 		/**
 		 * Creates a basic {@link GameController} with a certain level, linked
@@ -310,7 +310,7 @@ public class GameController {
 
 			this.game = game;
 			this.player = game.getPlayer();
-			this.cameraController = new CameraController(player);
+			this.flightController = new FlightController(player);
 			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			this.level = player.getLastLevel();
 			optionalFeaturesToLoad.add(level);
@@ -441,7 +441,7 @@ public class GameController {
 		 * @return Builder instance with SteeringOverlay
 		 */
 		private Builder addSteeringOverlay() {
-			SteeringOverlay steeringOverlay = new SteeringOverlay(cameraController, game.getShapeRenderer(), stage);
+			SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, game.getShapeRenderer(), stage);
 			optionalFeaturesToRender.add(steeringOverlay);
 			optionalFeaturesToDispose.add(steeringOverlay);
 			return this;
@@ -454,7 +454,7 @@ public class GameController {
 		 * @return Builder instance with TouchScreenOverlay
 		 */
 		private Builder addTouchScreenOverlay() {
-			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(cameraController, game.getShapeRenderer(), stage);
+			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(flightController, game.getShapeRenderer(), stage);
 			optionalFeaturesToRender.add(touchScreenOverlay);
 			optionalFeaturesToDispose.add(touchScreenOverlay);
 			return this;
@@ -508,7 +508,7 @@ public class GameController {
 			gc.optionalFeaturesToFinish = optionalFeaturesToFinish;
 			gc.optionalFeaturesToDispose = optionalFeaturesToDispose;
 			gc.level = level;
-			gc.camController = cameraController;
+			gc.flightController = flightController;
 			gc.batch = new ModelBatch();
 
 			level.addEventListener(new Level.EventAdapter() {

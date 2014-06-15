@@ -60,6 +60,7 @@ public class Player {
 		settingManager.addSetting("showFPS", "Show FPS:", false);
 		settingManager.addSetting("alphaSlider", "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
 		settingManager.addSetting("bufferSlider", "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
+		settingManager.addSetting("cameraOffset", "Camera Distance:", 30.0f, 0.0f, 100.0f, 1.0f);
 	}
 	
 	/**

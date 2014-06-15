@@ -8,19 +8,19 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
-import de.fau.cs.mad.fly.game.CameraController;
+import de.fau.cs.mad.fly.game.FlightController;
 import de.fau.cs.mad.fly.game.GameController;
 
 public class TouchScreenOverlay implements IFeatureInit, IFeatureRender, IFeatureDispose {
 	
-	private CameraController cameraController;
+	private FlightController flightController;
 	
 	private OrthographicCamera camera;
 	private ShapeRenderer shapeRenderer;
 	
-	public TouchScreenOverlay(final CameraController cameraController, final ShapeRenderer shapeRenderer, Stage stage) {
+	public TouchScreenOverlay(final FlightController cameraController, final ShapeRenderer shapeRenderer, Stage stage) {
 		
-		this.cameraController = cameraController;
+		this.flightController = cameraController;
 
 		this.shapeRenderer = shapeRenderer;
 
