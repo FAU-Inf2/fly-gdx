@@ -10,12 +10,12 @@ public class GameModel {
 	public final Model display;
 	public final Model hitbox;
 
-	public GameModel(Model display, Model hitbox) {
+	public GameModel(final Model display, final Model hitbox) {
 		this.display = display;
 		this.hitbox = hitbox;
 	}
 
-	public GameModel(Model display) {
+	public GameModel(final Model display) {
 		this(display, display);
 	}
 

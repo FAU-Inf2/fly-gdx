@@ -19,12 +19,12 @@ import de.fau.cs.mad.fly.game.GameController;
 public class TimeLeftOverlay implements IFeatureInit, IFeatureRender {
 	private final Fly game;
 	
-	private Skin skin;
-	private Stage stage;
+	private final Skin skin;
+	private final Stage stage;
 	private Label timeDescription, timeCounter;
 	private float time;
 	
-	public TimeLeftOverlay(final Fly game, Stage stage, float timeMax) {
+	public TimeLeftOverlay(final Fly game, final Stage stage, float timeMax) {
 		this.game = game;
 		this.stage = stage;
 		skin = game.getSkin();
@@ -66,6 +66,6 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureRender {
 	}
 
 	@Override
-	public void init(GameController gameController) {		
+	public void init(final GameController gameController) {		
 	}
 }

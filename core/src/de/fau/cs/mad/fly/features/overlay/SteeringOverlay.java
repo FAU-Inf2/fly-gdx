@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
-import de.fau.cs.mad.fly.game.CameraController;
+import de.fau.cs.mad.fly.game.FlightController;
 import de.fau.cs.mad.fly.game.GameController;
 
 /**
@@ -20,25 +20,21 @@ import de.fau.cs.mad.fly.game.GameController;
 public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 		IFeatureDispose {
 
-	private Stage stage;
-	private CameraController cameraController;
+	private final Stage stage;
+	private final FlightController flightController;
 
-	private OrthographicCamera camera;
-	private ShapeRenderer shapeRenderer;
-
-	private SpriteBatch batch;
+	private final OrthographicCamera camera;
+	private final ShapeRenderer shapeRenderer;
 
 	private float steeringX, steeringY;
 
-	public SteeringOverlay(final CameraController cameraController,
-			final ShapeRenderer shapeRenderer, Stage stage) {
+	public SteeringOverlay(final FlightController cameraController, final ShapeRenderer shapeRenderer, final Stage stage) {
 		this.stage = stage;
-		this.cameraController = cameraController;
+		this.flightController = cameraController;
 
 		this.shapeRenderer = shapeRenderer;
 
-		camera = new OrthographicCamera(Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight());
+		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	/**
@@ -58,8 +54,8 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 
 	@Override
 	public void render(float delta) {
-		steeringX = -20 * cameraController.getAzimuthDir();
-		steeringY = 20 * cameraController.getRollDir();
+		steeringX = -20 * flightController.getAzimuthDir();
+		steeringY = 20 * flightController.getRollDir();
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
@@ -77,7 +73,7 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 	}
 
 	@Override
-	public void init(GameController gameController) {
+	public void init(final GameController gameController) {
 		steeringX = 0.0f;
 		steeringY = 0.0f;
 	}
@@ -85,6 +81,5 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-
 	}
 }

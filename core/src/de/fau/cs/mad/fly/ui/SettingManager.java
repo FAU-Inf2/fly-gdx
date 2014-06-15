@@ -15,20 +15,22 @@ import java.util.Map;
  * @author Tobias Zangl
  */
 public class SettingManager {	
-	private Skin skin;
+	private final Skin skin;
+	
 	private Preferences prefs;
 	private Map<String, Setting> settingMap;
-	private List<String> settingList;
-	
-	public List<String> getSettingList() {
-		return settingList;
-	}
 	
 	public Map<String, Setting> getSettingMap() {
 		return settingMap;
 	}
 
-	public SettingManager(String file, Skin skin) {
+	private List<String> settingList;
+	
+	public List<String> getSettingList() {
+		return settingList;
+	}
+
+	public SettingManager(String file, final Skin skin) {
 		prefs = Gdx.app.getPreferences(file);
 		this.skin = skin;
 		settingMap = new HashMap<String, Setting>();

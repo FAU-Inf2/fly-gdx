@@ -43,7 +43,7 @@ public class Player {
 	/**
 	 * Creates the SettingManager and all the Settings.
 	 */
-	public void createSettings(Skin skin) {
+	public void createSettings(final Skin skin) {
 		settingManager = new SettingManager("fly_preferences", skin);
 
 		//settingManager.addSetting("name", "Playername:", "Test");
@@ -60,6 +60,7 @@ public class Player {
 		settingManager.addSetting("showFPS", "Show FPS:", false);
 		settingManager.addSetting("alphaSlider", "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
 		settingManager.addSetting("bufferSlider", "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
+		settingManager.addSetting("cameraOffset", "Camera Distance:", 30.0f, 0.0f, 100.0f, 1.0f);
 	}
 	
 	/**

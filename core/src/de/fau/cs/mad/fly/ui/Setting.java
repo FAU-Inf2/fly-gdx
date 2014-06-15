@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  * @author Tobias Zangl
  */
 public class Setting extends ChangeListener {
-	private SettingManager manager;
+	private final SettingManager manager;
 	private String id;
 	private SettingType type;
 	
@@ -46,7 +46,7 @@ public class Setting extends ChangeListener {
 	 * @param skin
 	 *            the Skin of the UI        
 	 */
-	Setting(SettingManager manager, String id, String description, String value, Skin skin) {
+	Setting(final SettingManager manager, String id, String description, String value, final Skin skin) {
 		this.type = SettingType.TEXT;
 		this.manager = manager;
 		this.id = id;
@@ -74,7 +74,7 @@ public class Setting extends ChangeListener {
 	 * @param skin
 	 *            the Skin of the UI        
 	 */
-	public Setting(SettingManager manager, String id, String description, int value, String[] selectionList, Skin skin) {
+	public Setting(final SettingManager manager, String id, String description, int value, String[] selectionList, final Skin skin) {
 		this.type = SettingType.SELECTION;
 		this.manager = manager;
 		this.id = id;
@@ -102,7 +102,7 @@ public class Setting extends ChangeListener {
 	 * @param skin
 	 *            the Skin of the UI        
 	 */
-	public Setting(SettingManager manager, String id, String description, boolean value, Skin skin) {
+	public Setting(final SettingManager manager, String id, String description, boolean value, final Skin skin) {
 		this.type = SettingType.CHECKBOX;
 		this.manager = manager;
 		this.id = id;
@@ -136,7 +136,7 @@ public class Setting extends ChangeListener {
 	 * @param skin
 	 *            the Skin of the UI        
 	 */
-	public Setting(SettingManager manager, String id, String description, float value, float min, float max, float stepSize, Skin skin) {
+	public Setting(final SettingManager manager, String id, String description, float value, float min, float max, float stepSize, final Skin skin) {
 		this.type = SettingType.SLIDER;
 		this.manager = manager;
 		this.id = id;
@@ -229,5 +229,4 @@ public class Setting extends ChangeListener {
 			sliderValue = slider.getValue();
 		}
 	}
-
 }

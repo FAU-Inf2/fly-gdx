@@ -59,8 +59,7 @@ public class Fly extends Game {
 	 * Creates the Skin for the UI.
 	 */
 	public void createSkin() {
-		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
-				Gdx.files.internal("OpenSans-Regular.ttf"));
+		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
 		fontParameter.size = (int) (Gdx.graphics.getWidth() * 0.04);
 		BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
@@ -141,7 +140,9 @@ public class Fly extends Game {
 		Assets.manager.load(f, Level.class);
 		Assets.manager.finishLoading();
 		Gdx.app.log("Fly.loadLevel", "Level ready. Displaying...");
-		loadLevel(Assets.manager.get(f, Level.class));
+		Level l = Assets.manager.get(f, Level.class);
+		l.reset();
+		loadLevel(l);
 	}
 
 	public void loadLevel(Level level) {

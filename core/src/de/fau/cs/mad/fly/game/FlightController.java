@@ -11,7 +11,7 @@ import de.fau.cs.mad.fly.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CameraController implements InputProcessor {
+public class FlightController implements InputProcessor {
 
 	private boolean useSensorData;
 	private boolean useRolling;
@@ -20,6 +20,7 @@ public class CameraController implements InputProcessor {
 
 	private Player player;
 	private PerspectiveCamera camera;
+	private float cameraOffset;
 
 	private float startRoll, startAzimuth;
 
@@ -41,7 +42,7 @@ public class CameraController implements InputProcessor {
 	private List<Float> azimuthInput;
 	private List<Float> azimuthOutput;
 
-	public CameraController(Player player) {
+	public FlightController(Player player) {
 		this.player = player;
 
 		this.useSensorData = !player.getSettingManager().getCheckBoxValue("useTouch");
@@ -51,6 +52,7 @@ public class CameraController implements InputProcessor {
 
 		this.bufferSize = (int) player.getSettingManager().getSliderValue("bufferSlider");
 		this.alpha = player.getSettingManager().getSliderValue("alphaSlider") / 100.f;
+		this.cameraOffset = player.getSettingManager().getSliderValue("cameraOffset") / 100.f;
 
 		setUpCamera();
 	}
@@ -93,6 +95,15 @@ public class CameraController implements InputProcessor {
 	public float getAzimuthDir() {
 		return azimuthDir;
 	}
+	
+	public void resetSteering() {
+		float roll = Gdx.input.getRoll();
+		float pitch = Gdx.input.getPitch();
+		float azimuth = Gdx.input.getAzimuth();
+
+		startAzimuth = computeAzimuth(roll, pitch, azimuth);
+		startRoll = Gdx.input.getRoll();
+	}
 
 	/**
 	 * recomputes camera position and rotation
@@ -106,6 +117,9 @@ public class CameraController implements InputProcessor {
 		if (useSensorData) {
 			interpretSensorInput();
 		}
+		
+		/*Vector3 dir = new Vector3(camera.direction.x, camera.direction.y, camera.direction.z);
+		camera.translate(dir.scl(player.getPlane().getSpeed() * cameraOffset));*/
 
 		// rotating the camera
 		rotateCamera(rollDir, azimuthDir);
@@ -113,9 +127,9 @@ public class CameraController implements InputProcessor {
 
 		// move the camera (first person flight)
 		Vector3 dir = new Vector3(camera.direction.x, camera.direction.y, camera.direction.z);
-		camera.translate(dir.scl(player.getPlane().getSpeed() * delta));
+		camera.translate(dir.scl(player.getPlane().getSpeed() * delta));//(delta - cameraOffset)));
 		camera.update();
-
+		
 		return camera;
 	}
 
@@ -125,12 +139,7 @@ public class CameraController implements InputProcessor {
 	public final void setUpCamera() {
 
 		// initializing Roll- and Pitch-Values for later comparison
-		float roll = Gdx.input.getRoll();
-		float pitch = Gdx.input.getPitch();
-		float azimuth = Gdx.input.getAzimuth();
-
-		startAzimuth = computeAzimuth(roll, pitch, azimuth);
-		startRoll = Gdx.input.getRoll();
+		resetSteering();
 
 		// setting up the camera
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
@@ -154,6 +163,8 @@ public class CameraController implements InputProcessor {
 		azimuthInput = new ArrayList<Float>();
 		azimuthOutput = new ArrayList<Float>();
 	}
+	
+	float maxRotate = 45.f;
 
 	/**
 	 * Interprets the rotation of the smartphone and calls camera rotation
@@ -209,20 +220,20 @@ public class CameraController implements InputProcessor {
 		}
 
 		// capping the rotation to a maximum of 90 degrees
-		if (Math.abs(difRoll) > 90) {
-			difRoll = 90 * Math.signum(difRoll);
+		if (Math.abs(difRoll) > maxRotate) {
+			difRoll = maxRotate * Math.signum(difRoll);
 		}
 
-		if (Math.abs(difAzimuth) > 90) {
-			difRoll = 90 * Math.signum(difAzimuth);
+		if (Math.abs(difAzimuth) > maxRotate) {
+			difAzimuth = maxRotate * Math.signum(difAzimuth);
 		}
 
 		rollDir = 0.0f;
 		azimuthDir = 0.0f;
 
 		// camera rotation according to smartphone rotation
-		setAzimuthDir(difAzimuth / -90.0f);
-		setRollDir(difRoll / -90.0f);
+		setAzimuthDir(difAzimuth / -maxRotate);
+		setRollDir(difRoll / -maxRotate);
 	}
 
 	/**

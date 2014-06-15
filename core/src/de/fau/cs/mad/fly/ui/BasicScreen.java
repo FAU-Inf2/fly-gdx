@@ -9,10 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import de.fau.cs.mad.fly.Fly;
 
-public abstract class BasicScreen implements Screen{
+public abstract class BasicScreen implements Screen {
 	
-	protected Skin skin;
-	protected Stage stage;
+	protected final Skin skin;
+	protected final Stage stage;
 
 	/**
 	 * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the

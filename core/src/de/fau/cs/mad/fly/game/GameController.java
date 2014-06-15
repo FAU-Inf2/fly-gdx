@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
 import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.*;
@@ -16,6 +15,7 @@ import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.*;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
+import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.res.Level;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class GameController {
 	private List<IFeatureRender> optionalFeaturesToRender;
 	private List<IFeatureDispose> optionalFeaturesToDispose;
 	private List<IFeatureFinish> optionalFeaturesToFinish;
-	private CameraController camController;
+	private FlightController flightController;
 	PerspectiveCamera camera;
 
 	private ModelBatch batch;
@@ -90,10 +90,10 @@ public class GameController {
 	/**
 	 * Getter for the camera controller.
 	 * 
-	 * @return {@link #camController}
+	 * @return {@link #flightController}
 	 */
-	public CameraController getCameraController() {
-		return camController;
+	public FlightController getCameraController() {
+		return flightController;
 	}
 
 	/**
@@ -165,12 +165,10 @@ public class GameController {
 	 * initialized.
 	 */
 	public void initGame() {
-		camera = camController.getCamera();
+		camera = flightController.getCamera();
 
 		// initializes all optional features
-		Gdx.app.log("GameController.initGame", "init.size = " + optionalFeaturesToInit.size());
 		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
-			Gdx.app.log("GameController.initGame", "init.class = " + optionalFeature.getClass());
 			optionalFeature.init(this);
 		}
 
@@ -219,7 +217,7 @@ public class GameController {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		camera = camController.recomputeCamera(delta);
+		camera = flightController.recomputeCamera(delta);
 
 		collisionDetector.perform();
 
@@ -286,7 +284,7 @@ public class GameController {
 		private ArrayList<IFeatureRender> optionalFeaturesToRender;
 		private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
 		private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
-		private CameraController cameraController;
+		private FlightController flightController;
 
 		/**
 		 * Creates a basic {@link GameController} with a certain level, linked
@@ -310,15 +308,22 @@ public class GameController {
 
 			this.game = game;
 			this.player = game.getPlayer();
-			this.cameraController = new CameraController(player);
+			this.flightController = new FlightController(player);
 			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			this.level = player.getLastLevel();
 			optionalFeaturesToLoad.add(level);
 
 			addPlayerPlane();
 			collisionDetector = new CollisionDetector();
-			
+
 			collisionDetector.getCollisionContactListener().addListener(level);
+			collisionDetector.getCollisionContactListener().addListener(new ICollisionListener<Spaceship, GameObject>() {
+				@Override
+				public void onCollision(Spaceship ship, GameObject g) {
+					Gdx.input.vibrate(500);
+					Debug.setOverlay(0, "DEAD!");
+				}
+			});
 
 			Gdx.app.log("Builder.init", "Setting up collision for level gates...");
 
@@ -328,7 +333,7 @@ public class GameController {
 					btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
 					g.display.filterGroup = CollisionDetector.DUMMY_FLAG;
 					g.display.filterMask = CollisionDetector.ALL_FLAG;
-					g.display.setCollisionObject(displayShape, CollisionDetector.Types.Gate, g);
+					g.display.setCollisionObject(displayShape);
 				}
 				collisionDetector.addCollisionObject(g.display);
 				
@@ -336,9 +341,10 @@ public class GameController {
 					Gdx.app.log("Builder.init", "Goal CollisionObject == null");
 					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
 					g.goal.hide();
+					g.goal.userData = g;
 					g.goal.filterGroup = CollisionDetector.DUMMY_FLAG;
 					g.goal.filterMask = CollisionDetector.PLAYER_FLAG;
-					g.goal.setCollisionObject(goalShape, CollisionDetector.Types.Goal, g);
+					g.goal.setCollisionObject(goalShape);
 				}
 				collisionDetector.addCollisionObject(g.goal);
 			}
@@ -352,6 +358,12 @@ public class GameController {
 						g.unmark();
 					for (Level.Gate g : passed.successors)
 						g.mark();
+				}
+
+				@Override
+				public void onRender() {
+					for (Level.Gate g : level.allGates())
+						g.display.transform.rotate(new Vector3(0f, 0f, 1f), 0.5f);
 				}
 			});
 
@@ -379,6 +391,9 @@ public class GameController {
 			if (player.getSettingManager().getCheckBoxValue("showGameFinished")) {
 				addGameFinishedOverlay();
 			}
+			if (!player.getSettingManager().getCheckBoxValue("useTouch")) {
+				addSteeringResetOverlay();
+			}
 
 			return this;
 		}
@@ -393,6 +408,7 @@ public class GameController {
 			GateIndicator gateIndicator = new GateIndicator();
 			optionalFeaturesToInit.add(gateIndicator);
 			optionalFeaturesToRender.add(gateIndicator);
+			optionalFeaturesToDispose.add(gateIndicator);
 			return this;
 		}
 
@@ -441,7 +457,7 @@ public class GameController {
 		 * @return Builder instance with SteeringOverlay
 		 */
 		private Builder addSteeringOverlay() {
-			SteeringOverlay steeringOverlay = new SteeringOverlay(cameraController, game.getShapeRenderer(), stage);
+			SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, game.getShapeRenderer(), stage);
 			optionalFeaturesToRender.add(steeringOverlay);
 			optionalFeaturesToDispose.add(steeringOverlay);
 			return this;
@@ -454,7 +470,7 @@ public class GameController {
 		 * @return Builder instance with TouchScreenOverlay
 		 */
 		private Builder addTouchScreenOverlay() {
-			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(cameraController, game.getShapeRenderer(), stage);
+			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(flightController, game.getShapeRenderer(), stage);
 			optionalFeaturesToRender.add(touchScreenOverlay);
 			optionalFeaturesToDispose.add(touchScreenOverlay);
 			return this;
@@ -473,6 +489,21 @@ public class GameController {
 			optionalFeaturesToInit.add(gameFinishedOverlay);
 			optionalFeaturesToRender.add(gameFinishedOverlay);
 			optionalFeaturesToFinish.add(gameFinishedOverlay);
+			return this;
+		}
+
+		/**
+		 * Adds a {@link GameFinishedOverlay} to the GameController, that is
+		 * initialized, updated every frame and updated when the game is
+		 * finished.
+		 * 
+		 * @return Builder instance with SteeringOverlay
+		 */
+		private Builder addSteeringResetOverlay() {
+			SteeringResetOverlay steeringResetOverlay = new SteeringResetOverlay(game, flightController, stage);
+			optionalFeaturesToInit.add(steeringResetOverlay);
+			optionalFeaturesToRender.add(steeringResetOverlay);
+			optionalFeaturesToDispose.add(steeringResetOverlay);
 			return this;
 		}
 		
@@ -508,7 +539,7 @@ public class GameController {
 			gc.optionalFeaturesToFinish = optionalFeaturesToFinish;
 			gc.optionalFeaturesToDispose = optionalFeaturesToDispose;
 			gc.level = level;
-			gc.camController = cameraController;
+			gc.flightController = flightController;
 			gc.batch = new ModelBatch();
 
 			level.addEventListener(new Level.EventAdapter() {

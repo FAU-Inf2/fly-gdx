@@ -16,7 +16,7 @@ import de.fau.cs.mad.fly.Fly;
 public class SplashScreen implements Screen {
 	private final Fly game;
 	
-	private SpriteBatch batch;
+	private final SpriteBatch batch;
 	private Texture splashImg;
 	
 	private long startTime;

@@ -7,10 +7,11 @@ import de.fau.cs.mad.fly.game.GameObject;
  * 
  * @author Tobias Zangl
  */
-public interface ICollisionListener {	
+public interface ICollisionListener<T, P> {
 	/**
 	 * This method is called by the {@link de.fau.cs.mad.fly.game.CollisionDetector.CollisionContactListener} when a
 	 * collision event is received.
 	 */
-	public void onCollision(GameObject o1, GameObject o2);
+	public void onCollision(T o1, P o2);
 }
+

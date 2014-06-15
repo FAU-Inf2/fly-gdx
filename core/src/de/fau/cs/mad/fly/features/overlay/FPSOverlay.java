@@ -17,11 +17,11 @@ import de.fau.cs.mad.fly.features.IFeatureRender;
 public class FPSOverlay implements IFeatureRender {
 	private final Fly game;
 	
-	private Skin skin;
-	private Stage stage;
+	private final Skin skin;
+	private final Stage stage;
 	private Label fpsDescription, fpsCounter;
 	
-	public FPSOverlay(final Fly game, Stage stage) {
+	public FPSOverlay(final Fly game, final Stage stage) {
 		this.game = game;
 		this.stage = stage;
 		skin = game.getSkin();

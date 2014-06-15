@@ -76,6 +76,4 @@ public class LevelChooserScreen extends BasicScreen {
 		levelScrollPane.setColor(UI.Window.BACKGROUND_COLOR);
 		stage.addActor(levelScrollPane);
 	}
-
-
 }
