@@ -2,14 +2,17 @@ package de.fau.cs.mad.fly.features.overlay;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Optional Feature to display the used time.
@@ -29,12 +32,7 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureRender {
 		this.stage = stage;
 		skin = game.getSkin();
 		
-		time = timeMax;
-
-		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
 		
-		timeDescription = addLabel("Time left:", labelStyle, 0.01f, 0.0f);
-		timeCounter = addLabel(String.valueOf((long) time), labelStyle, 0.20f, 0.0f);
 	}
 
 	/**
@@ -58,14 +56,24 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureRender {
 	@Override
 	public void render(float delta) {
 		timeCounter.setText(String.valueOf((long) time));
-
-		time -= delta;
-		if(time < 0.0f) {
-			time = 0.0f;
+		if(! game.getGameController().getLevel().isGameOver() )
+		{
+			time -= delta;		
+			if(time <= 0.0f) {
+			
+				time = 0.0f;
+			}
+			game.getGameController().getLevel().setLeftTime(time);
 		}
 	}
 
 	@Override
 	public void init(final GameController gameController) {		
+		time = game.getGameController().getLevel().getLeftTime();
+
+		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
+		
+		timeDescription = addLabel("Time left:", labelStyle, 0.01f, 0.0f);
+		timeCounter = addLabel(String.valueOf((long) time), labelStyle, 0.20f, 0.0f);
 	}
 }

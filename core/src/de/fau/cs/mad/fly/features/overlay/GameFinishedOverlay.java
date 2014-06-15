@@ -30,12 +30,40 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 		this.game = game;
 		this.stage = stage;
 		skin = game.getSkin();
-		
 		table = new Table();
+		
+	}
+
+	@Override
+	public void render(float delta) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void init(final GameController gameController) {		
+		this.gameController = gameController;
+		
+	}
+
+	@Override
+	public void finish() {
+		
+		
 		table.pad(Gdx.graphics.getWidth() * 0.2f);
 		table.setFillParent(true);
-		
-		final String infoString = "Congratulations! :)";
+		String infoString  = "Game over!";
+		if( game.getGameController().getLevel().isReachedLastGate()){
+			infoString = "Congratulations! :)";
+		}
+		else if( game.getGameController().getLevel().getLeftTime()<=0)
+		{
+			infoString = "Time is up! :)";
+		}
+		else if( game.getGameController().getLevel().getLeftCollisionTime()<=0 )
+		{
+			infoString = "Ops, your plane is totally broken! :)";
+		}
 		final Label infoLabel = new Label(infoString, skin);
 		continueButton = new TextButton("Back to Menu!", skin, "default");
 		
@@ -48,27 +76,12 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 		
 		table.row().expand();
 		table.add(pane);
-	}
-
-	@Override
-	public void render(float delta) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void init(final GameController gameController) {		
-		this.gameController = gameController;
 		continueButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
 				game.setMainMenuScreen();
 			}
 		});
-	}
-
-	@Override
-	public void finish() {
 		stage.addActor(table);
 	}
 }

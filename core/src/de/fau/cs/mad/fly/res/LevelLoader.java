@@ -65,6 +65,9 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 			JsonValue gid = e.get("id");
 			if ( gid != null ) {
 				Level.Gate p = new Level.Gate(gid.asInt());
+				JsonValue scoreJS = gid.get("score");
+				if(scoreJS != null)
+					p.score = scoreJS.asInt();
 				p.display = components.get(e.getString("display"));
 				p.goal = components.get(e.getString("goal"));
 				// TODO: make this explicit (don't just blacklist identity matrix...)

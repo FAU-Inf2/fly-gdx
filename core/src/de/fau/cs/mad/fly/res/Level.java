@@ -27,12 +27,15 @@ import java.util.*;
 public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Level.Gate> {
 	public static class Gate implements Iterable<Gate> {
 		public final int id;
+		public int score;
 		public GameObject display;
 		public GameObject goal;
+		public int passedTimes = 0;
 		public Collection<Gate> successors;
 
 		public Gate(Integer id) {
 			this.id = id;
+			this.score = 50;
 		}
 
 		public void mark() {
@@ -121,7 +124,58 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	private final Map<String, GameModel> dependencies;
 
 	private GameObject borderObject = null;
+	
+	private float initTime = 0;
+	private float leftTime = 0;
+	
+	public float getLeftTime() {
+		return leftTime;
+	}
+	
+	public void setLeftTime(float leftTime) {
+		this.leftTime = leftTime;
+	}
+	
+	protected void InitTime()
+	{
+		initTime = 30;//todo, calculate the time basis speed and distance
+		leftTime = initTime;
+	}	
+	
+	private int CollisionTime = 0;
+	private int leftCollisionTime = 0;
+	
+	public int getLeftCollisionTime() {
+		return leftCollisionTime;
+	}
+	
+	public void setLeftCollisionTime(int leftCollisionTime) {
+		this.leftCollisionTime = leftCollisionTime;
+	}
+	
+	protected void InitCollisionTime()
+	{
+		CollisionTime = 3;
+		leftCollisionTime = CollisionTime;		
+	}
+	
+	private boolean reachedLastGate = false;
+	
+	public boolean isReachedLastGate() {
+		return reachedLastGate;
+	}
 
+	protected void setReachedLastGate(boolean reachedLastGate) {
+		this.reachedLastGate = reachedLastGate;
+	}	
+	
+	private boolean gameOver = false;
+	
+
+	public boolean isGameOver() {
+		return gameOver;
+	}
+	
 	public Level(String name, Perspective start, Collection<GameObject> components, Map<String, GameModel> dependencies, Gate startingGate) {
 		this.head = new Head();
 		this.head.name = name;
@@ -132,6 +186,10 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		this.environment = new Environment();
 		this.dependencies = Collections.unmodifiableMap(dependencies);
 		setUpEnvironment();
+		
+		InitTime();
+		InitCollisionTime();
+		gameOver = false;
 		
 		for (GameObject c : components) {
 			if(c.id.equals("space")) {
@@ -162,10 +220,19 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 			s.onGatePassed(gate, virtualGate.successors);
 		virtualGate = gate;
 		if ( gate.successors.isEmpty() )
-			for ( EventListener s : eventListeners) {
-				Gdx.app.log("Level.activeGatePassed", "s=" + s);
-				s.onFinished();
-			}
+		{
+			reachedLastGate = true;
+			 levelFinished();
+		}
+	}
+	
+	private void levelFinished()
+	{
+		gameOver = true;
+		for ( EventListener s : eventListeners) {
+			Gdx.app.log("Level.activeGatePassed", "s=" + s);
+			s.onFinished();
+		}
 	}
 
 	public void addEventListener(EventListener listener) {
@@ -206,7 +273,13 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		for (GameObject c : components) {
 			c.render(batch, environment, camera);
 		}
+		if( gameOver == false &&( leftTime <= 0 || leftCollisionTime <=0 ) )
+		{
+			 levelFinished();
+		}
 	}
+	
+	
 
 	/**
 	 * Sets up the environment for the level with its light.
