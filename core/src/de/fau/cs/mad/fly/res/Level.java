@@ -7,13 +7,10 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 
-import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
-import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.geo.Perspective;
@@ -26,7 +23,7 @@ import java.util.*;
  * @author Lukas Hahmann
  * 
  */
-public class Level implements Disposable, IFeatureLoad, ICollisionListener {
+public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Level.Gate> {
 	public static class Gate implements Iterable<Gate> {
 		public final int id;
 		public GameObject display;
@@ -89,6 +86,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 	public static interface EventListener {
 		public void onFinished();
 		public void onGatePassed(Gate gate, Iterable<Gate> current);
+		public void onRender();
 	}
 
 
@@ -97,6 +95,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 		public void onFinished() {}
 		@Override
 		public void onGatePassed(Gate gate, Iterable<Gate> current) {}
+		@Override
+		public void onRender() {}
 	}
 
 	@Override
@@ -188,14 +188,9 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 	 */
 	public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
 		borderObject.transform.setToTranslation(camera.position);
-		
-		for (GameObject c : components) {			
-			// ROTATE GATES START
-			if(c.userData instanceof Gate) {
-				c.transform.rotate(new Vector3(0f, 0f, 1f), 0.5f);
-				c.getCollisionObject().setWorldTransform(c.transform);
-			}
-			// ROTATE GATES END
+		for ( EventListener l : eventListeners )
+			l.onRender();
+		for (GameObject c : components) {
 			c.render(batch, environment, camera);
 		}
 	}
@@ -225,22 +220,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener {
 	}
 
 	@Override
-	public void onCollision(GameObject o1, GameObject o2) {
-		if(CollisionDetector.Types.get(o1.getCollisionObject().getUserValue()) == CollisionDetector.Types.Goal || CollisionDetector.Types.get(o2.getCollisionObject().getUserValue()) == CollisionDetector.Types.Goal) {
-			if ( !playerGateCollision(o1, o2) )
-				playerGateCollision(o2, o1);
-		} else {
-			Gdx.input.vibrate(500);
-			Debug.setOverlay(0, "DEAD!");
-		}
-	}
-
-	private boolean playerGateCollision(GameObject x, GameObject y) {
-		if ( x.userData instanceof Spaceship && y.userData instanceof Gate ) {
-			Gate gate = (Gate) y.userData;
-			gatePassed(gate);
-			return true;
-		}
-		return false;
+	public void onCollision(Spaceship spaceship, Gate gate) {
+		gatePassed(gate);
 	}
 }

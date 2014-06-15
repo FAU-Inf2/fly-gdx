@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
 import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.*;
@@ -16,6 +15,7 @@ import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.*;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
+import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.res.Level;
 
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class GameController {
 	/**
 	 * Getter for the camera controller.
 	 * 
-	 * @return {@link #camController}
+	 * @return {@link #flightController}
 	 */
 	public FlightController getCameraController() {
 		return flightController;
@@ -168,9 +168,7 @@ public class GameController {
 		camera = flightController.getCamera();
 
 		// initializes all optional features
-		Gdx.app.log("GameController.initGame", "init.size = " + optionalFeaturesToInit.size());
 		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
-			Gdx.app.log("GameController.initGame", "init.class = " + optionalFeature.getClass());
 			optionalFeature.init(this);
 		}
 
@@ -317,8 +315,15 @@ public class GameController {
 
 			addPlayerPlane();
 			collisionDetector = new CollisionDetector();
-			
+
 			collisionDetector.getCollisionContactListener().addListener(level);
+			collisionDetector.getCollisionContactListener().addListener(new ICollisionListener<Spaceship, GameObject>() {
+				@Override
+				public void onCollision(Spaceship ship, GameObject g) {
+					Gdx.input.vibrate(500);
+					Debug.setOverlay(0, "DEAD!");
+				}
+			});
 
 			Gdx.app.log("Builder.init", "Setting up collision for level gates...");
 
@@ -328,7 +333,7 @@ public class GameController {
 					btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
 					g.display.filterGroup = CollisionDetector.DUMMY_FLAG;
 					g.display.filterMask = CollisionDetector.ALL_FLAG;
-					g.display.setCollisionObject(displayShape, CollisionDetector.Types.Gate, g);
+					g.display.setCollisionObject(displayShape);
 				}
 				collisionDetector.addCollisionObject(g.display);
 				
@@ -336,9 +341,10 @@ public class GameController {
 					Gdx.app.log("Builder.init", "Goal CollisionObject == null");
 					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
 					g.goal.hide();
+					g.goal.userData = g;
 					g.goal.filterGroup = CollisionDetector.DUMMY_FLAG;
 					g.goal.filterMask = CollisionDetector.PLAYER_FLAG;
-					g.goal.setCollisionObject(goalShape, CollisionDetector.Types.Goal, g);
+					g.goal.setCollisionObject(goalShape);
 				}
 				collisionDetector.addCollisionObject(g.goal);
 			}
@@ -352,6 +358,12 @@ public class GameController {
 						g.unmark();
 					for (Level.Gate g : passed.successors)
 						g.mark();
+				}
+
+				@Override
+				public void onRender() {
+					for (Level.Gate g : level.allGates())
+						g.display.transform.rotate(new Vector3(0f, 0f, 1f), 0.5f);
 				}
 			});
 

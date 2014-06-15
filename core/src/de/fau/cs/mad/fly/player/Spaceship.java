@@ -27,13 +27,15 @@ public class Spaceship implements IPlane {
 		this.gameController = game;
 		
 		final ModelBuilder modelBuilder = new ModelBuilder();
-        model = modelBuilder.createSphere(0.1f, 0.1f, 0.1f, 2,2, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
-        instance = new GameObject(new GameModel(model));
-        instance.transform.setToTranslation(new Vector3(0, 0, 0));
+		model = modelBuilder.createSphere(0.1f, 0.1f, 0.1f, 2,2, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
+		instance = new GameObject(new GameModel(model));
+		instance.id = "spaceship";
+		instance.transform.setToTranslation(new Vector3(0, 0, 0));
 
 		instance.filterGroup = CollisionDetector.PLAYER_FLAG;
 		instance.filterMask = CollisionDetector.ALL_FLAG;
-		instance.setCollisionObject(new btSphereShape(0.1f), CollisionDetector.Types.Player, this);
+		instance.userData = this;
+		instance.setCollisionObject(new btSphereShape(0.1f));
 		gameController.getCollisionDetector().addCollisionObject(instance);
 	}
 
@@ -43,12 +45,12 @@ public class Spaceship implements IPlane {
 
 		instance.getCollisionObject().setWorldTransform(instance.transform);
 	}
-	
+
 	@Override
 	public GameObject getInstance() {
 		return instance;
 	}
-	
+
 	@Override
 	public Model getModel() {
 		return model;

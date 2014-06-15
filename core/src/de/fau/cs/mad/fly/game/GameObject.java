@@ -50,15 +50,15 @@ public class GameObject extends ModelInstance implements Disposable {
 	public GameObject(GameModel model) {
 		super(model.display);
 		this.gmodel = model;
+		this.userData = this;
 		initBoundingBox();
 	}
-	
+
 	/**
 	 * Adds a collision object to the game object and adds it to the collision world.
 	 */
-	public void setCollisionObject(btCollisionShape shape, CollisionDetector.Types type, Object userData) {
-		this.userData = userData;
-		setCollisionObject(CollisionDetector.createObject(this, shape, type, this));
+	public void setCollisionObject(btCollisionShape shape) {
+		setCollisionObject(CollisionDetector.createObject(this, shape, this));
 	}
 
 	public void setCollisionObject(btCollisionObject o) {
