@@ -46,8 +46,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 		this.auto = json;
 	}
 
+	private Map<String, GameModel> models;
 	public Level fromJson() {
 		getJson();
+		models = new HashMap<String, GameModel>();
 		for ( Map.Entry<String, String> e : dependencies.entrySet() )
 			models.put(e.getKey(), dependencyFor(e.getKey()));
 		getComponents();
@@ -115,7 +117,6 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 	}
 
 	private Map<String, GameObject> components;
-	private Map<String, GameModel> models = new HashMap<String, GameModel>();
 	private void getComponents() {
 		if ( components == null ) {
 			getJson();
@@ -152,7 +153,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 		fileName = null;
 		parameter = null;
 		manager = null;
-		models.clear();
+		models = null;
 	}
 
 	@Override

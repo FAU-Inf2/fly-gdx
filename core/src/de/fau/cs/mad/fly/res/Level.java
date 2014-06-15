@@ -127,10 +127,10 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		this.head.name = name;
 		this.virtualGate = startingGate;
 		this.startingGate = startingGate;
-		this.components = components;
+		this.components = Collections.unmodifiableCollection(components);
 		this.start = start;
 		this.environment = new Environment();
-		this.dependencies = dependencies;
+		this.dependencies = Collections.unmodifiableMap(dependencies);
 		setUpEnvironment();
 		
 		for (GameObject c : components) {
@@ -154,7 +154,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	}
 
 	public Map<String, GameModel> getDependencies() {
-		return Collections.unmodifiableMap(dependencies);
+		return dependencies;
 	}
 
 	public void activeGatePassed(Gate gate) {
