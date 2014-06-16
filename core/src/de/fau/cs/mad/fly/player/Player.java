@@ -2,7 +2,7 @@ package de.fau.cs.mad.fly.player;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.ui.SettingManager;
+import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
  * Stores all player-specific information.
@@ -49,23 +49,23 @@ public class Player {
 	 * Creates the SettingManager and all the Settings.
 	 */
 	public void createSettings(final Skin skin) {
-		settingManager = new SettingManager("fly_preferences", skin);
+		settingManager = new SettingManager("fly_preferences");
 
 		//settingManager.addSetting("name", "Playername:", "Test");
 		//String[] selection = { "Red", "Blue", "Green", "Yellow" };
 		//settingManager.addSetting("color", "Color:", 0, selection);
-		settingManager.addSetting("use.touch", false);
-		settingManager.addSetting("use.rolling", false);
-		settingManager.addSetting("use.lowpassfilter", false);
-		settingManager.addSetting("use.avg.of.sensor", false);
-		settingManager.addSetting("show.next.gate", true);
-		settingManager.addSetting("show.game.finished", false);
-		settingManager.addSetting("show.steering", false);
-		settingManager.addSetting("show.time", false);
-		settingManager.addSetting("show.fps", false);
-		settingManager.addSetting("alpha", 15.0f, 0.0f, 100.0f, 1.0f);
-		settingManager.addSetting("buffersize", 30.0f, 0.0f, 100.0f, 1.0f);
-		settingManager.addSetting("camera.distance", 30.0f, 0.0f, 100.0f, 1.0f);
+		settingManager.addBooleanSetting(SettingManager.USE_TOUCH, "Use TouchScreen:", false);
+		settingManager.addBooleanSetting(SettingManager.USE_ROLL_STEERING, "Use Rolling:", false);
+		settingManager.addBooleanSetting(SettingManager.USE_LOW_PASS_FILTER, "Use LowPassFilter:", false);
+		settingManager.addBooleanSetting(SettingManager.USE_AVERAGING, "Use Avg. of Sensor:", false);
+		settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
+		//settingManager.addBooleanSetting("showGameFinished", "Show Game finished:", false);
+		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, "Show Steering:", false);
+		//settingManager.addBooleanSetting("showTime", "Show Time:", false);
+		settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
+		settingManager.addSetting(SettingManager.ALPHA_SLIDER, "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
+		settingManager.addSetting(SettingManager.BUFFER_SLIDER, "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
+		settingManager.addSetting(SettingManager.CAMERA_OFFSET, "Camera Distance:", 30.0f, 0.0f, 100.0f, 1.0f);
 	}
 	
 	/**

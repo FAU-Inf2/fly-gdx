@@ -5,6 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import de.fau.cs.mad.fly.settings.SettingManager;
+
 /**
  * Stores one setting and displays its description and its value
  * 

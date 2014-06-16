@@ -1,6 +1,10 @@
 package de.fau.cs.mad.fly.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -20,9 +24,7 @@ import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.script.FlyEngine;
-
-import java.util.ArrayList;
-import java.util.List;
+import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
  * Manages the Player, the Level, the UI, the CameraController and all the optional Features
@@ -380,25 +382,24 @@ public class GameController {
 			
 			addAsteroidBelt();
 
-			if (player.getSettingManager().getCheckBoxValue("show.next.gate")) {
+			Preferences preferences = player.getSettingManager().getPreferences();
+			if (preferences.getBoolean(SettingManager.SHOW_GATE_INDICATOR)) {
 				addGateIndicator();
 			}
-			if (player.getSettingManager().getCheckBoxValue("show.time")) {
-				//addTimeOverlay();
-				addTimeLeftOverlay(60);
-			}
-			if (player.getSettingManager().getCheckBoxValue("show.fps")) {
+			addTimeLeftOverlay(60);
+			if (preferences.getBoolean(SettingManager.SHOW_FPS)) {
 				addFPSOverlay();
 			}
-			if (player.getSettingManager().getCheckBoxValue("show.steering")) {
+			if (preferences.getBoolean(SettingManager.SHOW_STEERING)) {
 				addSteeringOverlay();
 			}
-			if (player.getSettingManager().getCheckBoxValue("use.touch")) {
+			if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
 				addTouchScreenOverlay();
-			} else addSteeringResetOverlay();
-			if (player.getSettingManager().getCheckBoxValue("show.game.finished")) {
-				addGameFinishedOverlay();
 			}
+			else {
+				addSteeringResetOverlay();
+			}
+			addGameFinishedOverlay();
 
 			return this;
 		}

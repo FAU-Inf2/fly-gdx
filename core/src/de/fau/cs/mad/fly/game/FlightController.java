@@ -1,15 +1,18 @@
 package de.fau.cs.mad.fly.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector3;
-import de.fau.cs.mad.fly.player.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.fau.cs.mad.fly.player.Player;
+import de.fau.cs.mad.fly.settings.SettingManager;
 
 public class FlightController implements InputProcessor {
 
@@ -44,15 +47,16 @@ public class FlightController implements InputProcessor {
 
 	public FlightController(Player player) {
 		this.player = player;
-
-		this.useSensorData = !player.getSettingManager().getCheckBoxValue("use.touch");
-		this.useRolling = player.getSettingManager().getCheckBoxValue("use.rolling");
-		this.useLowPass = player.getSettingManager().getCheckBoxValue("use.lowpassfilter");
-		this.useAveraging = player.getSettingManager().getCheckBoxValue("use.avg.of.sensor");
-
-		this.bufferSize = (int) player.getSettingManager().getSliderValue("buffersize");
-		this.alpha = player.getSettingManager().getSliderValue("alpha") / 100.f;
-		this.cameraOffset = player.getSettingManager().getSliderValue("camera.distance") / 100.f;
+		
+		Preferences preferences = player.getSettingManager().getPreferences(); 
+		this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
+		this.useRolling = preferences.getBoolean(SettingManager.USE_ROLL_STEERING);
+		this.useLowPass = preferences.getBoolean(SettingManager.USE_LOW_PASS_FILTER);
+		this.useAveraging = preferences.getBoolean(SettingManager.USE_AVERAGING);
+		
+		this.bufferSize = (int) preferences.getFloat(SettingManager.BUFFER_SLIDER);
+		this.alpha = preferences.getFloat(SettingManager.ALPHA_SLIDER) / 100.f;
+		this.cameraOffset = preferences.getFloat(SettingManager.CAMERA_OFFSET) / 100.f;
 
 		setUpCamera();
 	}
@@ -101,6 +105,7 @@ public class FlightController implements InputProcessor {
 		float pitch = Gdx.input.getPitch();
 		float azimuth = Gdx.input.getAzimuth();
 
+		Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
 		startAzimuth = computeAzimuth(roll, pitch, azimuth);
 		Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
 		startRoll = Gdx.input.getRoll();
@@ -356,19 +361,19 @@ public class FlightController implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
+		// nothing should happen here
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
+		// nothing should happen here
 		return false;
 	}
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
+		// nothing should happen here
 		return false;
 	}
 	
@@ -441,13 +446,13 @@ public class FlightController implements InputProcessor {
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
+		// nothing should happen here
 		return false;
 	}
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
+		// nothing should happen here
 		return false;
 	}
 }

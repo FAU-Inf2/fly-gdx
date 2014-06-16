@@ -3,7 +3,9 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
  * Displays and changes the options of the game.
@@ -40,11 +42,13 @@ public class SettingScreen extends BasicScreen {
 
 	@Override
 	public void hide() {
-		settingManager.saveSettings();
+		//TODO: remove
+		//settingManager.saveSettings();
 	}
 
 	@Override
 	public void dispose() {
-		settingManager.saveSettings();
+		//TODO: remove
+		//settingManager.saveSettings();
 	}
 }
