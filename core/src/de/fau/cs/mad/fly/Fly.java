@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -15,6 +14,7 @@ import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.*;
+
 /**
  * Manages the different game screens.
  * <p>

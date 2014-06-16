@@ -16,6 +16,7 @@ import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.geo.Perspective;
 import de.fau.cs.mad.fly.player.Spaceship;
+import de.fau.cs.mad.fly.script.FlyEngine;
 
 import java.util.*;
 
@@ -122,6 +123,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	private final Environment environment;
 	private List<EventListener> eventListeners = new ArrayList<EventListener>();
 	private final Map<String, GameModel> dependencies;
+	public final Collection<String> scripts;
 
 	private GameObject borderObject = null;
 	
@@ -176,7 +178,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		return gameOver;
 	}
 	
-	public Level(String name, Perspective start, Collection<GameObject> components, Map<String, GameModel> dependencies, Gate startingGate) {
+	public Level(String name, Perspective start, Collection<GameObject> components, Map<String, GameModel> dependencies, Gate startingGate, Collection<String> scripts) {
 		this.head = new Head();
 		this.head.name = name;
 		this.virtualGate = startingGate;
@@ -185,6 +187,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		this.start = start;
 		this.environment = new Environment();
 		this.dependencies = Collections.unmodifiableMap(dependencies);
+		this.scripts = Collections.unmodifiableCollection(scripts);
 		setUpEnvironment();
 		
 		InitTime();

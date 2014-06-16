@@ -10,6 +10,7 @@
 		"space": "spacesphere",
 		"asteroid": "asteroid"
 	},
+	"scripts": ["rotate_gates.coffee"],
 	"gates": [
 		{
 			"successors": [0]

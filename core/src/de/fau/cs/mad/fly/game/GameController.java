@@ -19,6 +19,7 @@ import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.script.FlyEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -313,6 +314,12 @@ public class GameController {
 			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			optionalFeaturesToLoad.add(level);
 
+			FlyEngine engine = FlyEngine.get();
+			engine.setLevel(level);
+			level.addEventListener(engine);
+			for ( String s : level.scripts )
+				engine.load(Gdx.files.internal( "scripts/app/" + s ));
+
 			addPlayerPlane();
 			collisionDetector = new CollisionDetector();
 
@@ -359,12 +366,6 @@ public class GameController {
 						g.unmark();
 					for (Level.Gate g : passed.successors)
 						g.mark();
-				}
-
-				@Override
-				public void onRender() {
-					/*for (Level.Gate g : level.allGates())
-						g.display.transform.rotate(new Vector3(0f, 0f, 1f), 0.5f);*/
 				}
 			});
 

@@ -11,6 +11,7 @@
 		"hole": "torusHoleBox",
 		"asteroid": "asteroid"
 	},
+	"scripts": [],
 	"gates": [
 		{
 			"successors": [0]
