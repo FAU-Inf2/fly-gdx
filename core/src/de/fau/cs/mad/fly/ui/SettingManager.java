@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import de.fau.cs.mad.fly.I18n;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,21 +88,18 @@ public class SettingManager {
 	/**
 	 * Adds a new Setting with a CheckBox and a boolean value.
 	 * @param id
-	 *            the id of the Setting
-	 * @param description
-	 *            the description of the Setting
+	 *            the id of the Setting, also the key in properties
 	 * @param value
 	 *            the default value of the Setting
 	 */
-	public void addSetting(String id, String description, boolean value) {
+	public void addSetting(String id, boolean value) {
 		if(!prefs.contains(id)) {
 			prefs.putBoolean(id, value);
 			prefs.flush();
 		} else {
 			value = prefs.getBoolean(id);
 		}
-		
-		Setting setting = new Setting(this, id, description, value, skin);
+		Setting setting = new Setting(this, id, I18n.t(id), value, skin);
 		settingMap.put(id, setting);
 		settingList.add(id);
 	}
@@ -109,9 +107,7 @@ public class SettingManager {
 	/**
 	 * Adds a new Setting with a Slider and a float value.
 	 * @param id
-	 *            the id of the Setting
-	 * @param description
-	 *            the description of the Setting
+	 *            the id of the Setting, also the key in properties
 	 * @param value
 	 *            the default value of the Setting
 	 * @param min
@@ -121,7 +117,7 @@ public class SettingManager {
 	 * @param stepSize
 	 *            the step size of the Slider
 	 */
-	public void addSetting(String id, String description, float value, float min, float max, float stepSize) {
+	public void addSetting(String id, float value, float min, float max, float stepSize) {
 		if(!prefs.contains(id)) {
 			prefs.putFloat(id, value);
 			prefs.flush();
@@ -129,7 +125,7 @@ public class SettingManager {
 			value = prefs.getFloat(id);
 		}
 		
-		Setting setting = new Setting(this, id, description, value, min, max, stepSize, skin);
+		Setting setting = new Setting(this, id, I18n.t(id), value, min, max, stepSize, skin);
 		settingMap.put(id, setting);
 		settingList.add(id);
 	}
@@ -159,6 +155,7 @@ public class SettingManager {
 	 * Getter for the CheckBox value.
 	 */
 	public boolean getCheckBoxValue(String id) {
+		Gdx.app.log("SettingManager.getCheckBoxValue", "id: " + id);
 		return settingMap.get(id).getCheckBox();
 	}
 	
@@ -166,6 +163,7 @@ public class SettingManager {
 	 * Getter for the Slider value.
 	 */
 	public float getSliderValue(String id) {
+		Gdx.app.log("SettingManager.getSliderValue", "id: " + id);
 		return settingMap.get(id).getSlider();
 	}
 	

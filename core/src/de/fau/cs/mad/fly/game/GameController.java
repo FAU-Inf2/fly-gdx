@@ -314,11 +314,15 @@ public class GameController {
 			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			optionalFeaturesToLoad.add(level);
 
+			Gdx.app.log("Builder.init", "Loading scripts in header...");
+			long before = System.nanoTime();
 			FlyEngine engine = FlyEngine.get();
 			engine.setLevel(level);
 			level.addEventListener(engine);
 			for ( String s : level.scripts )
 				engine.load(Gdx.files.internal( "scripts/app/" + s ));
+			long after = System.nanoTime();
+			Gdx.app.log("Builder.init", "Finished loading scripts. Took " + (after - before) + " nanoseconds.");
 
 			addPlayerPlane();
 			collisionDetector = new CollisionDetector();
@@ -376,27 +380,24 @@ public class GameController {
 			
 			addAsteroidBelt();
 
-			if (player.getSettingManager().getCheckBoxValue("showGateIndicator")) {
+			if (player.getSettingManager().getCheckBoxValue("show.next.gate")) {
 				addGateIndicator();
 			}
-			if (player.getSettingManager().getCheckBoxValue("showTime")) {
+			if (player.getSettingManager().getCheckBoxValue("show.time")) {
 				//addTimeOverlay();
 				addTimeLeftOverlay(60);
 			}
-			if (player.getSettingManager().getCheckBoxValue("showFPS")) {
+			if (player.getSettingManager().getCheckBoxValue("show.fps")) {
 				addFPSOverlay();
 			}
-			if (player.getSettingManager().getCheckBoxValue("showSteering")) {
+			if (player.getSettingManager().getCheckBoxValue("show.steering")) {
 				addSteeringOverlay();
 			}
-			if (player.getSettingManager().getCheckBoxValue("useTouch")) {
+			if (player.getSettingManager().getCheckBoxValue("use.touch")) {
 				addTouchScreenOverlay();
-			}
-			if (player.getSettingManager().getCheckBoxValue("showGameFinished")) {
+			} else addSteeringResetOverlay();
+			if (player.getSettingManager().getCheckBoxValue("show.game.finished")) {
 				addGameFinishedOverlay();
-			}
-			if (!player.getSettingManager().getCheckBoxValue("useTouch")) {
-				addSteeringResetOverlay();
 			}
 
 			return this;

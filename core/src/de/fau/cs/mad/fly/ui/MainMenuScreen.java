@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.res.Assets;
 
 
@@ -26,9 +27,9 @@ public class MainMenuScreen extends BasicScreen {
 		table.pad(UI.Window.SINGLE_SPACE_HEIGHT, UI.Window.SINGLE_SPACE_WIDTH, UI.Window.SINGLE_SPACE_HEIGHT, UI.Window.SINGLE_SPACE_WIDTH).setFillParent(true);
 		stage.addActor(table);
 
-		final TextButton continueButton = new TextButton("Continue", skin, "default");
-		final TextButton chooseLevelButton = new TextButton("Choose Level", skin, "default");
-		final TextButton optionButton = new TextButton("Settings", skin, "default");
+		final TextButton continueButton = new TextButton(I18n.t("continue"), skin, "default");
+		final TextButton chooseLevelButton = new TextButton(I18n.t("choose.level"), skin, "default");
+		final TextButton optionButton = new TextButton(I18n.t("settings"), skin, "default");
 
 		table.row().expand();
 		table.add(continueButton).fill().pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).colspan(2);
@@ -64,8 +65,7 @@ public class MainMenuScreen extends BasicScreen {
 	public void dispose() {
 		stage.dispose();
 		skin.dispose();
-		Assets.dispose();
-		((Fly) Gdx.app.getApplicationListener()).dispose();
+		Gdx.app.getApplicationListener().dispose();
 		Gdx.app.exit();
 	}
 }

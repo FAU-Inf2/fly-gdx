@@ -45,14 +45,14 @@ public class FlightController implements InputProcessor {
 	public FlightController(Player player) {
 		this.player = player;
 
-		this.useSensorData = !player.getSettingManager().getCheckBoxValue("useTouch");
-		this.useRolling = player.getSettingManager().getCheckBoxValue("useRoll");
-		this.useLowPass = player.getSettingManager().getCheckBoxValue("useLowPass");
-		this.useAveraging = player.getSettingManager().getCheckBoxValue("useAveraging");
+		this.useSensorData = !player.getSettingManager().getCheckBoxValue("use.touch");
+		this.useRolling = player.getSettingManager().getCheckBoxValue("use.rolling");
+		this.useLowPass = player.getSettingManager().getCheckBoxValue("use.lowpassfilter");
+		this.useAveraging = player.getSettingManager().getCheckBoxValue("use.avg.of.sensor");
 
-		this.bufferSize = (int) player.getSettingManager().getSliderValue("bufferSlider");
-		this.alpha = player.getSettingManager().getSliderValue("alphaSlider") / 100.f;
-		this.cameraOffset = player.getSettingManager().getSliderValue("cameraOffset") / 100.f;
+		this.bufferSize = (int) player.getSettingManager().getSliderValue("buffersize");
+		this.alpha = player.getSettingManager().getSliderValue("alpha") / 100.f;
+		this.cameraOffset = player.getSettingManager().getSliderValue("camera.distance") / 100.f;
 
 		setUpCamera();
 	}
@@ -101,7 +101,6 @@ public class FlightController implements InputProcessor {
 		float pitch = Gdx.input.getPitch();
 		float azimuth = Gdx.input.getAzimuth();
 
-		Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
 		startAzimuth = computeAzimuth(roll, pitch, azimuth);
 		Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
 		startRoll = Gdx.input.getRoll();

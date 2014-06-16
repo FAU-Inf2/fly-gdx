@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
@@ -52,20 +53,18 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 		
 		table.pad(Gdx.graphics.getWidth() * 0.2f);
 		table.setFillParent(true);
-		String infoString  = "Game over!";
-		if( game.getGameController().getLevel().isReachedLastGate()){
-			infoString = "Congratulations! :)";
+		String infoString  = I18n.t("game.over");
+		if( game.getGameController().getLevel().isReachedLastGate()) {
+			infoString = I18n.t("level.congratulations");
 		}
-		else if( game.getGameController().getLevel().getLeftTime()<=0)
-		{
-			infoString = "Time is up! :)";
+		else if( game.getGameController().getLevel().getLeftTime() <= 0) {
+			infoString = I18n.t("level.time.up");
 		}
-		else if( game.getGameController().getLevel().getLeftCollisionTime()<=0 )
-		{
-			infoString = "Ops, your plane is totally broken! :)";
+		else if( game.getGameController().getLevel().getLeftCollisionTime() <= 0 ) {
+			infoString = I18n.t("ship.destroyed");
 		}
 		final Label infoLabel = new Label(infoString, skin);
-		continueButton = new TextButton("Back to Menu!", skin, "default");
+		continueButton = new TextButton(I18n.t("back.to.menu"), skin, "default");
 		
 		final Table infoTable = new Table();
 		final ScrollPane pane = new ScrollPane(infoTable, skin);
