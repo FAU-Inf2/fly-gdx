@@ -49,7 +49,7 @@ public class LevelChooserScreen extends BasicScreen {
 		scrollableTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		// create a button for each level
-		int maxRows = ((int) Math.ceil(((double) allLevels.size()) / ((double) UI.SmallButtons.BUTTONS_IN_A_ROW)));
+		int maxRows = (int) Math.ceil((double) allLevels.size() / (double) UI.SmallButtons.BUTTONS_IN_A_ROW);
 		for (int row = 0; row < maxRows; row++) {
 			int max = Math.min(allLevels.size() - (row * UI.SmallButtons.BUTTONS_IN_A_ROW), UI.SmallButtons.BUTTONS_IN_A_ROW);
 			// fill a row with buttons
@@ -59,7 +59,6 @@ public class LevelChooserScreen extends BasicScreen {
 				button.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-//						((Fly) Gdx.app.getApplicationListener()).getPlayer().setLastLevel(level);
 						((Fly) Gdx.app.getApplicationListener()).loadLevel(level);
 					}
 				});

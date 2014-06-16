@@ -12,13 +12,15 @@ import com.badlogic.gdx.graphics.Color;
 public final class UI {
 	
 	/** This class should not be instantiated */
-	private UI () {}
+	private UI () {
+	}
 
 	/** This class contains basic parameter for creating windows */
 	public static final class Window {
 		
 		/** This class should not be instantiated */
-		private Window () {}
+		private Window () {
+		}
 
 		/** This percentage of the screen width is covered with button surface */
 		public static final float RELATIVE_WIDTH_OF_ALL_BUTTONS = .8f;
@@ -56,7 +58,8 @@ public final class UI {
 	public static final class SmallButtons {
 		
 		/** This class should not be instantiated */
-		private SmallButtons () {}
+		private SmallButtons () {
+		}
 		
 		/** Max. number of buttons for level to show in a row */
 		public static final int BUTTONS_IN_A_ROW = 3;
