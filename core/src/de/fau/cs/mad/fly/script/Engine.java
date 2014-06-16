@@ -10,7 +10,7 @@ import org.mozilla.javascript.*;
  */
 public class Engine {
 	protected final Scriptable root;
-	protected final Coffee coffee;
+	protected Coffee coffee;
 
 	public Engine() {
 		this("scripts/vendor/coffeescript.js");
@@ -20,10 +20,33 @@ public class Engine {
 		this(Gdx.files.internal(coffeePath));
 	}
 
-	public Engine(FileHandle coffee) {
+	public Engine(final FileHandle coffee) {
+		ContextFactory.getGlobal().addListener(new ContextFactory.Listener() {
+			@Override
+			public void contextCreated(Context cx) {
+				if ( Gdx.app.getType() == Application.ApplicationType.Android )
+					cx.setOptimizationLevel(-1);
+			}
+
+			@Override
+			public void contextReleased(Context cx) {
+			}
+		});
 		root = Context.enter().initStandardObjects();
 		Context.exit();
-		this.coffee = getCoffee(coffee);
+		Thread t = new Thread(Thread.currentThread().getThreadGroup(), new Runnable() {
+
+			@Override
+			public void run() {
+				Engine.this.coffee = getCoffee(coffee);
+			}
+		}, "CoffeeLoader", 100000);
+		t.start();
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Coffee getCoffee(FileHandle f) {

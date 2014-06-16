@@ -13,6 +13,7 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.script.FlyEngine;
 import de.fau.cs.mad.fly.ui.*;
 
 /**
@@ -43,6 +44,7 @@ public class Fly extends Game {
 	@Override
 	public void create() {
 		Bullet.init();
+		FlyEngine.get();
 
 		createSkin();
 		shapeRenderer = new ShapeRenderer();
