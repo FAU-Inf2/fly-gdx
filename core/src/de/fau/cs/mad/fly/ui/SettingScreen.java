@@ -40,15 +40,4 @@ public class SettingScreen extends BasicScreen {
 		table.add(settingPane);
 	}
 
-	@Override
-	public void hide() {
-		//TODO: remove
-		//settingManager.saveSettings();
-	}
-
-	@Override
-	public void dispose() {
-		//TODO: remove
-		//settingManager.saveSettings();
-	}
 }

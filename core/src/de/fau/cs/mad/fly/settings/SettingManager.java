@@ -31,15 +31,6 @@ public class SettingManager {
 	private Map<String, ISetting> settingMap;
 	private List<String> settingList;
 
-	public Map<String, ISetting> getSettingMap() {
-		return settingMap;
-	}
-
-	
-	public List<String> getSettingList() {
-		return settingList;
-	}
-
 	public SettingManager(String preferenceFileName) {
 		prefs = Gdx.app.getPreferences(preferenceFileName);
 		settingMap = new HashMap<String, ISetting>();
@@ -85,7 +76,7 @@ public class SettingManager {
 	 * @param stepSize
 	 *            the step size of the Slider
 	 */
-	public void addSetting(String id, String description, float value, float min, float max, float stepSize) {
+	public void addFloatSetting(String id, String description, float value, float min, float max, float stepSize) {
 		if (!prefs.contains(id)) {
 			prefs.putFloat(id, value);
 			prefs.flush();
@@ -97,11 +88,25 @@ public class SettingManager {
 		settingMap.put(id, newFloatSetting);
 		settingList.add(id);
 	}
-	
+
 	/**
-	 * Getter for the Preferences.
+	 * Getter for the {@link #prefs}.
 	 */
 	public Preferences getPreferences() {
 		return prefs;
+	}
+
+	/**
+	 * Getter for the {@link #settingMap}
+	 */
+	public Map<String, ISetting> getSettingMap() {
+		return settingMap;
+	}
+
+	/**
+	 * Sorted list of all Preferences.
+	 */
+	public List<String> getSettingList() {
+		return settingList;
 	}
 }
