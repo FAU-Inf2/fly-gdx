@@ -23,24 +23,55 @@ import com.badlogic.gdx.utils.Disposable;
  * @author Tobias Zangl
  */
 public class GameObject extends ModelInstance implements Disposable {
-	private final Vector3 center = new Vector3();
-	private final Vector3 dimensions = new Vector3();
+
+	/**
+	 * Position of the game object.
+	 */
 	private final Vector3 position = new Vector3();
+	
+	/**
+	 * Center of the bounding box of the game object.
+	 */
+	private final Vector3 center = new Vector3();
+	
+	/**
+	 * Dimensions of the bounding box of the game object.
+	 */
+	private final Vector3 dimensions = new Vector3();
 
-	public Vector3 movingDir = new Vector3(0.0f, 0.0f, 0.0f);
-	public float movingSpeed = 0.0f;
-
+	/**
+	 * Bounding box of the game object used for frustum culling.
+	 */
 	private final static BoundingBox bounds = new BoundingBox();
 
+	/**
+	 * Collision object of the game object.
+	 */
 	private btCollisionObject collisionObject;
 
+	/**
+	 * Model of the game object.
+	 */
 	private final GameModel gmodel;
 
+	/**
+	 * Data used for collision detection.
+	 */
 	public Object userData;
 
+	/**
+	 * Determines if the game object is currently visible.
+	 */
 	private boolean visible = true;
 
+	/**
+	 * Collision group of the game object for filtering.
+	 */
 	public short filterGroup = CollisionDetector.OBJECT_FLAG;
+	
+	/**
+	 * Collision mask of the game object. It can only collide with objects in the filter mask.
+	 */
 	public short filterMask = CollisionDetector.ALL_FLAG;
 
 	public String id;
@@ -49,7 +80,8 @@ public class GameObject extends ModelInstance implements Disposable {
 	// TODO: create more constructors to match the ModelInstance constructors
 
 	/**
-	 * Creates a new GameObject without any collision detection.
+	 * Contructs a new game object without any collision detection.
+	 * @param model
 	 */
 	public GameObject(GameModel model) {
 		super(model.display);
@@ -59,18 +91,25 @@ public class GameObject extends ModelInstance implements Disposable {
 	}
 
 	/**
-	 * Adds a collision object to the game object and adds it to the collision world.
+	 * Adds a collision object with a shape to the game object and adds it to the collision world.
+	 * @param shape
 	 */
 	public void setCollisionObject(btCollisionShape shape) {
 		setCollisionObject(CollisionDetector.createObject(this, shape, this));
 	}
 
-	public void setCollisionObject(btCollisionObject o) {
-		collisionObject = o;
+	/**
+	 * Sets the collision object of the game object.
+	 * @param collisionObject
+	 */
+	public void setCollisionObject(btCollisionObject ollisionObject) {
+		this.collisionObject = ollisionObject;
 	}
 
 	/**
 	 * Initializes the bounding box for the frustum culling.
+	 * <p>
+	 * Size of the bounding box is doubled to make sure the object is always displayed when it should be.
 	 */
 	private void initBoundingBox() {		
 		calculateBoundingBox(bounds);
@@ -78,12 +117,23 @@ public class GameObject extends ModelInstance implements Disposable {
 		dimensions.set(bounds.getDimensions().cpy().scl(2.0f));
 	}
 
+	/**
+	 * Returns if the object is hidden.
+	 */
 	public boolean isHidden() { return !visible; }
 
+	/**
+	 * Returns if the object is visible.
+	 */
 	public boolean isVisible() { return visible; }
 
+	/**
+	 * Makes the object hidden.
+	 */
 	public void hide() { visible = false; }
-
+	/**
+	 * Makes the object visible.
+	 */
 	public void show() { visible = true; }
 
 	/**
@@ -109,10 +159,16 @@ public class GameObject extends ModelInstance implements Disposable {
 		collisionObject.userData = object;
 	}
 
+	/**
+	 * Marks the game object with a special color.
+	 */
 	public void mark() {
 		materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
 	}
 
+	/**
+	 * Unmarks the object.
+	 */
 	public void unmark() {
 		materials.get(0).set(ColorAttribute.createDiffuse(Color.GRAY));
 	}
