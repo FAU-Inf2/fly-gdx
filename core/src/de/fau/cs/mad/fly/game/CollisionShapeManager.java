@@ -26,6 +26,9 @@ import java.util.Map;
  * @author Tobias Zangl
  */
 public class CollisionShapeManager implements Disposable {
+	/**
+	 * Maps to save the different shape types.
+	 */
 	Map<String, btCollisionShape> meshShapeMap, convexShapeMap, boxShapeMap, sphereShapeMap;
 
 	/**
@@ -79,31 +82,6 @@ public class CollisionShapeManager implements Disposable {
 		if(shape != null) {
 			return shape;
 		}
-		
-		/*Mesh mesh = instance.model.meshes.first();
-		
-		short[] indices = new short[mesh.getNumIndices()];
-		float[] vertices = new float[mesh.getNumVertices()*mesh.getVertexSize()/4];
-		mesh.getIndices(indices);
-		mesh.getVertices(vertices);
-		ShortBuffer indexData = ShortBuffer.wrap(indices);
-		FloatBuffer vertexData = FloatBuffer.wrap(vertices);
-		
-		btIndexedMesh indexedMesh = new btIndexedMesh();
-		indexedMesh.setNumTriangles(mesh.getNumIndices()/3);
-		indexedMesh.setNumVertices(mesh.getNumVertices());
-		indexedMesh.setTriangleIndexStride(6);
-		indexedMesh.setIndexType(PHY_ScalarType.PHY_SHORT);
-		indexedMesh.setVertexStride(mesh.getVertexSize());
-		indexedMesh.setVertexType(PHY_ScalarType.PHY_FLOAT);
-		indexedMesh.setTriangleIndexBase(indexData);
-		indexedMesh.setVertexBase(vertexData);
-
-		btTriangleIndexVertexArray meshInterface = new btTriangleIndexVertexArray();
-		meshInterface.addIndexedMesh(indexedMesh, PHY_ScalarType.PHY_SHORT);
-		btBvhTriangleMeshShape meshShape = new btBvhTriangleMeshShape(meshInterface, true);*/
-		
-		//btBvhTriangleMeshShape meshShape = new btBvhTriangleMeshShape(true, instance.model.meshes.first());
 
 		btCollisionShape meshShape = Bullet.obtainStaticNodeShape(instance.model.nodes);
 		
