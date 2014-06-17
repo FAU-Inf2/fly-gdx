@@ -222,7 +222,7 @@ public class GameObject extends ModelInstance implements Disposable {
 
 	@Override
 	public void dispose() {
-		Gdx.app.log("GameObject.dispose", "dispose " + id);
+		//Gdx.app.log("GameObject.dispose", "dispose " + id);
 		if ( collisionObject != null )
 			collisionObject.dispose();
 	}

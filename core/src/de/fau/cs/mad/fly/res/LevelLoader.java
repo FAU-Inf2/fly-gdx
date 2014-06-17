@@ -9,10 +9,13 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Quaternion;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.geo.Perspective;
@@ -134,8 +137,35 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 				o.modelId = ref;
 				o.id = id;
 				JsonValue transform = e.get("transformMatrix");
-				if ( transform != null )
+				JsonValue position = e.get("position");
+				if ( transform != null ) {					
 					o.transform = new Matrix4(transform.asFloatArray());
+					//Gdx.app.log("LevelLoader.getComponents", "TransformMatrix: " + o.transform.toString());
+				} else if ( position != null ) {
+					Vector3 pos = new Vector3(position.asFloatArray());
+					//Gdx.app.log("LevelLoader.getComponents", "Position: " + pos.toString());
+					
+					JsonValue euler = e.get("euler");
+					JsonValue quaternion = e.get("quaternion");					
+					if( euler != null ) {
+						//Gdx.app.log("LevelLoader.getComponents", "Euler: " + euler.getFloat(0) + ", " + euler.getFloat(1) + ", " + euler.getFloat(2));
+						
+						Quaternion quat = new Quaternion();
+						quat.setEulerAngles(euler.getFloat(0), euler.getFloat(1), euler.getFloat(2));
+						o.transform = new Matrix4(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
+					} else if ( quaternion != null ) {
+						//Gdx.app.log("LevelLoader.getComponents", "Quaternion: " + quaternion.getFloat(0) + ", " + quaternion.getFloat(1) + ", " + quaternion.getFloat(2) + ", " + quaternion.getFloat(3));
+						
+						Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
+						o.transform = new Matrix4(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
+					} else {
+						o.transform = new Matrix4();
+						o.transform.trn(pos);
+					}
+				} else {
+					o.transform = new Matrix4();
+					//Gdx.app.log("LevelLoader.getComponents", "No 3D info found: " + o.transform.toString());
+				}
 				components.put(id, o);
 			}
 		}
