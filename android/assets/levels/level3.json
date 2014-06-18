@@ -280,7 +280,7 @@
     ],
     "id": 3,
     "name": "Crazy Circle",
-    // "scripts": [],
+    "scripts": [],
     "start": {
         "position": {
             "x": 0.0,
