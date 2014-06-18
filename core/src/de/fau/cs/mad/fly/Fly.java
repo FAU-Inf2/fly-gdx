@@ -46,7 +46,7 @@ public class Fly extends Game {
 	@Override
 	public void create() {
 		Bullet.init();
-		FlyEngine.get();
+//		FlyEngine.get();
 
 		createSkin();
 		shapeRenderer = new ShapeRenderer();

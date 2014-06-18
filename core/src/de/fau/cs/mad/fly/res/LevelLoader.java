@@ -101,10 +101,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 		if ( dummy == null )
 			throw new RuntimeException("No dummy gate found.");
 
-		Collection<String> scripts = Arrays.asList(json.get("scripts").asStringArray());
+//		Collection<String> scripts = Arrays.asList(json.get("scripts").asStringArray());
 
 		Gdx.app.log("LevelLoader.fromJson", "Exit.");
-		return new Level(name, start, components.values(), models, dummy, scripts);
+		return new Level(name, start, components.values(), models, dummy);
 	}
 
 	private JsonValue json;

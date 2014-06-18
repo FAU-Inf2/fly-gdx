@@ -316,15 +316,11 @@ public class GameController {
 			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			optionalFeaturesToLoad.add(level);
 
-			Gdx.app.log("Builder.init", "Loading scripts in header...");
-			long before = System.nanoTime();
-			FlyEngine engine = FlyEngine.get();
-			engine.setLevel(level);
-			level.addEventListener(engine);
-			for ( String s : level.scripts )
-				engine.load(Gdx.files.internal( "scripts/app/" + s ));
-			long after = System.nanoTime();
-			Gdx.app.log("Builder.init", "Finished loading scripts. Took " + (after - before) + " nanoseconds.");
+//			FlyEngine engine = FlyEngine.get();
+//			engine.setLevel(level);
+//			level.addEventListener(engine);
+//			for ( String s : level.scripts )
+//				engine.load(Gdx.files.internal( "scripts/app/" + s ));
 
 			addPlayerPlane();
 			collisionDetector = new CollisionDetector();
