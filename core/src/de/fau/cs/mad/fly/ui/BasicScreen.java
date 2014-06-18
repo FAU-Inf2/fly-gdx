@@ -3,10 +3,12 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
 import de.fau.cs.mad.fly.Fly;
 
 public abstract class BasicScreen implements Screen {
@@ -33,7 +35,9 @@ public abstract class BasicScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(UI.Window.BACKGROUND_COLOR.r, UI.Window.BACKGROUND_COLOR.g, UI.Window.BACKGROUND_COLOR.b, UI.Window.BACKGROUND_COLOR.a);
+		Color backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
+		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+		//Gdx.gl.glClearColor(UI.Window.BACKGROUND_COLOR.r, UI.Window.BACKGROUND_COLOR.g, UI.Window.BACKGROUND_COLOR.b, UI.Window.BACKGROUND_COLOR.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(delta);
 		stage.draw();

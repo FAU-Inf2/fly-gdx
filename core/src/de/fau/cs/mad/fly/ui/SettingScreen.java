@@ -26,7 +26,7 @@ public class SettingScreen extends BasicScreen {
 		
 		final Table settingTable = new Table();
 		final ScrollPane settingPane = new ScrollPane(settingTable, skin);
-		settingPane.setColor(UI.Window.BACKGROUND_COLOR);
+		settingPane.setColor(skin.getColor(UI.Window.BACKGROUND_COLOR));
 		settingPane.setFadeScrollBars(false);
 	 	settingPane.setScrollingDisabled(true, false);
 

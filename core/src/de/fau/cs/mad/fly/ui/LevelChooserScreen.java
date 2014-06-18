@@ -72,7 +72,7 @@ public class LevelChooserScreen extends BasicScreen {
 		ScrollPane levelScrollPane = new ScrollPane(scrollableTable, skin);
 		levelScrollPane.setScrollingDisabled(true, false);
 		levelScrollPane.setFillParent(true);
-		levelScrollPane.setColor(UI.Window.BACKGROUND_COLOR);
+		levelScrollPane.setColor(skin.getColor(UI.Window.BACKGROUND_COLOR));
 		stage.addActor(levelScrollPane);
 	}
 }

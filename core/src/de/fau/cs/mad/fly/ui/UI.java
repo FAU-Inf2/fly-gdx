@@ -1,7 +1,6 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 
 /**
  * This file contains all parameter to modify the 2d UI.
@@ -51,7 +50,7 @@ public final class UI {
 		public static final float SINGLE_SPACE_HEIGHT = Window.RELATIVE_HEIGHT_OF_ALL_SPACE / 6 * Gdx.graphics.getHeight();
 		
 		/** Background color of the windows */
-		public static final Color BACKGROUND_COLOR = Color.BLACK;
+		public static final String BACKGROUND_COLOR = "black";
 	}
 
 	/** This class contains all parameters related to smaller buttons. */
