@@ -43,7 +43,7 @@
 			"id": "gate1",
 			"ref": "torus",
 			"position": [ 0.0, 0.0, 10.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate1hole",
@@ -53,7 +53,7 @@
 			"id": "gate2",
 			"ref": "torus",
 			"position": [ 0.0, 0.0, 18.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate2hole",
@@ -63,7 +63,7 @@
 			"id": "gate3",
 			"ref": "torus",
 			"position": [ 0.0, 3.0, 25.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate3hole",

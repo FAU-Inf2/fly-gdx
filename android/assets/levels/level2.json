@@ -80,7 +80,7 @@
 			"id": "gate1",
 			"ref": "torus",
 			"position": [ 0.0, 0.0, 10.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate1hole",
@@ -90,7 +90,7 @@
 			"id": "gate2",
 			"ref": "torus",
 			"position": [ 0.0, 2.5, 25.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate2hole",
@@ -100,7 +100,7 @@
 			"id": "gate3",
 			"ref": "torus",
 			"position": [ 0.0, 7.0, 40.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate3hole",
@@ -110,7 +110,7 @@
 			"id": "gate4",
 			"ref": "torus",
 			"position": [ 0.0, 15.0, 52.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate4hole",
@@ -120,7 +120,7 @@
 			"id": "gate5",
 			"ref": "torus",
 			"position": [ 0.0, 24.0, 64.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate5hole",
@@ -130,7 +130,7 @@
 			"id": "gate6",
 			"ref": "torus",
 			"position": [ 0.0, 36.0, 72.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate6hole",
@@ -140,7 +140,7 @@
 			"id": "gate7",
 			"ref": "torus",
 			"position": [ 0.0, 50.0, 80.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate7hole",
@@ -150,7 +150,7 @@
 			"id": "gate8",
 			"ref": "torus",
 			"position": [ 0.0, 63.0, 85.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate8hole",
@@ -160,7 +160,7 @@
 			"id": "gate9",
 			"ref": "torus",
 			"position": [ 0.0, 80.0, 90.0 ],
-			"euler": [0.0, 90.0, 0.0 ]
+			"euler": [90.0, 0.0, 0.0 ]
 		},
 		{
 			"id": "gate9hole",
