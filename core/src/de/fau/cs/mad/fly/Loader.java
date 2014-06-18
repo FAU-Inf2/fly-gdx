@@ -19,6 +19,10 @@ public class Loader {
 		this.game = game;
 	}
 
+	/**
+	 * Initiates the loading of a level and sets the game's current screen to LoadingScreen
+	 * @param levelHead the Level.Head of the level to be loaded
+	 */
 	public void startLoading(Level.Head levelHead) {
 		Assets.init();
 		currentLevelPath = levelHead.file.path();
@@ -28,6 +32,9 @@ public class Loader {
 		game.setLoadingScreen();
 	}
 
+	/**
+	 * Finishes the loading of a level. Sets the player's current level, initializes the gameController and sets the current screen to GameScreen.
+	 */
 	public void finishLoading() {
 		Gdx.app.log("Loader.finishLoading", "Assets loaded.");
 		Level level = Assets.manager.get(currentLevelPath, Level.class);
@@ -38,6 +45,9 @@ public class Loader {
 		Gdx.app.log("Loader.finishLoading", "Level loaded.");
 	}
 
+	/**
+	 * Continues the player's last played level. If no last level is specified defaults to the first level.
+	 */
 	public void continueLevel() {
 		Level.Head levelHead = game.getPlayer().getLastLevel();
 		if(levelHead == null) {
