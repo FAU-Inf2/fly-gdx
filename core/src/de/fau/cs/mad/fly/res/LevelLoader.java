@@ -145,22 +145,30 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 					Vector3 pos = new Vector3(position.asFloatArray());
 					//Gdx.app.log("LevelLoader.getComponents", "Position: " + pos.toString());
 					
+					Vector3 scl = new Vector3(1.0f, 1.0f, 1.0f);
+					JsonValue scale = e.get("scale");
+					if( scale != null ) {
+						scl.set(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
+						//Gdx.app.log("LevelLoader.getComponents", "Scaling: " + scl.toString());
+					}
+					
 					JsonValue euler = e.get("euler");
 					JsonValue quaternion = e.get("quaternion");					
 					if( euler != null ) {
-						//Gdx.app.log("LevelLoader.getComponents", "Euler: " + euler.getFloat(0) + ", " + euler.getFloat(1) + ", " + euler.getFloat(2));
+						Gdx.app.log("LevelLoader.getComponents", "Euler: " + euler.getFloat(0) + ", " + euler.getFloat(1) + ", " + euler.getFloat(2));
 						
 						Quaternion quat = new Quaternion();
-						quat.setEulerAngles(euler.getFloat(0), euler.getFloat(1), euler.getFloat(2));
-						o.transform = new Matrix4(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
+						quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
+						o.transform = new Matrix4(pos, quat, scl);
 					} else if ( quaternion != null ) {
 						//Gdx.app.log("LevelLoader.getComponents", "Quaternion: " + quaternion.getFloat(0) + ", " + quaternion.getFloat(1) + ", " + quaternion.getFloat(2) + ", " + quaternion.getFloat(3));
 						
 						Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
-						o.transform = new Matrix4(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
+						o.transform = new Matrix4(pos, quat, scl);
 					} else {
 						o.transform = new Matrix4();
 						o.transform.trn(pos);
+						o.transform.scl(scl);
 					}
 				} else {
 					o.transform = new Matrix4();
