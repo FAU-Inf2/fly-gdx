@@ -49,7 +49,7 @@ public class MainMenuScreen extends BasicScreen {
 		continueButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
-				((Fly) Gdx.app.getApplicationListener()).continueLevel();
+				((Fly) Gdx.app.getApplicationListener()).getLoader().continueLevel();
 			}
 		});
 		

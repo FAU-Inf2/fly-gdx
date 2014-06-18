@@ -59,7 +59,7 @@ public class LevelChooserScreen extends BasicScreen {
 				button.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						((Fly) Gdx.app.getApplicationListener()).loadLevel(level);
+						((Fly) Gdx.app.getApplicationListener()).getLoader().startLoading(level);
 					}
 				});
 				scrollableTable.add(button).width(UI.SmallButtons.BUTTON_WIDTH).height(UI.SmallButtons.BUTTON_HEIGHT).pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).center();

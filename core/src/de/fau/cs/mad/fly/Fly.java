@@ -34,6 +34,8 @@ public class Fly extends Game {
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
 	private GameScreen gameScreen;
+
+	private Loader loader;
 	
 	private Player player;
 	private GameController gameController;
@@ -51,6 +53,8 @@ public class Fly extends Game {
 
 		player = new Player();
 		player.createSettings(skin);
+
+		loader = new Loader(this);
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
@@ -126,46 +130,14 @@ public class Fly extends Game {
 		setScreen(splashScreen);
 	}
 
-	public void continueLevel() {
-		Level.Head l = player.getLastLevel();
-		if ( l == null )
-			l = LevelChooserScreen.getLevelList().get(0);
-		loadLevel(l);
-	}
-
 	/**
-	 * Switches the current Screen to the LoadingScreen.
+	 * Switches the current screen to the LoadingScreen
 	 */
-	public void loadLevel(Level.Head head) {
-		Gdx.app.log("Fly.loadLevel", "Telling AssetManager to load level...");
-		String f = head.file.path();
-		Assets.init();
-		Assets.manager.load(f, Level.class);
-		Assets.manager.finishLoading();
-		Gdx.app.log("Fly.loadLevel", "Level ready. Displaying...");
-		Level l = Assets.manager.get(f, Level.class);
-		l.reset();
-		loadLevel(l);
-	}
-
-	public void loadLevel(Level level) {
+	public void setLoadingScreen() {
 		if (loadingScreen == null) {
 			loadingScreen = new LoadingScreen(this);
 		}
-		// TODO: make loading asynchronous to the loading screen and display the progress
 		setScreen(loadingScreen);
-		Gdx.app.log("Fly.loadLevel", "LoadingScreen on.");
-		// TODO: this should be level dependent in the future
-
-		player.setLevel(level);
-
-		GameController.Builder builder = new GameController.Builder();
-		builder.init(this);
-
-		gameController = builder.build();
-		Gdx.app.log("Fly.loadLevel", "Controller built.");
-		gameController.loadGame();
-		Gdx.app.log("Fly.loadLevel", "Game loaded.");
 	}
 
 	/**
@@ -197,5 +169,21 @@ public class Fly extends Game {
 			settingScreen = new SettingScreen();
 		}
 		setScreen(settingScreen);
+	}
+
+	/**
+	 * Initializes the GameController for the current level
+	 */
+	public void initGameController() {
+		GameController.Builder builder = new GameController.Builder();
+		builder.init(this);
+
+		gameController = builder.build();
+		Gdx.app.log("Fly.initGameController", "Controller built.");
+		gameController.loadGame();
+	}
+
+	public Loader getLoader() {
+		return loader;
 	}
 }

@@ -32,6 +32,9 @@ public class LoadingScreen implements Screen {
 
 	private ProgressBar progressBar;
 
+	boolean doneLoading = false;
+	int framesToRenderAfter = 3;
+
 	private float progress = 0f;
 
 	public LoadingScreen(final Fly game) {
@@ -99,11 +102,24 @@ public class LoadingScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 
-		incProgress(100f);
+		if(!Assets.manager.update()) {
+			float currentProgress = ((float)Assets.manager.getLoadedAssets() /(float)(Assets.manager.getLoadedAssets() + Assets.manager.getQueuedAssets())) * 100f;
+			if(currentProgress > progress) {
+				setProgress(currentProgress);
+			}
+			return;
+		} else {
+			setProgress(100f);
+			doneLoading = true;
+		}
 
-		if (progress >= 100f) {
-			game.setGameScreen();
-			setProgress(0f);
+		if(doneLoading) {
+			if(framesToRenderAfter-- == 0) {
+				progress = 0f;
+				doneLoading = false;
+				framesToRenderAfter = 3;
+				game.getLoader().finishLoading();
+			}
 		}
 	}
 
