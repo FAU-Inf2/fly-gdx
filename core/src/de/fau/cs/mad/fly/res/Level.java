@@ -140,7 +140,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	
 	protected void InitTime()
 	{
-		initTime = 30;//todo, calculate the time basis speed and distance
+		// TODO: calculate the time basis speed and distance
+		initTime = 90;
 		leftTime = initTime;
 	}	
 	
