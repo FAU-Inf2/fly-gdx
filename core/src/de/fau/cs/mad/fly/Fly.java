@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -62,6 +63,28 @@ public class Fly extends Game {
 		setMainMenuScreen();
 		// disabled for debugging reasons
 		// setSplashScreen();
+	}
+	
+	@Override
+	public void dispose() {
+		Gdx.app.log("Fly", "dispose game");
+		
+		disposeScreen(splashScreen);
+		disposeScreen(loadingScreen);
+		disposeScreen(levelChooserScreen);
+		disposeScreen(mainMenuScreen);
+		disposeScreen(settingScreen);
+		disposeScreen(statisticsScreen);
+		disposeScreen(gameScreen);
+		
+		skin.dispose();
+	}
+	
+	public void disposeScreen(Screen screen) {
+		if(screen != null) {
+			screen.dispose();
+			screen = null;
+		}
 	}
 
 	/**

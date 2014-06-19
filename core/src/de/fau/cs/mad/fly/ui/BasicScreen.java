@@ -72,12 +72,12 @@ public abstract class BasicScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		Gdx.app.log("BasicScreen", "dispose screen");
 		// everything that implements the interface Disposable should be
 		// disposed, because Java garbage collections does not care about such
 		// objects
-		
-		//removed by Fan, or else the app crashed when you re-enter a screen
-		//stage.dispose();
+
+		stage.dispose();
 	}
 
 }

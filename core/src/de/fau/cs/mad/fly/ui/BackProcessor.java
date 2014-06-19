@@ -18,7 +18,6 @@ public class BackProcessor extends InputAdapter {
 		if ( keycode == Keys.ESCAPE || keycode == Keys.BACK ) {
 			Fly game = (Fly) Gdx.app.getApplicationListener();
 			Gdx.app.log("BackProcessor.keyDown", "Back, screen.class=" + game.getScreen().getClass().getName());
-			game.getScreen().dispose();
 			if (!(game.getScreen() instanceof MainMenuScreen))
 				game.setMainMenuScreen();
 			return true;
