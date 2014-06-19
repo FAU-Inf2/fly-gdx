@@ -75,7 +75,9 @@ public abstract class BasicScreen implements Screen {
 		// everything that implements the interface Disposable should be
 		// disposed, because Java garbage collections does not care about such
 		// objects
-		stage.dispose();
+		
+		//removed by Fan, or else the app crashed when you re-enter a screen
+		//stage.dispose();
 	}
 
 }

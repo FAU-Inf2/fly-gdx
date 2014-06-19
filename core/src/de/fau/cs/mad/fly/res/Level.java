@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Disposable;
 
+import de.fau.cs.mad.fly.Debug;
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.game.GameController;
@@ -16,6 +18,9 @@ import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.geo.Perspective;
 import de.fau.cs.mad.fly.player.Spaceship;
+import de.fau.cs.mad.fly.profile.Score;
+import de.fau.cs.mad.fly.profile.ScoreDetail;
+import de.fau.cs.mad.fly.profile.ScoreManager;
 import de.fau.cs.mad.fly.script.FlyEngine;
 
 import java.util.*;
@@ -25,7 +30,7 @@ import java.util.*;
  * @author Lukas Hahmann
  * 
  */
-public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Level.Gate> {
+public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Level.Gate>{
 	public static class Gate implements Iterable<Gate> {
 		public final int id;
 		public int score;
@@ -141,10 +146,19 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	protected void InitTime()
 	{
 		// TODO: calculate the time basis speed and distance
-		initTime = 90;
+		initTime = getGatesNumber()*5 + 10;
 		leftTime = initTime;
 	}	
 	
+	public int getGatesNumber()
+	{
+		int count = 0;
+		for( Gate gate: allGates())
+		{
+			count++;
+		}
+		return count;
+	}
 	private int CollisionTime = 0;
 	private int leftCollisionTime = 0;
 	
@@ -179,6 +193,36 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		return gameOver;
 	}
 	
+	public Score getScore()
+	{
+		if( gameOver)
+		{
+			Score newScore = new Score();
+			newScore.setReachedDate(new Date());
+			
+			int score = 0;
+			int totalScore = 0;
+			for ( Gate gate : allGates() ) {
+				totalScore += gate.score*gate.passedTimes;
+			}
+			score = totalScore;
+			newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + "" ));
+			
+			totalScore += (int)(leftTime*50);
+			
+			newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), (totalScore - score) + "" ));
+			score = totalScore;
+			
+			totalScore += leftCollisionTime*50;
+			newScore.setTotalScore(totalScore);
+			newScore.getScoreDetails().add(new ScoreDetail(("leftCollisionTime"), (totalScore - score) + "" ));
+			return newScore;
+		}
+		else
+		{
+			return new Score();//todo
+		}
+	}
 	public Level(String name, Perspective start, Collection<GameObject> components, Map<String, GameModel> dependencies, Gate startingGate) {
 		this.head = new Head();
 		this.head.name = name;
@@ -208,7 +252,10 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 
 	public void gatePassed(Gate gate) {
 		if ( currentGates().contains(gate) )
+		{
+			gate.passedTimes++;
 			activeGatePassed(gate);
+		}
 	}
 
 	public GameModel getDependency(String id) {
@@ -319,4 +366,5 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	public void onCollision(Spaceship spaceship, Gate gate) {
 		gatePassed(gate);
 	}
+	
 }

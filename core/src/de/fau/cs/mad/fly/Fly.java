@@ -9,8 +9,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.Player;
+import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.script.FlyEngine;
@@ -33,6 +35,7 @@ public class Fly extends Game {
 	private LevelChooserScreen levelChooserScreen;
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
+	private StatisticsScreen statisticsScreen;
 	private GameScreen gameScreen;
 
 	private Loader loader;
@@ -51,7 +54,7 @@ public class Fly extends Game {
 		createSkin();
 		shapeRenderer = new ShapeRenderer();
 
-		player = new Player();
+		player = PlayerManager.Instance.getCurrentPlayer();
 		player.createSettings(skin);
 
 		loader = new Loader(this);
@@ -186,4 +189,16 @@ public class Fly extends Game {
 	public Loader getLoader() {
 		return loader;
 	}
+
+	
+		
+	/**
+	 * Switches the current Screen to the StatisticsScreen.
+	 */
+	public void setStatisticsScreen() {
+		if (statisticsScreen == null) {
+			statisticsScreen = new StatisticsScreen();
+		}
+		setScreen(statisticsScreen);
+    }
 }
