@@ -5,94 +5,139 @@ import bpy
 from mathutils import Vector, Euler
 
 
+class ConvertHelper:
+	"""Helper class for converting blender data to export data"""
+	
+	@staticmethod
+	def convert_pos(pos):
+		"""Converts the position to floating point and cuts too many decimal places"""
+		return float('%.4f' % pos)
 
-def convert_position(pos):
-	return float('%.4f' % pos)
+	@staticmethod
+	def convert_angle(angle):
+		"""Converts the angle to degree and cuts too many decimal places"""
+		return float('%.4f' % math.degrees(angle))
 
-def convert_angle(angle):
-	return float('%.4f' % math.degrees(angle))
+	@staticmethod
+	def convert_id(id):
+		"""Converts the object id to an integer number"""
+		return int(id.replace("Gate.", ""))
 
-def convert_id(id):
-	return int(id.replace("Gate.", ""))
+
+
+class LevelExporter:
+	"""Creates the dictionary of the blender data and exports it to a json file"""
+	
+	def __init__(self, export):
+		self.data = { }
+		
+	def setup(self, export):
+		"""Creates the dictionary of the blender data"""
+		print("create level data")
+	
+		self.setupInfo(export)
+		
+		self.data['start'] = self.setupStartPos()
+		self.data['dependencies'] = self.setupDependencies()
+		self.data['gates'] = self.setupGates()
+		self.data['components'] = self.setupComponents(export)
+		
+	def setupInfo(self, export):
+		"""Creates the level information"""
+		self.data['id'] = int(export.level_id)
+		self.data['name'] = export.level_name
+		self.data['scripts'] = [ ]
+		
+	def setupStartPos(self):
+		"""Creates the starting position information"""
+		player = bpy.data.objects["Player"]
+    
+		viewDir = Vector((0.0, 0.0, -1.0))
+		viewDir.rotate(player.rotation_euler) 
+		
+		start = { }
+		start['position'] = { 'x': ConvertHelper.convert_pos(player.location.x), 'y': ConvertHelper.convert_pos(player.location.y), 'z': ConvertHelper.convert_pos(player.location.z) }
+		start['viewDirection'] = { 'x': ConvertHelper.convert_pos(viewDir.x), 'y': ConvertHelper.convert_pos(viewDir.y), 'z': ConvertHelper.convert_pos(viewDir.z) }
+		return start
+		
+	def setupDependencies(self):
+		"""Creates the dependency information"""
+		deps = { }
+		deps['space'] = "spacesphere"
+		deps['torus'] = "torus"
+		deps['hole'] = "torusHoleBox"
+		deps['asteroid'] = "asteroid"
+		return deps
+		
+	def setupGates(self):
+		"""Creates the gate information"""
+		gates = [ ]
+
+		dummy_gate = { }
+		dummy_gate['successors'] = [ ]
+		for gateId in bpy.data.cameras["Player"]["start_gates"]:
+			dummy_gate['successors'].append(int(gateId))
+		gates.append(dummy_gate)
+		
+		for item in bpy.data.objects:
+			if "Gate" in item.name:
+				gate = { }
+				gate['id'] = ConvertHelper.convert_id(item.name)
+				gate['display'] = item.name
+				gate['goal'] = item.name + "hole"
+
+				successors = [ ]
+				for constraint in item.constraints:
+					successors.append(ConvertHelper.convert_id(constraint.target.name))
+
+				gate['successors'] = successors
+				gates.append(gate)
+		
+		return gates
+		
+	def setupComponents(self, export):
+		"""Creates the component information"""
+		components = [ ]
+		
+		component = { }
+		component['id'] = "space"
+		component['ref'] = export.border_model
+		components.append(component)
+
+		for item in bpy.data.objects:
+			if "Gate" in item.name:
+				component = { }
+				component['id'] = item.name
+				component['ref'] = export.gate_model
+				component['position'] = [ ConvertHelper.convert_pos(item.location.x), ConvertHelper.convert_pos(item.location.y), ConvertHelper.convert_pos(item.location.z) ]
+				component['euler'] = [ ConvertHelper.convert_angle(item.rotation_euler.x) - 90.0, ConvertHelper.convert_angle(item.rotation_euler.y), ConvertHelper.convert_angle(item.rotation_euler.z) ]
+				components.append(component)
+			
+				component = { }
+				component['id'] = item.name + "hole"
+				component['ref'] = export.hole_model
+				components.append(component)
+			
+		return components
+
+	def writeLevel(self, filepath):
+		"""Exports the file to the specified filepath"""
+		print("write level")
+	
+		f = open(filepath, 'w', encoding='utf-8')
+		f.write(json.dumps(self.data, sort_keys=True, indent=4, separators=(',', ': ')))
+		f.close()
+
+
+
 
 
 def write_level(context, export):
-	print("create level data")
+	levelExporter = LevelExporter(export)
 	
-	data = { }
+	levelExporter.setup(export)
 	
-	data['id'] = int(export.level_id)
-	data['name'] = export.level_name
-
-	player = bpy.data.objects["Player"]
-	
-	viewDir = Vector((0.0, 0.0, -1.0))
-	viewDir.rotate(player.rotation_euler) 
-	
-	data['start'] = { }
-	data['start']['position'] = { 'x': convert_position(player.location.x), 'y': convert_position(player.location.y), 'z': convert_position(player.location.z) }
-	data['start']['viewDirection'] = { 'x': convert_position(viewDir.x), 'y': convert_position(viewDir.y), 'z': convert_position(viewDir.z) }
-	
-	data['dependencies'] = { }
-	data['dependencies']["space"] = "spacesphere"
-	data['dependencies']["torus"] = "torus"
-	data['dependencies']["hole"] = "torusHoleBox"
-	data['dependencies']["asteroid"] = "asteroid"	
-	
-	data['scripts'] = [ ]
-
-	gates = [ ]
-
-	dummy_gate = { }
-	dummy_gate['successors'] = [ ]
-	for gateId in bpy.data.cameras["Player"]["start_gates"]:
-		dummy_gate['successors'].append(int(gateId))
-	gates.append(dummy_gate)
-	
-	for item in bpy.data.objects:
-		if "Gate" in item.name:
-			gate = { }
-			gate['id'] = convert_id(item.name)
-			gate['display'] = item.name
-			gate['goal'] = item.name + "hole"
-
-			successors = [ ]
-			for constraint in item.constraints:
-				successors.append(convert_id(constraint.target.name))
-
-			gate['successors'] = successors
-			gates.append(gate)
-	
-	data['gates'] = gates
-
-	components = [ ]
-	
-	component = { }
-	component['id'] = "space"
-	component['ref'] = export.border_model
-	components.append(component)
-
-	for item in bpy.data.objects:
-		if "Gate" in item.name:
-			component = { }
-			component['id'] = item.name
-			component['ref'] = export.gate_model
-			component['position'] = [ convert_position(item.location.x), convert_position(item.location.y), convert_position(item.location.z) ]
-			component['euler'] = [ convert_angle(item.rotation_euler.x) - 90.0, convert_angle(item.rotation_euler.y), convert_angle(item.rotation_euler.z) ]
-			components.append(component)
-		
-			component = { }
-			component['id'] = item.name + "hole"
-			component['ref'] = export.hole_model
-			components.append(component)
-		
-	data['components'] = components
-
-	print("write level")
-	
-	f = open(export.filepath, 'w', encoding='utf-8')
-	f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
-	f.close()
+	levelExporter.writeLevel(export.filepath)
 
 	return {'FINISHED'}
 
