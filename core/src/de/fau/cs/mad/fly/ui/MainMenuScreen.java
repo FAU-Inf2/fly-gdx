@@ -72,8 +72,5 @@ public class MainMenuScreen extends BasicScreen {
 	@Override
 	public void dispose() {
 		stage.dispose();
-		skin.dispose();
-		Gdx.app.getApplicationListener().dispose();
-		Gdx.app.exit();
 	}
 }

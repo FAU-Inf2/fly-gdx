@@ -155,7 +155,6 @@ public class LoadingScreen implements Screen {
 	public void dispose() {
 		splashImg.dispose();
 		batch.dispose();
-		skin.dispose();
 		stage.dispose();
 	}
 }
