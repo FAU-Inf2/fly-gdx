@@ -66,7 +66,7 @@ public class Player {
 	 * Creates the SettingManager and all the Settings.
 	 */
 	public void createSettings(final Skin skin) {
-		settingManager = new SettingManager("fly_user_preferences_" + getName());
+		settingManager = new SettingManager("fly_user_preferences_" + getId());
 
 		//settingManager.addSetting("name", "Playername:", "Test");
 		//String[] selection = { "Red", "Blue", "Green", "Yellow" };
