@@ -38,19 +38,24 @@ public final class UI {
 		 * {@link #RELATIVE_HEIGHT_OF_ALL_BUTTONS} + {@link #RELATIVE_HEIGHT_OF_ALL_SPACE}
 		 * < 1.0.
 		 */
-		public static final float RELATIVE_HEIGHT_OF_ALL_BUTTONS = .7f;
+		public static final float RELATIVE_HEIGHT_OF_ALL_BUTTONS = .5f;
 
 		/**
 		 * This percentage of the screen width is covered with space between
 		 * buttons
 		 */
-		public static final float RELATIVE_HEIGHT_OF_ALL_SPACE = .15f;
+		public static final float RELATIVE_HEIGHT_OF_ALL_SPACE = .5f;
 
 		public static final float SINGLE_SPACE_WIDTH = Window.RELATIVE_WIDTH_OF_ALL_SPACE / 6 * Gdx.graphics.getWidth();
 		public static final float SINGLE_SPACE_HEIGHT = Window.RELATIVE_HEIGHT_OF_ALL_SPACE / 6 * Gdx.graphics.getHeight();
 		
 		/** Background color of the windows */
 		public static final String BACKGROUND_COLOR = "black";
+		
+		public static final String TRANSPARENT_COLOR = "transparent";
+		
+		/** This is used to find the transparent style for a {@link ScrollPane} in the uiskin.json */
+		public static final String TRANSPARENT_SCROLL_PANE_STYLE = "transparent";
 	}
 
 	/** This class contains all parameters related to smaller buttons. */

@@ -24,7 +24,6 @@ public class Loader {
 	 * @param levelHead the Level.Head of the level to be loaded
 	 */
 	public void startLoading(Level.Head levelHead) {
-		Assets.init();
 		currentLevelPath = levelHead.file.path();
 		Gdx.app.log("Loader.startLoading", "Queuing level for loading.");
 		Assets.manager.load(currentLevelPath, Level.class);

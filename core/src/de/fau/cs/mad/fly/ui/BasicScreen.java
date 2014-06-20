@@ -5,18 +5,23 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.res.Assets;
 
 public abstract class BasicScreen implements Screen {
 	
 	protected final Skin skin;
 	protected final Stage stage;
+	protected final Sprite sprite;
+	protected final Texture background;
 	protected final Batch batch;
 
 	/**
@@ -29,6 +34,11 @@ public abstract class BasicScreen implements Screen {
 		skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
+		
+		Assets.load(Assets.background);
+		background = Assets.manager.get(Assets.background);
+		sprite = new Sprite(background);
+		sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch = new SpriteBatch();
 		generateContent();
 	}
@@ -40,8 +50,10 @@ public abstract class BasicScreen implements Screen {
 	public void render(float delta) {
 		Color backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-		//Gdx.gl.glClearColor(UI.Window.BACKGROUND_COLOR.r, UI.Window.BACKGROUND_COLOR.g, UI.Window.BACKGROUND_COLOR.b, UI.Window.BACKGROUND_COLOR.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+	    sprite.draw(batch);
+	    batch.end();
 		stage.act(delta);
 		stage.draw();
 	}
@@ -79,9 +91,11 @@ public abstract class BasicScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		Gdx.app.log("BasicScreen", "dispose screen");
 		// everything that implements the interface Disposable should be
 		// disposed, because Java garbage collections does not care about such
 		// objects
+
 		stage.dispose();
 	}
 

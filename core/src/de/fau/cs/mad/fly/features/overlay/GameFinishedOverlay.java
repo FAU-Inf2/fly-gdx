@@ -5,12 +5,16 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.profile.Score;
+import de.fau.cs.mad.fly.profile.ScoreDetail;
+import de.fau.cs.mad.fly.profile.ScoreManager;
 
 /**
  * Optional Feature to display a start and a finish message to the player.
@@ -32,7 +36,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 		this.stage = stage;
 		skin = game.getSkin();
 		table = new Table();
-		
 	}
 
 	@Override
@@ -68,10 +71,41 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 		
 		final Table infoTable = new Table();
 		final ScrollPane pane = new ScrollPane(infoTable, skin);
+		pane.setFadeScrollBars(true);
+		
 		infoTable.add(infoLabel).pad(10f);
 		infoTable.row();
-		infoTable.add(continueButton).pad(10f);
-		pane.setFadeScrollBars(true);
+		Score newScore = game.getGameController().getLevel().getScore();
+		
+		ScoreManager.Instance.saveBestScore( newScore);
+		
+		String  scoreString = I18n.t("newScore") + newScore.getTotalScore();	
+		
+		
+		final Label scoreLabel = new Label(scoreString, skin);
+		
+		infoTable.add(scoreLabel).pad(15f);
+		
+		infoTable.row().expand();
+		
+		for(ScoreDetail detail : newScore.getScoreDetails() )
+		{
+			 infoTable.row().expand();
+			 infoTable.add( new Label(I18n.t(detail.getDetailName()),skin)).pad(6f).uniform();
+			 infoTable.add( new Label(detail.getValue(), skin)).pad(6f).uniform();
+		}
+		
+		if(ScoreManager.Instance.getCurrentBestScore() == null
+				|| newScore.getTotalScore() > ScoreManager.Instance.getCurrentBestScore().getTotalScore() )
+		{
+			ScoreManager.Instance.saveBestScore(newScore);
+			infoTable.row().expand();
+			infoTable.add( new Label(I18n.t("newRecord"),skin)).pad(6f).uniform();
+		}
+		
+		infoTable.row().expand();
+		infoTable.add(continueButton).pad(10f);		
+		
 		
 		table.row().expand();
 		table.add(pane);

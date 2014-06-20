@@ -1,5 +1,8 @@
 package de.fau.cs.mad.fly.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -9,11 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.res.Level;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Offers a selection of Levels to start
@@ -47,7 +48,12 @@ public class LevelChooserScreen extends BasicScreen {
 		// table that contains all buttons
 		Table scrollableTable = new Table(skin);
 		scrollableTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+		
+		ScrollPane levelScrollPane = new ScrollPane(scrollableTable, skin);
+		levelScrollPane.setScrollingDisabled(true, false);
+		levelScrollPane.setFillParent(true);
+		levelScrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
+		
 		// create a button for each level
 		int maxRows = (int) Math.ceil((double) allLevels.size() / (double) UI.SmallButtons.BUTTONS_IN_A_ROW);
 		for (int row = 0; row < maxRows; row++) {
@@ -69,10 +75,7 @@ public class LevelChooserScreen extends BasicScreen {
 
 		// place the table of buttons in a ScrollPane to make it scrollable, if
 		// not all buttons can be displayed
-		ScrollPane levelScrollPane = new ScrollPane(scrollableTable, skin);
-		levelScrollPane.setScrollingDisabled(true, false);
-		levelScrollPane.setFillParent(true);
-		levelScrollPane.setColor(skin.getColor(UI.Window.BACKGROUND_COLOR));
+		
 		stage.addActor(levelScrollPane);
 	}
 }

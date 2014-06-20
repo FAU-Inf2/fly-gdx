@@ -10,7 +10,7 @@ import java.util.Locale;
  * Created by danyel on 16/06/14.
  */
 public final class I18n {
-	public static Locale locale = Locale.GERMAN;
+	public static Locale locale = Locale.ENGLISH;
 
 	private static final FileHandle baseFileHandle = Gdx.files.internal("config/locales/Bundle");
 	private static I18NBundle bundle = I18NBundle.createBundle(baseFileHandle, locale);

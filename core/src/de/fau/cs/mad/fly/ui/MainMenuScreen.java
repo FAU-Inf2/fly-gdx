@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.res.Assets;
 
 
 /**
@@ -30,12 +29,14 @@ public class MainMenuScreen extends BasicScreen {
 		final TextButton continueButton = new TextButton(I18n.t("continue"), skin, "default");
 		final TextButton chooseLevelButton = new TextButton(I18n.t("choose.level"), skin, "default");
 		final TextButton optionButton = new TextButton(I18n.t("settings"), skin, "default");
+		final TextButton statsButton = new TextButton("Statistics", skin, "default");
 
 		table.row().expand();
-		table.add(continueButton).fill().pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).colspan(2);
+		table.add(continueButton).fill().pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).colspan(3);
 		table.row().expand();
 		table.add(chooseLevelButton).fill().pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).uniform();
 		table.add(optionButton).fill().pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).uniform();
+		table.add(statsButton).fill().pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).uniform();
 		table.row().expand();
 		
 		
@@ -59,13 +60,17 @@ public class MainMenuScreen extends BasicScreen {
 				((Fly) Gdx.app.getApplicationListener()).setSettingScreen();
 			}
 		});
+		
+		statsButton.addListener(new ClickListener() {
+			@Override 
+			public void clicked(InputEvent event, float x, float y) {
+				((Fly) Gdx.app.getApplicationListener()).setStatisticsScreen();
+			}
+		});
 	}
 
 	@Override
 	public void dispose() {
 		stage.dispose();
-		skin.dispose();
-		Gdx.app.getApplicationListener().dispose();
-		Gdx.app.exit();
 	}
 }

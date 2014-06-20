@@ -32,6 +32,11 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureRender {
 		this.stage = stage;
 		skin = game.getSkin();
 		
+		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
+		
+		timeDescription = addLabel("Time left:", labelStyle, 0.01f, 0.0f);
+		timeCounter = addLabel(String.valueOf((long) time), labelStyle, 0.20f, 0.0f);
+		
 		
 	}
 
@@ -71,9 +76,6 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureRender {
 	public void init(final GameController gameController) {		
 		time = game.getGameController().getLevel().getLeftTime();
 
-		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
 		
-		timeDescription = addLabel("Time left:", labelStyle, 0.01f, 0.0f);
-		timeCounter = addLabel(String.valueOf((long) time), labelStyle, 0.20f, 0.0f);
 	}
 }

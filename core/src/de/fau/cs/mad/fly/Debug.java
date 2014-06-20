@@ -2,6 +2,8 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.TimeUtils;
+
 import de.fau.cs.mad.fly.features.overlay.DebugOverlay;
 
 /**
@@ -17,6 +19,9 @@ import de.fau.cs.mad.fly.features.overlay.DebugOverlay;
  */
 public class Debug {
 	public static DebugOverlay debugOverlay;
+	
+	private static long lastTimeMS = 0;
+	private static long lastTimeNS = 0;
 
 	public static void init(final Fly game, final Stage stage, int index) {
 		debugOverlay = new DebugOverlay(game, stage, index);
@@ -42,6 +47,46 @@ public class Debug {
 		
 		debugOverlay.setValue(index, value);
 	}
+	
+	
+	/**
+	 * Returns the current time in milli seconds and stores it in the static variable lastTimeMS
+	 * @return lastTimeMS
+	 */
+	public static long getMSTime() {
+		lastTimeMS = TimeUtils.millis();
+		return lastTimeMS;
+	}
+	
+	/**
+	 * Returns the current time in nano seconds and stores it in the static variable lastTimeNS
+	 * @return lastTimeNS
+	 */
+	public static long getNSTime() {
+		lastTimeNS = TimeUtils.nanoTime();
+		return lastTimeNS;
+	}
+
+	/**
+	 * Returns the time in milli seconds since the last getMSTime() call and stores the current time in the static variable lastTimeMS
+	 * @return timeDiff
+	 */
+	public static long getMSTimeSinceLast() {
+		long timeDiff = TimeUtils.millis() - lastTimeMS;
+		lastTimeMS = TimeUtils.millis();
+		return timeDiff;
+	}
+	
+	/**
+	 * Returns the time in nano seconds since the last getNSTime() call and stores the current time in the static variable lastTimeNS
+	 * @return timeDiff
+	 */
+	public static long getNSTimeSinceLast() {
+		long timeDiff = TimeUtils.nanoTime() - lastTimeNS;
+		lastTimeNS = TimeUtils.nanoTime();
+		return timeDiff;
+	}	
+
 	
 	public static void setLogLevel(int logLevel) {
 		Gdx.app.setLogLevel(logLevel);

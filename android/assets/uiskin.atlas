@@ -173,6 +173,14 @@ default-rect
   orig: 3, 3
   offset: 0, 0
   index: -1
+transparent-rect
+  rotate: false
+  xy: 38, 20
+  size: 3, 3
+  split: 1, 1, 1, 1
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 default-select-selection
   rotate: false
   xy: 26, 16

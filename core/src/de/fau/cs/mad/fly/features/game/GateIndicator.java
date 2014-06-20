@@ -29,7 +29,7 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
 	@Override
 	public void init(final GameController game) {
 		this.gameController = game;
-		Assets.loadArrow();
+		Assets.load(Assets.arrow);
 		arrowModel = new GameObject(Assets.manager.get(Assets.arrow));
 		batch = game.getBatch();
 

@@ -17,7 +17,24 @@ public class Player {
 	
 	private Level.Head lastLevel;
 	private Level level;
-	//TODO: Player name
+	private String name;
+	private int id;
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}	
 
 	private SettingManager settingManager;
 	
@@ -49,7 +66,7 @@ public class Player {
 	 * Creates the SettingManager and all the Settings.
 	 */
 	public void createSettings(final Skin skin) {
-		settingManager = new SettingManager("fly_preferences");
+		settingManager = new SettingManager("fly_user_preferences_" + getName());
 
 		//settingManager.addSetting("name", "Playername:", "Test");
 		//String[] selection = { "Red", "Blue", "Green", "Yellow" };
