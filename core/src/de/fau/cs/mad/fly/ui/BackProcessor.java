@@ -3,8 +3,8 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.GameScreen;
 
 /**
  * Handles the Back-Button of the Smartphone and the Escape-Button of the Desktop
@@ -18,8 +18,12 @@ public class BackProcessor extends InputAdapter {
 		if ( keycode == Keys.ESCAPE || keycode == Keys.BACK ) {
 			Fly game = (Fly) Gdx.app.getApplicationListener();
 			Gdx.app.log("BackProcessor.keyDown", "Back, screen.class=" + game.getScreen().getClass().getName());
-			if (!(game.getScreen() instanceof MainMenuScreen))
+			if (!(game.getScreen() instanceof MainMenuScreen)) {
 				game.setMainMenuScreen();
+			}
+			else {
+				Gdx.app.exit();
+			}
 			return true;
 		}
 		return false;
