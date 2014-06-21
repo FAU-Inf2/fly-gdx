@@ -54,6 +54,9 @@ public final class UI {
 		
 		/** This is used to find the transparent style for a {@link ScrollPane} in the uiskin.json */
 		public static final String TRANSPARENT_SCROLL_PANE_STYLE = "transparent";
+		
+		/** This is the amount of pixels which should be left blank between border of the screen and the outer widgets */
+		public static final int BORDER_SPACE = Gdx.graphics.getWidth()/40;
 	}
 
 	/** This class contains all parameters related to buttons. */

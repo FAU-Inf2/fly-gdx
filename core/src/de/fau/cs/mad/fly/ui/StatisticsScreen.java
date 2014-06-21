@@ -71,10 +71,11 @@ public class StatisticsScreen extends BasicScreen {
 		stage.addActor(table);
 		
 		final Table infoTable = new Table();
-		final ScrollPane settingPane = new ScrollPane(infoTable, skin);
-		settingPane.setColor(skin.getColor(UI.Window.BACKGROUND_COLOR));
-		settingPane.setFadeScrollBars(false);
-	 	settingPane.setScrollingDisabled(true, false);
+		final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
+		statisticsPane.setColor(skin.getColor(UI.Window.BACKGROUND_COLOR));
+		statisticsPane.setFadeScrollBars(false);
+	 	statisticsPane.setScrollingDisabled(true, false);
+	 	statisticsPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
 	
 	 	String userName = ((Fly) Gdx.app.getApplicationListener()).getPlayer().getName();
 	 	infoTable.row().expand();
@@ -128,7 +129,7 @@ public class StatisticsScreen extends BasicScreen {
 		}
 		 
 		table.row().expand();
-		table.add(settingPane);	
+		table.add(statisticsPane);	
 	}
 
 	@Override
