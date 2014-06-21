@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -61,7 +62,7 @@ public class LevelChooserScreen extends BasicScreen {
 			// fill a row with buttons
 			for (int i = 0; i < max; i++) {
 				final Level.Head level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + i);
-				final TextButton button = new TextButton(level.name, skin, "default");
+				final TextButton button = new TextButton(level.name, skin.get(UI.Buttons.STYLE, TextButtonStyle.class));
 				button.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
