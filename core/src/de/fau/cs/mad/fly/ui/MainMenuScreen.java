@@ -2,10 +2,16 @@ package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
@@ -25,25 +31,31 @@ public class MainMenuScreen extends BasicScreen {
 	 */
 	protected void generateContent() {
 		Table table = new Table();
-		table.pad(UI.Window.SINGLE_SPACE_HEIGHT, UI.Window.SINGLE_SPACE_WIDTH, UI.Window.SINGLE_SPACE_HEIGHT, UI.Window.SINGLE_SPACE_WIDTH).setFillParent(true);
+		table.setFillParent(true);
+		table.pad(50, 50, 50, 50);
 		stage.addActor(table);
 		
 		TextButtonStyle textButtonStyle = skin.get(UI.Buttons.STYLE, TextButtonStyle.class);
-		final TextButton continueButton = new TextButton(I18n.t("continue"), textButtonStyle);
-		final TextButton chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
-		final TextButton optionButton = new TextButton(I18n.t("settings"), textButtonStyle);
-		final TextButton statsButton = new TextButton("Statistics", textButtonStyle);
+		final Button continueButton = new TextButton(I18n.t("continue"), textButtonStyle);
+		final Button chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
+		final Button settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+		final Button statsButton = new TextButton("Statistics", textButtonStyle);
 
-		
+		table.row();
+		table.add();
+		table.add();
+		table.add(settingsButton).right();
 		table.row().expand();
 		table.add();
-		table.add(optionButton).fill().uniform();
+		table.add(continueButton).fill();
+		table.add();
 		table.row().expand();
-		table.add(continueButton).fill().pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).colspan(3);
+		table.add();
+		table.add(chooseLevelButton).fill().pad(40, 0, 40, 0);
+		table.add();
 		table.row().expand();
-		table.add(chooseLevelButton).fill().pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).uniform();
-		
-		table.add(statsButton).fill().pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).uniform();
+		table.add();
+		table.add(statsButton).fill().setWidgetHeight(0.2f);;
 		table.row().expand();
 		
 		
@@ -61,7 +73,7 @@ public class MainMenuScreen extends BasicScreen {
 			}
 		});
 		
-		optionButton.addListener(new ClickListener() {
+		settingsButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
 				((Fly) Gdx.app.getApplicationListener()).setSettingScreen();

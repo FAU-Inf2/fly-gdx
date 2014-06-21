@@ -219,3 +219,10 @@ green-rounded-button-9patch
   orig: 90, 90
   offset: 0, 0
   index: -1
+gear
+  rotate: false
+  xy: 92, 50
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1

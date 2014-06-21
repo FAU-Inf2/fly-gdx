@@ -56,7 +56,7 @@ public final class UI {
 		public static final String TRANSPARENT_SCROLL_PANE_STYLE = "transparent";
 	}
 
-	/** This class contains all parameters related to smaller buttons. */
+	/** This class contains all parameters related to buttons. */
 	public static final class Buttons {
 		
 		/** This class should not be instantiated */
@@ -75,5 +75,9 @@ public final class UI {
 
 		public static final float SPACE_WIDTH = Window.SINGLE_SPACE_WIDTH;
 		public static final float SPACE_HEIGHT = Window.SINGLE_SPACE_HEIGHT;
+		
+		/** Style used for settings button in main menu */
+		public static final String SETTING_BUTTON_STYLE = "settings";
 	}
+	
 }
