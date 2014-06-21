@@ -63,10 +63,10 @@ class LevelExporter:
 	def setupDependencies(self):
 		"""Creates the dependency information"""
 		deps = { }
-		deps['space'] = "spacesphere"
-		deps['torus'] = "torus"
-		deps['hole'] = "torusHoleBox"
-		deps['asteroid'] = "asteroid"
+		for model in bpy.data.objects["Player"].keys():
+			if model not in '_RNA_UI':
+				deps[model] = bpy.data.objects["Player"][model]
+
 		return deps
 		
 	def setupGates(self):
@@ -75,8 +75,8 @@ class LevelExporter:
 
 		dummy_gate = { }
 		dummy_gate['successors'] = [ ]
-		for gateId in bpy.data.cameras["Player"]["start_gates"]:
-			dummy_gate['successors'].append(int(gateId))
+		for constraint in bpy.data.objects["Player"].constraints:
+			dummy_gate['successors'].append(ConvertHelper.convert_id(constraint.target.name))
 		gates.append(dummy_gate)
 		
 		for item in bpy.data.objects:
@@ -105,18 +105,21 @@ class LevelExporter:
 		components.append(component)
 
 		for item in bpy.data.objects:
-			if "Gate" in item.name:
+			if "Player" not in item.name:
 				component = { }
 				component['id'] = item.name
-				component['ref'] = export.gate_model
+				component['ref'] = item['Model']
 				component['position'] = [ ConvertHelper.convert_pos(item.location.x), ConvertHelper.convert_pos(item.location.y), ConvertHelper.convert_pos(item.location.z) ]
 				component['euler'] = [ ConvertHelper.convert_angle(item.rotation_euler.x) - 90.0, ConvertHelper.convert_angle(item.rotation_euler.y), ConvertHelper.convert_angle(item.rotation_euler.z) ]
+				if item.scale.x != 1.0 or item.scale.y != 1.0 or item.scale.z != 1.0:
+					component['scale'] = [ ConvertHelper.convert_pos(item.scale.x), ConvertHelper.convert_pos(item.scale.y), ConvertHelper.convert_pos(item.scale.z) ]
 				components.append(component)
-			
-				component = { }
-				component['id'] = item.name + "hole"
-				component['ref'] = export.hole_model
-				components.append(component)
+				
+				if "Gate" in item.name:
+					component = { }
+					component['id'] = item.name + "hole"
+					component['ref'] = item['HoleModel']
+					components.append(component)
 			
 		return components
 
@@ -158,8 +161,6 @@ class ExportLevelOperator(Operator, ExportHelper):
 	level_name = StringProperty(name="Level Name", description="Name of the Level", default="Level");
 	
 	border_model = StringProperty(name="Border Model", description="Border model if no border model property is added", default="space");
-	gate_model = StringProperty(name="Gate Model", description="Gate model if no gate model property is added", default="torus");
-	hole_model = StringProperty(name="Hole Model", description="Hole model if no hole model property is added", default="hole");
 
 	def execute(self, context):
 		return write_level(context, self)
