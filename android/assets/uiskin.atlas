@@ -214,8 +214,8 @@ white
 green-rounded-button-9patch
   rotate: false
   xy: 1, 50
-  size: 126, 126
-  split: 45, 45, 45, 45
-  orig: 130, 130
+  size: 90, 90
+  split: 44, 44, 44, 44
+  orig: 90, 90
   offset: 0, 0
   index: -1
