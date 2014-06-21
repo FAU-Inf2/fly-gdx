@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.geo;
+package de.fau.cs.mad.fly.res;
 
 import com.badlogic.gdx.math.Vector3;
 

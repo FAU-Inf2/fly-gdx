@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.geo.Perspective;
 
 import java.util.*;
 
