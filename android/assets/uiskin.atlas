@@ -211,3 +211,11 @@ white
   orig: 1, 1
   offset: 0, 0
   index: -1
+green-rounded-button-9patch
+  rotate: false
+  xy: 1, 50
+  size: 126, 126
+  split: 45, 45, 45, 45
+  orig: 130, 130
+  offset: 0, 0
+  index: -1

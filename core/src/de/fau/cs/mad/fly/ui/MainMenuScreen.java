@@ -1,10 +1,14 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 
@@ -25,8 +29,8 @@ public class MainMenuScreen extends BasicScreen {
 		Table table = new Table();
 		table.pad(UI.Window.SINGLE_SPACE_HEIGHT, UI.Window.SINGLE_SPACE_WIDTH, UI.Window.SINGLE_SPACE_HEIGHT, UI.Window.SINGLE_SPACE_WIDTH).setFillParent(true);
 		stage.addActor(table);
-
-		final TextButton continueButton = new TextButton(I18n.t("continue"), skin, "default");
+		
+		final TextButton continueButton = new TextButton(I18n.t("continue"), skin.get("rounded", TextButtonStyle.class));
 		final TextButton chooseLevelButton = new TextButton(I18n.t("choose.level"), skin, "default");
 		final TextButton optionButton = new TextButton(I18n.t("settings"), skin, "default");
 		final TextButton statsButton = new TextButton("Statistics", skin, "default");
