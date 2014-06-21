@@ -55,12 +55,12 @@ public class LevelChooserScreen extends BasicScreen {
 		levelScrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
 		
 		// create a button for each level
-		int maxRows = (int) Math.ceil((double) allLevels.size() / (double) UI.SmallButtons.BUTTONS_IN_A_ROW);
+		int maxRows = (int) Math.ceil((double) allLevels.size() / (double) UI.Buttons.BUTTONS_IN_A_ROW);
 		for (int row = 0; row < maxRows; row++) {
-			int max = Math.min(allLevels.size() - (row * UI.SmallButtons.BUTTONS_IN_A_ROW), UI.SmallButtons.BUTTONS_IN_A_ROW);
+			int max = Math.min(allLevels.size() - (row * UI.Buttons.BUTTONS_IN_A_ROW), UI.Buttons.BUTTONS_IN_A_ROW);
 			// fill a row with buttons
 			for (int i = 0; i < max; i++) {
-				final Level.Head level = allLevels.get(row * UI.SmallButtons.BUTTONS_IN_A_ROW + i);
+				final Level.Head level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + i);
 				final TextButton button = new TextButton(level.name, skin, "default");
 				button.addListener(new ClickListener() {
 					@Override
@@ -68,7 +68,7 @@ public class LevelChooserScreen extends BasicScreen {
 						((Fly) Gdx.app.getApplicationListener()).getLoader().startLoading(level);
 					}
 				});
-				scrollableTable.add(button).width(UI.SmallButtons.BUTTON_WIDTH).height(UI.SmallButtons.BUTTON_HEIGHT).pad(UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH, UI.SmallButtons.SPACE_HEIGHT, UI.SmallButtons.SPACE_WIDTH).center();
+				scrollableTable.add(button).width(UI.Buttons.BUTTON_WIDTH).height(UI.Buttons.BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).center();
 			}
 			scrollableTable.row();
 		}

@@ -52,18 +52,18 @@ public final class UI {
 		/** Background color of the windows */
 		public static final String BACKGROUND_COLOR = "black";
 		
-		public static final String TRANSPARENT_COLOR = "transparent";
-		
 		/** This is used to find the transparent style for a {@link ScrollPane} in the uiskin.json */
 		public static final String TRANSPARENT_SCROLL_PANE_STYLE = "transparent";
 	}
 
 	/** This class contains all parameters related to smaller buttons. */
-	public static final class SmallButtons {
+	public static final class Buttons {
 		
 		/** This class should not be instantiated */
-		private SmallButtons () {
+		private Buttons () {
 		}
+		
+		public static final String STYLE = "rounded";
 		
 		/** Max. number of buttons for level to show in a row */
 		public static final int BUTTONS_IN_A_ROW = 3;
