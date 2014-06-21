@@ -70,7 +70,6 @@ public class MovingGameObject extends GameObject {
 	}
 	
 	
-	
 	/**
 	 * Flips the direction vector and the rotation vector around.
 	 */
@@ -94,6 +93,17 @@ public class MovingGameObject extends GameObject {
 	 */
 	public void setRotationSpeed(float speed) {
 		rotationSpeed = speed;
+	}
+	
+	public void setMovingVector(Vector3 vector) {
+		directionVector = vector.nor();
+		if(vector != new Vector3(1.0f, 0.0f, 0.0f)) {
+			Vector3 helpVector = vector.cpy().crs(new Vector3(1.0f, 0.0f, 0.0f));
+			upVector = vector.cpy().crs(helpVector);
+		} else {
+			Vector3 helpVector = vector.cpy().crs(new Vector3(0.0f, 1.0f, 0.0f));
+			upVector = vector.cpy().crs(helpVector);
+		}
 	}
 	
 	/**
