@@ -17,6 +17,8 @@ public class Assets {
 	public static final AssetDescriptor<GameModel> arrow = new AssetDescriptor<GameModel>("3d/arrow/arrow", GameModel.class);
 	public static final AssetDescriptor<Texture> flyTextureLoadingScreen = new AssetDescriptor<Texture>("Fly.png", Texture.class);
 	public static final AssetDescriptor<Texture> background = new AssetDescriptor<Texture>("background.png", Texture.class);
+	
+	public static final AssetDescriptor<GameModel> spaceship = new AssetDescriptor<GameModel>("spaceship", GameModel.class);
 
 	public static void init() {
 		manager = new AssetManager();
@@ -32,6 +34,12 @@ public class Assets {
 	
 	public static void load(AssetDescriptor descriptor) {
 		manager.load(descriptor);
+		manager.finishLoading();
+	}
+	
+	public static void loadSpaceship() {
+		if(!manager.isLoaded(spaceship.fileName, spaceship.type))
+			manager.load(spaceship);
 		manager.finishLoading();
 	}
 }

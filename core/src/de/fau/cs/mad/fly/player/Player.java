@@ -39,7 +39,7 @@ public class Player {
 	private SettingManager settingManager;
 	
 	public Player() {
-		this.plane = new Spaceship();
+		this.plane = new Spaceship("spaceship");
 	}
 
 	public Level.Head getLastLevel() {
@@ -80,6 +80,8 @@ public class Player {
 		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, "Show Steering:", false);
 		//settingManager.addBooleanSetting("showTime", "Show Time:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
+		settingManager.addBooleanSetting(SettingManager.FIRST_PERSON, "First Person", false);
+		
 		settingManager.addFloatSetting(SettingManager.ALPHA_SLIDER, "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
 		settingManager.addFloatSetting(SettingManager.BUFFER_SLIDER, "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
 		settingManager.addFloatSetting(SettingManager.CAMERA_OFFSET, "Camera Distance:", 30.0f, 0.0f, 100.0f, 1.0f);

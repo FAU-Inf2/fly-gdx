@@ -20,6 +20,8 @@ public class FlightController implements InputProcessor {
 	private boolean useRolling;
 	private boolean useLowPass;
 	private boolean useAveraging;
+	
+	private boolean firstPerson = false;
 
 	private Player player;
 	private PerspectiveCamera camera;
@@ -53,6 +55,7 @@ public class FlightController implements InputProcessor {
 		this.useRolling = preferences.getBoolean(SettingManager.USE_ROLL_STEERING);
 		this.useLowPass = preferences.getBoolean(SettingManager.USE_LOW_PASS_FILTER);
 		this.useAveraging = preferences.getBoolean(SettingManager.USE_AVERAGING);
+		//this.firstPerson = preferences.getBoolean(SettingManager.FIRST_PERSON);
 		
 		this.bufferSize = (int) preferences.getFloat(SettingManager.BUFFER_SLIDER);
 		this.alpha = preferences.getFloat(SettingManager.ALPHA_SLIDER) / 100.f;
@@ -124,16 +127,32 @@ public class FlightController implements InputProcessor {
 			interpretSensorInput();
 		}
 		
-		/*Vector3 dir = new Vector3(camera.direction.x, camera.direction.y, camera.direction.z);
-		camera.translate(dir.scl(player.getPlane().getSpeed() * cameraOffset));*/
-
+		if(!firstPerson)
+			player.getPlane().rotate(rollDir, azimuthDir);
+		
 		// rotating the camera
 		rotateCamera(rollDir, azimuthDir);
 		camera.update();
-
+		
+		
+		if(!firstPerson) {
+			// workaround for computing new Camera-Orientation
+			float[] values = player.getPlane().getInstance().transform.getValues();
+			Vector3 newDir = new Vector3(values[8], values[9], values[10]).nor();
+			camera.direction.set(newDir).nor();
+			Vector3 newUp = new Vector3(values[4], values[5], values[6]).nor();
+			camera.up.set(newUp);
+		}
 		// move the camera (first person flight)
 		Vector3 dir = new Vector3(camera.direction.x, camera.direction.y, camera.direction.z);
-		camera.translate(dir.scl(player.getPlane().getSpeed() * delta));//(delta - cameraOffset)));
+		
+		if(firstPerson) {
+			camera.translate(dir.scl(player.getPlane().getSpeed() * delta));
+		} else {
+			camera.position.set(player.getPlane().getPosition().cpy().sub(dir.scl(2.f /* * cameraOffset*/)));
+			camera.position.add(camera.up.cpy().scl(0.5f));
+		}
+		
 		camera.update();
 		
 		return camera;
@@ -429,8 +448,8 @@ public class FlightController implements InputProcessor {
 				setAzimuthDir(-xDif / screenWidth / 0.075f);
 				setRollDir(-yDif / screenHeight / 0.075f);
 			} else {
-				setAzimuthDir(0);
-				setRollDir(0);
+				setAzimuthDir(-xDif / length * radius / screenWidth / 0.075f);
+				setRollDir(-yDif / length * radius / screenHeight / 0.075f);
 			}
 			
 		}

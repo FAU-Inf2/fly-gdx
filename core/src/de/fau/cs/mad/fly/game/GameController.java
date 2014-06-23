@@ -536,6 +536,7 @@ public class GameController {
 		 */
 		private Builder addPlayerPlane() {
 			IPlane plane = player.getPlane();
+			optionalFeaturesToInit.add(plane);
 			optionalFeaturesToLoad.add(plane);
 			optionalFeaturesToRender.add(plane);
 			optionalFeaturesToDispose.add(plane);

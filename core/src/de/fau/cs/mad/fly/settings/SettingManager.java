@@ -22,6 +22,7 @@ public class SettingManager {
 	public static final String SHOW_GATE_INDICATOR = "showGateIndicator";
 	public static final String SHOW_STEERING = "showSteering";
 	public static final String SHOW_FPS = "showFPS";
+	public static final String FIRST_PERSON = "firstPerson";
 
 	public static final String ALPHA_SLIDER = "alphaSlider";
 	public static final String BUFFER_SLIDER = "bufferSlider";
