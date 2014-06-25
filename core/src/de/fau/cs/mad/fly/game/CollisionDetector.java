@@ -16,6 +16,7 @@ import java.util.Map;
 public class CollisionDetector implements Disposable {
 
 	CollisionShapeManager shapeManager;
+	RigidBodyInfoManager rigidBodyInfoManager;
 
 	public final static short DUMMY_FLAG = 1 << 7;
 	public final static short OBJECT_FLAG = 1 << 8;
@@ -76,6 +77,7 @@ public class CollisionDetector implements Disposable {
 
 	public CollisionDetector() {
 		shapeManager = new CollisionShapeManager();
+		rigidBodyInfoManager = new RigidBodyInfoManager();
 
 		collisionConfig = new btDefaultCollisionConfiguration();
 		dispatcher = new btCollisionDispatcher(collisionConfig);
@@ -90,6 +92,10 @@ public class CollisionDetector implements Disposable {
 
 	public CollisionShapeManager getShapeManager() {
 		return shapeManager;
+	}
+	
+	public RigidBodyInfoManager getRigidBodyInfoManager() {
+		return rigidBodyInfoManager;
 	}
 
 	public static btCollisionObject createObject(final GameObject instance, final btCollisionShape shape, final GameObject userData) {
@@ -125,6 +131,8 @@ public class CollisionDetector implements Disposable {
 		dispatcher.dispose();
 		collisionConfig.dispose();
 		contactListener.dispose();
+
+		rigidBodyInfoManager.dispose();
 		shapeManager.dispose();
 		Gdx.app.log("CollisionDetector", "Collision disposed.");
 	}
