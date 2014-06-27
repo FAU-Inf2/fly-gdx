@@ -6,5 +6,8 @@ package de.fau.cs.mad.fly.features;
  * @author Tobias Zangl
  */
 public interface IFeatureFinish {
+	/**
+	 * Called when the level is finished.
+	 */
 	public void finish();
 }

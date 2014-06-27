@@ -6,9 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureInit;
-import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.game.GameController;
 
 /**
@@ -16,7 +17,7 @@ import de.fau.cs.mad.fly.game.GameController;
  * 
  * @author Tobias Zangl
  */
-public class TimeOverlay implements IFeatureInit, IFeatureRender {
+public class TimeOverlay implements IFeatureInit, IFeatureUpdate {
 	private final Fly game;
 	
 	private final Skin skin;
@@ -55,7 +56,7 @@ public class TimeOverlay implements IFeatureInit, IFeatureRender {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void update(float delta) {
 		timeCounter.setText(String.valueOf((long) time));
 
 		time += delta;

@@ -8,5 +8,9 @@ import de.fau.cs.mad.fly.game.GameController;
  * @author Tobias Zangl
  */
 public interface IFeatureLoad {
+	/**
+	 * Called while the level is loading.
+	 * @param game		The game controller.
+	 */
 	public void load(final GameController game);
 }

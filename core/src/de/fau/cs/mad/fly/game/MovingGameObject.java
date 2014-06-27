@@ -88,13 +88,17 @@ public class MovingGameObject extends GameObject {
 	}
 	
 	/**
-	 * Setter for the rotation speed
+	 * Setter for the rotation speed.
 	 * @param speed
 	 */
 	public void setRotationSpeed(float speed) {
 		rotationSpeed = speed;
 	}
 	
+	/**
+	 * Setter for the moving vector. It also changes the up vector accordingly.
+	 * @param vector
+	 */
 	public void setMovingVector(Vector3 vector) {
 		directionVector = vector.nor();
 		if(vector != new Vector3(1.0f, 0.0f, 0.0f)) {

@@ -77,6 +77,7 @@ public class Player {
 		settingManager.addBooleanSetting(SettingManager.USE_AVERAGING, "Use Avg. of Sensor:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
 		//settingManager.addBooleanSetting("showGameFinished", "Show Game finished:", false);
+		settingManager.addBooleanSetting(SettingManager.SHOW_PAUSE, "Show Pause Button:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, "Show Steering:", false);
 		//settingManager.addBooleanSetting("showTime", "Show Time:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);

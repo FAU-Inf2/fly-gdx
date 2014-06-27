@@ -17,8 +17,7 @@ import de.fau.cs.mad.fly.game.GameController;
  * 
  * @author Tobias Zangl
  */
-public class SteeringOverlay implements IFeatureInit, IFeatureRender,
-		IFeatureDispose {
+public class SteeringOverlay implements IFeatureInit, IFeatureRender, IFeatureDispose {
 
 	private final Stage stage;
 	private final FlightController flightController;
@@ -61,9 +60,7 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender,
 
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(1.0f, 0.84f, 0.0f, 1.0f);
-		shapeRenderer.circle(Gdx.graphics.getWidth() *0.01f * steeringX,
-				Gdx.graphics.getHeight() * 0.01f * steeringY, Gdx.graphics.getWidth() * 0.01f,
-				20);
+		shapeRenderer.circle(Gdx.graphics.getWidth() *0.01f * steeringX, Gdx.graphics.getHeight() * 0.01f * steeringY, Gdx.graphics.getWidth() * 0.01f, 20);
 		shapeRenderer.end();
 
 		shapeRenderer.begin(ShapeType.Line);

@@ -6,5 +6,8 @@ package de.fau.cs.mad.fly.features;
  * @author Tobias Zangl
  */
 public interface IFeatureDispose {
+	/**
+	 * Called when the level is disposed.
+	 */
 	public void dispose();
 }

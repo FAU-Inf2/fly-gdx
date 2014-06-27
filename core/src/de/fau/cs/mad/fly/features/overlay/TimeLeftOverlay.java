@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureInit;
-import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.res.Level;
 
@@ -19,7 +19,7 @@ import de.fau.cs.mad.fly.res.Level;
  * 
  * @author Tobias Zangl
  */
-public class TimeLeftOverlay implements IFeatureInit, IFeatureRender {
+public class TimeLeftOverlay implements IFeatureInit, IFeatureUpdate {
 	private final Fly game;
 	
 	private final Skin skin;
@@ -59,7 +59,7 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureRender {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void update(float delta) {
 		timeCounter.setText(String.valueOf((long) time));
 		if(! game.getGameController().getLevel().isGameOver() )
 		{

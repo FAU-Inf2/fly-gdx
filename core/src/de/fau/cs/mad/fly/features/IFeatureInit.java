@@ -8,5 +8,9 @@ import de.fau.cs.mad.fly.game.GameController;
  * @author Tobias Zangl
  */
 public interface IFeatureInit {
+	/**
+	 * Called at the moment the level starts.
+	 * @param game		The game controller.
+	 */
 	public void init(final GameController game);
 }

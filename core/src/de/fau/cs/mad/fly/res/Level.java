@@ -29,7 +29,7 @@ import java.util.*;
  * @author Lukas Hahmann
  * 
  */
-public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Level.Gate>{
+public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Level.Gate> {
 	public static class Gate implements Iterable<Gate> {
 		public final int id;
 		public int score;
@@ -95,15 +95,17 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	public static interface EventListener {
 		public void onFinished();
 		public void onGatePassed(Gate gate, Iterable<Gate> current);
+		public void onUpdate();
 		public void onRender();
 	}
-
 
 	public static class EventAdapter implements EventListener {
 		@Override
 		public void onFinished() {}
 		@Override
 		public void onGatePassed(Gate gate, Iterable<Gate> current) {}
+		@Override
+		public void onUpdate() {}
 		@Override
 		public void onRender() {}
 	}
@@ -311,13 +313,25 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	}
 
 	/**
+	 * Update the level
+	 */
+	public void update(float delta, PerspectiveCamera camera) {
+		borderObject.transform.setToTranslation(camera.position);
+		for ( EventListener l : eventListeners )
+			l.onUpdate();
+		if( gameOver == false &&( leftTime <= 0 || leftCollisionTime <=0 ) )
+		{
+			 levelFinished();
+		}
+	}
+	
+	/**
 	 * Render the level
 	 * 
 	 * @param camera
 	 *            that displays the level
 	 */
 	public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
-		borderObject.transform.setToTranslation(camera.position);
 		for ( EventListener l : eventListeners )
 			l.onRender();
 		for (GameObject c : components) {
@@ -326,10 +340,6 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 			} else {
 				c.render(batch, environment, camera);
 			}
-		}
-		if( gameOver == false &&( leftTime <= 0 || leftCollisionTime <=0 ) )
-		{
-			 levelFinished();
 		}
 	}
 	

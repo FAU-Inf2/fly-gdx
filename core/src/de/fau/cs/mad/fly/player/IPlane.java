@@ -7,6 +7,7 @@ import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.game.GameObject;
 
 /**
@@ -15,7 +16,7 @@ import de.fau.cs.mad.fly.game.GameObject;
  * @author Lukas Hahmann
  * 
  */
-public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureRender, IFeatureDispose {
+public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
 	public GameObject getInstance();
 	public Model getModel();
 	

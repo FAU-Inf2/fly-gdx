@@ -34,6 +34,11 @@ public class FlyEngine extends Engine implements Level.EventListener {
 	public void onGatePassed(Level.Gate gate, Iterable<Level.Gate> current) {
 		call(fly, "trigger", "gatepass", gate, current);
 	}
+	
+	@Override
+	public void onUpdate() {
+		//call(fly, "trigger", "update");
+	}
 
 	@Override
 	public void onRender() {

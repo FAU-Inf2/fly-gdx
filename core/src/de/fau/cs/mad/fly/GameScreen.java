@@ -11,7 +11,7 @@ import de.fau.cs.mad.fly.ui.BackProcessor;
  * 
  * @author Tobias Zangl
  */
-public class GameScreen implements Screen{
+public class GameScreen implements Screen {
 	private final Fly game;
 	
 	private InputMultiplexer inputProcessor;
@@ -45,7 +45,7 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void hide() {
-		Gdx.app.log("GameScreen.hide", "huhu");
+		Gdx.app.log("GameScreen.hide", "hide game screen");
 		game.getGameController().disposeGame();
 	}
 
@@ -61,7 +61,7 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void dispose() {
-		Gdx.app.log("GameScreen.dispose", "Hihi");
+		Gdx.app.log("GameScreen.dispose", "dispose game screen");
 		Assets.dispose();
 		game.getGameController().disposeGame();
 	}

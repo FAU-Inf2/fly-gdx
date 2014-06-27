@@ -20,6 +20,7 @@ public class SettingManager {
 	public static final String USE_LOW_PASS_FILTER = "useLowPass";
 	public static final String USE_AVERAGING = "useAveraging";
 	public static final String SHOW_GATE_INDICATOR = "showGateIndicator";
+	public static final String SHOW_PAUSE = "showPause";
 	public static final String SHOW_STEERING = "showSteering";
 	public static final String SHOW_FPS = "showFPS";
 	public static final String FIRST_PERSON = "firstPerson";

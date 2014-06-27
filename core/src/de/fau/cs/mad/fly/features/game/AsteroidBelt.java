@@ -10,24 +10,25 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.game.MovingGameObject;
-import de.fau.cs.mad.fly.res.Assets;
 
 /**
  * Creates an asteroid belt inside a given level size with a given asteroid model and a given count of asteroids.
  * 
  * @author Tobias Zangl
  */
-public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureRender, IFeatureDispose {
+public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
 	private GameController gameController;
 	private ModelBatch batch;
 	private Environment environment;
@@ -98,9 +99,11 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureRender,
 		asteroid.setMovingSpeed(getRandomFloat(2.0f, 10.0f));
 
 		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, asteroid);
+		//btRigidBodyConstructionInfo rigidBodyInfo = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 1.0f);
 		asteroid.filterGroup = CollisionDetector.OBJECT_FLAG;
 		asteroid.filterMask = CollisionDetector.ALL_FLAG;
 		asteroid.setCollisionObject(shape);
+		//asteroid.setRigidBody(shape, rigidBodyInfo);
 		gameController.getCollisionDetector().addCollisionObject(asteroid);
 
 		return asteroid;
@@ -176,8 +179,7 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureRender,
 	}
 	
 	@Override
-	public void render(float delta) {
-		batch.begin(camera);
+	public void update(float delta) {		
 		for(MovingGameObject asteroid : asteroids) {
 			asteroid.rotate(delta);
 			
@@ -186,6 +188,13 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureRender,
 			}
 			
 			asteroid.move(delta);
+		}
+	}
+	
+	@Override
+	public void render(float delta) {		
+		batch.begin(camera);
+		for(MovingGameObject asteroid : asteroids) {
 			asteroid.render(batch, environment, camera);
 		}
 		batch.end();

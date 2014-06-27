@@ -12,6 +12,7 @@ import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
@@ -19,7 +20,7 @@ import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
-public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureRender, IFeatureDispose {
+public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
 	private GameController gameController;
 	private ModelBatch batch;
 	private Environment environment;
@@ -70,10 +71,30 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureRe
 		
 		gameController.getCollisionDetector().addCollisionObject(instance);
 	}
+	
+	@Override
+	public void update(float delta) {		
+		instance.transform.translate(movingDir.cpy().scl(2.f / scaleFactor * delta));
+
+		instance.getCollisionObject().setWorldTransform(instance.transform);
+	}
 
 	@Override
+	public void render(float delta) {		
+		float rollDir = lastRoll * 10.f;
+		float azimuthDir = lastAzimuth * 50f;
+		
+		instance.transform.rotate(movingDir.cpy().crs(up), rollDir);
+		instance.transform.rotate(movingDir, -azimuthDir);
+		
+		instance.render(batch, environment, camera);
+		
+		instance.transform.rotate(movingDir, azimuthDir);
+		instance.transform.rotate(movingDir.cpy().crs(up), -rollDir);
+	}
+	
+	/*@Override
 	public void render(float delta) {
-
 		instance.transform.translate(movingDir.cpy().scl(2.f / scaleFactor * delta));
 
 		instance.getCollisionObject().setWorldTransform(instance.transform);
@@ -88,7 +109,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureRe
 		
 		instance.transform.rotate(movingDir, azimuthDir);
 		instance.transform.rotate(movingDir.cpy().crs(up), -rollDir);
-	}
+	}*/
 
 	@Override
 	public GameObject getInstance() {
