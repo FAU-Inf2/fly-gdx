@@ -313,7 +313,12 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	}
 
 	/**
-	 * Update the level
+	 * Update the level.
+	 * 
+	 * @param delta
+	 * 				time after the last call.
+	 * @param camera
+	 * 				that displays the level.
 	 */
 	public void update(float delta, PerspectiveCamera camera) {
 		borderObject.transform.setToTranslation(camera.position);
@@ -326,10 +331,14 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	}
 	
 	/**
-	 * Render the level
+	 * Render the level.
 	 * 
+	 * @param delta
+	 * 				time after the last call.
+	 * @param batch
+	 * 				the batch to render the level.
 	 * @param camera
-	 *            that displays the level
+	 *            	that displays the level.
 	 */
 	public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
 		for ( EventListener l : eventListeners )
@@ -342,8 +351,6 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 			}
 		}
 	}
-	
-	
 
 	/**
 	 * Sets up the environment for the level with its light.
