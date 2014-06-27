@@ -246,9 +246,7 @@ public class GameController {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		
-
-		collisionDetector.perform(delta);
+		collisionDetector.perform();
 
 		batch.begin(camera);
 		level.render(delta, batch, camera);
