@@ -217,15 +217,13 @@ public class GameObject extends ModelInstance implements Disposable {
 	/**
 	 * Renders the game object with environment and updates the position of the collision object if one is defined.
 	 */
-	public void render(ModelBatch batch, Environment environment, PerspectiveCamera cam) {
-		//System.out.println(id + ": " + rigidBody.getCenterOfMassPosition());
-		
-		//if(visible && isVisible(cam)) {
+	public void render(ModelBatch batch, Environment environment, PerspectiveCamera cam) {		
+		if(visible && isVisible(cam)) {
 			if(environment == null)
 				batch.render(this);
 			else
 				batch.render(this, environment);
-		//}
+		}
 	}
 
 	/**
