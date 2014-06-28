@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
@@ -55,28 +56,27 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		GameModel model = Assets.manager.get(modelRef, GameModel.class);
 		
 		instance = new GameObject(model);
-		if(instance.getCollisionObject() == null) {
-			btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, instance);
-			instance.filterGroup = CollisionDetector.PLAYER_FLAG;
-			instance.filterMask = CollisionDetector.ALL_FLAG;
-			instance.id = "spaceship";
-			
-			instance.transform.setToTranslation(game.getLevel().start.position);
-			instance.transform.scl(scaleFactor);
-			instance.userData = this;
-			instance.setCollisionObject(shape);
-			
-			gameController.getCollisionDetector().addCollisionObject(instance);
-		}
+
+		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, instance);
+		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 0.1f);
+		instance.filterGroup = CollisionDetector.PLAYER_FLAG;
+		instance.filterMask = CollisionDetector.ALL_FLAG;
+		instance.id = "spaceship";
 		
-		gameController.getCollisionDetector().addCollisionObject(instance);
+		instance.transform.setToTranslation(game.getLevel().start.position);
+		instance.transform.scl(scaleFactor);
+		instance.setRigidBody(shape, info);
+
+		instance.setMovement(new Vector3(0.0f, 0.0f, 1.0f));
+		instance.userData = this;
+		gameController.getCollisionDetector().addRigidBody(instance);
 	}
 	
 	@Override
-	public void update(float delta) {		
+	public void update(float delta) {
 		instance.transform.translate(movingDir.cpy().scl(2.f / scaleFactor * delta));
-
-		instance.getCollisionObject().setWorldTransform(instance.transform);
+		
+		instance.getRigidBody().setWorldTransform(instance.transform);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		
 		instance.transform.rotate(movingDir.cpy().crs(up), rollDir);
 		instance.transform.rotate(movingDir, -azimuthDir);
-		
+
 		instance.render(batch, environment, camera);
 		
 		instance.transform.rotate(movingDir, azimuthDir);

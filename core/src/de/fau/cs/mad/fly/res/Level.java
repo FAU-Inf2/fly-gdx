@@ -347,6 +347,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 			if(c == borderObject) {
 				borderObject.render(batch, camera);
 			} else {
+				//c.updateRigidBody();
 				c.render(batch, environment, camera);
 			}
 		}

@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
@@ -43,11 +43,11 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * Bounding box of the game object used for frustum culling.
 	 */
 	private final static BoundingBox bounds = new BoundingBox();
-
+	
 	/**
-	 * Collision object of the game object.
+	 * Rigid body of the game object.
 	 */
-	private btCollisionObject collisionObject;
+	protected btRigidBody rigidBody;
 
 	/**
 	 * Model of the game object.
@@ -89,21 +89,26 @@ public class GameObject extends ModelInstance implements Disposable {
 		this.userData = this;
 		initBoundingBox();
 	}
-
+	
 	/**
-	 * Adds a collision object with a shape to the game object and adds it to the collision world.
+	 * Adds a rigid body with a shape and a rigid body info to the game object and adds it to the collision world.
 	 * @param shape
+	 * @param rigidBodyInfo
 	 */
-	public void setCollisionObject(btCollisionShape shape) {
-		setCollisionObject(CollisionDetector.createObject(this, shape, this));
+	public void setRigidBody(btCollisionShape shape, btRigidBody.btRigidBodyConstructionInfo rigidBodyInfo) {
+		setRigidBody(CollisionDetector.createRigidBody(this, shape, this, rigidBodyInfo));
 	}
 
 	/**
-	 * Sets the collision object of the game object.
-	 * @param collisionObject
+	 * Sets the rigid body of the game object.
+	 * @param rigidBody
 	 */
-	public void setCollisionObject(btCollisionObject ollisionObject) {
-		this.collisionObject = ollisionObject;
+	public void setRigidBody(btRigidBody rigidBody) {
+		this.rigidBody = rigidBody;
+	}
+	
+	public void setTrigger() {
+		
 	}
 
 	/**
@@ -148,16 +153,6 @@ public class GameObject extends ModelInstance implements Disposable {
 		position.add(center);
 		return camera.frustum.boundsInFrustum(position, dimensions);
 	}
-	
-	/**
-	 * Setter for the collisionObject.userData of the GameObject.
-	 */
-	public void setCollisionTarget(Object object) {
-		if(collisionObject == null)
-			return;
-		
-		collisionObject.userData = object;
-	}
 
 	/**
 	 * Marks the game object with a special color.
@@ -174,20 +169,38 @@ public class GameObject extends ModelInstance implements Disposable {
 	}
 	
 	/**
-	 * Setter for the collisionObject.userValue of the GameObject.
+	 * Setter for the rigidBody.userData of the GameObject.
 	 */
-	public void setCollisionType(int userValue) {
-		if(collisionObject == null)
+	public void setCollisionTarget(Object object) {
+		if(rigidBody == null)
 			return;
 		
-		collisionObject.setUserValue(userValue);
+		rigidBody.userData = object;
 	}
 	
 	/**
-	 * Getter for the collision object.
+	 * Setter for the rigidBody.userValue of the GameObject.
 	 */
-	public btCollisionObject getCollisionObject() {
-		return collisionObject;
+	public void setCollisionType(int userValue) {
+		if(rigidBody == null)
+			return;
+		rigidBody.setUserValue(userValue);
+	}
+	
+	/**
+	 * Setter for the rigid body restitution of the GameObject.
+	 */
+	public void setRestitution(float rest) {
+		if(rigidBody == null)
+			return;
+		rigidBody.setRestitution(rest);
+	}
+	
+	/**
+	 * Getter for the rigid body.
+	 */
+	public btRigidBody getRigidBody() {
+		return rigidBody;
 	}
 
 	/**
@@ -196,18 +209,23 @@ public class GameObject extends ModelInstance implements Disposable {
 	public void render(ModelBatch batch, PerspectiveCamera cam) {
 		render(batch, null, cam);
 	}
+	
+	public void updateRigidBody() {
+		rigidBody.getWorldTransform(transform);
+	}
 
 	/**
 	 * Renders the game object with environment and updates the position of the collision object if one is defined.
 	 */
 	public void render(ModelBatch batch, Environment environment, PerspectiveCamera cam) {
-		if(collisionObject != null)
-			collisionObject.setWorldTransform(transform);
-		if ( visible && isVisible(cam) )
-			if ( environment == null )
+		//System.out.println(id + ": " + rigidBody.getCenterOfMassPosition());
+		
+		//if(visible && isVisible(cam)) {
+			if(environment == null)
 				batch.render(this);
 			else
 				batch.render(this, environment);
+		//}
 	}
 
 	/**
@@ -219,11 +237,34 @@ public class GameObject extends ModelInstance implements Disposable {
 		transform.getTranslation(position);
 		return position;
 	}
+	
+	/**
+	 * Setter for the rotation.
+	 * @param vel
+	 */
+	public void setRotation(Vector3 vel) {
+		rigidBody.setAngularVelocity(vel);
+	}
+	
+	/**
+	 * Setter for the movement.
+	 * @param vel
+	 */
+	public void setMovement(Vector3 vel) {
+		rigidBody.setLinearVelocity(vel);
+	}
+	
+	/**
+	 * Flips the direction around.
+	 */
+	public void flipDirection() {		
+		rigidBody.setLinearVelocity(rigidBody.getLinearVelocity().scl(-1.0f));
+	}
 
 	@Override
 	public void dispose() {
 		//Gdx.app.log("GameObject.dispose", "dispose " + id);
-		if ( collisionObject != null )
-			collisionObject.dispose();
+		if ( rigidBody != null )
+			rigidBody.dispose();
 	}
 }

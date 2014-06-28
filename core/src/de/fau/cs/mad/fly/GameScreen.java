@@ -63,6 +63,6 @@ public class GameScreen implements Screen {
 	public void dispose() {
 		Gdx.app.log("GameScreen.dispose", "dispose game screen");
 		Assets.dispose();
-		game.getGameController().disposeGame();
+		//game.getGameController().disposeGame();
 	}
 }

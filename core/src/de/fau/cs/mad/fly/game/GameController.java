@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -232,27 +233,27 @@ public class GameController {
 		
 		if (gameState == GameState.RUNNING) { 
 			camera = flightController.recomputeCamera(delta);
+			
+			level.update(delta, camera);
 		
 			// update optional features if the game is not paused
 			for (IFeatureUpdate optionalFeature : optionalFeaturesToUpdate) {
 				optionalFeature.update(delta);
 			}
 
+			collisionDetector.perform(delta);
+
 			time += delta;
 		}
-		
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		collisionDetector.perform();
-
 		batch.begin(camera);
 		level.render(delta, batch, camera);
 		batch.end();
-		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer
-		// etc., split render up?
+		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer etc., split render up?
 
 		// render optional features
 		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
@@ -361,25 +362,27 @@ public class GameController {
 
 			for ( Level.Gate g : level.allGates() ) {
 				Gdx.app.log("Builder.init", "Gate " + g);
-				if ( g.display.getCollisionObject() == null ) {
-					Gdx.app.log("Builder.init", "Display CollisionObject == null");
+				if ( g.display.getRigidBody() == null ) {
+					Gdx.app.log("Builder.init", "Display RigidBody == null");
 					btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
-					g.display.filterGroup = CollisionDetector.DUMMY_FLAG;
+					btRigidBodyConstructionInfo displayInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(g.display.modelId, displayShape, 0.0f);
+					g.display.filterGroup = CollisionDetector.OBJECT_FLAG;
 					g.display.filterMask = CollisionDetector.ALL_FLAG;
-					g.display.setCollisionObject(displayShape);
+					g.display.setRigidBody(displayShape, displayInfo);
 				}
-				collisionDetector.addCollisionObject(g.display);
+				collisionDetector.addRigidBody(g.display);
 				
-				if ( g.goal.getCollisionObject() == null ) {
-					Gdx.app.log("Builder.init", "Goal CollisionObject == null");
+				if ( g.goal.getRigidBody() == null ) {
+					Gdx.app.log("Builder.init", "Goal RigidBody == null");
 					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
+					btRigidBodyConstructionInfo goalInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(g.display.modelId, goalShape, 0.0f);
 					g.goal.hide();
 					g.goal.userData = g;
 					g.goal.filterGroup = CollisionDetector.DUMMY_FLAG;
 					g.goal.filterMask = CollisionDetector.PLAYER_FLAG;
-					g.goal.setCollisionObject(goalShape);
+					g.goal.setRigidBody(goalShape, goalInfo);
 				}
-				collisionDetector.addCollisionObject(g.goal);
+				collisionDetector.addRigidBody(g.goal);
 			}
 
 			Gdx.app.log("Builder.init", "Registering EventListeners for level.");
@@ -446,7 +449,7 @@ public class GameController {
 		 * @return Builder instance with GateIndicator
 		 */
 		private Builder addAsteroidBelt() {
-			AsteroidBelt asteroidBelt = new AsteroidBelt(10, "asteroid", new Vector3(50.0f, 50.0f, 50.0f));
+			AsteroidBelt asteroidBelt = new AsteroidBelt(10, "asteroid", new Vector3(40.0f, 40.0f, 40.0f));
 			optionalFeaturesToLoad.add(asteroidBelt);
 			optionalFeaturesToInit.add(asteroidBelt);
 			optionalFeaturesToUpdate.add(asteroidBelt);

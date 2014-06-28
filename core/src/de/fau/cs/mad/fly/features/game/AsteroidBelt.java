@@ -21,7 +21,6 @@ import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.game.MovingGameObject;
 
 /**
  * Creates an asteroid belt inside a given level size with a given asteroid model and a given count of asteroids.
@@ -38,7 +37,7 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	
 	private int asteroidCount = 0;
 	private String modelRef;
-	private List<MovingGameObject> asteroids;
+	private List<GameObject> asteroids;
 
 	/**
 	 * Constructor for the AstroidBelt
@@ -58,7 +57,7 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 		batch = gameController.getBatch();
 		environment = gameController.getLevel().getEnvironment();
 		
-		asteroids = new ArrayList<MovingGameObject>(asteroidCount);
+		asteroids = new ArrayList<GameObject>(asteroidCount);
 
 		GameModel model = gameController.getLevel().getDependency(modelRef);
 		if(model == null) {
@@ -69,8 +68,7 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 		Matrix4 identityMatrix = new Matrix4();
 		
 		for(int i = 0; i < asteroidCount; i++) {
-
-			asteroids.add(createAsteroid(model));
+			asteroids.add(createAsteroid(model, i));
 		}
 
 		Gdx.app.log("AsteroidBelt.load", "Asteroid belt created.");
@@ -84,27 +82,27 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	 * @param model			The model used for the asteroid.
 	 * @return
 	 */
-	private MovingGameObject createAsteroid(GameModel model) {
-		MovingGameObject asteroid = new MovingGameObject(model);
+	private GameObject createAsteroid(GameModel model, int id) {
+		GameObject asteroid = new GameObject(model);
 		
 		Vector3 position;
 		do {
 			position = getRandomVector(levelSize);
-		} while(checkForSpawnCollision(position, asteroids, 40.0f));
+		} while(checkForSpawnCollision(position, asteroids, 20.0f));
 		
 		asteroid.transform.setToTranslation(position);
-		asteroid.setRotationVector(getRandomVector(new Vector3(2.0f, 2.0f, 2.0f)).nor());
-		asteroid.setRotationSpeed(getRandomFloat(2.0f, 10.0f));
-		asteroid.setMovingVector(getRandomVector(new Vector3(2.0f, 2.0f, 2.0f)).nor());
-		asteroid.setMovingSpeed(getRandomFloat(2.0f, 10.0f));
 
 		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, asteroid);
-		//btRigidBodyConstructionInfo rigidBodyInfo = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 1.0f);
+		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 1.0f);
 		asteroid.filterGroup = CollisionDetector.OBJECT_FLAG;
 		asteroid.filterMask = CollisionDetector.ALL_FLAG;
-		asteroid.setCollisionObject(shape);
-		//asteroid.setRigidBody(shape, rigidBodyInfo);
-		gameController.getCollisionDetector().addCollisionObject(asteroid);
+		asteroid.setRigidBody(shape, info);
+		asteroid.setRestitution(1.0f);
+		asteroid.id = "Asteroid_" + id;
+		gameController.getCollisionDetector().addRigidBody(asteroid);
+		
+		asteroid.setMovement(getRandomVector(new Vector3(6.0f, 6.0f, 6.0f)));
+		asteroid.setRotation(getRandomVector(new Vector3(1.0f, 1.0f, 1.0f)));
 
 		return asteroid;
 	}
@@ -116,8 +114,8 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	 * @param distance2		The minimum distance between a created asteroid and the other objects.
 	 * @return
 	 */
-	private boolean checkForSpawnCollision(Vector3 position, List<MovingGameObject> asteroids, float distance2) {
-		for(MovingGameObject asteroid : asteroids) {
+	private boolean checkForSpawnCollision(Vector3 position, List<GameObject> asteroids, float distance2) {
+		for(GameObject asteroid : asteroids) {
 			if(position.dst2(asteroid.getPosition()) < distance2) {
 				Gdx.app.log("AsteroidBelt.checkForSpawnCollision", "SpawnCollision with other asteroid");
 				return true;
@@ -148,6 +146,14 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 		return v;
 	}
 	
+	// TODO: finish getRandomVector with min and max values
+	/*
+	private Vector3 getRandomVector(Vector3 min, Vector3 max) {
+		Vector3 v = new Vector3();
+		return v;
+	}
+	*/
+	
 	/**
 	 * Calculates a random floating point number between min and max values.
 	 * @param min		The minimum value of the floating point number.
@@ -166,7 +172,7 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	 * @param distance2		The minimum distance between the astroid and the target.
 	 * @return true, if it is too far away, otherwise false.
 	 */
-	private boolean checkOutOfBound(MovingGameObject asteroid, Vector3 target, float distance2) {
+	private boolean checkOutOfBound(GameObject asteroid, Vector3 target, float distance2) {
 		if(asteroid.getPosition().dst2(target) > distance2) {
 			return true;
 		}
@@ -180,21 +186,18 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	
 	@Override
 	public void update(float delta) {		
-		for(MovingGameObject asteroid : asteroids) {
-			asteroid.rotate(delta);
-			
+		for(GameObject asteroid : asteroids) {
 			if(checkOutOfBound(asteroid, gameController.getCamera().position, 2000.0f)) {
 				asteroid.flipDirection();
 			}
-			
-			asteroid.move(delta);
 		}
 	}
 	
 	@Override
 	public void render(float delta) {		
 		batch.begin(camera);
-		for(MovingGameObject asteroid : asteroids) {
+		for(GameObject asteroid : asteroids) {
+			asteroid.updateRigidBody();
 			asteroid.render(batch, environment, camera);
 		}
 		batch.end();

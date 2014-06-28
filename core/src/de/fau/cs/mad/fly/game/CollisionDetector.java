@@ -1,10 +1,18 @@
 package de.fau.cs.mad.fly.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.*;
+import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver;
+import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
+import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
+import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Disposable;
+
 import de.fau.cs.mad.fly.features.ICollisionListener;
 
 import java.lang.reflect.ParameterizedType;
@@ -72,7 +80,10 @@ public class CollisionDetector implements Disposable {
 	btDispatcher dispatcher;
 	CollisionContactListener contactListener;
 	btBroadphaseInterface broadphase;
-	btCollisionWorld collisionWorld;
+	
+	btDynamicsWorld dynamicsWorld;
+    btConstraintSolver constraintSolver;
+	
 	DebugDrawer debugDrawer;
 
 	public CollisionDetector() {
@@ -82,12 +93,16 @@ public class CollisionDetector implements Disposable {
 		collisionConfig = new btDefaultCollisionConfiguration();
 		dispatcher = new btCollisionDispatcher(collisionConfig);
 		broadphase = new btDbvtBroadphase();
-		collisionWorld = new btCollisionWorld(dispatcher, broadphase, collisionConfig);
+		
+        constraintSolver = new btSequentialImpulseConstraintSolver();
+        dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, constraintSolver, collisionConfig);
+        dynamicsWorld.setGravity(new Vector3(0.0f, 0.0f, 0.0f));
+		
 		contactListener = new CollisionContactListener();
 
-		debugDrawer = new DebugDrawer();
-		collisionWorld.setDebugDrawer(debugDrawer);
-		debugDrawer.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_MAX_DEBUG_DRAW_MODE);
+		/*debugDrawer = new DebugDrawer();
+		dynamicsWorld.setDebugDrawer(debugDrawer);
+		debugDrawer.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_MAX_DEBUG_DRAW_MODE);*/
 	}
 
 	public CollisionShapeManager getShapeManager() {
@@ -98,39 +113,57 @@ public class CollisionDetector implements Disposable {
 		return rigidBodyInfoManager;
 	}
 
-	public static btCollisionObject createObject(final GameObject instance, final btCollisionShape shape, final GameObject userData) {
+	/*public static btCollisionObject createObject(final GameObject instance, final btCollisionShape shape, final GameObject userData) {
 		btCollisionObject collisionObject = new btCollisionObject();
 		collisionObject.setCollisionShape(shape);
+		//  | btCollisionObject.CollisionFlags.CF_NO_CONTACT_RESPONSE
 		collisionObject.setCollisionFlags(collisionObject.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
 		collisionObject.setWorldTransform(instance.transform);
 		collisionObject.userData = userData;
 
 		return collisionObject;
+	}*/
+	
+	public static btRigidBody createRigidBody(final GameObject instance, final btCollisionShape shape, final GameObject userData, btRigidBody.btRigidBodyConstructionInfo rigidBodyInfo) {
+		btRigidBody rigidBody = new btRigidBody(rigidBodyInfo);
+		rigidBody.setCollisionShape(shape);
+		//  | btRigidBody..CollisionFlags.CF_NO_CONTACT_RESPONSE
+		rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | btRigidBody.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
+		
+		rigidBody.setWorldTransform(instance.transform);
+		rigidBody.userData = userData;
+		
+		//rigidBody.setContactCallbackFlag(GROUND_FLAG);
+		//rigidBody.setContactCallbackFilter(0);
+		
+		
+		return rigidBody;
 	}
-
-	public void addCollisionObject(final GameObject o) {
-		collisionWorld.addCollisionObject(o.getCollisionObject(), o.filterGroup, o.filterMask);
+	
+	public void addRigidBody(final GameObject o) {
+		dynamicsWorld.addRigidBody(o.getRigidBody(), o.filterGroup, o.filterMask);
 	}
 
 	public CollisionContactListener getCollisionContactListener() {
 		return contactListener;
 	}
 
-	public void perform() {
-		/*debugDrawer.begin(gameController.getCamera());
--		collisionWorld.debugDrawWorld();
--		debugDrawer.end();*/
+	public void perform(float delta) {
+		/*debugDrawer.begin(camera);
+		dynamicsWorld.debugDrawWorld();
+		debugDrawer.end();*/
 		
-		collisionWorld.performDiscreteCollisionDetection();
+		dynamicsWorld.stepSimulation(delta, 5, 1f/60f);
 	}
 
 	@Override
 	public void dispose() {
-		collisionWorld.dispose();
+		dynamicsWorld.dispose();
 		broadphase.dispose();
 		dispatcher.dispose();
 		collisionConfig.dispose();
 		contactListener.dispose();
+		constraintSolver.dispose();
 
 		rigidBodyInfoManager.dispose();
 		shapeManager.dispose();
