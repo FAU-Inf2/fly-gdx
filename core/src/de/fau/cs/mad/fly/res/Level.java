@@ -89,6 +89,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 
 	public static class Head {
 		public String name;
+		public int id;
 		public FileHandle file;
 	}
 
@@ -209,12 +210,12 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 			score = totalScore;
 			newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + "" ));
 			
-			totalScore += (int)(leftTime*50);
+			totalScore += ((int)leftTime)*20;
 			
 			newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), (totalScore - score) + "" ));
 			score = totalScore;
 			
-			totalScore += leftCollisionTime*50;
+			totalScore += leftCollisionTime*30;
 			newScore.setTotalScore(totalScore);
 			newScore.getScoreDetails().add(new ScoreDetail(("leftCollisionTime"), (totalScore - score) + "" ));
 			return newScore;
@@ -324,7 +325,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		borderObject.transform.setToTranslation(camera.position);
 		for ( EventListener l : eventListeners )
 			l.onUpdate();
-		if( gameOver == false &&( leftTime <= 0 || leftCollisionTime <=0 ) )
+		if( gameOver == false &&( (int)leftTime <= 0 || leftCollisionTime <=0 ) )
 		{
 			 levelFinished();
 		}
@@ -351,6 +352,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 				c.render(batch, environment, camera);
 			}
 		}
+		
+		
 	}
 
 	/**

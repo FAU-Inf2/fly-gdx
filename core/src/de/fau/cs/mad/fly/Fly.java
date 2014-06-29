@@ -58,7 +58,7 @@ public class Fly extends Game {
 		createSkin();
 		shapeRenderer = new ShapeRenderer();
 
-		player = PlayerManager.Instance.getCurrentPlayer();
+		player = PlayerManager.getInstance().getCurrentPlayer();
 		player.createSettings(skin);
 
 		loader = new Loader(this);

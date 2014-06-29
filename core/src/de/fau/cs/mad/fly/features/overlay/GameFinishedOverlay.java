@@ -54,7 +54,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 	public void finish() {
 		
 		
-		table.pad(Gdx.graphics.getWidth() * 0.2f);
+		table.pad(Gdx.graphics.getWidth() * 0.1f);
 		table.setFillParent(true);
 		String infoString  = I18n.t("game.over");
 		if( game.getGameController().getLevel().isReachedLastGate()) {
@@ -77,7 +77,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 		infoTable.row();
 		Score newScore = game.getGameController().getLevel().getScore();
 		
-		ScoreManager.Instance.saveBestScore( newScore);
+		ScoreManager.getInstance().saveBestScore( newScore);
 		
 		String  scoreString = I18n.t("newScore") + newScore.getTotalScore();	
 		
@@ -95,10 +95,10 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 			 infoTable.add( new Label(detail.getValue(), skin)).pad(6f).uniform();
 		}
 		
-		if(ScoreManager.Instance.getCurrentBestScore() == null
-				|| newScore.getTotalScore() > ScoreManager.Instance.getCurrentBestScore().getTotalScore() )
+		if(ScoreManager.getInstance().getCurrentLevelBestScore() == null
+				|| newScore.getTotalScore() > ScoreManager.getInstance().getCurrentLevelBestScore().getTotalScore() )
 		{
-			ScoreManager.Instance.saveBestScore(newScore);
+			ScoreManager.getInstance().saveBestScore(newScore);
 			infoTable.row().expand();
 			infoTable.add( new Label(I18n.t("newRecord"),skin)).pad(6f).uniform();
 		}

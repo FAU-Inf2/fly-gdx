@@ -3,6 +3,11 @@ apply plugin: "java"
 sourceCompatibility = 1.6
 sourceSets.main.java.srcDirs = [ "src/" ]
 
+dependencies {    
+    compile files('libs/gdx-sqlite-desktop.jar')
+    compile files('libs/sqlite-jdbc-3.7.2.jar')
+}
+
 project.ext.mainClassName = "de.fau.cs.mad.fly.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../android/assets");
 

@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 
+import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
@@ -51,7 +52,7 @@ public class Loader {
 		Level.Head levelHead = game.getPlayer().getLastLevel();
 		if(levelHead == null) {
 			Gdx.app.log("Loader.continueLevel", "No last level set for player. Defaulting to first level..");
-			levelHead = LevelChooserScreen.getLevelList().get(0);
+			levelHead = LevelManager.getInstance().getLevelList().get(0);
 		}
 		Gdx.app.log("Loader.continueLevel", "Initializing load...");
 		startLoading(levelHead);

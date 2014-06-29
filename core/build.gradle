@@ -9,6 +9,9 @@ sourceSets.test.resources.srcDirs = [ "test/res/" ]
 
 dependencies {
     compile 'org.mozilla:rhino:1.7R4'
+    
+    compile files('libs/gdx-sqlite.jar')
+    
 
 
     testCompile group: 'junit', name: 'junit', version: '4.+'

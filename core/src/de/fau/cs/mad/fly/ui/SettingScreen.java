@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
@@ -17,8 +18,13 @@ public class SettingScreen extends BasicScreen {
 	
 	@Override
 	protected void generateContent() {
-		// TODO: not updated if player changes while app is running
-		settingManager = ((Fly) Gdx.app.getApplicationListener()).getPlayer().getSettingManager();
+		generateContentDynamic();
+	}
+	
+	private void generateContentDynamic(){
+		stage.clear();
+		Player player =  ((Fly) Gdx.app.getApplicationListener()).getPlayer();
+		settingManager = player.getSettingManager();
 		Table table = new Table();
 		table.pad(Gdx.graphics.getWidth() * 0.1f);
 		table.setFillParent(true);
@@ -39,5 +45,13 @@ public class SettingScreen extends BasicScreen {
 		table.row().expand();
 		table.add(settingPane);
 	}
+	
+	@Override
+	public void show() {
+		super.show();
+		generateContentDynamic();
+
+	}
+	
 
 }

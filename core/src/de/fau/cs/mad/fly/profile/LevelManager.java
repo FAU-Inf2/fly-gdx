@@ -24,21 +24,27 @@ public class LevelManager {
 	
 	private Level.Head chosenLevel;
 	
-	public static LevelManager Instance = new LevelManager();
+	private static LevelManager Instance = new LevelManager();
+	
+	public static LevelManager getInstance() {
+		return Instance;
+	}
+	
 	
 	private JsonReader reader = new JsonReader();
 	
 	public List<Level.Head> getLevelList() {
-		List<Level.Head> hs = new ArrayList<Level.Head>();
+		List<Level.Head> levels = new ArrayList<Level.Head>();
 		FileHandle dirHandle = Gdx.files.internal("levels/");
-		for( FileHandle f : dirHandle.list() ) {
-			JsonValue j = reader.parse(f);
-			Level.Head h = new Level.Head();
-			h.name = j.getString("name");
-			h.file = f;
-			hs.add(h);
+		for( FileHandle file : dirHandle.list() ) {
+			JsonValue json = reader.parse(file);
+			Level.Head levelHead = new Level.Head();
+			levelHead.name = json.getString("name");
+			levelHead.id = json.getInt("id");
+			levelHead.file = file;
+			levels.add(levelHead);
 		}
-		return hs;
+		return levels;
 	}
 	
 	public Level.Head getChosedLevel()

@@ -16,6 +16,9 @@ public class ScoreDetail {
 		this.value = value;
 	}
 	
+	public ScoreDetail() {
+	}
+
 	public String getDetailName() {
 		return detailName;
 	}

@@ -55,7 +55,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 		for ( Map.Entry<String, String> e : dependencies.entrySet() )
 			models.put(e.getKey(), dependencyFor(e.getKey()));
 		getComponents();
-		int id = json.getInt("id");
+		int levelID = json.getInt("id");
 		String name = json.getString("name");
 		Perspective start = auto.fromJson(Perspective.class, json.get("start").toString());
 		System.out.println(start);
@@ -103,7 +103,9 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 //		Collection<String> scripts = Arrays.asList(json.get("scripts").asStringArray());
 
 		Gdx.app.log("LevelLoader.fromJson", "Exit.");
-		return new Level(name, start, components.values(), models, dummy);
+		Level level = new Level(name, start, components.values(), models, dummy);
+		level.head.id = levelID;
+		return level;
 	}
 
 	private JsonValue json;

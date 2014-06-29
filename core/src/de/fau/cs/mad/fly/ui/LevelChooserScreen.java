@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.res.Level;
 
 /**
@@ -23,20 +24,7 @@ import de.fau.cs.mad.fly.res.Level;
  * @author Lukas Hahmann
  */
 public class LevelChooserScreen extends BasicScreen {
-	private static JsonReader reader = new JsonReader();
-
-	public static List<Level.Head> getLevelList() {
-		List<Level.Head> hs = new ArrayList<Level.Head>();
-		FileHandle dirHandle = Gdx.files.internal("levels/");
-		for( FileHandle f : dirHandle.list() ) {
-			JsonValue j = reader.parse(f);
-			Level.Head h = new Level.Head();
-			h.name = j.getString("name");
-			h.file = f;
-			hs.add(h);
-		}
-		return hs;
-	}
+	
 
 	/**
 	 * Shows a list of all available levels.
@@ -44,7 +32,7 @@ public class LevelChooserScreen extends BasicScreen {
 	@Override
 	public void generateContent() {
 		// calculate width and height of buttons and the space in between
-		List<Level.Head> allLevels = getLevelList();
+		List<Level.Head> allLevels = LevelManager.getInstance().getLevelList();
 
 		// table that contains all buttons
 		Table scrollableTable = new Table(skin);
