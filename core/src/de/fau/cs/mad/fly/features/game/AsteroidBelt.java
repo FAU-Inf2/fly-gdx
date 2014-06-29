@@ -184,9 +184,9 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	 */
 	private Vector3 getRandomVector(final Vector3 min, final Vector3 max) {
 		Vector3 v = new Vector3();
-		v.x = MathUtils.random(min.x, min.x);
-		v.y = MathUtils.random(min.y, min.y);
-		v.z = MathUtils.random(min.z, min.z);
+		v.x = MathUtils.random(min.x, max.x);
+		v.y = MathUtils.random(min.y, max.y);
+		v.z = MathUtils.random(min.z, max.z);
 		return v;
 	}
 	
