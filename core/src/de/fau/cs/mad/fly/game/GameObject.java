@@ -116,6 +116,11 @@ public class GameObject extends ModelInstance implements Disposable {
 		center.set(bounds.getCenter());
 		dimensions.set(bounds.getDimensions().cpy().scl(2.0f));
 	}
+	
+	public void scaleBoundingBox(float scale) {
+		center.scl(transform.getScaleX());
+		dimensions.scl(transform.getScaleX());
+	}
 
 	/**
 	 * Returns if the object is hidden.

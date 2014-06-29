@@ -150,7 +150,7 @@ public class FlightController implements InputProcessor {
 			camera.translate(dir.scl(player.getPlane().getSpeed() * delta));
 		} else {
 			camera.position.set(player.getPlane().getPosition().cpy().sub(dir.scl(2.f /* * cameraOffset*/)));
-			camera.position.add(camera.up.cpy().scl(0.5f));
+			camera.position.add(camera.up.cpy().scl(0.3f + cameraOffset));
 		}
 		
 		camera.update();

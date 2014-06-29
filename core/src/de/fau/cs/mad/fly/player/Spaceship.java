@@ -65,6 +65,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		
 		instance.transform.setToTranslation(game.getLevel().start.position);
 		instance.transform.scl(scaleFactor);
+		instance.scaleBoundingBox(scaleFactor);
 		instance.setRigidBody(shape, info);
 
 		instance.setMovement(new Vector3(0.0f, 0.0f, 1.0f));

@@ -85,7 +85,7 @@ public class Player {
 		
 		settingManager.addFloatSetting(SettingManager.ALPHA_SLIDER, "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
 		settingManager.addFloatSetting(SettingManager.BUFFER_SLIDER, "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
-		settingManager.addFloatSetting(SettingManager.CAMERA_OFFSET, "Camera Distance:", 30.0f, 0.0f, 100.0f, 1.0f);
+		settingManager.addFloatSetting(SettingManager.CAMERA_OFFSET, "Camera Distance:", 50.0f, 0.0f, 100.0f, 1.0f);
 	}
 	
 	/**
