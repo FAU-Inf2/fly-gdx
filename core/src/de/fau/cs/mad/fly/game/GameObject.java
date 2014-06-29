@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -105,10 +104,6 @@ public class GameObject extends ModelInstance implements Disposable {
 	 */
 	public void setRigidBody(btRigidBody rigidBody) {
 		this.rigidBody = rigidBody;
-	}
-	
-	public void setTrigger() {
-		
 	}
 
 	/**

@@ -18,10 +18,10 @@ import java.util.Map;
  * Creates, stores and disposes all used collision shapes.
  * <p>
  * Available shape types:
- * 		boxShape:    if a simple box around the object is enough
- * 		sphereShape: if a simple sphere fits the object better a box
- *      convexShape: if the object has a convex but not simple form
- *      meshShape:   if the object has holes and they have to be identified by the collision detector
+ * 		boxShape:    if a simple box around the object is enough.
+ * 		sphereShape: if a simple sphere fits the object better a box.
+ *      convexShape: if the object has a convex but not simple form.
+ *      meshShape:   if the object has holes and they have to be identified by the collision detector.
  * 
  * @author Tobias Zangl
  */
@@ -48,6 +48,9 @@ public class CollisionShapeManager implements Disposable {
 	
 	/**
 	 * Getter for a mesh shape with given shapeId.
+	 * 
+	 * @param shapeId		The id of the needed shape.
+	 * @return				btCollisionShape
 	 */
 	public btCollisionShape getMeshShape(String shapeId) {
 		return meshShapeMap.get(shapeId);
@@ -55,6 +58,9 @@ public class CollisionShapeManager implements Disposable {
 	
 	/**
 	 * Getter for a convex shape with given shapeId.
+	 * 
+	 * @param shapeId		The id of the needed shape.
+	 * @return				btCollisionShape
 	 */
 	public btCollisionShape getConvexShape(String shapeId) {
 		return convexShapeMap.get(shapeId);
@@ -62,6 +68,9 @@ public class CollisionShapeManager implements Disposable {
 	
 	/**
 	 * Getter for a box shape with given shapeId.
+	 * 
+	 * @param shapeId		The id of the needed shape.
+	 * @return				btCollisionShape
 	 */
 	public btCollisionShape getBoxShape(String shapeId) {
 		return boxShapeMap.get(shapeId);
@@ -69,6 +78,9 @@ public class CollisionShapeManager implements Disposable {
 	
 	/**
 	 * Getter for a sphere shape with given shapeId.
+	 * 
+	 * @param shapeId		The id of the needed shape.
+	 * @return				btCollisionShape
 	 */
 	public btCollisionShape getSphereShape(String shapeId) {
 		return sphereShapeMap.get(shapeId);
@@ -76,6 +88,10 @@ public class CollisionShapeManager implements Disposable {
 	
 	/**
 	 * Creates a new static mesh shape out of the instance if the shape is not already created.
+	 * 
+	 * @param shapeId		The id of the needed shape.
+	 * @param box			The game object to construct the shape.
+	 * @return				btCollisionShape
 	 */
 	public btCollisionShape createStaticMeshShape(String shapeId, final GameObject instance) {
 		btCollisionShape shape = meshShapeMap.get(shapeId);
@@ -85,7 +101,7 @@ public class CollisionShapeManager implements Disposable {
 
 		btCollisionShape meshShape = Bullet.obtainStaticNodeShape(instance.model.nodes);
 		
-		Gdx.app.log("CollisionShapeManager", "Created static mesh shape: " + shapeId);
+		//Gdx.app.log("CollisionShapeManager", "Created static mesh shape: " + shapeId);
 		
 		meshShapeMap.put(shapeId, meshShape);
 		return meshShape;
@@ -93,6 +109,10 @@ public class CollisionShapeManager implements Disposable {
 
 	/**
 	 * Creates a new btConvexHullShape out of the instance if the shape is not already created.
+	 * 
+	 * @param shapeId		The id of the needed shape.
+	 * @param instance		The game object to construct the shape.
+	 * @return				btCollisionShape
 	 */
 	public btCollisionShape createConvexShape(String shapeId, final GameObject instance) {
 		btCollisionShape shape = convexShapeMap.get(shapeId);
@@ -111,7 +131,7 @@ public class CollisionShapeManager implements Disposable {
 		hullShape.dispose();
 		hull.dispose();
 		
-		Gdx.app.log("CollisionShapeManager", "Created convex shape: " + shapeId);
+		//Gdx.app.log("CollisionShapeManager", "Created convex shape: " + shapeId);
 
 		convexShapeMap.put(shapeId, convexShape);
 		return convexShape;
@@ -119,6 +139,10 @@ public class CollisionShapeManager implements Disposable {
 
 	/**
 	 * Creates a new btBoxShape with given box sizes if the shape is not already created.
+	 * 
+	 * @param shapeId		The id of the needed shape.
+	 * @param box			The size of the box shape.
+	 * @return				btCollisionShape
 	 */
 	public btCollisionShape createBoxShape(String shapeId, Vector3 box) {
 		btCollisionShape shape = boxShapeMap.get(shapeId);
@@ -128,7 +152,7 @@ public class CollisionShapeManager implements Disposable {
 		
 		btBoxShape boxShape = new btBoxShape(box);
 
-		Gdx.app.log("CollisionShapeManager", "Created box shape: " + shapeId);
+		//Gdx.app.log("CollisionShapeManager", "Created box shape: " + shapeId);
 		
 		boxShapeMap.put(shapeId, boxShape);
 		return boxShape;
@@ -136,6 +160,10 @@ public class CollisionShapeManager implements Disposable {
 	
 	/**
 	 * Creates a new btSphereShape with given radius if the shape is not already created.
+	 * 
+	 * @param shapeId		The id of the needed shape.
+	 * @param radius		The radius of the shape sphere.
+	 * @return				btCollisionShape
 	 */
 	public btCollisionShape createSphereShape(String shapeId, float radius) {
 		btCollisionShape shape = sphereShapeMap.get(shapeId);
@@ -145,7 +173,7 @@ public class CollisionShapeManager implements Disposable {
 		
 		btSphereShape sphereShape = new btSphereShape(radius);
 
-		Gdx.app.log("CollisionShapeManager", "Created sphere shape: " + shapeId);
+		//Gdx.app.log("CollisionShapeManager", "Created sphere shape: " + shapeId);
 		
 		sphereShapeMap.put(shapeId, sphereShape);
 		return sphereShape;

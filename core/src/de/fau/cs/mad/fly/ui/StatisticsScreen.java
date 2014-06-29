@@ -65,7 +65,7 @@ public class StatisticsScreen extends BasicScreen {
 	
 	private void generateContentInside(){
 		stage.clear();
-		final Table table = new Table();;
+		final Table table = new Table();
 		table.pad(Gdx.graphics.getWidth() * 0.1f);
 		table.setFillParent(true);
 		stage.addActor(table);
@@ -134,6 +134,8 @@ public class StatisticsScreen extends BasicScreen {
 
 	@Override
 	public void show() {
+		super.show();
+		
 		generateContentInside();
 	}
 }

@@ -30,13 +30,19 @@ public class RigidBodyInfoManager implements Disposable {
 	
 	/**
 	 * Getter for a rigid body construction info.
+	 * @param mass			The id of the needed rigid body construction info.
+	 * @return				btRigidBodyConstructionInfo
 	 */
 	public btRigidBodyConstructionInfo getRigidBodyInfo(String infoId) {
 		return rigidBodyInfoMap.get(infoId);
 	}
 	
 	/**
-	 * Creates a new rigid body construction info.
+	 * Creates a new rigid body construction info if its not already created.
+	 * @param infoId		The id of the needed rigid body construction info.
+	 * @param shape			The used shape to calculate the local inertia.
+	 * @param mass			The mass of the object.
+	 * @return				btRigidBodyConstructionInfo
 	 */
 	public btRigidBodyConstructionInfo createRigidBodyInfo(String infoId, btCollisionShape shape, float mass) {
 		btRigidBodyConstructionInfo constructionInfo = rigidBodyInfoMap.get(infoId);
@@ -53,7 +59,7 @@ public class RigidBodyInfoManager implements Disposable {
         }
         constructionInfo = new btRigidBody.btRigidBodyConstructionInfo(mass, null, shape, localInertia);
 		
-		Gdx.app.log("RigidBodyInfoManager", "Created rigid body info: " + infoId + " with mass " + mass);
+		//Gdx.app.log("RigidBodyInfoManager", "Created rigid body info: " + infoId + " with mass " + mass);
 		
 		rigidBodyInfoMap.put(infoId, constructionInfo);
 		return constructionInfo;

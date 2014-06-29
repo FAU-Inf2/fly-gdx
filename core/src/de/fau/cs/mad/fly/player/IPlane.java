@@ -17,12 +17,47 @@ import de.fau.cs.mad.fly.game.GameObject;
  * 
  */
 public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
+	/**
+	 * Getter for the game object instance.
+	 * @return GameObject
+	 */
 	public GameObject getInstance();
+	
+	/**
+	 * Getter for the model.
+	 * @return Model
+	 */
 	public Model getModel();
 	
+	/**
+	 * Getter for the speed of the plane.
+	 * @return speed
+	 */
 	public float getSpeed();
+	
+	/**
+	 * Getter for the azimuth speed of the plane.
+	 * @return azimuth speed
+	 */
 	public float getAzimuthSpeed();
+	
+	/**
+	 * Getter for the rolling speed of the plane.
+	 * @return rolling speed
+	 */
 	public float getRollingSpeed();
-	public void rotate(float rollDir, float azimuthDir);
+	
+	/**
+	 * Getter for the current position of the plane.
+	 * @return position
+	 */
 	public Vector3 getPosition();
+	
+	/**
+	 * Rotates the plane with given roll and azimuth dir.
+	 * 
+	 * @param rollDir
+	 * @param azimuthDir
+	 */
+	public void rotate(float rollDir, float azimuthDir);
 }

@@ -66,6 +66,11 @@ public class GameController {
 
 	private ModelBatch batch;
 
+	/**
+	 * Getter for the model batch used to draw the 3d game.
+	 * 
+	 * @return ModelBatch
+	 */
 	public ModelBatch getBatch() {
 		return batch;
 	}
@@ -146,22 +151,8 @@ public class GameController {
 	 * loaded.
 	 */
 	public void loadGame() {
-		// currently an optional feature
-		//player.getPlane().load(this);
-		
-		// level = new Level("Level XYZ");
-		// Level-Constructor includes:
-		// load level from file
-		// load models, textures, ... needed for this level from files
-		// create 3D objects for the level
-		// stores List of Rings, Lists of other stuff in the level
 
-		// player = new Player();
-		// Player-Constructor includes:
-		// mix/connect with camera controller ?
-		// create 3D objects for the player
-		// stores position and other attributes of player
-		
+		// loads all optional features
 		for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
 			optionalFeature.load(this);
 		}
@@ -187,14 +178,23 @@ public class GameController {
 		Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
 	}
 
+	/**
+	 * Sets the game state to running.
+	 */
 	public void startGame() {
 		gameState = GameState.RUNNING;
 	}
 	
+	/**
+	 * Sets the game state to paused.
+	 */
 	public void pauseGame() {
 		gameState = GameState.PAUSED;
 	}
 
+	/**
+	 * Sets the game state to finished and ends the game.
+	 */
 	public void finishGame() {
 		System.out.println("FINISHED");
 		gameState = GameState.FINISHED;
@@ -202,20 +202,40 @@ public class GameController {
 		endGame();
 	}
 
+	/**
+	 * Setter for the game state.
+	 * 
+	 * @param state		The new game state.
+	 */
 	public void setGameState(GameState state) {
 		gameState = state;
 	}
 	
+	/**
+	 * Getter for the game state.
+	 * 
+	 * @return GameState
+	 */
 	public GameState getGameState() {
 		return gameState;
 	}
 	
+	/**
+	 * Checks if the game is running.
+	 * 
+	 * @return true if the game is running, otherwise false.
+	 */
 	public boolean isRunning() {
 		if(gameState == GameState.RUNNING)
 			return true;
 		return false;
 	}
 	
+	/**
+	 * Checks if the game is paused.
+	 * 
+	 * @return true if the game is paused, otherwise false.
+	 */
 	public boolean isPaused() {
 		if(gameState == GameState.PAUSED)
 			return true;
@@ -226,9 +246,10 @@ public class GameController {
 	 * This method is called every frame.
 	 * Furthermore all optional features in {@link #optionalFeaturesToRender} are
 	 * updated and rendered.
+	 * 
+	 * @param delta			Time after the last call.
 	 */
 	public void renderGame(float delta) {
-
 		stage.act(delta);
 		
 		if (gameState == GameState.RUNNING) { 
@@ -399,6 +420,15 @@ public class GameController {
 
 			Gdx.app.log("Builder.init", "Final work for level done.");
 			
+			checkAndAddFeatures();
+
+			return this;
+		}
+		
+		/**
+		 * Checks the preferences if the features should be used and adds them to the game controller if necessary.
+		 */
+		private void checkAndAddFeatures() {
 			Debug.init(game, stage, 1);
 			Debug.setOverlay(0, "Alive");
 			
@@ -425,8 +455,6 @@ public class GameController {
 				addSteeringResetOverlay();
 			}
 			addGameFinishedOverlay();
-
-			return this;
 		}
 
 		/**

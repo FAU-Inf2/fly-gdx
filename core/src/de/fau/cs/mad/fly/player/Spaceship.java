@@ -80,7 +80,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	}
 
 	@Override
-	public void render(float delta) {		
+	public void render(float delta) {
 		float rollDir = lastRoll * 10.f;
 		float azimuthDir = lastAzimuth * 50f;
 		
@@ -92,24 +92,6 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		instance.transform.rotate(movingDir, azimuthDir);
 		instance.transform.rotate(movingDir.cpy().crs(up), -rollDir);
 	}
-	
-	/*@Override
-	public void render(float delta) {
-		instance.transform.translate(movingDir.cpy().scl(2.f / scaleFactor * delta));
-
-		instance.getCollisionObject().setWorldTransform(instance.transform);
-		
-		float rollDir = lastRoll * 10.f;
-		float azimuthDir = lastAzimuth * 50f;
-		
-		instance.transform.rotate(movingDir.cpy().crs(up), rollDir);
-		instance.transform.rotate(movingDir, -azimuthDir);
-		
-		instance.render(batch, environment, camera);
-		
-		instance.transform.rotate(movingDir, azimuthDir);
-		instance.transform.rotate(movingDir.cpy().crs(up), -rollDir);
-	}*/
 
 	@Override
 	public GameObject getInstance() {
@@ -143,7 +125,6 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 
 	@Override
 	public void init(GameController game) {
-		// TODO Auto-generated method stub
 		camera = gameController.getCamera();
 		
 		instance.transform.rotate(new Vector3(0,0,1), camera.direction);
@@ -151,7 +132,6 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 
 	@Override
 	public void rotate(float rollDir, float azimuthDir) {
-		// TODO Auto-generated method stub
 		instance.transform.rotate(movingDir.cpy().crs(up), rollDir);
 		instance.transform.rotate(up, azimuthDir);
 
@@ -161,7 +141,6 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 
 	@Override
 	public Vector3 getPosition() {
-		// TODO Auto-generated method stub
 		return instance.getPosition();
 	}
 }

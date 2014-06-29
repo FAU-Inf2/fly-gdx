@@ -20,6 +20,8 @@ public class Player {
 	private String name;
 	private int id;
 	
+	private SettingManager settingManager;
+	
 	public String getName() {
 		return name;
 	}
@@ -34,9 +36,7 @@ public class Player {
 
 	public void setId(int id) {
 		this.id = id;
-	}	
-
-	private SettingManager settingManager;
+	}
 	
 	public Player() {
 		this.plane = new Spaceship("spaceship");
