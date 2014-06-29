@@ -100,8 +100,8 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 		asteroid.id = "Asteroid_" + id;
 		gameController.getCollisionDetector().addRigidBody(asteroid);
 		
-		asteroid.setMovement(getRandomVector(new Vector3(-6.0f, -6.0f, -6.0f), new Vector3(6.0f, 6.0f, 6.0f)));
-		asteroid.setRotation(getRandomVector(new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+		asteroid.setMovement(getRandomVector(-2.0f, 2.0f));
+		asteroid.setRotation(getRandomVector(-0.5f, 0.5f));
 
 		return asteroid;
 	}
@@ -129,6 +129,25 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Calculates a random vector with x, y and z value between 0.0f and max value.
+	 * @param max		The maximum size of the random vector.
+	 * @return random vector.
+	 */
+	private Vector3 getRandomVector(float max) {
+		return getRandomVector(new Vector3(max, max, max));
+	}
+	
+	/**
+	 * Calculates a random vector with x, y and z value between min and max value.
+	 * @param min		The minimum size of the random vector.
+	 * @param max		The maximum size of the random vector.
+	 * @return random vector.
+	 */
+	private Vector3 getRandomVector(float min, float max) {
+		return getRandomVector(new Vector3(min, min, min), new Vector3(max, max, max));
 	}
 	
 	/**
