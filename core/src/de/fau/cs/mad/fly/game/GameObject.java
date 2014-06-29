@@ -197,20 +197,30 @@ public class GameObject extends ModelInstance implements Disposable {
 	public btRigidBody getRigidBody() {
 		return rigidBody;
 	}
-
-	/**
-	 * Renders the game object and updates the position of the collision object if one is defined.
-	 */
-	public void render(ModelBatch batch, PerspectiveCamera cam) {
-		render(batch, null, cam);
-	}
 	
+	/**
+	 * Updates the current transform matrix with the rigid body transform matrix after the rigid body simulation.
+	 */
 	public void updateRigidBody() {
 		rigidBody.getWorldTransform(transform);
 	}
 
 	/**
+	 * Renders the game object and updates the position of the collision object if one is defined.
+	 * 
+	 * @param batch		The model batch of the screen.
+	 * @param cam		The camera used to display the world.
+	 */
+	public void render(ModelBatch batch, PerspectiveCamera cam) {
+		render(batch, null, cam);
+	}
+	
+	/**
 	 * Renders the game object with environment and updates the position of the collision object if one is defined.
+	 * 
+	 * @param batch				The model batch of the screen.
+	 * @param environment		The environment used to display the world.
+	 * @param cam				The camera used to display the world.
 	 */
 	public void render(ModelBatch batch, Environment environment, PerspectiveCamera cam) {		
 		if(visible && isVisible(cam)) {

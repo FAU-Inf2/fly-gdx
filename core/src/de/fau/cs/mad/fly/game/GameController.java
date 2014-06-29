@@ -477,7 +477,7 @@ public class GameController {
 		 * @return Builder instance with GateIndicator
 		 */
 		private Builder addAsteroidBelt() {
-			AsteroidBelt asteroidBelt = new AsteroidBelt(10, "asteroid", new Vector3(40.0f, 40.0f, 40.0f));
+			AsteroidBelt asteroidBelt = new AsteroidBelt(10, "asteroid", new Vector3(20.0f, 20.0f, 20.0f));
 			optionalFeaturesToLoad.add(asteroidBelt);
 			optionalFeaturesToInit.add(asteroidBelt);
 			optionalFeaturesToUpdate.add(asteroidBelt);

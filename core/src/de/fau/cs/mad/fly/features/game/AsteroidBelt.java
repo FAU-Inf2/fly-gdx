@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
@@ -33,7 +34,7 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	private Environment environment;
 	private PerspectiveCamera camera;
 	
-	private Vector3 levelSize;
+	private Vector3 spawnSize;
 	
 	private int asteroidCount = 0;
 	private String modelRef;
@@ -43,12 +44,12 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	 * Constructor for the AstroidBelt
 	 * @param asteroidCount		The count of asteroids to display and update.
 	 * @param modelRef			The model used for the asteroids.
-	 * @param levelSize			The size of the box where the asteroids have to be created inside.
+	 * @param spawnSize			The size of the box in positive and negative direction where the asteroids have to be created inside.
 	 */
-	public AsteroidBelt(int asteroidCount, String modelRef, Vector3 levelSize) {
+	public AsteroidBelt(int asteroidCount, String modelRef, Vector3 spawnSize) {
 		this.asteroidCount = asteroidCount;
 		this.modelRef = modelRef;
-		this.levelSize = levelSize;
+		this.spawnSize = spawnSize;
 	}
 	
 	@Override
@@ -65,8 +66,6 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 			return;
 		}
 		
-		Matrix4 identityMatrix = new Matrix4();
-		
 		for(int i = 0; i < asteroidCount; i++) {
 			asteroids.add(createAsteroid(model, i));
 		}
@@ -80,14 +79,14 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	 * Calculates moving and rotation randomly between specific values after cheking if the position is not colling with anything else.
 	 * Creates the collision object of the asteroid.
 	 * @param model			The model used for the asteroid.
-	 * @return
+	 * @return GameObject
 	 */
 	private GameObject createAsteroid(GameModel model, int id) {
 		GameObject asteroid = new GameObject(model);
 		
 		Vector3 position;
 		do {
-			position = getRandomVector(levelSize);
+			position = getRandomVectorInSize(spawnSize);
 		} while(checkForSpawnCollision(position, asteroids, 20.0f));
 		
 		asteroid.transform.setToTranslation(position);
@@ -101,8 +100,8 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 		asteroid.id = "Asteroid_" + id;
 		gameController.getCollisionDetector().addRigidBody(asteroid);
 		
-		asteroid.setMovement(getRandomVector(new Vector3(6.0f, 6.0f, 6.0f)));
-		asteroid.setRotation(getRandomVector(new Vector3(1.0f, 1.0f, 1.0f)));
+		asteroid.setMovement(getRandomVector(new Vector3(-6.0f, -6.0f, -6.0f), new Vector3(6.0f, 6.0f, 6.0f)));
+		asteroid.setRotation(getRandomVector(new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f)));
 
 		return asteroid;
 	}
@@ -112,7 +111,7 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	 * @param position		The currently calculated position.
 	 * @param asteroids		The list of the already created asteroids.
 	 * @param distance2		The minimum distance between a created asteroid and the other objects.
-	 * @return
+	 * @return true if the position is too close to anything else, false otherwise.
 	 */
 	private boolean checkForSpawnCollision(Vector3 position, List<GameObject> asteroids, float distance2) {
 		for(GameObject asteroid : asteroids) {
@@ -133,36 +132,43 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	}
 	
 	/**
-	 * Calculates a random vector within a given size.
-	 * @param size		The maximum size of the random vector.
+	 * Calculates a random vector positive or negative within a given absolute size.
+	 * @param size		The maximum absolute size of the random vector.
 	 * @return random vector.
 	 */
-	private Vector3 getRandomVector(Vector3 size) {
+	private Vector3 getRandomVectorInSize(final Vector3 size) {
 		Vector3 v = new Vector3();
-		v.x = (float) (Math.random() * size.x) - size.x / 2.0f;
-		v.y = (float) (Math.random() * size.y) - size.y / 2.0f;
-		v.z = (float) (Math.random() * size.z) - size.z / 2.0f;
-		//System.out.println(v.x + " " + v.y + " " + v.z);
+		v.x = MathUtils.random(- size.x, size.x);
+		v.y = MathUtils.random(- size.y, size.y);
+		v.z = MathUtils.random(- size.z, size.z);
 		return v;
 	}
-	
-	// TODO: finish getRandomVector with min and max values
-	/*
-	private Vector3 getRandomVector(Vector3 min, Vector3 max) {
-		Vector3 v = new Vector3();
-		return v;
-	}
-	*/
 	
 	/**
-	 * Calculates a random floating point number between min and max values.
-	 * @param min		The minimum value of the floating point number.
-	 * @param max		The maximum value of the floating point number.
-	 * @return random floating point number.
+	 * Calculates a random vector between 0.0f and maximum vector.
+	 * @param max		The maximum size of the random vector.
+	 * @return random vector.
 	 */
-	private float getRandomFloat(float min, float max) {
-		float speed = (float) (Math.random() * (max-min)) + min;
-		return speed;
+	private Vector3 getRandomVector(final Vector3 max) {
+		Vector3 v = new Vector3();
+		v.x = MathUtils.random(0.0f, max.x);
+		v.y = MathUtils.random(0.0f, max.y);
+		v.z = MathUtils.random(0.0f, max.z);
+		return v;
+	}
+
+	/**
+	 * Calculates a random vector between a min and a max vector.
+	 * @param min		The minimum vector size.
+	 * @param max		The maximum vector size.
+	 * @return random vector.
+	 */
+	private Vector3 getRandomVector(final Vector3 min, final Vector3 max) {
+		Vector3 v = new Vector3();
+		v.x = MathUtils.random(min.x, min.x);
+		v.y = MathUtils.random(min.y, min.y);
+		v.z = MathUtils.random(min.z, min.z);
+		return v;
 	}
 	
 	/**
