@@ -117,7 +117,7 @@ public class GameObject extends ModelInstance implements Disposable {
 		dimensions.set(bounds.getDimensions().cpy().scl(2.0f));
 	}
 	
-	public void scaleBoundingBox(float scale) {
+	public void scaleBoundingBox() {
 		center.scl(transform.getScaleX());
 		dimensions.scl(transform.getScaleX());
 	}
