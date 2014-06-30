@@ -60,3 +60,6 @@ nb-configuration.xml
 
 .gradle
 build/
+
+## databae
+fau.mad.fly.db
