@@ -19,10 +19,6 @@ android {
         instrumentTest.setRoot('tests')
     }
 
-	dependencies {    
-    	compile files('gdx-sqlite-android.jar')
-    
-	}
     signingConfigs {
         release {
             storeFile file("unknown")
