@@ -40,6 +40,7 @@ public class FloatSetting extends ChangeListener implements ISetting {
 		
 		this.value = value;
 		slider = new Slider(minValue, maxValue, stepSize, false, skin);
+		slider.setValue(value);
 		this.slider.addListener(this);
 	}
 	
