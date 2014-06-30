@@ -15,6 +15,7 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -40,11 +41,12 @@ public class Fly extends Game {
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
 	private StatisticsScreen statisticsScreen;
-	private GameScreen gameScreen;
+	private GameScreen gameScreen;	
+	private GlobalHighScoreScreen globalHighScoreScreen;
 
 	private Loader loader;
 	
-	private Player player;
+	//private Player player;
 	private GameController gameController;
 
 	private Skin skin;
@@ -58,8 +60,10 @@ public class Fly extends Game {
 		createSkin();
 		shapeRenderer = new ShapeRenderer();
 
-		player = PlayerManager.getInstance().getCurrentPlayer();
-		player.createSettings(skin);
+		//remove by fan
+		//please use PlayerManager.getInstance().getCurrentPlayer()
+		//player = PlayerManager.getInstance().getCurrentPlayer();
+		//player.createSettings(skin);
 
 		loader = new Loader(this);
 
@@ -79,7 +83,7 @@ public class Fly extends Game {
 		disposeScreen(settingScreen);
 		disposeScreen(statisticsScreen);
 		disposeScreen(gameScreen);
-		
+		disposeScreen(globalHighScoreScreen);
 		skin.dispose();
 	}
 	
@@ -110,9 +114,9 @@ public class Fly extends Game {
 	/**
 	 * Getter for the Player.
 	 */
-	public Player getPlayer() {
-		return player;
-	}
+	//public Player getPlayer() {
+	//	return player;
+	//}
 	
 	public GameController getGameController() {
 		return gameController;
@@ -121,9 +125,9 @@ public class Fly extends Game {
 	/**
 	 * Setter for the Player.
 	 */
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
+	//public void setPlayer(Player player) {
+	//	this.player = player;
+	//}
 
 	/**
 	 * Getter for the Skin.
@@ -226,5 +230,15 @@ public class Fly extends Game {
 			statisticsScreen = new StatisticsScreen();
 		}
 		setScreen(statisticsScreen);
+    }
+	
+	/**
+	 * Switches the current Screen to the StatisticsScreen.
+	 */
+	public void setGlobalHighScoreScreen() {
+		if (globalHighScoreScreen == null) {
+			globalHighScoreScreen = new GlobalHighScoreScreen();
+		}
+		setScreen(globalHighScoreScreen);
     }
 }

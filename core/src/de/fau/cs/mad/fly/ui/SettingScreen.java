@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.player.Player;
+import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
@@ -23,7 +24,7 @@ public class SettingScreen extends BasicScreen {
 	
 	private void generateContentDynamic(){
 		stage.clear();
-		Player player =  ((Fly) Gdx.app.getApplicationListener()).getPlayer();
+		Player player =  PlayerManager.getInstance().getCurrentPlayer();
 		settingManager = player.getSettingManager();
 		Table table = new Table();
 		table.pad(Gdx.graphics.getWidth() * 0.1f);

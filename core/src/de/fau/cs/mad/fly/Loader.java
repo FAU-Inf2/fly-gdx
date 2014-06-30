@@ -3,9 +3,9 @@ package de.fau.cs.mad.fly;
 import com.badlogic.gdx.Gdx;
 
 import de.fau.cs.mad.fly.profile.LevelManager;
+import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 
 /**
  * Created by Jakob Falke on 18.06.14.
@@ -39,7 +39,7 @@ public class Loader {
 		Gdx.app.log("Loader.finishLoading", "Assets loaded.");
 		Level level = Assets.manager.get(currentLevelPath, Level.class);
 		level.reset();
-		game.getPlayer().setLevel(level);
+		PlayerManager.getInstance().getCurrentPlayer().setLevel(level);
 		game.initGameController();
 		game.setGameScreen();
 		Gdx.app.log("Loader.finishLoading", "Level loaded.");
@@ -49,11 +49,12 @@ public class Loader {
 	 * Continues the player's last played level. If no last level is specified defaults to the first level.
 	 */
 	public void continueLevel() {
-		Level.Head levelHead = game.getPlayer().getLastLevel();
+		Level.Head levelHead = PlayerManager.getInstance().getCurrentPlayer().getLastLevel();
 		if(levelHead == null) {
 			Gdx.app.log("Loader.continueLevel", "No last level set for player. Defaulting to first level..");
 			levelHead = LevelManager.getInstance().getLevelList().get(0);
 		}
+		currentLevelPath = levelHead.file.path();
 		Gdx.app.log("Loader.continueLevel", "Initializing load...");
 		startLoading(levelHead);
 	}

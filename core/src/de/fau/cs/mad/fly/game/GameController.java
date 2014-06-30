@@ -23,6 +23,7 @@ import de.fau.cs.mad.fly.features.overlay.*;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
+import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.script.FlyEngine;
 import de.fau.cs.mad.fly.settings.SettingManager;
@@ -355,7 +356,7 @@ public class GameController {
 			optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
 
 			this.game = game;
-			this.player = game.getPlayer();
+			this.player = PlayerManager.getInstance().getCurrentPlayer();
 			this.level = player.getLevel();
 			this.flightController = new FlightController(player);
 			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));

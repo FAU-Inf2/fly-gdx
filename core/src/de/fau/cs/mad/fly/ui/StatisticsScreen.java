@@ -64,11 +64,10 @@ public class StatisticsScreen extends BasicScreen {
 					protected void result(Object o) {
 						if (o instanceof Player) {
 							Player player = (Player) o;
-							player.createSettings(skin);
+							player.createSettings();
 							PlayerManager.getInstance()
 									.setCurrentPlayer(player);
-							((Fly) Gdx.app.getApplicationListener())
-									.setPlayer(player);
+							
 							AppSettingsManager.Instance.setIntegerSetting(
 									AppSettingsManager.CHOSEN_USER,
 									player.getId());
@@ -104,9 +103,8 @@ public class StatisticsScreen extends BasicScreen {
 							String name = usernameTF.getText();
 							if (name != "")// todo more check
 							{
-								Player player = new Player();
-								player.setName(name);
-								player.setId(PlayerManager.getInstance()
+								Player player = new Player(name,
+										PlayerManager.getInstance()
 										.getMaxPlayerID() + 1);
 								PlayerManager.getInstance().savePlayer(player);
 								generateContentDynamic();
@@ -142,7 +140,7 @@ public class StatisticsScreen extends BasicScreen {
 				UI.Window.TRANSPARENT_SCROLL_PANE_STYLE,
 				ScrollPane.ScrollPaneStyle.class));
 
-		String userName = ((Fly) Gdx.app.getApplicationListener()).getPlayer()
+		String userName = PlayerManager.getInstance().getCurrentPlayer()
 				.getName();
 		infoTable.row().expand();
 		infoTable.add(new Label(I18n.t("usernameLableText"), skin)).pad(6f)
@@ -153,12 +151,7 @@ public class StatisticsScreen extends BasicScreen {
 		if (PlayerManager.getInstance().getAllPlayer().size() > 1) {
 			infoTable.add(changeUserButton).pad(6f).uniform();
 		}
-		infoTable.add(addUserButton).pad(6f).uniform();
-
-		infoTable.row().expand();
-
-		// infoTable.add(new Label(I18n.t("ScoresLableText"),
-		// skin)).pad(6f).uniform();
+		infoTable.add(addUserButton).pad(6f).uniform();		
 
 		List<Level.Head> allLevels = LevelManager.getInstance().getLevelList();
 		boolean haveScore = false;
@@ -200,6 +193,17 @@ public class StatisticsScreen extends BasicScreen {
 			infoTable.row().expand();
 			infoTable.add(new Label(I18n.t("noScore"), skin)).pad(6f).uniform();
 		}
+		
+		infoTable.row().expand();
+
+		TextButton globalHighScoreButton = new TextButton("Global high scores",textButtonStyle);
+		globalHighScoreButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				((Fly) Gdx.app.getApplicationListener()).setGlobalHighScoreScreen();
+			}
+		});
+		infoTable.add(globalHighScoreButton);
 
 		table.row().expand();
 		table.add(statisticsPane);

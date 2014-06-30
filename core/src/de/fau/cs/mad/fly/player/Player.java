@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.player;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
@@ -38,7 +37,13 @@ public class Player {
 		this.id = id;
 	}
 	
-	public Player() {
+	public Player() {		
+		this.plane = new Spaceship("spaceship");
+	}
+	
+	public Player(String name, int id) {
+		setName(name);
+		setId(id);		
 		this.plane = new Spaceship("spaceship");
 	}
 
@@ -65,7 +70,7 @@ public class Player {
 	/**
 	 * Creates the SettingManager and all the Settings.
 	 */
-	public void createSettings(final Skin skin) {
+	public void createSettings() {
 		settingManager = new SettingManager("fly_user_preferences_" + getId());
 
 		//settingManager.addSetting("name", "Playername:", "Test");

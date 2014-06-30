@@ -1,21 +1,17 @@
 package de.fau.cs.mad.fly.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.profile.LevelManager;
+import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
 
 /**
@@ -54,6 +50,7 @@ public class LevelChooserScreen extends BasicScreen {
 				button.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
+						PlayerManager.getInstance().getCurrentPlayer().setLastLevel(level);
 						((Fly) Gdx.app.getApplicationListener()).getLoader().startLoading(level);
 					}
 				});

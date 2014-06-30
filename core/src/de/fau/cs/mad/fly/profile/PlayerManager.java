@@ -61,12 +61,11 @@ public class PlayerManager {
 		if (player == null) {
 			player = new Player();
 			player.setName(I18n.t("default.username"));
-
 			player.setId(getMaxPlayerID() + 1);
-
 			savePlayer(player);
-
 		}
+		
+		player.createSettings();
 		setCurrentPlayer(player);
 		AppSettingsManager.Instance.setIntegerSetting(
 				AppSettingsManager.CHOSEN_USER, player.getId());
