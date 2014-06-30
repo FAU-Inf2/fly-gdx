@@ -71,9 +71,10 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
 		compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+		compile 'org.xerial:sqlite-jdbc:3.7.2'
 		
 		compile files('libs/gdx-sqlite-desktop.jar')
-		compile files('libs/sqlite-jdbc-3.7.2.jar')
+		compile files('libs/gdx-sqlite.jar')
     }
 }
 
@@ -102,6 +103,8 @@ project(":android") {
 		natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
 
 		compile files('libs/gdx-sqlite-android.jar')
+		
+		compile files('libs/gdx-sqlite.jar')
     }
 }
 
@@ -130,6 +133,8 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
 		compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+		
+		compile files('libs/gdx-sqlite.jar')
     }
 }
 
