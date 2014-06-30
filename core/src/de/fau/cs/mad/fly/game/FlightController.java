@@ -19,7 +19,7 @@ public class FlightController implements InputProcessor {
 	private boolean useSensorData;
 	private boolean useRolling;
 	private boolean useLowPass;
-	private boolean useAveraging;
+	private boolean useAveraging = true;
 	
 	private boolean firstPerson = false;
 
@@ -54,7 +54,6 @@ public class FlightController implements InputProcessor {
 		this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
 		this.useRolling = preferences.getBoolean(SettingManager.USE_ROLL_STEERING);
 		this.useLowPass = preferences.getBoolean(SettingManager.USE_LOW_PASS_FILTER);
-		this.useAveraging = preferences.getBoolean(SettingManager.USE_AVERAGING);
 		//this.firstPerson = preferences.getBoolean(SettingManager.FIRST_PERSON);
 		
 		this.bufferSize = (int) preferences.getFloat(SettingManager.BUFFER_SLIDER);
@@ -78,10 +77,6 @@ public class FlightController implements InputProcessor {
 
 	public void setUseLowPass(boolean useLowPass) {
 		this.useLowPass = useLowPass;
-	}
-
-	public void setUseAveraging(boolean useAveraging) {
-		this.useAveraging = useAveraging;
 	}
 
 	public void setBufferSize(int bufferSize) {
