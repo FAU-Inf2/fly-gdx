@@ -21,6 +21,7 @@ import de.fau.cs.mad.fly.I18n;
  */
 public class MainMenuScreen extends BasicScreen {
 
+
 	/**
 	 * Adds the main menu to the main menu screen.
 	 * <p>
@@ -28,6 +29,7 @@ public class MainMenuScreen extends BasicScreen {
 	 */
 	protected void generateContent() {
 		Table table = new Table();
+		table.defaults().width(viewport.getWorldWidth()/3);
 		table.setFillParent(true);
 		table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
 		stage.addActor(table);
@@ -35,24 +37,23 @@ public class MainMenuScreen extends BasicScreen {
 		TextButtonStyle textButtonStyle = skin.get(UI.Buttons.STYLE, TextButtonStyle.class);
 		final Button continueButton = new TextButton(I18n.t("continue"), textButtonStyle);
 		final Button chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
-		final Button settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+		final ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
 		final Button statsButton = new TextButton("Statistics", textButtonStyle);
-
-		table.row();
+		
 		table.add();
 		table.add();
-		table.add(settingsButton).right();
+		table.add(settingsButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
 		table.row().expand();
 		table.add();
-		table.add(continueButton).fill();
-		table.add();
-		table.row().expand();
-		table.add();
-		table.add(chooseLevelButton).fill().pad(40, 0, 40, 0);
+		table.add(continueButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
 		table.add();
 		table.row().expand();
 		table.add();
-		table.add(statsButton).fill().setWidgetHeight(0.2f);;
+		table.add(chooseLevelButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+		table.add();
+		table.row().expand();
+		table.add();
+		table.add(statsButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
 		table.row().expand();
 		
 		

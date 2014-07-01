@@ -20,8 +20,8 @@ public class SettingScreen extends BasicScreen {
 		// TODO: not updated if player changes while app is running
 		settingManager = ((Fly) Gdx.app.getApplicationListener()).getPlayer().getSettingManager();
 		Table table = new Table();
-		table.pad(Gdx.graphics.getWidth() * 0.1f);
 		table.setFillParent(true);
+		table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
 		stage.addActor(table);
 		
 		final Table settingTable = new Table();

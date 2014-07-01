@@ -46,8 +46,8 @@ public final class UI {
 		 */
 		public static final float RELATIVE_HEIGHT_OF_ALL_SPACE = .5f;
 
-		public static final float SINGLE_SPACE_WIDTH = Window.RELATIVE_WIDTH_OF_ALL_SPACE / 6 * Gdx.graphics.getWidth();
-		public static final float SINGLE_SPACE_HEIGHT = Window.RELATIVE_HEIGHT_OF_ALL_SPACE / 6 * Gdx.graphics.getHeight();
+		public static final float SINGLE_SPACE_WIDTH = 200;
+		public static final float SINGLE_SPACE_HEIGHT = 150;
 		
 		/** Background color of the windows */
 		public static final String BACKGROUND_COLOR = "black";
@@ -57,6 +57,14 @@ public final class UI {
 		
 		/** This is the amount of pixels which should be left blank between border of the screen and the outer widgets */
 		public static final int BORDER_SPACE = Gdx.graphics.getWidth()/40;
+		
+		/** Width in Pixel for that all bitmaps are optimized */
+		public static final float REFERENCE_WIDTH = 4000;
+		
+		/** Height in Pixel for that all bitmaps are optimized */
+		public static final float REFERENCE_HEIGHT = 2200;
+		
+		
 	}
 
 	/** This class contains all parameters related to buttons. */
@@ -66,10 +74,17 @@ public final class UI {
 		private Buttons () {
 		}
 		
+		public static final int MAIN_BUTTON_WIDTH = 1600;
+		
+		public static final int MAIN_BUTTON_HEIGHT = 380;
+		
+		/** This is the default font size for all Buttons */
+		public static final int FONT_SIZE = 150;
+		
 		public static final String STYLE = "rounded";
 		
 		/** Max. number of buttons for level to show in a row */
-		public static final int BUTTONS_IN_A_ROW = 3;
+		public static final int BUTTONS_IN_A_ROW = 2;
 
 		public static final int BUTTONS_IN_A_COLUMN = 3;
 

@@ -21,6 +21,7 @@ import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SplashScreen;
 import de.fau.cs.mad.fly.ui.StatisticsScreen;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Manages the different game screens.
@@ -96,12 +97,12 @@ public class Fly extends Game {
 	public void createSkin() {
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
-		fontParameter.size = (int) (Gdx.graphics.getWidth() * 0.04);
+		fontParameter.size = UI.Buttons.FONT_SIZE;
 		BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
 		fontGenerator.dispose();
 
-		skin = new Skin();
-		skin.addRegions(new TextureAtlas(Gdx.files.internal("uiskin.atlas")));
+		skin = new Skin(new TextureAtlas(Gdx.files.internal("uiskin.atlas")));
+		skin.add("default-button-font", bitmapFont);
 		skin.add("default-font", bitmapFont);
 
 		skin.load(Gdx.files.internal("uiskin.json"));
@@ -191,10 +192,12 @@ public class Fly extends Game {
 	}
 
 	/**
-	 * Switches the current Screen to the SettingScreen.
+	 * Switches the current Screen to the SettingScreen. 
+	 * 
+	 * It is recreated when the player has switched.
 	 */
 	public void setSettingScreen() {
-		if (settingScreen == null) {
+		if(settingScreen == null) {
 			settingScreen = new SettingScreen();
 		}
 		setScreen(settingScreen);
