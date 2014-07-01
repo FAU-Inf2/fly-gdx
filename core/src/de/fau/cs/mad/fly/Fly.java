@@ -15,6 +15,7 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
@@ -44,8 +45,6 @@ public class Fly extends Game {
 	private GameScreen gameScreen;	
 	private GlobalHighScoreScreen globalHighScoreScreen;
 
-	private Loader loader;
-	
 	//private Player player;
 	private GameController gameController;
 
@@ -64,8 +63,6 @@ public class Fly extends Game {
 		//please use PlayerManager.getInstance().getCurrentPlayer()
 		//player = PlayerManager.getInstance().getCurrentPlayer();
 		//player.createSettings(skin);
-
-		loader = new Loader(this);
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
@@ -110,24 +107,10 @@ public class Fly extends Game {
 
 		skin.load(Gdx.files.internal("uiskin.json"));
 	}
-	
-	/**
-	 * Getter for the Player.
-	 */
-	//public Player getPlayer() {
-	//	return player;
-	//}
-	
+
 	public GameController getGameController() {
 		return gameController;
 	}
-
-	/**
-	 * Setter for the Player.
-	 */
-	//public void setPlayer(Player player) {
-	//	this.player = player;
-	//}
 
 	/**
 	 * Getter for the Skin.
@@ -166,10 +149,21 @@ public class Fly extends Game {
 	/**
 	 * Switches the current screen to the LoadingScreen
 	 */
-	public void setLoadingScreen() {
+	public void loadLevel(Level.Head head) {
 		if (loadingScreen == null) {
-			loadingScreen = new LoadingScreen(this);
+			loadingScreen = new LoadingScreen(skin);
 		}
+		Loader<Level> loader = Loader.create(Assets.manager, head.file.path(), Level.class);
+		loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
+			@Override
+			public void progressFinished(Level level) {
+				level.reset();
+				PlayerManager.getInstance().getCurrentPlayer().setLevel(level);
+				initGameController();
+				setGameScreen();
+			}
+		});
+		loadingScreen.initiate(loader);
 		setScreen(loadingScreen);
 	}
 
@@ -214,10 +208,6 @@ public class Fly extends Game {
 		gameController = builder.build();
 		Gdx.app.log("Fly.initGameController", "Controller built.");
 		gameController.loadGame();
-	}
-
-	public Loader getLoader() {
-		return loader;
 	}
 
 	

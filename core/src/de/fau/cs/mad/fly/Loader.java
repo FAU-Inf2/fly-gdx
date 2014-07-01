@@ -2,60 +2,62 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetManager;
 import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Created by Jakob Falke on 18.06.14.
  */
-public class Loader {
+public class Loader<T> {
 
-	private Fly game;
-	private String currentLevelPath;
-	private boolean firstLoad = true;
+	private Collection<ProgressListener<T>> listeners = new ArrayList<ProgressListener<T>>();
+	private float progress = 0;
+	private AssetManager manager;
+	private AssetDescriptor<T> target;
 
-	public Loader(Fly game) {
-		this.game = game;
+	public Loader(AssetManager manager, String target, Class<T> type) {
+		this(manager, new AssetDescriptor<T>(target, type));
 	}
 
-	/**
-	 * Initiates the loading of a level and sets the game's current screen to LoadingScreen
-	 * @param levelHead the Level.Head of the level to be loaded
-	 */
-	public void startLoading(Level.Head levelHead) {
-		currentLevelPath = levelHead.file.path();
-		Gdx.app.log("Loader.startLoading", "Queuing level for loading.");
-		Assets.manager.load(currentLevelPath, Level.class);
-		Gdx.app.log("Loader.startLoading", "Setting LoadingScreen...");
-		game.setLoadingScreen();
+	public Loader(AssetManager manager, AssetDescriptor<T> target) {
+		this.manager = manager;
+		this.target = target;
 	}
 
-	/**
-	 * Finishes the loading of a level. Sets the player's current level, initializes the gameController and sets the current screen to GameScreen.
-	 */
-	public void finishLoading() {
-		Gdx.app.log("Loader.finishLoading", "Assets loaded.");
-		Level level = Assets.manager.get(currentLevelPath, Level.class);
-		level.reset();
-		PlayerManager.getInstance().getCurrentPlayer().setLevel(level);
-		game.initGameController();
-		game.setGameScreen();
-		Gdx.app.log("Loader.finishLoading", "Level loaded.");
+	public void addProgressListener(ProgressListener<T> listener) {
+		this.listeners.add(listener);
 	}
 
-	/**
-	 * Continues the player's last played level. If no last level is specified defaults to the first level.
-	 */
-	public void continueLevel() {
-		Level.Head levelHead = PlayerManager.getInstance().getCurrentPlayer().getLastLevel();
-		if(levelHead == null) {
-			Gdx.app.log("Loader.continueLevel", "No last level set for player. Defaulting to first level..");
-			levelHead = LevelManager.getInstance().getLevelList().get(0);
+	public void initiate() {
+		manager.load(target);
+		for ( ProgressListener l : listeners )
+			l.progressStarted();
+	}
+
+	public void update() {
+		if(!manager.update()) {
+			float currentProgress = ( (float) manager.getLoadedAssets() / (float) (manager.getLoadedAssets() + manager.getQueuedAssets())) * 100f;
+			if(currentProgress > progress) {
+				progress = currentProgress;
+				for ( ProgressListener l : listeners )
+					l.progressUpdated(currentProgress);
+			}
+		} else {
+			for ( ProgressListener<T> l : listeners ) {
+				l.progressUpdated(100f);
+				l.progressFinished(manager.get(target));
+			}
 		}
-		currentLevelPath = levelHead.file.path();
-		Gdx.app.log("Loader.continueLevel", "Initializing load...");
-		startLoading(levelHead);
+	}
+
+	public static <P> Loader<P> create(AssetManager manager, String target, Class<P> type) {
+		return new Loader<P>(manager, target, type);
 	}
 }

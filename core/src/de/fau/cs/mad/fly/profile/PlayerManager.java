@@ -22,7 +22,7 @@ public class PlayerManager {
 	
 
 	public Player getCurrentPlayer() {
-		Gdx.app.log("getCurrentPlayer", "" + currentPlayer.getName());
+		Gdx.app.log("PlayerManager.getCurrentPlayer", currentPlayer.getName());
 		return currentPlayer;
 	}
 
