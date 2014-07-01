@@ -32,7 +32,8 @@ public class LevelChooserScreen extends BasicScreen {
 
 		// table that contains all buttons
 		Table scrollableTable = new Table(skin);
-		scrollableTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		scrollableTable.setFillParent(true);
+		scrollableTable.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
 		
 		ScrollPane levelScrollPane = new ScrollPane(scrollableTable, skin);
 		levelScrollPane.setScrollingDisabled(true, false);
@@ -54,7 +55,7 @@ public class LevelChooserScreen extends BasicScreen {
 						((Fly) Gdx.app.getApplicationListener()).loadLevel(level);
 					}
 				});
-				scrollableTable.add(button).width(UI.Buttons.BUTTON_WIDTH).height(UI.Buttons.BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).center();
+				scrollableTable.add(button).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).center();
 			}
 			scrollableTable.row();
 		}

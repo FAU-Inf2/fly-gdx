@@ -68,9 +68,9 @@ default-round
   index: -1
 check-off
   rotate: false
-  xy: 170, 1
-  size: 28, 28
-  orig: 28, 28
+  xy: 0, 721
+  size: 400, 132
+  orig: 400, 132
   offset: 0, 0
   index: -1
 textfield
@@ -83,9 +83,9 @@ textfield
   index: -1
 check-on
   rotate: false
-  xy: 140, 1
-  size: 28, 28
-  orig: 28, 28
+  xy: 0, 581
+  size: 400, 132
+  orig: 400, 132
   offset: 0, 0
   index: -1
 tree-minus
@@ -222,7 +222,7 @@ green-rounded-button-9patch
 gear
   rotate: false
   xy: 92, 50
-  size: 128, 128
-  orig: 128, 128
+  size: 256, 256
+  orig: 256, 256
   offset: 0, 0
   index: -1

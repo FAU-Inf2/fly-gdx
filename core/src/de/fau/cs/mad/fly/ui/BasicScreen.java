@@ -5,24 +5,18 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.res.Assets;
 
 public abstract class BasicScreen implements Screen {
 	
 	protected final Skin skin;
 	protected final Stage stage;
-	protected final Sprite sprite;
-	protected final Texture background;
-	protected final Batch batch;
+	protected final Viewport viewport;
 
 	/**
 	 * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the
@@ -31,15 +25,14 @@ public abstract class BasicScreen implements Screen {
 	protected InputMultiplexer inputProcessor;
 	
 	public BasicScreen() {
+		stage = new Stage();
 		skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
-		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float)Gdx.graphics.getWidth();
+		float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float)Gdx.graphics.getHeight();
+		float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
+		viewport = new FillViewport(Gdx.graphics.getWidth()*scalingFactor, Gdx.graphics.getHeight()*scalingFactor, stage.getCamera());
+		stage.setViewport(viewport);
 		inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
-		
-		Assets.load(Assets.background);
-		background = Assets.manager.get(Assets.background);
-		sprite = new Sprite(background);
-		sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		batch = new SpriteBatch();
 		generateContent();
 	}
 
@@ -51,9 +44,6 @@ public abstract class BasicScreen implements Screen {
 		Color backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-	    sprite.draw(batch);
-	    batch.end();
 		stage.act(delta);
 		stage.draw();
 	}

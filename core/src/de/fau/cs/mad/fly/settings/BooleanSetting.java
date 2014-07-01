@@ -40,8 +40,6 @@ public class BooleanSetting extends ChangeListener implements ISetting {
 		this.value = value;
 		this.checkBox = new CheckBox("", skin);
 		this.checkBox.setChecked(value);
-		//TODO: remove this and use skin instead
-		this.checkBox.getCells().get(0).size(0.05f * Gdx.graphics.getWidth(), 0.05f * Gdx.graphics.getHeight());
 		this.checkBox.addListener(this);
 	}
 	

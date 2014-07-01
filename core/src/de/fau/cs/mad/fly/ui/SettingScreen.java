@@ -27,8 +27,8 @@ public class SettingScreen extends BasicScreen {
 		Player player =  PlayerManager.getInstance().getCurrentPlayer();
 		settingManager = player.getSettingManager();
 		Table table = new Table();
-		table.pad(Gdx.graphics.getWidth() * 0.1f);
 		table.setFillParent(true);
+		table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
 		stage.addActor(table);
 		
 		final Table settingTable = new Table();
