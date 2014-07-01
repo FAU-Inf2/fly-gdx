@@ -174,6 +174,8 @@ public class GameController {
 		}
 
 		time = 0.0f;
+		PlayerManager.getInstance().getCurrentPlayer().setLives(10);
+		Debug.setOverlay(0, PlayerManager.getInstance().getCurrentPlayer().getLives());
 
 		startGame();
 		Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
@@ -376,7 +378,13 @@ public class GameController {
 				@Override
 				public void onCollision(Spaceship ship, GameObject g) {
 					Gdx.input.vibrate(500);
-					Debug.setOverlay(0, "DEAD!");
+					Player player = PlayerManager.getInstance().getCurrentPlayer();
+					if(player.incLives()) {
+						Debug.setOverlay(0, "DEAD");
+						game.getGameController().finishGame();
+					} else {
+						Debug.setOverlay(0, player.getLives());
+					}
 				}
 			});
 
@@ -431,7 +439,6 @@ public class GameController {
 		 */
 		private void checkAndAddFeatures() {
 			Debug.init(game, stage, 1);
-			Debug.setOverlay(0, "Alive");
 			
 			addAsteroidBelt();
 

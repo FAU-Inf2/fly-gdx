@@ -12,6 +12,7 @@ import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
@@ -63,7 +64,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 		else if( game.getGameController().getLevel().getLeftTime() <= 0) {
 			infoString = I18n.t("level.time.up");
 		}
-		else if( game.getGameController().getLevel().getLeftCollisionTime() <= 0 ) {
+		else if( PlayerManager.getInstance().getCurrentPlayer().isDead() ) {
 			infoString = I18n.t("ship.destroyed");
 		}
 		final Label infoLabel = new Label(infoString, skin);

@@ -103,9 +103,7 @@ public class StatisticsScreen extends BasicScreen {
 							String name = usernameTF.getText();
 							if (name != "")// todo more check
 							{
-								Player player = new Player(name,
-										PlayerManager.getInstance()
-										.getMaxPlayerID() + 1);
+								Player player = new Player(name, PlayerManager.getInstance().getMaxPlayerID() + 1);
 								PlayerManager.getInstance().savePlayer(player);
 								generateContentDynamic();
 							}
