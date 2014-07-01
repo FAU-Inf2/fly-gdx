@@ -165,17 +165,12 @@ public class Player {
 	public void createSettings() {
 		settingManager = new SettingManager("fly_user_preferences_" + getId());
 
-		//settingManager.addSetting("name", "Playername:", "Test");
-		//String[] selection = { "Red", "Blue", "Green", "Yellow" };
-		//settingManager.addSetting("color", "Color:", 0, selection);
 		settingManager.addBooleanSetting(SettingManager.USE_TOUCH, "Use TouchScreen:", false);
 		settingManager.addBooleanSetting(SettingManager.USE_ROLL_STEERING, "Use Rolling:", false);
 		settingManager.addBooleanSetting(SettingManager.USE_LOW_PASS_FILTER, "Use LowPassFilter:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
-		//settingManager.addBooleanSetting("showGameFinished", "Show Game finished:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_PAUSE, "Show Pause Button:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, "Show Steering:", false);
-		//settingManager.addBooleanSetting("showTime", "Show Time:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
 		settingManager.addBooleanSetting(SettingManager.FIRST_PERSON, "First Person", false);
 		

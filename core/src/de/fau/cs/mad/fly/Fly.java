@@ -46,7 +46,6 @@ public class Fly extends Game {
 	private GameScreen gameScreen;	
 	private GlobalHighScoreScreen globalHighScoreScreen;
 
-	//private Player player;
 	private GameController gameController;
 
 	private Skin skin;
@@ -59,11 +58,6 @@ public class Fly extends Game {
 		Assets.init();
 		createSkin();
 		shapeRenderer = new ShapeRenderer();
-
-		//remove by fan
-		//please use PlayerManager.getInstance().getCurrentPlayer()
-		//player = PlayerManager.getInstance().getCurrentPlayer();
-		//player.createSettings(skin);
 
 		setMainMenuScreen();
 		// disabled for debugging reasons
