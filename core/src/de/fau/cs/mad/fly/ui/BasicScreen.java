@@ -21,8 +21,8 @@ public abstract class BasicScreen implements Screen {
 	
 	protected final Skin skin;
 	protected final Stage stage;
-	protected final Sprite sprite;
-	protected final Texture background;
+	//protected final Sprite sprite;
+	//protected final Texture background;
 	protected final Batch batch;
 	protected final Viewport viewport;
 
@@ -43,9 +43,9 @@ public abstract class BasicScreen implements Screen {
 		inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
 		
 		Assets.load(Assets.background);
-		background = Assets.manager.get(Assets.background);
-		sprite = new Sprite(background);
-		sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		//background = Assets.manager.get(Assets.background);
+		//sprite = new Sprite(background);
+		//sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch = new SpriteBatch();
 		generateContent();
 	}
@@ -58,9 +58,9 @@ public abstract class BasicScreen implements Screen {
 		Color backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-	    sprite.draw(batch);
-	    batch.end();
+		//batch.begin();
+	    //sprite.draw(batch);
+	    //batch.end();
 		stage.act(delta);
 		stage.draw();
 	}

@@ -42,7 +42,7 @@ public class MainMenuScreen extends BasicScreen {
 		
 		table.add();
 		table.add();
-		table.add(settingsButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+		table.add(settingsButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).right();
 		table.row().expand();
 		table.add();
 		table.add(continueButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);

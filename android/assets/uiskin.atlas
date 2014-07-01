@@ -68,7 +68,7 @@ default-round
   index: -1
 check-off
   rotate: false
-  xy: 0, 444
+  xy: 0, 721
   size: 400, 132
   orig: 400, 132
   offset: 0, 0
@@ -83,7 +83,7 @@ textfield
   index: -1
 check-on
   rotate: false
-  xy: 0, 308
+  xy: 0, 581
   size: 400, 132
   orig: 400, 132
   offset: 0, 0
