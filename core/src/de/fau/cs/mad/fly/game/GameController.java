@@ -12,21 +12,35 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.features.*;
+import de.fau.cs.mad.fly.features.ICollisionListener;
+import de.fau.cs.mad.fly.features.IFeatureDispose;
+import de.fau.cs.mad.fly.features.IFeatureFinish;
+import de.fau.cs.mad.fly.features.IFeatureInit;
+import de.fau.cs.mad.fly.features.IFeatureLoad;
+import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.AsteroidBelt;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
-import de.fau.cs.mad.fly.features.overlay.*;
+import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
+import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
+import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
+import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
+import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
+import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
+import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
+import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.script.FlyEngine;
 import de.fau.cs.mad.fly.settings.SettingManager;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Manages the Player, the Level, the UI, the CameraController and all the optional Features
@@ -358,10 +372,16 @@ public class GameController {
 			optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
 
 			this.game = game;
-			this.player = PlayerManager.getInstance().getCurrentPlayer();
-			this.level = player.getLevel();
-			this.flightController = new FlightController(player);
-			this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			player = PlayerManager.getInstance().getCurrentPlayer();
+			level = player.getLevel();
+			flightController = new FlightController(player);
+	
+			stage = new Stage();
+			float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float)Gdx.graphics.getWidth();
+			float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float)Gdx.graphics.getHeight();
+			float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
+			Viewport viewport = new FillViewport(Gdx.graphics.getWidth()*scalingFactor, Gdx.graphics.getHeight()*scalingFactor, stage.getCamera());
+			stage.setViewport(viewport);
 			optionalFeaturesToLoad.add(level);
 
 //			FlyEngine engine = FlyEngine.get();
@@ -596,7 +616,7 @@ public class GameController {
 		 * @return Builder instance with SteeringResetOverlay
 		 */
 		private Builder addSteeringResetOverlay() {
-			SteeringResetOverlay steeringResetOverlay = new SteeringResetOverlay(game, flightController, stage);
+			SteeringResetOverlay steeringResetOverlay = new SteeringResetOverlay(game.getSkin(), flightController, stage);
 			optionalFeaturesToInit.add(steeringResetOverlay);
 			optionalFeaturesToRender.add(steeringResetOverlay);
 			optionalFeaturesToDispose.add(steeringResetOverlay);

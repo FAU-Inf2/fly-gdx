@@ -1,15 +1,13 @@
 package de.fau.cs.mad.fly.features.overlay;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
@@ -21,31 +19,20 @@ public class SteeringResetOverlay implements IFeatureInit, IFeatureRender, IFeat
 
 	private final FlightController flightController;
 	
-	private final Skin skin;
 	private final Stage stage;
 	private final Table table;
 	
-	private TextButton resetButton;
+	private Button resetButton;
 
-	public SteeringResetOverlay(final Fly game, final FlightController flightController, final Stage stage) {
+	public SteeringResetOverlay(final Skin skin, final FlightController flightController, final Stage stage) {
 		this.flightController = flightController;
 		this.stage = stage;
-		skin = game.getSkin();
-		
 		table = new Table();
-		table.setBounds(Gdx.graphics.getWidth() * 0.3f, -Gdx.graphics.getHeight() * 0.4f, Gdx.graphics.getWidth() * 0.05f, Gdx.graphics.getHeight() * 0.05f);
-		table.pad(Gdx.graphics.getWidth() * 0.01f);
 		table.setFillParent(true);
-		resetButton = new TextButton("Reset Steering", skin, "roundedOverlay");
-		
-		final Table infoTable = new Table();
-		final ScrollPane pane = new ScrollPane(infoTable, skin);
-		pane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
-		infoTable.add(resetButton).pad(1f);
-		pane.setFadeScrollBars(true);
+		resetButton = new TextButton("Reset Steering", skin, UI.Buttons.STYLE);
 		
 		table.row().expand();
-		table.add(pane);
+		table.add(resetButton).right().bottom().pad(UI.Window.BORDER_SPACE);
 	}
 	
 	@Override
