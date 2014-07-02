@@ -90,15 +90,17 @@ public class Fly extends Game {
 	 * Creates the Skin for the UI.
 	 */
 	public void createSkin() {
+		
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
 		fontParameter.size = UI.Buttons.FONT_SIZE;
 		BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
-		fontGenerator.dispose();
+		BitmapFont bitmapFont2 = fontGenerator.generateFont(fontParameter);
 
-		skin = new Skin(new TextureAtlas(Gdx.files.internal("uiskin.atlas")));
+		Assets.load(Assets.skin);
+		skin = Assets.manager.get(Assets.skin);
 		skin.add("default-button-font", bitmapFont);
-		skin.add("default-font", bitmapFont);
+		skin.add("default-font", bitmapFont2);
 
 		skin.load(Gdx.files.internal("uiskin.json"));
 	}
