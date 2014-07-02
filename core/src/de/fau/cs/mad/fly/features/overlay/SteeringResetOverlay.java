@@ -15,6 +15,7 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.FlightController;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.ui.UI;
 
 public class SteeringResetOverlay implements IFeatureInit, IFeatureRender, IFeatureDispose {
 
@@ -35,10 +36,11 @@ public class SteeringResetOverlay implements IFeatureInit, IFeatureRender, IFeat
 		table.setBounds(Gdx.graphics.getWidth() * 0.3f, -Gdx.graphics.getHeight() * 0.4f, Gdx.graphics.getWidth() * 0.05f, Gdx.graphics.getHeight() * 0.05f);
 		table.pad(Gdx.graphics.getWidth() * 0.01f);
 		table.setFillParent(true);
-		resetButton = new TextButton("Reset Steering", skin, "default");
+		resetButton = new TextButton("Reset Steering", skin, "roundedOverlay");
 		
 		final Table infoTable = new Table();
 		final ScrollPane pane = new ScrollPane(infoTable, skin);
+		pane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
 		infoTable.add(resetButton).pad(1f);
 		pane.setFadeScrollBars(true);
 		

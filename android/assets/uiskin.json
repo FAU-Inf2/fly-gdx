@@ -16,9 +16,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	rounded: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { down: default-round-down, up: default-round, font: default-button-font, fontColor: black },
-	toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-button-font, fontColor: black, downFontColor: red },
-	rounded: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-button-font, fontColor: white}
+	default: { down: default-round-down, up: default-round, font: 2dButtonFont, fontColor: black },
+	toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: 2dButtonFont, fontColor: black, downFontColor: red },
+	rounded2d: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch, font: 2dButtonFont, fontColor: white},
+	roundedOverlay: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-font, fontColor: white}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	settings: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: gear, imageDown: gear }

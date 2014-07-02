@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -12,7 +11,6 @@ import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.game.GameController;
-import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
@@ -94,13 +92,14 @@ public class Fly extends Game {
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
 		fontParameter.size = UI.Buttons.FONT_SIZE;
-		BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
-		BitmapFont bitmapFont2 = fontGenerator.generateFont(fontParameter);
+		BitmapFont buttonFont = fontGenerator.generateFont(fontParameter);
+		fontParameter.size = UI.Overlay.OVERLAY_FONT_SIZE;
+		BitmapFont overlayFont = fontGenerator.generateFont(fontParameter);
 
-		Assets.load(Assets.skin);
-		skin = Assets.manager.get(Assets.skin);
-		skin.add("default-button-font", bitmapFont);
-		skin.add("default-font", bitmapFont2);
+		Assets.load(Assets.textureAtlas);
+		skin = new Skin(Assets.manager.get(Assets.textureAtlas));
+		skin.add("2dButtonFont", buttonFont);
+		skin.add("default-font", overlayFont);
 
 		skin.load(Gdx.files.internal("uiskin.json"));
 	}

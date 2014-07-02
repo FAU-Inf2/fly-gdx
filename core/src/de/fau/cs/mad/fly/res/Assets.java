@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.res;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.game.GameModel;
@@ -18,7 +19,7 @@ public class Assets {
 	public static final AssetDescriptor<GameModel> arrow = new AssetDescriptor<GameModel>("3d/arrow/arrow", GameModel.class);
 	public static final AssetDescriptor<Texture> flyTextureLoadingScreen = new AssetDescriptor<Texture>("Fly.png", Texture.class);
 	public static final AssetDescriptor<Texture> background = new AssetDescriptor<Texture>("background.png", Texture.class);
-	public static final AssetDescriptor<Skin> skin = new AssetDescriptor<Skin>("uiskin.atlas", Skin.class);
+	public static final AssetDescriptor<TextureAtlas> textureAtlas = new AssetDescriptor<TextureAtlas>("uiskin.atlas", TextureAtlas.class);
 	
 	public static final AssetDescriptor<GameModel> spaceship = new AssetDescriptor<GameModel>("spaceship", GameModel.class);
 
