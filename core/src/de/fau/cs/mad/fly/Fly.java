@@ -93,13 +93,10 @@ public class Fly extends Game {
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
 		fontParameter.size = UI.Buttons.FONT_SIZE;
 		BitmapFont buttonFont = fontGenerator.generateFont(fontParameter);
-		fontParameter.size = UI.Overlay.OVERLAY_FONT_SIZE;
-		BitmapFont overlayFont = fontGenerator.generateFont(fontParameter);
 
 		Assets.load(Assets.textureAtlas);
 		skin = new Skin(Assets.manager.get(Assets.textureAtlas));
-		skin.add("2dButtonFont", buttonFont);
-		skin.add("default-font", overlayFont);
+		skin.add("default-font", buttonFont);
 
 		skin.load(Gdx.files.internal("uiskin.json"));
 	}

@@ -61,9 +61,7 @@ public final class UI {
 		/** This is the default font size for all Buttons */
 		public static final int FONT_SIZE = 150;
 		
-		public static final String STYLE = "rounded2d";
-		
-		public static final String OVERLAY_STYLE = "rounded2d";
+		public static final String STYLE = "rounded";
 		
 		/** Max. number of buttons for level to show in a row */
 		public static final int BUTTONS_IN_A_ROW = 2;

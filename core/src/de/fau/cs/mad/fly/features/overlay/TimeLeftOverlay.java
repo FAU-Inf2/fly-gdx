@@ -13,6 +13,7 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Optional Feature to display the used time.
@@ -32,12 +33,9 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureUpdate {
 		this.stage = stage;
 		skin = game.getSkin();
 		
-		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
-		
+		LabelStyle labelStyle = skin.get("red", LabelStyle.class);
 		timeDescription = addLabel("Time left:", labelStyle, 0.01f, 0.0f);
-		timeCounter = addLabel(String.valueOf((long) time), labelStyle, 0.20f, 0.0f);
-		
-		
+		timeCounter = addLabel(String.valueOf((long) time), labelStyle, timeDescription.getWidth(), 0.0f);
 	}
 
 	/**
@@ -53,7 +51,7 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureUpdate {
 	 */
 	public Label addLabel(String text, LabelStyle labelStyle, float x, float y) {
 		Label label = new Label(text, labelStyle);
-		label.setPosition(Gdx.graphics.getWidth() * x, Gdx.graphics.getHeight()*y);
+		label.setPosition(x+UI.Window.BORDER_SPACE, y+UI.Window.BORDER_SPACE);
 		stage.addActor(label);
 		return label;
 	}
@@ -75,7 +73,5 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureUpdate {
 	@Override
 	public void init(final GameController gameController) {		
 		time = game.getGameController().getLevel().getLeftTime();
-
-		
 	}
 }
