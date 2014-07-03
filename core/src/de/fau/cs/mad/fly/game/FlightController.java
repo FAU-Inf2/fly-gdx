@@ -53,11 +53,11 @@ public class FlightController implements InputProcessor {
 		Preferences preferences = player.getSettingManager().getPreferences(); 
 		this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
 		this.useRolling = preferences.getBoolean(SettingManager.USE_ROLL_STEERING);
-		this.useLowPass = preferences.getBoolean(SettingManager.USE_LOW_PASS_FILTER);
+		this.useLowPass = false;
 		
-		this.bufferSize = 100;
-		this.alpha = 100.f;
-		this.cameraOffset = 25f;
+		this.bufferSize = 30;
+		this.alpha = 0.15f;
+		this.cameraOffset = 0.5f;
 
 		setUpCamera();
 	}

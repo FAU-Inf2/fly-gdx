@@ -42,11 +42,11 @@ public class LoadingScreen extends BasicScreen {
 		background.setOrigin(0,0);
 		if(xSkalingFactor >= ySkalingFactor) {
 			background.setScale(xSkalingFactor);
-			deltaY = (Gdx.graphics.getHeight() - background.getHeight() * ySkalingFactor)/2.0f;
+			deltaY = (Gdx.graphics.getHeight() - background.getHeight() * xSkalingFactor)/2.0f;
 		}
 		else {
 			background.setScale(ySkalingFactor);
-			deltaX = (Gdx.graphics.getWidth() - background.getWidth() * xSkalingFactor)/2.0f;
+			deltaX = (Gdx.graphics.getWidth() - background.getWidth() * ySkalingFactor)/2.0f;
 		}
 		background.setPosition(deltaX, deltaY);
 		

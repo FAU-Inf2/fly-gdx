@@ -167,8 +167,8 @@ public class Player {
 
 		settingManager.addBooleanSetting(SettingManager.USE_TOUCH, "Use TouchScreen:", false);
 		settingManager.addBooleanSetting(SettingManager.USE_ROLL_STEERING, "Use Rolling:", false);
-		settingManager.addBooleanSetting(SettingManager.USE_LOW_PASS_FILTER, "Use LowPassFilter:", false);
-		settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
+		// removed for release: settingManager.addBooleanSetting(SettingManager.USE_LOW_PASS_FILTER, "Use LowPassFilter:", false);
+		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
 		settingManager.addBooleanSetting(SettingManager.SHOW_PAUSE, "Show Pause Button:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, "Show Steering:", false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);

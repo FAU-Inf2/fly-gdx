@@ -463,9 +463,7 @@ public class GameController {
 			addAsteroidBelt();
 
 			Preferences preferences = player.getSettingManager().getPreferences();
-			if (preferences.getBoolean(SettingManager.SHOW_GATE_INDICATOR)) {
-				addGateIndicator();
-			}
+			addGateIndicator();
 			addTimeLeftOverlay(60);
 			if (preferences.getBoolean(SettingManager.SHOW_PAUSE)) {
 				addPauseGameOverlay();
