@@ -144,7 +144,7 @@ public class Fly extends Game {
 	 */
 	public void loadLevel(Level.Head head) {
 		if (loadingScreen == null) {
-			loadingScreen = new LoadingScreen(skin);
+			loadingScreen = new LoadingScreen();
 		}
 		Loader<Level> loader = Loader.create(Assets.manager, head.file.path(), Level.class);
 		loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {

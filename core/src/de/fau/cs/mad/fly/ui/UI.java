@@ -29,7 +29,7 @@ public final class UI {
 		public static final String TRANSPARENT_SCROLL_PANE_STYLE = "transparent";
 		
 		/** This is the amount of pixels which should be left blank between border of the screen and the outer widgets */
-		public static final int BORDER_SPACE = 90;
+		public static final int BORDER_SPACE = 100;
 		
 		/** Width in Pixel for that all bitmaps are optimized */
 		public static final float REFERENCE_WIDTH = 4000;

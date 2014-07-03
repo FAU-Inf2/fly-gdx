@@ -1,20 +1,17 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import de.fau.cs.mad.fly.Fly;
+
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.ProgressListener;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.ui.ScalableProgressBar.ScalableProgressBarStyle;
 
 /**
  * Displays the loading screen with a progress bar.
@@ -23,56 +20,58 @@ import de.fau.cs.mad.fly.res.Level;
  * 
  * @author Tobias Zangl
  */
-public class LoadingScreen implements Screen {
+public class LoadingScreen extends BasicScreen {
 
-	private final SpriteBatch batch;
-	private final Texture splashImg;
+	private Sprite background;
 
-	private final Skin skin;
-	private final Stage stage;
-
-	private ProgressBar progressBar;
+	private ScalableProgressBar progressBar;
 	private Loader<Level> loader;
+	private Batch batch;
 
-	public LoadingScreen(final Skin skin) {
-		this.skin = skin;
-
-		batch = new SpriteBatch();
-		splashImg = Assets.manager.get(Assets.flyTextureLoadingScreen);
-
-		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-
-		addLoadingProgress();
-	}
 
 	public void initiate(Loader<Level> loader) {
+		batch = new SpriteBatch();
+		Assets.load(Assets.background);
+		background = new Sprite(Assets.manager.get(Assets.background));
+		// Here the current display size should be used, to make sure the image is not stretched
+		float xSkalingFactor = Gdx.graphics.getWidth()/background.getWidth();
+		float ySkalingFactor = Gdx.graphics.getHeight()/background.getHeight();
+		float deltaX = 0f;
+		float deltaY = 0f;
+		background.setOrigin(0,0);
+		if(xSkalingFactor >= ySkalingFactor) {
+			background.setScale(xSkalingFactor);
+			deltaY = (Gdx.graphics.getHeight() - background.getHeight() * ySkalingFactor)/2.0f;
+		}
+		else {
+			background.setScale(ySkalingFactor);
+			deltaX = (Gdx.graphics.getWidth() - background.getWidth() * xSkalingFactor)/2.0f;
+		}
+		background.setPosition(deltaX, deltaY);
+		
+		ScalableProgressBarStyle style = skin.get("default", ScalableProgressBarStyle.class);
+		progressBar = new ScalableProgressBar(style);
+		progressBar.setWidth(2000f);
+		
+		Table table = new Table();
+		table.setFillParent(true);
+		table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
+		stage.addActor(table);
+		
+		table.row().expand();
+		table.add(progressBar).bottom();
+		table.row().expand();
+		
 		this.loader = loader;
 		loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
 			@Override
 			public void progressUpdated(float percent) {
-				progressBar.setValue(percent);
+				progressBar.setProgress(percent/100f);
 			}
 		});
 		loader.initiate();
 	}
 
-	/**
-	 * Adds the progress bar to the loading screen.
-	 */
-	private void addLoadingProgress() {
-		Table table = new Table();
-		table.pad(Gdx.graphics.getWidth() * 0.2f);
-		table.padTop(Gdx.graphics.getHeight() * 0.7f);
-		table.setFillParent(true);
-		stage.addActor(table);
-
-		progressBar = new ProgressBar(0f, 100f, 1f, false, skin);
-		progressBar.setValue(0);
-		progressBar.scaleBy(100.0f);
-
-		table.row().expand();
-		table.add(progressBar).fill().pad(10f);
-	}
 
 	@Override
 	public void render(float delta) {
@@ -80,9 +79,9 @@ public class LoadingScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-		batch.draw(splashImg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		background.draw(batch);
 		batch.end();
-
+		
 		stage.act(delta);
 		stage.draw();
 
@@ -119,8 +118,12 @@ public class LoadingScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		splashImg.dispose();
-		batch.dispose();
 		stage.dispose();
+	}
+
+
+	@Override
+	protected void generateContent() {
+		// done in initiate
 	}
 }

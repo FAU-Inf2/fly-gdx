@@ -4,7 +4,7 @@ com.badlogic.gdx.graphics.Color: {
 	white: { a: 1, b: 1, g: 1, r: 1 },
 	red: { a: 1, b: 0, g: 0, r: 1 },
 	black: { a: 1, b: 0, g: 0, r: 0 },
-	lightGrey: { a: 1, b: 0.859, g: 0.858, r: 0.857 },
+	lightGrey: { a: 1, b: 0.809, g: 0.808, r: 0.807 },
 	transparent: { a: 0, b: 0, g: 0, r: 0 }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
@@ -68,5 +68,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: { minus: tree-minus, plus: tree-plus, selection: default-select-selection }
+},
+de.fau.cs.mad.fly.ui.ScalableProgressBar$ScalableProgressBarStyle: {
+	default: { background: grey-progress-bar, foreground: green-progress-bar }
 }
 }
