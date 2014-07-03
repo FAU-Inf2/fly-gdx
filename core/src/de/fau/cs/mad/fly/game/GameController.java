@@ -470,9 +470,7 @@ public class GameController {
 			if (preferences.getBoolean(SettingManager.SHOW_PAUSE)) {
 				addPauseGameOverlay();
 			}
-			if (preferences.getBoolean(SettingManager.SHOW_FPS)) {
-				addFPSOverlay();
-			}
+			// if needed for debugging: addFPSOverlay();
 			if (preferences.getBoolean(SettingManager.SHOW_STEERING)) {
 				addSteeringOverlay();
 			}

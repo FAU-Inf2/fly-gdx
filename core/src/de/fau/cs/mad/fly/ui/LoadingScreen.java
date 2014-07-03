@@ -27,6 +27,7 @@ public class LoadingScreen extends BasicScreen {
 	private ScalableProgressBar progressBar;
 	private Loader<Level> loader;
 	private Batch batch;
+	private float progressBarWidth = 2000f;
 
 
 	public void initiate(Loader<Level> loader) {
@@ -51,7 +52,7 @@ public class LoadingScreen extends BasicScreen {
 		
 		ScalableProgressBarStyle style = skin.get("default", ScalableProgressBarStyle.class);
 		progressBar = new ScalableProgressBar(style);
-		progressBar.setWidth(2000f);
+		progressBar.setWidth(progressBarWidth);
 		
 		Table table = new Table();
 		table.setFillParent(true);

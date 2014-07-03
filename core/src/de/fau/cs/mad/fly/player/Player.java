@@ -171,12 +171,12 @@ public class Player {
 		settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
 		settingManager.addBooleanSetting(SettingManager.SHOW_PAUSE, "Show Pause Button:", false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, "Show Steering:", false);
-		settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
-		settingManager.addBooleanSetting(SettingManager.FIRST_PERSON, "First Person", false);
+		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
+		// removed for release: settingManager.addBooleanSetting(SettingManager.FIRST_PERSON, "First Person", false);
 		
-		settingManager.addFloatSetting(SettingManager.ALPHA_SLIDER, "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
-		settingManager.addFloatSetting(SettingManager.BUFFER_SLIDER, "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
-		settingManager.addFloatSetting(SettingManager.CAMERA_OFFSET, "Camera Distance:", 50.0f, 0.0f, 100.0f, 1.0f);
+		// removed for release: settingManager.addFloatSetting(SettingManager.ALPHA_SLIDER, "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
+		// removed for release: settingManager.addFloatSetting(SettingManager.BUFFER_SLIDER, "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
+		// removed for release: settingManager.addFloatSetting(SettingManager.CAMERA_OFFSET, "Camera Distance:", 50.0f, 0.0f, 100.0f, 1.0f);
 	}
 	
 	/**
