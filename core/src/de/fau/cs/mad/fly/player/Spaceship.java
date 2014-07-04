@@ -57,14 +57,15 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		
 		instance = new GameObject(model);
 
+		instance.transform.setToTranslation(game.getLevel().start.position);
+		instance.transform.scl(scaleFactor);
+		
 		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, instance);
 		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 0.1f);
 		instance.filterGroup = CollisionDetector.PLAYER_FLAG;
 		instance.filterMask = CollisionDetector.ALL_FLAG;
 		instance.id = "spaceship";
-		
-		instance.transform.setToTranslation(game.getLevel().start.position);
-		instance.transform.scl(scaleFactor);
+
 		instance.scaleBoundingBox();
 		instance.setRigidBody(shape, info);
 
@@ -76,8 +77,13 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	@Override
 	public void update(float delta) {
 		instance.transform.translate(movingDir.cpy().scl(2.f / scaleFactor * delta));
-		
 		instance.getRigidBody().setWorldTransform(instance.transform);
+		
+		//instance.updateRigidBody();
+
+		//Vector3 trans = new Vector3();
+		//instance.transform.getTranslation(trans);
+		//System.out.println(instance.transform);
 	}
 
 	@Override
@@ -87,6 +93,8 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		
 		instance.transform.rotate(movingDir.cpy().crs(up), rollDir);
 		instance.transform.rotate(movingDir, -azimuthDir);
+		
+		//instance.transform.scl(scaleFactor);
 
 		instance.render(batch, environment, camera);
 		
@@ -135,6 +143,8 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	public void rotate(float rollDir, float azimuthDir) {
 		instance.transform.rotate(movingDir.cpy().crs(up), rollDir);
 		instance.transform.rotate(up, azimuthDir);
+		
+		//instance.getRigidBody().set
 
 		lastRoll = rollDir;
 		lastAzimuth = azimuthDir;
