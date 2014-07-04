@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.player;
 
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
@@ -165,12 +166,12 @@ public class Player {
 	public void createSettings() {
 		settingManager = new SettingManager("fly_user_preferences_" + getId());
 
-		settingManager.addBooleanSetting(SettingManager.USE_TOUCH, "Use TouchScreen:", false);
-		settingManager.addBooleanSetting(SettingManager.USE_ROLL_STEERING, "Use Rolling:", false);
+		settingManager.addBooleanSetting(SettingManager.USE_TOUCH, I18n.t("use.touch"), false);
+		settingManager.addBooleanSetting(SettingManager.USE_ROLL_STEERING, I18n.t("use.rolling"), false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.USE_LOW_PASS_FILTER, "Use LowPassFilter:", false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
-		settingManager.addBooleanSetting(SettingManager.SHOW_PAUSE, "Show Pause Button:", false);
-		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, "Show Steering:", false);
+		settingManager.addBooleanSetting(SettingManager.SHOW_PAUSE, I18n.t("show.pause"), false);
+		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, I18n.t("show.steering"), false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.FIRST_PERSON, "First Person", false);
 		
