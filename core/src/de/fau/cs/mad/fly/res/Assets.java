@@ -16,7 +16,6 @@ public class Assets {
 	public static AssetManager manager;
 
 	public static final AssetDescriptor<GameModel> arrow = new AssetDescriptor<GameModel>("3d/arrow/arrow", GameModel.class);
-	public static final AssetDescriptor<Texture> flyTextureLoadingScreen = new AssetDescriptor<Texture>("Fly.png", Texture.class);
 	public static final AssetDescriptor<Texture> background = new AssetDescriptor<Texture>("background.png", Texture.class);
 	public static final AssetDescriptor<TextureAtlas> textureAtlas = new AssetDescriptor<TextureAtlas>("uiskin.atlas", TextureAtlas.class);
 	
@@ -26,7 +25,6 @@ public class Assets {
 		manager = new AssetManager();
 		manager.setLoader(Level.class, new LevelLoader());
 		manager.setLoader(GameModel.class, new GameModelLoader());
-		manager.load(flyTextureLoadingScreen);
 		manager.finishLoading();
 	}
 
