@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.android;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -14,6 +16,20 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+		addShortcut();
 		initialize(new Fly(), config);
+	}
+	
+	/** adds a shortcut to the launcher when the app is installed */
+	private void addShortcut() {
+		Context context = getApplicationContext();
+		Intent shortcutIntent = new Intent(context, AndroidLauncher.class);
+		Intent addIntent = new Intent();
+		shortcutIntent.setAction(Intent.ACTION_MAIN);
+		addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+		addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, R.string.app_name);
+		addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_launcher));
+		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+		context.sendBroadcast(addIntent);
 	}
 }
