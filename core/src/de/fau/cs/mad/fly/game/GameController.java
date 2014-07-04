@@ -32,7 +32,6 @@ import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
-import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
@@ -507,19 +506,6 @@ public class GameController {
 			optionalFeaturesToUpdate.add(asteroidBelt);
 			optionalFeaturesToRender.add(asteroidBelt);
 			optionalFeaturesToDispose.add(asteroidBelt);
-			return this;
-		}
-		
-		/**
-		 * Adds a {@link TimeOverlay} to the GameController, that is initialized
-		 * and updated every frame.
-		 * 
-		 * @return Builder instance with TimeOverlay
-		 */
-		private Builder addTimeOverlay() {
-			TimeOverlay timeOverlay = new TimeOverlay(game, stage);
-			optionalFeaturesToInit.add(timeOverlay);
-			optionalFeaturesToUpdate.add(timeOverlay);
 			return this;
 		}
 		
