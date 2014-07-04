@@ -1,9 +1,7 @@
 package de.fau.cs.mad.fly.features.overlay;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -14,6 +12,7 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.ui.UI;
 
 public class PauseGameOverlay implements IFeatureInit, IFeatureDispose {
 	private final Fly game;
@@ -30,24 +29,16 @@ public class PauseGameOverlay implements IFeatureInit, IFeatureDispose {
 		skin = game.getSkin();
 		
 		table = new Table();
-		table.setBounds(Gdx.graphics.getWidth() * 0.35f, -Gdx.graphics.getHeight() * 0.3f, Gdx.graphics.getWidth() * 0.05f, Gdx.graphics.getHeight() * 0.05f);
-		table.pad(Gdx.graphics.getWidth() * 0.01f);
 		table.setFillParent(true);
-		pauseButton = new TextButton(I18n.t("pause"), skin, "default");
-
-		final Table infoTable = new Table();
-		final ScrollPane pane = new ScrollPane(infoTable, skin);
-		infoTable.add(pauseButton).pad(1f);
-		pane.setFadeScrollBars(true);
-		
+		pauseButton = new TextButton(I18n.t("pause"), skin, UI.Buttons.STYLE);
 		table.row().expand();
-		table.add(pane);
+		table.add(pauseButton).right().pad(UI.Window.BORDER_SPACE);
+		table.row().expand();
 	}
 	
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		stage.dispose();
 	}
 
 	@Override
