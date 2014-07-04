@@ -1,4 +1,19 @@
 {
+    "id": 3,
+    "name": "Level 3",
+    "scripts": [],
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
 	    "components": [
         {
             "id": "space",
@@ -277,20 +292,5 @@
             "id": 9,
             "successors": []
         }
-    ],
-    "id": 3,
-    "name": "Crazy Circle",
-    "scripts": [],
-    "start": {
-        "position": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-        },
-        "viewDirection": {
-            "x": 0.0,
-            "y": 1.0,
-            "z": 0.0
-        }
-    }
+    ]
 }

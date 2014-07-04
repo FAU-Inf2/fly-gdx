@@ -1,6 +1,6 @@
 {
 	"id": 2,
-	"name": "circle",
+	"name": "Level 2",
 	"start": {
 		"position": { "x": 0, "y": 0, "z": 0},
 		"viewDirection": { "x": 0, "y": 4, "z": 20 }
