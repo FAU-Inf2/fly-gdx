@@ -14,17 +14,12 @@ import de.fau.cs.mad.fly.Fly;
  * @author Tobias Zangl
  */
 public class DebugOverlay {
-	private final Fly game;
-	
-	private final Skin skin;
 	private final Stage stage;
 	private Label valueLabels[] = new Label[3];
 	private int count;
 	
-	public DebugOverlay(final Fly game, final Stage stage, int count) {
-		this.game = game;
+	public DebugOverlay(final Skin skin, final Stage stage, int count) {
 		this.stage = stage;
-		skin = game.getSkin();
 
 		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
 		

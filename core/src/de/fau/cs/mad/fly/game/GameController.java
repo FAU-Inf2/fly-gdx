@@ -458,7 +458,7 @@ public class GameController {
 		 * Checks the preferences if the features should be used and adds them to the game controller if necessary.
 		 */
 		private void checkAndAddFeatures() {
-			Debug.init(game, stage, 1);
+			// if needed for debugging: Debug.init(game.getSkin(), stage, 1);
 			
 			addAsteroidBelt();
 
