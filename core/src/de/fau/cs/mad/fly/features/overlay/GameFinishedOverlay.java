@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Fly;
@@ -16,6 +17,7 @@ import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Optional Feature to display a start and a finish message to the player.
@@ -53,22 +55,21 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 
 	@Override
 	public void finish() {
-		
-		
 		table.pad(Gdx.graphics.getWidth() * 0.1f);
 		table.setFillParent(true);
 		String infoString  = I18n.t("game.over");
-		if( game.getGameController().getLevel().isReachedLastGate()) {
+		if( gameController.getLevel().isReachedLastGate()) {
 			infoString = I18n.t("level.congratulations");
 		}
-		else if( game.getGameController().getLevel().getLeftTime() <= 0) {
+		else if( gameController.getLevel().getLeftTime() <= 0) {
 			infoString = I18n.t("level.time.up");
 		}
 		else if( PlayerManager.getInstance().getCurrentPlayer().isDead() ) {
 			infoString = I18n.t("ship.destroyed");
 		}
 		final Label infoLabel = new Label(infoString, skin);
-		continueButton = new TextButton(I18n.t("back.to.menu"), skin, "default");
+		TextButtonStyle textButtonStyle = skin.get(UI.Buttons.STYLE, TextButtonStyle.class);
+		continueButton = new TextButton(I18n.t("back.to.menu"), textButtonStyle);
 		
 		final Table infoTable = new Table();
 		final ScrollPane pane = new ScrollPane(infoTable, skin);
@@ -76,7 +77,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 		
 		infoTable.add(infoLabel).pad(10f);
 		infoTable.row();
-		Score newScore = game.getGameController().getLevel().getScore();
+		Score newScore = gameController.getLevel().getScore();
 		
 		ScoreManager.getInstance().saveBestScore( newScore);
 		
