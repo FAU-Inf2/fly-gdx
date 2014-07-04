@@ -32,7 +32,6 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
 		Assets.load(Assets.arrow);
 		arrowModel = new GameObject(Assets.manager.get(Assets.arrow));
 		batch = game.getBatch();
-
 		environment = gameController.getLevel().getEnvironment();
 	}
 
@@ -51,7 +50,7 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
 			// midpoint.
 			Vector3 gatePositionRelativeToCamera = cameraDirection.scl(3).add(gameController.getCamera().position).add(down.scl(1.4f));
 
-			vectorToTarget.set(targetPosition.cpy().sub(gatePositionRelativeToCamera).scl(-1).nor());
+			vectorToTarget.set(targetPosition.cpy().sub(gameController.getCamera().position).scl(-1).nor());
 
 			// calculate orthogonal up vector
 			up.crs(vectorToTarget).crs(vectorToTarget).nor();

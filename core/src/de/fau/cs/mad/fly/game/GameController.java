@@ -42,31 +42,29 @@ import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
- * Manages the Player, the Level, the UI, the CameraController and all the optional Features
- * and calls the load(), init(), render(), finish() and dispose() methods of those.
+ * Manages the Player, the Level, the UI, the CameraController and all the
+ * optional Features and calls the load(), init(), render(), finish() and
+ * dispose() methods of those.
  * <p>
- * Optional Feature Interfaces:
- * 		load(): 	- called before the game starts while the loading screen is shown
- * 					- should be stuff like loading models, creating instances, which takes a while
- * 		init():		- called the moment the game starts after switchting to the game screen
- * 					- should be stuff like setting values, resetting counter
- *		update():	- called every frame while the game is running and not paused
- * 					- should be stuff like calculating and updating values
- * 		render():	- called every frame while the game is running or paused, in pause the delta time is 0
- * 					- should be stuff like rendering models, showing overlays
- * 		finish():	- called at the moment the game is over, still in game screen
- * 					- should be stuff like showing points, saving the highscore
- * 		dispose():	- called when the game screen is left
- * 					- should be stuff like disposing models
+ * Optional Feature Interfaces: load(): - called before the game starts while
+ * the loading screen is shown - should be stuff like loading models, creating
+ * instances, which takes a while init(): - called the moment the game starts
+ * after switchting to the game screen - should be stuff like setting values,
+ * resetting counter update(): - called every frame while the game is running
+ * and not paused - should be stuff like calculating and updating values
+ * render(): - called every frame while the game is running or paused, in pause
+ * the delta time is 0 - should be stuff like rendering models, showing overlays
+ * finish(): - called at the moment the game is over, still in game screen -
+ * should be stuff like showing points, saving the highscore dispose(): - called
+ * when the game screen is left - should be stuff like disposing models
  * 
  * @author Lukas Hahmann
  */
 public class GameController {
 	public enum GameState {
-	    RUNNING, PAUSED, FINISHED
+		RUNNING, PAUSED, FINISHED
 	}
-	
-	private Fly game;
+
 	private Stage stage;
 	private CollisionDetector collisionDetector;
 	private List<IFeatureLoad> optionalFeaturesToLoad;
@@ -76,9 +74,14 @@ public class GameController {
 	private List<IFeatureDispose> optionalFeaturesToDispose;
 	private List<IFeatureFinish> optionalFeaturesToFinish;
 	private FlightController flightController;
-	PerspectiveCamera camera;
-
+	private PerspectiveCamera camera;
 	private ModelBatch batch;
+	private Level level;
+	private GameState gameState;
+
+	/** Use Builder to initiate GameController */
+	protected GameController() {
+	}
 
 	/**
 	 * Getter for the model batch used to draw the 3d game.
@@ -87,23 +90,6 @@ public class GameController {
 	 */
 	public ModelBatch getBatch() {
 		return batch;
-	}
-
-	private Level level;
-
-	private float time;
-
-	private GameState gameState;
-
-	public GameController() {}
-	
-	/**
-	 * Getter for the game.
-	 * 
-	 * @return {@link #game}
-	 */
-	public Fly getGame() {
-		return game;
 	}
 
 	/**
@@ -132,7 +118,7 @@ public class GameController {
 	public PerspectiveCamera getCamera() {
 		return camera;
 	}
-	
+
 	/**
 	 * Getter for the collision detector.
 	 * 
@@ -159,13 +145,11 @@ public class GameController {
 	}
 
 	/**
-	 * This method is called, while the level is loading. It loads everything the
-	 * default functions need.
-	 * Furthermore all optional features in {@link #optionalFeaturesToLoad} are
-	 * loaded.
+	 * This method is called, while the level is loading. It loads everything
+	 * the default functions need. Furthermore all optional features in
+	 * {@link #optionalFeaturesToLoad} are loaded.
 	 */
 	public void loadGame() {
-
 		// loads all optional features
 		for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
 			optionalFeature.load(this);
@@ -186,7 +170,7 @@ public class GameController {
 			optionalFeature.init(this);
 		}
 
-		time = 0.0f;
+		//TODO: number of lifes should not be defined statically
 		PlayerManager.getInstance().getCurrentPlayer().setLives(10);
 		Debug.setOverlay(0, PlayerManager.getInstance().getCurrentPlayer().getLives());
 
@@ -200,7 +184,7 @@ public class GameController {
 	public void startGame() {
 		gameState = GameState.RUNNING;
 	}
-	
+
 	/**
 	 * Sets the game state to paused.
 	 */
@@ -214,19 +198,19 @@ public class GameController {
 	public void finishGame() {
 		System.out.println("FINISHED");
 		gameState = GameState.FINISHED;
-
 		endGame();
 	}
 
 	/**
 	 * Setter for the game state.
 	 * 
-	 * @param state		The new game state.
+	 * @param state
+	 *            The new game state.
 	 */
 	public void setGameState(GameState state) {
 		gameState = state;
 	}
-	
+
 	/**
 	 * Getter for the game state.
 	 * 
@@ -235,52 +219,50 @@ public class GameController {
 	public GameState getGameState() {
 		return gameState;
 	}
-	
+
 	/**
 	 * Checks if the game is running.
 	 * 
 	 * @return true if the game is running, otherwise false.
 	 */
 	public boolean isRunning() {
-		if(gameState == GameState.RUNNING)
+		if (gameState == GameState.RUNNING)
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Checks if the game is paused.
 	 * 
 	 * @return true if the game is paused, otherwise false.
 	 */
 	public boolean isPaused() {
-		if(gameState == GameState.PAUSED)
+		if (gameState == GameState.PAUSED)
 			return true;
 		return false;
 	}
 
 	/**
-	 * This method is called every frame.
-	 * Furthermore all optional features in {@link #optionalFeaturesToRender} are
-	 * updated and rendered.
+	 * This method is called every frame. Furthermore all optional features in
+	 * {@link #optionalFeaturesToRender} are updated and rendered.
 	 * 
-	 * @param delta			Time after the last call.
+	 * @param delta
+	 *            Time after the last call.
 	 */
 	public void renderGame(float delta) {
 		stage.act(delta);
-		
-		if (gameState == GameState.RUNNING) { 
+
+		if (gameState == GameState.RUNNING) {
 			camera = flightController.recomputeCamera(delta);
-			
+
 			level.update(delta, camera);
-		
+
 			// update optional features if the game is not paused
 			for (IFeatureUpdate optionalFeature : optionalFeaturesToUpdate) {
 				optionalFeature.update(delta);
 			}
 
 			collisionDetector.perform(delta);
-
-			time += delta;
 		}
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -290,20 +272,20 @@ public class GameController {
 		batch.begin(camera);
 		level.render(delta, batch, camera);
 		batch.end();
-		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer etc., split render up?
+		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer
+		// etc., split render up?
 
 		// render optional features
 		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
 			optionalFeature.render(delta);
 		}
-		
+
 		stage.draw();
 	}
 
 	/**
-	 * This method is called when the game is over.
-	 * Furthermore all optional features in {@link #optionalFeaturesToFinish} are
-	 * finished.
+	 * This method is called when the game is over. Furthermore all optional
+	 * features in {@link #optionalFeaturesToFinish} are finished.
 	 */
 	public void endGame() {
 		for (IFeatureFinish optionalFeature : optionalFeaturesToFinish) {
@@ -312,18 +294,15 @@ public class GameController {
 	}
 
 	/**
-	 * This method is called when the game is over.
-	 * Furthermore all optional features in {@link #optionalFeaturesToDispose} are
-	 * disposed.
+	 * This method is called when the game is over. Furthermore all optional
+	 * features in {@link #optionalFeaturesToDispose} are disposed.
 	 */
 	public void disposeGame() {
 		for (IFeatureDispose optionalFeature : optionalFeaturesToDispose) {
 			Gdx.app.log("GameController.disposeGame", "dispose: " + optionalFeature.getClass().getSimpleName());
 			optionalFeature.dispose();
 		}
-
 		collisionDetector.dispose();
-
 		optionalFeaturesToUpdate.clear();
 		optionalFeaturesToRender.clear();
 	}
@@ -374,20 +353,20 @@ public class GameController {
 			player = PlayerManager.getInstance().getCurrentPlayer();
 			level = player.getLevel();
 			flightController = new FlightController(player);
-	
+
 			stage = new Stage();
-			float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float)Gdx.graphics.getWidth();
-			float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float)Gdx.graphics.getHeight();
+			float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
+			float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
 			float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
-			Viewport viewport = new FillViewport(Gdx.graphics.getWidth()*scalingFactor, Gdx.graphics.getHeight()*scalingFactor, stage.getCamera());
+			Viewport viewport = new FillViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
 			stage.setViewport(viewport);
 			optionalFeaturesToLoad.add(level);
 
-//			FlyEngine engine = FlyEngine.get();
-//			engine.setLevel(level);
-//			level.addEventListener(engine);
-//			for ( String s : level.scripts )
-//				engine.load(Gdx.files.internal( "scripts/app/" + s ));
+			// FlyEngine engine = FlyEngine.get();
+			// engine.setLevel(level);
+			// level.addEventListener(engine);
+			// for ( String s : level.scripts )
+			// engine.load(Gdx.files.internal( "scripts/app/" + s ));
 
 			addPlayerPlane();
 			collisionDetector = new CollisionDetector();
@@ -398,7 +377,7 @@ public class GameController {
 				public void onCollision(Spaceship ship, GameObject g) {
 					Gdx.input.vibrate(500);
 					Player player = PlayerManager.getInstance().getCurrentPlayer();
-					if(player.incLives()) {
+					if (player.incLives()) {
 						Debug.setOverlay(0, "DEAD");
 						game.getGameController().finishGame();
 					} else {
@@ -409,9 +388,9 @@ public class GameController {
 
 			Gdx.app.log("Builder.init", "Setting up collision for level gates...");
 
-			for ( Level.Gate g : level.allGates() ) {
+			for (Level.Gate g : level.allGates()) {
 				Gdx.app.log("Builder.init", "Gate " + g);
-				if ( g.display.getRigidBody() == null ) {
+				if (g.display.getRigidBody() == null) {
 					Gdx.app.log("Builder.init", "Display RigidBody == null");
 					btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
 					btRigidBodyConstructionInfo displayInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(g.display.modelId, displayShape, 0.0f);
@@ -420,8 +399,8 @@ public class GameController {
 					g.display.setRigidBody(displayShape, displayInfo);
 				}
 				collisionDetector.addRigidBody(g.display);
-				
-				if ( g.goal.getRigidBody() == null ) {
+
+				if (g.goal.getRigidBody() == null) {
 					Gdx.app.log("Builder.init", "Goal RigidBody == null");
 					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
 					btRigidBodyConstructionInfo goalInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(g.display.modelId, goalShape, 0.0f);
@@ -447,18 +426,19 @@ public class GameController {
 			});
 
 			Gdx.app.log("Builder.init", "Final work for level done.");
-			
+
 			checkAndAddFeatures();
 
 			return this;
 		}
-		
+
 		/**
-		 * Checks the preferences if the features should be used and adds them to the game controller if necessary.
+		 * Checks the preferences if the features should be used and adds them
+		 * to the game controller if necessary.
 		 */
 		private void checkAndAddFeatures() {
 			// if needed for debugging: Debug.init(game.getSkin(), stage, 1);
-			
+
 			addAsteroidBelt();
 
 			Preferences preferences = player.getSettingManager().getPreferences();
@@ -473,8 +453,7 @@ public class GameController {
 			}
 			if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
 				addTouchScreenOverlay();
-			}
-			else {
+			} else {
 				addSteeringResetOverlay();
 			}
 			addGameFinishedOverlay();
@@ -494,7 +473,7 @@ public class GameController {
 		}
 
 		/**
-		 * Adds a {@link AsteroidBelt} to the GameController, that is loaded, 
+		 * Adds a {@link AsteroidBelt} to the GameController, that is loaded,
 		 * initialized, updated every frame and disposed.
 		 * 
 		 * @return Builder instance with GateIndicator
@@ -508,7 +487,7 @@ public class GameController {
 			optionalFeaturesToDispose.add(asteroidBelt);
 			return this;
 		}
-		
+
 		/**
 		 * Adds a {@link TimeOverlay} to the GameController, that is initialized
 		 * and updated every frame.
@@ -516,7 +495,7 @@ public class GameController {
 		 * @return Builder instance with TimeOverlay
 		 */
 		private Builder addTimeLeftOverlay(float time) {
-			TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game, stage, time);
+			TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game.getSkin(), stage);
 			optionalFeaturesToInit.add(timeLeftOverlay);
 			optionalFeaturesToUpdate.add(timeLeftOverlay);
 			return this;
@@ -548,10 +527,10 @@ public class GameController {
 			Gdx.app.log("Builder.addSteeringOverlay", "exit");
 			return this;
 		}
-		
+
 		/**
-		 * Adds a {@link TouchScreenOverlay} to the GameController, that is updated
-		 * every frame.
+		 * Adds a {@link TouchScreenOverlay} to the GameController, that is
+		 * updated every frame.
 		 * 
 		 * @return Builder instance with TouchScreenOverlay
 		 */
@@ -570,14 +549,13 @@ public class GameController {
 		 * @return Builder instance with SteeringOverlay
 		 */
 		private Builder addGameFinishedOverlay() {
-			GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(game,
-					stage);
+			GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(game, stage);
 			optionalFeaturesToInit.add(gameFinishedOverlay);
 			optionalFeaturesToRender.add(gameFinishedOverlay);
 			optionalFeaturesToFinish.add(gameFinishedOverlay);
 			return this;
 		}
-		
+
 		/**
 		 * Adds a {@link PauseGameOverlay} to the GameController, that is
 		 * initialized and displayed every frame
@@ -604,11 +582,10 @@ public class GameController {
 			optionalFeaturesToDispose.add(steeringResetOverlay);
 			return this;
 		}
-		
+
 		/**
-		 * Adds a {@link IPlane} to the GameController, that is
-		 * initialized, updated every frame and updated when the game is
-		 * finished.
+		 * Adds a {@link IPlane} to the GameController, that is initialized,
+		 * updated every frame and updated when the game is finished.
 		 * 
 		 * @return Builder instance with collisionDetector
 		 */
@@ -630,7 +607,6 @@ public class GameController {
 		 */
 		public GameController build() {
 			final GameController gc = new GameController();
-			gc.game = game;
 			gc.stage = stage;
 			gc.collisionDetector = collisionDetector;
 			gc.optionalFeaturesToLoad = optionalFeaturesToLoad;
