@@ -20,7 +20,7 @@ public class ScalableProgressBar extends Actor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		background.draw(batch, super.getX(), super.getY(), super.getWidth(), super.getHeight());
-		foreground.draw(batch, super.getX(), super.getY(), super.getWidth()*progress, super.getHeight());
+		foreground.draw(batch, super.getX()+11, super.getY()+11, super.getWidth()*progress-14, 110);
 	}
 
 	/**

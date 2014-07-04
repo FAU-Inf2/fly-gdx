@@ -229,9 +229,9 @@ gear
 green-progress-bar
   rotate: false
   xy: 0, 309
-  size: 133, 133
-  split: 66, 66, 66, 66
-  orig: 133, 133
+  size: 110, 110
+  split: 54, 54, 54, 54
+  orig: 110, 110
   offset: 0, 0
   index: -1
 grey-progress-bar
