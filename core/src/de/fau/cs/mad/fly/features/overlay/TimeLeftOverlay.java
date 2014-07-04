@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.game.GameController;
@@ -30,8 +31,8 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureUpdate {
 		skin = game.getSkin();
 		
 		LabelStyle labelStyle = skin.get("red", LabelStyle.class);
-		timeDescription = addLabel("Time left:", labelStyle, 0.01f, 0.0f);
-		timeCounter = addLabel(String.valueOf((long) time), labelStyle, timeDescription.getWidth(), 0.0f);
+		timeDescription = addLabel(I18n.t("leftTime"), labelStyle, 0.01f, 0.0f);
+		timeCounter = addLabel(String.valueOf((long) time), labelStyle, timeDescription.getWidth()+50, 0.0f);
 	}
 
 	/**

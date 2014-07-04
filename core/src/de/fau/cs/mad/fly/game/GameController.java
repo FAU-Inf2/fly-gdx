@@ -32,7 +32,6 @@ import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
-import de.fau.cs.mad.fly.features.overlay.TimeOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
@@ -458,7 +457,7 @@ public class GameController {
 		 * Checks the preferences if the features should be used and adds them to the game controller if necessary.
 		 */
 		private void checkAndAddFeatures() {
-			Debug.init(game, stage, 1);
+			// if needed for debugging: Debug.init(game.getSkin(), stage, 1);
 			
 			addAsteroidBelt();
 
@@ -507,19 +506,6 @@ public class GameController {
 			optionalFeaturesToUpdate.add(asteroidBelt);
 			optionalFeaturesToRender.add(asteroidBelt);
 			optionalFeaturesToDispose.add(asteroidBelt);
-			return this;
-		}
-		
-		/**
-		 * Adds a {@link TimeOverlay} to the GameController, that is initialized
-		 * and updated every frame.
-		 * 
-		 * @return Builder instance with TimeOverlay
-		 */
-		private Builder addTimeOverlay() {
-			TimeOverlay timeOverlay = new TimeOverlay(game, stage);
-			optionalFeaturesToInit.add(timeOverlay);
-			optionalFeaturesToUpdate.add(timeOverlay);
 			return this;
 		}
 		

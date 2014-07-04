@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import de.fau.cs.mad.fly.features.overlay.DebugOverlay;
@@ -23,8 +24,8 @@ public class Debug {
 	private static long lastTimeMS = 0;
 	private static long lastTimeNS = 0;
 
-	public static void init(final Fly game, final Stage stage, int index) {
-		debugOverlay = new DebugOverlay(game, stage, index);
+	public static void init(final Skin skin, final Stage stage, int index) {
+		debugOverlay = new DebugOverlay(skin, stage, index);
 	}
 	
 	public static void setOverlay(int index, int value) {
