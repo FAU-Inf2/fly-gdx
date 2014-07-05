@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
@@ -32,7 +33,6 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	private boolean firstPerson;
 
 	private String modelRef;
-	private float scaleFactor = 0.003f;
 	
 	private Vector3 movingDir = new Vector3(0,0,1);
 	private Vector3 up =  new Vector3(0,1,0);
@@ -58,28 +58,28 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		instance = new GameObject(model);
 
 		instance.transform.setToTranslation(game.getLevel().start.position);
-		instance.transform.scl(scaleFactor);
 		
 		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, instance);
-		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 0.1f);
+		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 1.0f);
 		instance.filterGroup = CollisionDetector.PLAYER_FLAG;
 		instance.filterMask = CollisionDetector.ALL_FLAG;
 		instance.id = "spaceship";
 
 		instance.scaleBoundingBox();
 		instance.setRigidBody(shape, info);
+		
+		instance.getRigidBody().setDamping(0.0f, 0.5f);
 
-		instance.setMovement(new Vector3(0.0f, 0.0f, 1.0f));
 		instance.userData = this;
 		gameController.getCollisionDetector().addRigidBody(instance);
 	}
 	
 	@Override
 	public void update(float delta) {
-		instance.transform.translate(movingDir.cpy().scl(2.f / scaleFactor * delta));
-		instance.getRigidBody().setWorldTransform(instance.transform);
-		
-		//instance.updateRigidBody();
+		//instance.transform.translate(movingDir.cpy().scl(2.f * delta));
+		//instance.getRigidBody().setWorldTransform(instance.transform);
+	
+		instance.updateRigidBody();
 
 		//Vector3 trans = new Vector3();
 		//instance.transform.getTranslation(trans);
@@ -93,8 +93,6 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		
 		instance.transform.rotate(movingDir.cpy().crs(up), rollDir);
 		instance.transform.rotate(movingDir, -azimuthDir);
-		
-		//instance.transform.scl(scaleFactor);
 
 		instance.render(batch, environment, camera);
 		
@@ -135,16 +133,26 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	@Override
 	public void init(GameController game) {
 		camera = gameController.getCamera();
+
+		Matrix4 startTransform = instance.getRigidBody().getCenterOfMassTransform().rotate(new Vector3(0,0,1), camera.direction);
+
+		instance.getRigidBody().setCenterOfMassTransform(startTransform);
+		instance.updateRigidBody();
 		
-		instance.transform.rotate(new Vector3(0,0,1), camera.direction);
+		instance.setMovement(camera.direction);
 	}
 
 	@Override
-	public void rotate(float rollDir, float azimuthDir) {
-		instance.transform.rotate(movingDir.cpy().crs(up), rollDir);
-		instance.transform.rotate(up, azimuthDir);
+	public void rotate(float rollDir, float azimuthDir) {	
+		Matrix4 rotationTransform = instance.getRigidBody().getCenterOfMassTransform();
+		rotationTransform.rotate(movingDir.cpy().crs(up), rollDir).rotate(up, azimuthDir);
+		instance.getRigidBody().setCenterOfMassTransform(rotationTransform);
 		
-		//instance.getRigidBody().set
+		float[] transformValues = rotationTransform.getValues();
+		Vector3 linearMovement = new Vector3(transformValues[8], transformValues[9], transformValues[10]);
+		linearMovement.scl(getSpeed());
+
+		instance.setMovement(linearMovement);
 
 		lastRoll = rollDir;
 		lastAzimuth = azimuthDir;
