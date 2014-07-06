@@ -1,6 +1,7 @@
 {
 	"id": 2,
 	"name": "Level 2",
+	"time": 60,
 	"start": {
 		"position": { "x": 0, "y": 0, "z": 0},
 		"viewDirection": { "x": 0, "y": 4, "z": 20 }

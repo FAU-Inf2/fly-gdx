@@ -62,7 +62,7 @@ import de.fau.cs.mad.fly.ui.UI;
  * 
  * @author Lukas Hahmann
  */
-public class GameController {
+public class GameController implements TimeIsUpListener{
 	public enum GameState {
 		RUNNING, PAUSED, FINISHED
 	}
@@ -80,6 +80,7 @@ public class GameController {
 	private ModelBatch batch;
 	private Level level;
 	private GameState gameState;
+	private TimeController timeController;
 
 	/** Use Builder to initiate GameController */
 	protected GameController() {
@@ -175,6 +176,7 @@ public class GameController {
 		//TODO: number of lifes should not be defined statically
 		PlayerManager.getInstance().getCurrentPlayer().setLives(10);
 		Debug.setOverlay(0, PlayerManager.getInstance().getCurrentPlayer().getLives());
+		timeController.initTimer(level.getLeftTime());
 
 		startGame();
 		Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
@@ -265,6 +267,7 @@ public class GameController {
 			}
 
 			collisionDetector.perform(delta);
+			timeController.checkTime();
 		}
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -308,6 +311,22 @@ public class GameController {
 		optionalFeaturesToUpdate.clear();
 		optionalFeaturesToRender.clear();
 	}
+	
+	public void setTimeController(TimeController timeController) {
+		this.timeController = timeController;
+		timeController.registerTimeIsUpListener(this);
+	}
+	
+	public TimeController getTimeController() {
+		return timeController;
+	}
+	
+	@Override
+	public void timeIsUp() {
+		finishGame();
+	}
+	
+	
 
 	/**
 	 * This class implements the builder pattern to create a GameController with
@@ -329,7 +348,7 @@ public class GameController {
 		private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
 		private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
 		private FlightController flightController;
-		
+		private TimeController timeController;
 		private EndlessLevelGenerator generator;
 
 		/**
@@ -352,7 +371,9 @@ public class GameController {
 			optionalFeaturesToRender = new ArrayList<IFeatureRender>();
 			optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
 			optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
-
+			
+			timeController = new TimeController();
+			
 			this.game = game;
 			player = PlayerManager.getInstance().getCurrentPlayer();
 			level = player.getLevel();
@@ -381,7 +402,7 @@ public class GameController {
 				public void onCollision(Spaceship ship, GameObject g) {
 					Gdx.input.vibrate(500);
 					Player player = PlayerManager.getInstance().getCurrentPlayer();
-					if (player.incLives()) {
+					if (player.decreaseLives()) {
 						Debug.setOverlay(0, "DEAD");
 						game.getGameController().finishGame();
 					} else {
@@ -466,7 +487,7 @@ public class GameController {
 
 			Preferences preferences = player.getSettingManager().getPreferences();
 			addGateIndicator();
-			addTimeLeftOverlay(60);
+			addTimeLeftOverlay();
 			if (preferences.getBoolean(SettingManager.SHOW_PAUSE)) {
 				addPauseGameOverlay();
 			}
@@ -517,10 +538,11 @@ public class GameController {
 		 * 
 		 * @return Builder instance with TimeOverlay
 		 */
-		private Builder addTimeLeftOverlay(float time) {
+		private Builder addTimeLeftOverlay() {
 			TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game.getSkin(), stage);
 			optionalFeaturesToInit.add(timeLeftOverlay);
-			optionalFeaturesToUpdate.add(timeLeftOverlay);
+			//optionalFeaturesToUpdate.add(timeLeftOverlay);
+			timeController.registerIntegerTimeListener(timeLeftOverlay);
 			return this;
 		}
 
@@ -641,6 +663,7 @@ public class GameController {
 			gc.level = level;
 			gc.flightController = flightController;
 			gc.batch = new ModelBatch();
+			gc.setTimeController(timeController);
 
 			level.addEventListener(new Level.EventAdapter() {
 				@Override

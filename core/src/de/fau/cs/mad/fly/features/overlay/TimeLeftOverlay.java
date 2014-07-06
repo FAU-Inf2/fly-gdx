@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.features.overlay;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -7,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureInit;
-import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.IntegerTimeListener;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -16,7 +17,7 @@ import de.fau.cs.mad.fly.ui.UI;
  * 
  * @author Tobias Zangl
  */
-public class TimeLeftOverlay implements IFeatureInit, IFeatureUpdate {
+public class TimeLeftOverlay implements IFeatureInit, IntegerTimeListener {
 
 	private Label timeDescription, timeCounter;
 	private float time;
@@ -32,16 +33,13 @@ public class TimeLeftOverlay implements IFeatureInit, IFeatureUpdate {
 	}
 
 	@Override
-	public void update(float delta) {
-		time -= delta;
-		if (time <= 0.0f) {
-			time = 0.0f;
-		}
-		timeCounter.setText(String.valueOf((long) time));
+	public void init(final GameController gameController) {
+		time = gameController.getLevel().getLeftTime();
 	}
 
 	@Override
-	public void init(final GameController gameController) {
-		time = gameController.getLevel().getLeftTime();
+	public void integerTimeChanged(int newTime) {
+		Gdx.app.log("timeChanged", "overlay: " + String.valueOf(newTime));
+		timeCounter.setText(String.valueOf(newTime));
 	}
 }
