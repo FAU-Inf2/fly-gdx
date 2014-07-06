@@ -41,8 +41,6 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	private float lastRoll = 0.f;
 	private float lastAzimuth = 0.f;
 	
-	private Vector3 oldPos = new Vector3();
-	
 	public Spaceship(String modelRef) {
 		this.modelRef = modelRef;
 	}
@@ -93,14 +91,6 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		//Vector3 trans = new Vector3();
 		//instance.transform.getTranslation(trans);
 		//System.out.println("IN: " + instance.transform);
-		
-		/*Vector3 test = new Vector3();
-		instance.transform.getTranslation(test);
-		test.sub(oldPos);
-		
-		System.out.println(test);
-		
-		instance.transform.getTranslation(oldPos);*/
 	}
 
 	@Override
@@ -152,32 +142,25 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		camera = gameController.getCamera();
 
 		Matrix4 startTransform = instance.getRigidBody().getCenterOfMassTransform().rotate(new Vector3(0,0,1), camera.direction);
-
+		
 		instance.getRigidBody().setCenterOfMassTransform(startTransform);
-		instance.updateRigidBody();
 		
 		float[] transformValues = startTransform.getValues();
 		Vector3 linearMovement = new Vector3(transformValues[8], transformValues[9], transformValues[10]);
 		linearMovement.scl(getSpeed());
-
 		instance.setMovement(linearMovement);
-		
-		instance.transform.getTranslation(oldPos);
 	}
 
 	@Override
-	public void rotate(float rollDir, float azimuthDir) {	
+	public void rotate(float rollDir, float azimuthDir) {		
 		Matrix4 rotationTransform = instance.getRigidBody().getCenterOfMassTransform();
 		rotationTransform.rotate(movingDir.cpy().crs(up), rollDir).rotate(up, azimuthDir);
 		instance.getRigidBody().setCenterOfMassTransform(rotationTransform);
-		//System.out.println(rotationTransform);
 		
 		float[] transformValues = rotationTransform.getValues();
 		Vector3 linearMovement = new Vector3(transformValues[8], transformValues[9], transformValues[10]);
 		linearMovement.scl(getSpeed());
-
 		instance.setMovement(linearMovement);
-		//System.out.println("MOV: " + linearMovement);
 
 		lastRoll = rollDir;
 		lastAzimuth = azimuthDir;
