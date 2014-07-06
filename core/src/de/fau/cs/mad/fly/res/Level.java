@@ -10,9 +10,11 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Disposable;
 
 import de.fau.cs.mad.fly.Debug;
+import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
+import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
@@ -30,7 +32,7 @@ import java.util.*;
  * 
  */
 public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Level.Gate> {
-	public static class Gate implements Iterable<Gate> {
+	public static class Gate implements Iterable<Gate>, Disposable {
 		public final int id;
 		public int score;
 		public GameObject display;
@@ -85,6 +87,16 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 			buildIterator(set);
 			return set.iterator();
 		}
+
+		@Override
+		public void dispose() {
+			CollisionDetector collisionDetector = ((Fly) Gdx.app.getApplicationListener()).getGameController().getCollisionDetector();
+			collisionDetector.removeRigidBody(display);
+			collisionDetector.removeRigidBody(goal);
+			
+			display.dispose();
+			goal.dispose();
+		}
 	}
 
 	public static class Head {
@@ -123,10 +135,10 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	 */
 	public final float radius = 100.0f;
 	public final Head head;
-	public final Collection<GameObject> components;
+	public Collection<GameObject> components;
 	public final Perspective start;
 	private Gate virtualGate;
-	private final Gate startingGate;
+	private Gate startingGate;
 	private final Environment environment;
 	private List<EventListener> eventListeners = new ArrayList<EventListener>();
 	private final Map<String, GameModel> dependencies;
@@ -230,7 +242,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		this.head.name = name;
 		this.virtualGate = startingGate;
 		this.startingGate = startingGate;
-		this.components = Collections.unmodifiableCollection(components);
+		this.components = components;
 		this.start = start;
 		this.environment = new Environment();
 		this.dependencies = Collections.unmodifiableMap(dependencies);
@@ -290,6 +302,10 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 
 	public void addEventListener(EventListener listener) {
 		eventListeners.add(listener);
+	}
+	
+	public void setStartGate(Gate startingGate) {
+		this.startingGate = startingGate;
 	}
 
 	public Collection<Gate> currentGates() {
@@ -365,6 +381,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	}
 
 	public void reset() {
+		eventListeners.clear();
 		virtualGate = startingGate;
 	}
 

@@ -26,6 +26,7 @@ import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.AsteroidBelt;
+import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
@@ -328,6 +329,8 @@ public class GameController {
 		private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
 		private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
 		private FlightController flightController;
+		
+		private EndlessLevelGenerator generator;
 
 		/**
 		 * Creates a basic {@link GameController} with a certain level, linked
@@ -420,13 +423,31 @@ public class GameController {
 			level.addEventListener(new Level.EventAdapter() {
 				@Override
 				public void onGatePassed(Level.Gate passed, Iterable<Level.Gate> current) {
-					for (Level.Gate g : level.allGates())
-						g.unmark();
+					if(level.head.name.equals("Endless")) {
+						for (Level.Gate g : generator.getGates())
+							g.unmark();
+					} else {
+						for (Level.Gate g : level.allGates())
+							g.unmark();
+					}
 					for (Level.Gate g : passed.successors)
 						g.mark();
 				}
 			});
 
+			if(level.head.name.equals("Endless")) {
+				generator = new EndlessLevelGenerator(PlayerManager.getInstance().getCurrentPlayer().getLevel());
+				
+				PlayerManager.getInstance().getCurrentPlayer().getLevel().addEventListener(new Level.EventAdapter() {
+					@Override
+					public void onGatePassed(Level.Gate passed, Iterable<Level.Gate> current) {
+						
+						generator.addRandomGate(passed);
+					}
+				});
+			
+			}
+			
 			Gdx.app.log("Builder.init", "Final work for level done.");
 
 			checkAndAddFeatures();

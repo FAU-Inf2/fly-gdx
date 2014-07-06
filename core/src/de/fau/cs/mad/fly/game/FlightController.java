@@ -55,7 +55,7 @@ public class FlightController implements InputProcessor {
 		this.useRolling = preferences.getBoolean(SettingManager.USE_ROLL_STEERING);
 		this.useLowPass = false;
 		
-		this.bufferSize = 30;
+		this.bufferSize = 10;
 		this.alpha = 0.15f;
 		this.cameraOffset = 0.5f;
 

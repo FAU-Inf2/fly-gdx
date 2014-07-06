@@ -172,6 +172,15 @@ public class CollisionDetector implements Disposable {
 	public void addRigidBody(final GameObject o) {
 		dynamicsWorld.addRigidBody(o.getRigidBody(), o.filterGroup, o.filterMask);
 	}
+	
+	/**
+	 * Removes a rigid body from the dyamics world from a goven game object.
+	 * 
+	 * @param o - The game object with the rigid body to remove.
+	 */
+	public void removeRigidBody(final GameObject o) {
+		dynamicsWorld.removeRigidBody(o.getRigidBody());
+	}
 
 	/**
 	 * Getter for the collision contact listener
