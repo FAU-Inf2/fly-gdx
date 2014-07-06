@@ -1,6 +1,7 @@
 {
     "id": 3,
     "name": "Level 3",
+    "time": 60,
     "scripts": [],
     "start": {
         "position": {

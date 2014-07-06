@@ -21,9 +21,11 @@ public class TimeController {
 	
 	/** Sets the time to a certain second value */
 	public void initTimer(float seconds) {
+		Gdx.app.log("initTimer", String.valueOf(seconds));
 		this.initTime = seconds;
 		initTimeStamp = System.currentTimeMillis();
 		currentTime = initTime;
+		integerTimeChanged();
 	}
 
 	/**

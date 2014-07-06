@@ -40,7 +40,6 @@ public class LevelChooserScreen extends BasicScreen {
 		levelScrollPane.setFillParent(true);
 		
 		// create a button for each level
-		long time = System.currentTimeMillis();
 		int maxRows = (int) Math.ceil((double) allLevels.size() / (double) UI.Buttons.BUTTONS_IN_A_ROW);
 		
 		for (int row = 0; row < maxRows; row++) {
@@ -61,6 +60,5 @@ public class LevelChooserScreen extends BasicScreen {
 			scrollableTable.row().expand();
 		}
 		stage.addActor(levelScrollPane);
-		Gdx.app.log("timeCheck", String.valueOf(System.currentTimeMillis()-time));
 	}
 }

@@ -175,6 +175,7 @@ public class GameController implements TimeIsUpListener{
 		//TODO: number of lifes should not be defined statically
 		PlayerManager.getInstance().getCurrentPlayer().setLives(10);
 		Debug.setOverlay(0, PlayerManager.getInstance().getCurrentPlayer().getLives());
+		timeController.initTimer(level.getLeftTime());
 
 		startGame();
 		Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
@@ -644,7 +645,6 @@ public class GameController implements TimeIsUpListener{
 			gc.batch = new ModelBatch();
 			gc.timeController = timeController;
 			timeController.registerTimeIsUpListener(gc);
-			timeController.initTimer(level.getLeftTime());
 
 			level.addEventListener(new Level.EventAdapter() {
 				@Override
