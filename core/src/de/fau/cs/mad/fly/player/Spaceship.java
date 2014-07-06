@@ -19,6 +19,7 @@ import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.game.GameObjectMotionState;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
@@ -40,6 +41,8 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	private float lastRoll = 0.f;
 	private float lastAzimuth = 0.f;
 	
+	private Vector3 oldPos = new Vector3();
+	
 	public Spaceship(String modelRef) {
 		this.modelRef = modelRef;
 	}
@@ -60,6 +63,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		instance.transform.setToTranslation(game.getLevel().start.position);
 		
 		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, instance);
+		
 		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 1.0f);
 		instance.filterGroup = CollisionDetector.PLAYER_FLAG;
 		instance.filterMask = CollisionDetector.ALL_FLAG;
@@ -67,6 +71,11 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 
 		instance.scaleBoundingBox();
 		instance.setRigidBody(shape, info);
+		
+		GameObjectMotionState motionState = new GameObjectMotionState();
+		instance.motionState = motionState;
+		instance.motionState.transform = instance.transform;
+		instance.getRigidBody().setMotionState(motionState);
 		
 		instance.getRigidBody().setDamping(0.0f, 0.5f);
 
@@ -79,11 +88,19 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		//instance.transform.translate(movingDir.cpy().scl(2.f * delta));
 		//instance.getRigidBody().setWorldTransform(instance.transform);
 	
-		instance.updateRigidBody();
+		//instance.updateRigidBody();
 
 		//Vector3 trans = new Vector3();
 		//instance.transform.getTranslation(trans);
-		//System.out.println(instance.transform);
+		//System.out.println("IN: " + instance.transform);
+		
+		/*Vector3 test = new Vector3();
+		instance.transform.getTranslation(test);
+		test.sub(oldPos);
+		
+		System.out.println(test);
+		
+		instance.transform.getTranslation(oldPos);*/
 	}
 
 	@Override
@@ -139,7 +156,13 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		instance.getRigidBody().setCenterOfMassTransform(startTransform);
 		instance.updateRigidBody();
 		
-		instance.setMovement(camera.direction);
+		float[] transformValues = startTransform.getValues();
+		Vector3 linearMovement = new Vector3(transformValues[8], transformValues[9], transformValues[10]);
+		linearMovement.scl(getSpeed());
+
+		instance.setMovement(linearMovement);
+		
+		instance.transform.getTranslation(oldPos);
 	}
 
 	@Override
@@ -147,12 +170,14 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		Matrix4 rotationTransform = instance.getRigidBody().getCenterOfMassTransform();
 		rotationTransform.rotate(movingDir.cpy().crs(up), rollDir).rotate(up, azimuthDir);
 		instance.getRigidBody().setCenterOfMassTransform(rotationTransform);
+		//System.out.println(rotationTransform);
 		
 		float[] transformValues = rotationTransform.getValues();
 		Vector3 linearMovement = new Vector3(transformValues[8], transformValues[9], transformValues[10]);
 		linearMovement.scl(getSpeed());
 
 		instance.setMovement(linearMovement);
+		//System.out.println("MOV: " + linearMovement);
 
 		lastRoll = rollDir;
 		lastAzimuth = azimuthDir;

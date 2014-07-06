@@ -47,6 +47,11 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * Rigid body of the game object.
 	 */
 	protected btRigidBody rigidBody;
+	
+	/**
+	 * Motion state for the rigid body.
+	 */
+	public GameObjectMotionState motionState;
 
 	/**
 	 * Model of the game object.
