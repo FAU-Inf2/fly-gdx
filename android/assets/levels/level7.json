@@ -1,0 +1,268 @@
+{
+    "components": [
+        {
+            "id": "space",
+            "ref": "space"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.000hole",
+            "ref": "hole"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                -10.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.001hole",
+            "ref": "hole"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.002",
+            "position": [
+                -4.0,
+                -10.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.002hole",
+            "ref": "hole"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.003",
+            "position": [
+                -4.0,
+                0.0,
+                5.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.003hole",
+            "ref": "hole"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.004",
+            "position": [
+                -4.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.004hole",
+            "ref": "hole"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.005",
+            "position": [
+                4.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.005hole",
+            "ref": "hole"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.006",
+            "position": [
+                4.0,
+                0.0,
+                -5.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.006hole",
+            "ref": "hole"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.007",
+            "position": [
+                4.0,
+                -10.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.007hole",
+            "ref": "hole"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.008",
+            "position": [
+                0.0,
+                -20.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.008hole",
+            "ref": "hole"
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "hole": "torusHoleBox",
+        "space": "spacesphere",
+        "torus": "torus"
+    },
+    "gates": [
+        {
+            "successors": [
+                0
+            ]
+        },
+        {
+            "display": "Gate.000",
+            "goal": "Gate.000hole",
+            "id": 0,
+            "successors": [
+                1
+            ]
+        },
+        {
+            "display": "Gate.001",
+            "goal": "Gate.001hole",
+            "id": 1,
+            "successors": [
+                2
+            ]
+        },
+        {
+            "display": "Gate.002",
+            "goal": "Gate.002hole",
+            "id": 2,
+            "successors": [
+                3
+            ]
+        },
+        {
+            "display": "Gate.003",
+            "goal": "Gate.003hole",
+            "id": 3,
+            "successors": [
+                4
+            ]
+        },
+        {
+            "display": "Gate.004",
+            "goal": "Gate.004hole",
+            "id": 4,
+            "successors": [
+                5
+            ]
+        },
+        {
+            "display": "Gate.005",
+            "goal": "Gate.005hole",
+            "id": 5,
+            "successors": [
+                6
+            ]
+        },
+        {
+            "display": "Gate.006",
+            "goal": "Gate.006hole",
+            "id": 6,
+            "successors": [
+                7
+            ]
+        },
+        {
+            "display": "Gate.007",
+            "goal": "Gate.007hole",
+            "id": 7,
+            "successors": [
+                8
+            ]
+        },
+        {
+            "display": "Gate.008",
+            "goal": "Gate.008hole",
+            "id": 8,
+            "successors": []
+        }
+    ],
+    "id": 7,
+    "name": "Level 7",
+    "scripts": [],
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    }
+}
