@@ -1,6 +1,7 @@
 {
 	"id": 1,
 	"name": "Level 1",
+	"time": 10,
 	"start": {
 		"position": { "x": 0, "y": 0, "z": 0 }
 	},

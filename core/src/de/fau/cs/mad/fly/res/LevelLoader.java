@@ -105,6 +105,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 		Gdx.app.log("LevelLoader.fromJson", "Exit.");
 		Level level = new Level(name, start, components.values(), models, dummy);
 		level.head.id = levelID;
+		level.setLeftTime(json.getInt("time"));
 		return level;
 	}
 
