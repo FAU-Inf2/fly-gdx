@@ -44,19 +44,23 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		}
 
 		public void mark() {
-			if ( display != null )
+			if (display != null) {
 				display.mark();
+			}
 		}
 
 		public void unmark() {
-			if ( display != null )
+			if (display != null) {
 				display.unmark();
+			}
 		}
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
 			Gate gate = (Gate) o;
 			return id == gate.id;
 		}
@@ -72,8 +76,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		}
 
 		private void buildIterator(Collection<Gate> gs) {
-			for ( Gate g : successors )
-				if ( !gs.contains( g ) ) {
+			for (Gate g : successors)
+				if (!gs.contains(g)) {
 					gs.add(g);
 					g.buildIterator(gs);
 				}
@@ -95,20 +99,30 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 
 	public static interface EventListener {
 		public void onFinished();
+
 		public void onGatePassed(Gate gate, Iterable<Gate> current);
+
 		public void onUpdate();
+
 		public void onRender();
 	}
 
 	public static class EventAdapter implements EventListener {
 		@Override
-		public void onFinished() {}
+		public void onFinished() {
+		}
+
 		@Override
-		public void onGatePassed(Gate gate, Iterable<Gate> current) {}
+		public void onGatePassed(Gate gate, Iterable<Gate> current) {
+		}
+
 		@Override
-		public void onUpdate() {}
+		public void onUpdate() {
+		}
+
 		@Override
-		public void onRender() {}
+		public void onRender() {
+		}
 	}
 
 	@Override
@@ -130,101 +144,88 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	private final Environment environment;
 	private List<EventListener> eventListeners = new ArrayList<EventListener>();
 	private final Map<String, GameModel> dependencies;
-//	public final Collection<String> scripts;
+	// public final Collection<String> scripts;
 
 	private GameObject borderObject = null;
-	
-	private float initTime = 0;
+
+	//private float initTime = 0;
 	private float leftTime = 0;
-	
+
 	public float getLeftTime() {
 		return leftTime;
 	}
-	
+
 	public void setLeftTime(float leftTime) {
 		this.leftTime = leftTime;
 	}
-	
-	protected void InitTime()
-	{
-		// TODO: calculate the time basis speed and distance
-		initTime = getGatesNumber()*5 + 10;
-		leftTime = initTime;
-	}	
-	
-	public int getGatesNumber()
-	{
+
+	public int getGatesNumber() {
 		int count = 0;
-		for( Gate gate: allGates())
-		{
+		for (Gate gate : allGates()) {
 			count++;
 		}
 		return count;
 	}
+
 	private int CollisionTime = 0;
 	private int leftCollisionTime = 0;
-	
+
 	public int getLeftCollisionTime() {
 		return leftCollisionTime;
 	}
-	
+
 	public void setLeftCollisionTime(int leftCollisionTime) {
 		this.leftCollisionTime = leftCollisionTime;
 	}
-	
-	protected void InitCollisionTime()
-	{
+
+	protected void InitCollisionTime() {
 		CollisionTime = 3;
-		leftCollisionTime = CollisionTime;		
+		leftCollisionTime = CollisionTime;
 	}
-	
+
 	private boolean reachedLastGate = false;
-	
+
 	public boolean isReachedLastGate() {
 		return reachedLastGate;
 	}
 
 	protected void setReachedLastGate(boolean reachedLastGate) {
 		this.reachedLastGate = reachedLastGate;
-	}	
-	
+	}
+
 	private boolean gameOver = false;
-	
 
 	public boolean isGameOver() {
 		return gameOver;
 	}
-	
-	public Score getScore()
-	{
-		if( gameOver)
-		{
+
+	public Score getScore() {
+		if (gameOver) {
 			Score newScore = new Score();
 			newScore.setReachedDate(new Date());
-			
+
 			int score = 0;
 			int totalScore = 0;
-			for ( Gate gate : allGates() ) {
-				totalScore += gate.score*gate.passedTimes;
+			for (Gate gate : allGates()) {
+				totalScore += gate.score * gate.passedTimes;
 			}
 			score = totalScore;
-			newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + "" ));
-			
-			totalScore += ((int)leftTime)*20;
-			
-			newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), (totalScore - score) + "" ));
+			newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + ""));
+
+			totalScore += ((int) leftTime) * 20;
+
+			newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), (totalScore - score) + ""));
 			score = totalScore;
-			
-			totalScore += leftCollisionTime*30;
+
+			totalScore += leftCollisionTime * 30;
 			newScore.setTotalScore(totalScore);
-			newScore.getScoreDetails().add(new ScoreDetail(("leftCollisionTime"), (totalScore - score) + "" ));
+			newScore.getScoreDetails().add(new ScoreDetail(("leftCollisionTime"), (totalScore - score) + ""));
 			return newScore;
-		}
-		else
-		{
-			return new Score();//todo
+		} else {
+			return new Score();// todo
 		}
 	}
+
 	public Level(String name, Perspective start, Collection<GameObject> components, Map<String, GameModel> dependencies, Gate startingGate) {
 		this.head = new Head();
 		this.head.name = name;
@@ -234,27 +235,25 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		this.start = start;
 		this.environment = new Environment();
 		this.dependencies = Collections.unmodifiableMap(dependencies);
-//		this.scripts = Collections.unmodifiableCollection(scripts);
+		// this.scripts = Collections.unmodifiableCollection(scripts);
 		setUpEnvironment();
-		
-		InitTime();
+
 		InitCollisionTime();
 		gameOver = false;
-		
+
 		for (GameObject c : components) {
-			if(c.id.equals("space")) {
+			if (c.id.equals("space")) {
 				borderObject = c;
 			}
 		}
-		
-		if(borderObject == null) {
+
+		if (borderObject == null) {
 			Gdx.app.log("Level.Level", "No border specified.");
 		}
 	}
 
 	public void gatePassed(Gate gate) {
-		if ( currentGates().contains(gate) )
-		{
+		if (currentGates().contains(gate)) {
 			gate.passedTimes++;
 			activeGatePassed(gate);
 		}
@@ -269,20 +268,18 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	}
 
 	public void activeGatePassed(Gate gate) {
-		for ( EventListener s : eventListeners)
+		for (EventListener s : eventListeners)
 			s.onGatePassed(gate, virtualGate.successors);
 		virtualGate = gate;
-		if ( gate.successors.isEmpty() )
-		{
+		if (gate.successors.isEmpty()) {
 			reachedLastGate = true;
-			 levelFinished();
+			levelFinished();
 		}
 	}
-	
-	private void levelFinished()
-	{
+
+	private void levelFinished() {
 		gameOver = true;
-		for ( EventListener s : eventListeners) {
+		for (EventListener s : eventListeners) {
 			Gdx.app.log("Level.activeGatePassed", "s=" + s);
 			s.onFinished();
 		}
@@ -300,7 +297,9 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 		return startingGate;
 	}
 
-	public Iterable<Gate> remainingGates() { return virtualGate; }
+	public Iterable<Gate> remainingGates() {
+		return virtualGate;
+	}
 
 	/**
 	 * Environment in the level.
@@ -317,43 +316,41 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	 * Update the level.
 	 * 
 	 * @param delta
-	 * 				time after the last call.
+	 *            time after the last call.
 	 * @param camera
-	 * 				that displays the level.
+	 *            that displays the level.
 	 */
 	public void update(float delta, PerspectiveCamera camera) {
 		borderObject.transform.setToTranslation(camera.position);
-		for ( EventListener l : eventListeners )
+		for (EventListener l : eventListeners)
 			l.onUpdate();
-		if( gameOver == false &&( (int)leftTime <= 0 || leftCollisionTime <=0 ) )
-		{
-			 levelFinished();
+		if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
+			levelFinished();
 		}
 	}
-	
+
 	/**
 	 * Render the level.
 	 * 
 	 * @param delta
-	 * 				time after the last call.
+	 *            time after the last call.
 	 * @param batch
-	 * 				the batch to render the level.
+	 *            the batch to render the level.
 	 * @param camera
-	 *            	that displays the level.
+	 *            that displays the level.
 	 */
 	public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
-		for ( EventListener l : eventListeners )
+		for (EventListener l : eventListeners)
 			l.onRender();
 		for (GameObject c : components) {
-			if(c == borderObject) {
+			if (c == borderObject) {
 				borderObject.render(batch, camera);
 			} else {
-				//c.updateRigidBody();
+				// c.updateRigidBody();
 				c.render(batch, environment, camera);
 			}
 		}
-		
-		
+
 	}
 
 	/**
@@ -376,15 +373,15 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
 	@Override
 	public void dispose() {
 		Gdx.app.log("Level.dispose", "Disposing...");
-		for ( GameObject o : components )
+		for (GameObject o : components)
 			o.dispose();
-//		for ( GameModel m : dependencies )
-//			m.dispose();
+		// for ( GameModel m : dependencies )
+		// m.dispose();
 	}
 
 	@Override
 	public void onCollision(Spaceship spaceship, Gate gate) {
 		gatePassed(gate);
 	}
-	
+
 }
