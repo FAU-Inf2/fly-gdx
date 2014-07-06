@@ -378,7 +378,7 @@ public class GameController {
 				public void onCollision(Spaceship ship, GameObject g) {
 					Gdx.input.vibrate(500);
 					Player player = PlayerManager.getInstance().getCurrentPlayer();
-					if (player.incLives()) {
+					if (player.decreaseLives()) {
 						Debug.setOverlay(0, "DEAD");
 						game.getGameController().finishGame();
 					} else {

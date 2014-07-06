@@ -67,15 +67,15 @@ public class Player {
 	
 	/**
 	 * Decreases the live by 1 if the player has enough lives, otherwise he has 0 lives left.
-	 * @return true, if the player is dead after decreasing the lives, false otherwise.
+	 * @return true, if lifes can be decreased (>1) false otherise
 	 */
-	public boolean incLives() {
+	public boolean decreaseLives() {
 		if(lives > 1) {
 			lives--;
-			return false;
+			return true;
 		} else {
 			lives = 0;
-			return true;
+			return false;
 		}
 	}
 	
