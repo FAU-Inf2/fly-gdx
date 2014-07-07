@@ -3,8 +3,6 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
-
 public class TimeController {
 
 	float initTime;
@@ -21,7 +19,9 @@ public class TimeController {
 	
 	/** Sets the time to a certain second value */
 	public void initTimer(float seconds) {
-		Gdx.app.log("initTimer", String.valueOf(seconds));
+		if(seconds < 0) {
+			throw new IllegalArgumentException("TimeController.initTimer("+String.valueOf(seconds)+") got a negative parameter.");
+		}
 		this.initTime = seconds;
 		initTimeStamp = System.currentTimeMillis();
 		currentTime = initTime;
@@ -33,13 +33,13 @@ public class TimeController {
 	 * 
 	 * If time is up, {@link #timeIsUp()} is called, <p> 
 	 * if the integer of the time changes (ceiled) {@link #integerTimeChanged()} is called.
+	 * Time will never be below 0.
 	 */
 	public void checkTime() {
 		int timeBefore = (int) Math.ceil(currentTime);
-		Gdx.app.log("checkTime", String.valueOf(timeBefore));
 		currentTime = initTime - (System.currentTimeMillis()-initTimeStamp)/1000;
-		Gdx.app.log("checkTime", "current time: " + String.valueOf(currentTime));
 		if(currentTime < 1) {
+			currentTime = 0;
 			timeIsUp();
 		}
 		if(timeBefore != (int) Math.ceil(currentTime)) {
@@ -51,7 +51,6 @@ public class TimeController {
 	private void timeIsUp() {
 		for(TimeIsUpListener listener : timeIsUpListeners) {
 			listener.timeIsUp();
-			Gdx.app.log("TimeIsUP", "TimeIsUp");
 		}
 	}
 
@@ -59,7 +58,6 @@ public class TimeController {
 	private void integerTimeChanged() {
 		for(IntegerTimeListener listener : integerTimeListeners) {
 			listener.integerTimeChanged((int) Math.ceil(currentTime));
-			Gdx.app.log("timeChanged", "timeChanged: " + String.valueOf((int) Math.ceil(currentTime)));
 		}
 	}
 	
