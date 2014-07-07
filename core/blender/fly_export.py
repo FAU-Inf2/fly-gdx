@@ -46,6 +46,7 @@ class LevelExporter:
 		"""Creates the level information"""
 		self.data['id'] = int(export.level_id)
 		self.data['name'] = export.level_name
+		self.data['time'] = int(export.level_time)
 		self.data['scripts'] = [ ]
 		
 	def setupStartPos(self):
@@ -159,6 +160,7 @@ class ExportLevelOperator(Operator, ExportHelper):
 
 	level_id = StringProperty(name="Level ID", description="ID of the Level", default="1");
 	level_name = StringProperty(name="Level Name", description="Name of the Level", default="Level");
+	level_time = StringProperty(name="Level Time", description="Time of the Level", default="30");
 	
 	border_model = StringProperty(name="Border Model", description="Border model if no border model property is added", default="space");
 

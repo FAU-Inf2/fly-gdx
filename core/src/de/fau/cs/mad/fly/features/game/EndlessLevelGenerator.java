@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 
 import de.fau.cs.mad.fly.Fly;
@@ -179,6 +180,7 @@ public class EndlessLevelGenerator {
 			newGate.goal.filterGroup = CollisionDetector.DUMMY_FLAG;
 			newGate.goal.filterMask = CollisionDetector.PLAYER_FLAG;
 			newGate.goal.setRigidBody(goalShape, goalInfo);
+			newGate.goal.getRigidBody().setCollisionFlags(newGate.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
 		}
 		collisionDetector.addRigidBody(newGate.goal);
 		
