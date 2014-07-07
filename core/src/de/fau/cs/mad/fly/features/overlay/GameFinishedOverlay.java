@@ -28,7 +28,7 @@ import de.fau.cs.mad.fly.ui.UI;
  * 
  * @author Tobias Zangl
  */
-public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatureFinish {
+public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 	private final Fly game;
 	private GameController gameController;
 
@@ -39,12 +39,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureRender, IFeatu
 		this.game = game;
 		this.stage = stage;
 		skin = game.getSkin();
-	}
-
-	@Override
-	public void render(float delta) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

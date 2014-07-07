@@ -596,7 +596,6 @@ public class GameController implements TimeIsUpListener{
 		private Builder addGameFinishedOverlay() {
 			GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(game, stage);
 			optionalFeaturesToInit.add(gameFinishedOverlay);
-			optionalFeaturesToRender.add(gameFinishedOverlay);
 			optionalFeaturesToFinish.add(gameFinishedOverlay);
 			return this;
 		}
