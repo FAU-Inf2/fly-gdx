@@ -21,11 +21,17 @@ import de.fau.cs.mad.fly.features.overlay.DebugOverlay;
 public class Debug {
 	public static DebugOverlay debugOverlay;
 	
+	private static boolean debugMode = false;
+	
 	private static long lastTimeMS = 0;
 	private static long lastTimeNS = 0;
 
 	public static void init(final Skin skin, final Stage stage, int index) {
 		debugOverlay = new DebugOverlay(skin, stage, index);
+	}
+	
+	public static boolean isDebug() {
+		return debugMode;
 	}
 	
 	public static void setOverlay(int index, int value) {
