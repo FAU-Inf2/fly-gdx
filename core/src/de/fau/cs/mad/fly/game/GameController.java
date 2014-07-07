@@ -176,7 +176,6 @@ public class GameController implements TimeIsUpListener{
 		//TODO: number of lifes should not be defined statically
 		PlayerManager.getInstance().getCurrentPlayer().setLives(10);
 		Debug.setOverlay(0, PlayerManager.getInstance().getCurrentPlayer().getLives());
-		timeController.initTimer(level.getLeftTime());
 
 		startGame();
 		Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
@@ -187,6 +186,7 @@ public class GameController implements TimeIsUpListener{
 	 */
 	public void startGame() {
 		gameState = GameState.RUNNING;
+		timeController.initAndStartTimer(level.getLeftTime());
 	}
 
 	/**
@@ -194,6 +194,7 @@ public class GameController implements TimeIsUpListener{
 	 */
 	public void pauseGame() {
 		gameState = GameState.PAUSED;
+		timeController.pause();
 	}
 
 	/**
@@ -204,15 +205,13 @@ public class GameController implements TimeIsUpListener{
 		gameState = GameState.FINISHED;
 		endGame();
 	}
-
+	
 	/**
-	 * Setter for the game state.
-	 * 
-	 * @param state
-	 *            The new game state.
+	 * Sets the game from paused to running
 	 */
-	public void setGameState(GameState state) {
-		gameState = state;
+	public void resumeGame() {
+		gameState = GameState.RUNNING;
+		timeController.resume();
 	}
 
 	/**

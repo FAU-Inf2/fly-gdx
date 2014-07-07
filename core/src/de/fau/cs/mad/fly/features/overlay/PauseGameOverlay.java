@@ -50,7 +50,7 @@ public class PauseGameOverlay implements IFeatureInit, IFeatureDispose {
 					game.getGameController().pauseGame();
 					pauseButton.setText(I18n.t("run"));
 				} else if(game.getGameController().isPaused()) {
-					game.getGameController().startGame();
+					game.getGameController().resumeGame();
 					pauseButton.setText(I18n.t("pause"));
 				}
 			}

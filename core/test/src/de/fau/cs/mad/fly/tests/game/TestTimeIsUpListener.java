@@ -14,5 +14,9 @@ public class TestTimeIsUpListener implements TimeIsUpListener {
 	public boolean isTimeUp() {
 		return timeIsUp;
 	}
+	
+	public void resetTimeIsUp() {
+		timeIsUp = false;
+	}
 
 }

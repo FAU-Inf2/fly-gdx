@@ -2,10 +2,7 @@ package de.fau.cs.mad.fly.tests.game;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.fau.cs.mad.fly.game.TimeController;
@@ -14,15 +11,13 @@ import de.fau.cs.mad.fly.game.TimeController;
 public class TimeControllerTest {
 
 	private static TimeController timeControllerTestInstance;
-	private static float testTimeInSeconds;
 	private static TestIntegerTimeUpdateListener integerTimeUpdateListener1;
 	private static TestIntegerTimeUpdateListener integerTimeUpdateListener2;
 	private static TestTimeIsUpListener testTimeIsUpListener;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		timeControllerTestInstance = new TimeController();
-		testTimeInSeconds = 1f;
 		integerTimeUpdateListener1 = new TestIntegerTimeUpdateListener();
 		integerTimeUpdateListener2 = new TestIntegerTimeUpdateListener();
 		timeControllerTestInstance.registerIntegerTimeListener(integerTimeUpdateListener1);
@@ -31,44 +26,75 @@ public class TimeControllerTest {
 		timeControllerTestInstance.registerTimeIsUpListener(testTimeIsUpListener);
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-		timeControllerTestInstance.initTimer(testTimeInSeconds);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test(expected = IllegalArgumentException.class)
 	public void testInitTimer() {
-		timeControllerTestInstance.initTimer(-1);
+		timeControllerTestInstance.initAndStartTimer(-1);
 	}
 
 	@Test
 	public void testCheckTime() {
+		float testTimeInSeconds = 1f;
+		timeControllerTestInstance.initAndStartTimer(testTimeInSeconds);
 		timeControllerTestInstance.checkTime();
 		assertEquals((int) testTimeInSeconds, integerTimeUpdateListener1.getTime());
 		assertEquals((int) testTimeInSeconds, integerTimeUpdateListener1.getTime());
 		assertEquals(false, testTimeIsUpListener.isTimeUp());
 		try {
-			Thread.sleep((int) testTimeInSeconds *1000);
+			Thread.sleep((int) testTimeInSeconds * 1000);
 			timeControllerTestInstance.checkTime();
 			assertEquals((int) 0, integerTimeUpdateListener1.getTime());
 			assertEquals((int) 0, integerTimeUpdateListener1.getTime());
 			assertEquals(true, testTimeIsUpListener.isTimeUp());
-			
-			Thread.sleep((int) testTimeInSeconds *1000);
+
+			Thread.sleep((int) testTimeInSeconds * 1000);
 			timeControllerTestInstance.checkTime();
 			assertEquals((int) 0, integerTimeUpdateListener1.getTime());
 			assertEquals((int) 0, integerTimeUpdateListener1.getTime());
 			assertEquals(true, testTimeIsUpListener.isTimeUp());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testPause() {
+		final int initTime = 3;
+		for (int rounds = 0; rounds < 2; rounds++) {
+			timeControllerTestInstance.initAndStartTimer(initTime);
+			try {
+				assertEquals(initTime, integerTimeUpdateListener1.getTime());
+				Thread.sleep(1000);
+				timeControllerTestInstance.checkTime();
+				assertEquals(initTime - 1, integerTimeUpdateListener1.getTime());
+				assertEquals(false, testTimeIsUpListener.isTimeUp());
+
+				timeControllerTestInstance.pause();
+				Thread.sleep(2000);
+				timeControllerTestInstance.checkTime();
+				assertEquals(initTime - 1, integerTimeUpdateListener1.getTime());
+				assertEquals(false, testTimeIsUpListener.isTimeUp());
+
+				timeControllerTestInstance.resume();
+				Thread.sleep(500);
+				timeControllerTestInstance.checkTime();
+				assertEquals(initTime - 1, integerTimeUpdateListener1.getTime());
+				assertEquals(false, testTimeIsUpListener.isTimeUp());
+				
+				timeControllerTestInstance.pause();
+				Thread.sleep(2000);
+				timeControllerTestInstance.checkTime();
+				assertEquals(initTime - 1, integerTimeUpdateListener1.getTime());
+				assertEquals(false, testTimeIsUpListener.isTimeUp());
+
+				timeControllerTestInstance.resume();
+				Thread.sleep(2000);
+				timeControllerTestInstance.checkTime();
+				assertEquals(0, integerTimeUpdateListener1.getTime());
+				assertEquals(true, testTimeIsUpListener.isTimeUp());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			testTimeIsUpListener.resetTimeIsUp();
 		}
 	}
 }
