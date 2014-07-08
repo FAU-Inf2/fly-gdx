@@ -39,7 +39,7 @@ public class TimeLeftOverlay implements IFeatureInit, IntegerTimeListener {
 
 	@Override
 	public void integerTimeChanged(int newTime) {
-		Gdx.app.log("timeChanged", "overlay: " + String.valueOf(newTime));
+		//Gdx.app.log("timeChanged", "overlay: " + String.valueOf(newTime));
 		timeCounter.setText(String.valueOf(newTime));
 	}
 }

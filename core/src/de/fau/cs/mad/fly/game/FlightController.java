@@ -57,7 +57,7 @@ public class FlightController implements InputProcessor {
 		
 		this.bufferSize = 10;
 		this.alpha = 0.15f;
-		this.cameraOffset = 0.5f;
+		this.cameraOffset = 0.2f;
 
 		setUpCamera();
 	}
