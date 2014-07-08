@@ -9,8 +9,7 @@
 	"dependencies": {
 		"space": "spacesphere",
 		"torus": "torus",
-		"hole": "torusHoleBox",
-		"asteroid": "asteroid"
+		"hole": "torusHoleBox"
 	},
 	"scripts": [],
 	"gates": [

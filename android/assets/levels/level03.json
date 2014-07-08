@@ -1,7 +1,7 @@
 {
     "id": 3,
     "name": "Level 3",
-    "time": 60,
+    "time": 65,
     "scripts": [],
     "start": {
         "position": {
@@ -204,8 +204,7 @@
     "dependencies": {
     	"space": "spacesphere",
 		"torus": "torus",
-		"hole": "torusHoleBox",
-		"asteroid": "asteroid"
+		"hole": "torusHoleBox"
 	},
     "gates": [
         {

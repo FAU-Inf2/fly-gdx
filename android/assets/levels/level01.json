@@ -1,15 +1,14 @@
 {
 	"id": 1,
 	"name": "Level 1",
-	"time": 20,
+	"time": 25,
 	"start": {
 		"position": { "x": 0, "y": 0, "z": 0 }
 	},
 	"dependencies": {
 		"torus": "torus",
 		"hole": "torusHoleBox",
-		"space": "spacesphere",
-		"asteroid": "asteroid"
+		"space": "spacesphere"
 	},
 	"scripts": ["rotate_gates.coffee"],
 	"gates": [
