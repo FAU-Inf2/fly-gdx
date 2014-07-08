@@ -1,13 +1,15 @@
 package de.fau.cs.mad.fly.features.overlay;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Optional Feature to display the frames per second.
@@ -15,21 +17,22 @@ import de.fau.cs.mad.fly.features.IFeatureRender;
  * @author Tobias Zangl
  */
 public class FPSOverlay implements IFeatureRender {
-	private final Fly game;
 	
 	private final Skin skin;
 	private final Stage stage;
 	private Label fpsDescription, fpsCounter;
 	
 	public FPSOverlay(final Fly game, final Stage stage) {
-		this.game = game;
 		this.stage = stage;
 		skin = game.getSkin();
-
-		LabelStyle labelStyle = new LabelStyle(skin.getFont("default-font"), Color.RED);
 		
-		fpsDescription = addLabel("FPS:", labelStyle, 0.01f, 0.92f);
-		fpsCounter = addLabel("0", labelStyle, 0.12f, 0.92f);
+		LabelStyle labelStyle = skin.get("red", LabelStyle.class);
+		fpsDescription = new Label("FPS:", labelStyle);
+		fpsDescription.setPosition(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE*4);
+        stage.addActor(fpsDescription);
+        fpsCounter = new Label("", labelStyle);
+        fpsCounter.setPosition(UI.Window.BORDER_SPACE + fpsDescription.getWidth() + 50, 5*UI.Window.BORDER_SPACE);
+        stage.addActor(fpsCounter);
 	}
 
 	/**

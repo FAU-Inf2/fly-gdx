@@ -1,14 +1,11 @@
 package de.fau.cs.mad.fly.features.overlay;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.features.IFeatureInit;
-import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.IntegerTimeListener;
 import de.fau.cs.mad.fly.ui.UI;
 
@@ -17,10 +14,9 @@ import de.fau.cs.mad.fly.ui.UI;
  * 
  * @author Tobias Zangl
  */
-public class TimeLeftOverlay implements IFeatureInit, IntegerTimeListener {
+public class TimeLeftOverlay implements IntegerTimeListener {
 
 	private Label timeDescription, timeCounter;
-	private float time;
 
 	public TimeLeftOverlay(Skin skin, final Stage stage) {
 		LabelStyle labelStyle = skin.get("red", LabelStyle.class);
@@ -30,11 +26,6 @@ public class TimeLeftOverlay implements IFeatureInit, IntegerTimeListener {
 		timeCounter = new Label("", labelStyle);
 		timeCounter.setPosition(UI.Window.BORDER_SPACE + timeDescription.getWidth() + 50, 2*UI.Window.BORDER_SPACE);
 		stage.addActor(timeCounter);
-	}
-
-	@Override
-	public void init(final GameController gameController) {
-		time = gameController.getLevel().getLeftTime();
 	}
 
 	@Override

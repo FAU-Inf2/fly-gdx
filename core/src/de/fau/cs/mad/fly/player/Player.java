@@ -183,7 +183,7 @@ public class Player {
 		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
 		settingManager.addBooleanSetting(SettingManager.SHOW_PAUSE, false);
 		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, false);
-		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
+		settingManager.addBooleanSetting(SettingManager.SHOW_FPS, false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.FIRST_PERSON, "First Person", false);
 		
 		// removed for release: settingManager.addFloatSetting(SettingManager.ALPHA_SLIDER, "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
@@ -203,7 +203,7 @@ public class Player {
 		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
 		settingManager.addBooleanSettingUI(SettingManager.SHOW_PAUSE, I18n.t("show.pause"), false);
 		settingManager.addBooleanSettingUI(SettingManager.SHOW_STEERING, I18n.t("show.steering"), false);
-		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
+		settingManager.addBooleanSettingUI(SettingManager.SHOW_FPS, I18n.t("show.fps"), false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.FIRST_PERSON, "First Person", false);
 		
 		// removed for release: settingManager.addFloatSetting(SettingManager.ALPHA_SLIDER, "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
