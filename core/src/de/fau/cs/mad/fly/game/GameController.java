@@ -34,6 +34,7 @@ import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
+import de.fau.cs.mad.fly.features.overlay.TimeUpOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
@@ -316,6 +317,7 @@ public class GameController implements TimeIsUpListener{
 	public void setTimeController(TimeController timeController) {
 		this.timeController = timeController;
 		timeController.registerTimeIsUpListener(this);
+
 	}
 	
 	public TimeController getTimeController() {
@@ -324,7 +326,7 @@ public class GameController implements TimeIsUpListener{
 	
 	@Override
 	public void timeIsUp() {
-		finishGame();
+	    pauseGame();
 	}
 	
 	
@@ -337,6 +339,7 @@ public class GameController implements TimeIsUpListener{
 	 * 
 	 */
 	public static class Builder {
+	    private GameController gc = new GameController();
 		private Fly game;
 		private Player player;
 		private Stage stage;
@@ -373,14 +376,16 @@ public class GameController implements TimeIsUpListener{
 			optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
 			optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
 			
-			timeController = new TimeController();
-			
 			this.game = game;
 			player = PlayerManager.getInstance().getCurrentPlayer();
 			level = player.getLevel();
 			flightController = new FlightController(player);
 
 			stage = new Stage();
+			timeController = new TimeController();
+            TimeUpOverlay timeUpOverlay = new TimeUpOverlay(game, stage);
+            timeController.registerTimeIsUpListener(timeUpOverlay);
+            
 			float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
 			float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
 			float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
@@ -492,7 +497,9 @@ public class GameController implements TimeIsUpListener{
 			if (preferences.getBoolean(SettingManager.SHOW_PAUSE)) {
 				addPauseGameOverlay();
 			}
-			// if needed for debugging: addFPSOverlay();
+			if (preferences.getBoolean(SettingManager.SHOW_FPS)) {
+                addFPSOverlay();
+            }
 			if (preferences.getBoolean(SettingManager.SHOW_STEERING)) {
 				addSteeringOverlay();
 			}
@@ -541,8 +548,6 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addTimeLeftOverlay() {
 			TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game.getSkin(), stage);
-			optionalFeaturesToInit.add(timeLeftOverlay);
-			//optionalFeaturesToUpdate.add(timeLeftOverlay);
 			timeController.registerIntegerTimeListener(timeLeftOverlay);
 			return this;
 		}
@@ -651,7 +656,6 @@ public class GameController implements TimeIsUpListener{
 		 * @return new GameController
 		 */
 		public GameController build() {
-			final GameController gc = new GameController();
 			gc.stage = stage;
 			gc.collisionDetector = collisionDetector;
 			gc.optionalFeaturesToLoad = optionalFeaturesToLoad;
