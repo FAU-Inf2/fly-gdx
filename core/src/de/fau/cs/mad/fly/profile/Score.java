@@ -12,17 +12,17 @@ import java.util.List;
 public class Score {
 
 	private int totalScore;
-	private String compareScore;	
-	
-	private int id;	
+	private String compareScore;
+
+	private int id;
 	private int playTimes;
 	private Date reachedDate;
-	
+
 	private List<ScoreDetail> scoreDetails = new ArrayList<ScoreDetail>();
-	
-	public Score() {		
+
+	public Score() {
 	}
-	
+
 	public int getTotalScore() {
 		return totalScore;
 	}

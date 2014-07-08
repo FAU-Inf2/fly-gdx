@@ -57,6 +57,8 @@ public class Fly extends Game {
 		createSkin();
 		shapeRenderer = new ShapeRenderer();
 
+		//here start to init the databse staff, by fan
+		PlayerManager.getInstance().getCurrentPlayer().getName();
 		setMainMenuScreen();
 		// disabled for debugging reasons
 		// setSplashScreen();

@@ -48,7 +48,7 @@ public class SettingManager {
 	 * @param defaultValue
 	 *            the default value of the Setting
 	 */
-	public void addBooleanSetting(String id, String description, boolean defaultValue) {
+	public void addBooleanSettingUI(String id, String description, boolean defaultValue) {
 		boolean value = defaultValue;
 		if (!prefs.contains(id)) {
 			prefs.putBoolean(id, defaultValue);
@@ -59,6 +59,23 @@ public class SettingManager {
 		ISetting newBooleanSetting = new BooleanSetting(this, id, description, value);
 		settingMap.put(id, newBooleanSetting);
 		settingList.add(id);
+	}
+	
+	/**
+	 * Adds a new Setting without UI staff like a CheckBox and a boolean value.
+	 * 
+	 * @param id
+	 *            the id of the Setting
+	 * @param description
+	 *            the description of the Setting
+	 * @param defaultValue
+	 *            the default value of the Setting
+	 */
+	public void addBooleanSetting(String id, boolean defaultValue) {
+		if (!prefs.contains(id)) {
+			prefs.putBoolean(id, defaultValue);
+			prefs.flush();
+		}		
 	}
 
 	/**

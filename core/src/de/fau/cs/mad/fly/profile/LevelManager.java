@@ -21,43 +21,52 @@ public class LevelManager {
 
 	private LevelManager() {
 	}
-	
+
 	private Level.Head chosenLevel;
-	
+
 	private static LevelManager Instance = new LevelManager();
-	
+
 	public static LevelManager getInstance() {
 		return Instance;
 	}
-	
-	
+
 	private JsonReader reader = new JsonReader();
-	
+
+	private List<Level.Head> levels = null;
+
 	public List<Level.Head> getLevelList() {
-		List<Level.Head> levels = new ArrayList<Level.Head>();
-		FileHandle dirHandle = Gdx.files.internal("levels/");
-		for( FileHandle file : dirHandle.list() ) {
-			JsonValue json = reader.parse(file);
-			Level.Head levelHead = new Level.Head();
-			levelHead.name = json.getString("name");
-			levelHead.id = json.getInt("id");
-			levelHead.file = file;
-			levels.add(levelHead);
+		if (levels == null) {
+			levels = new ArrayList<Level.Head>();
+			FileHandle dirHandle = Gdx.files.internal("levels/");
+			for (FileHandle file : dirHandle.list()) {
+				JsonValue json = reader.parse(file);
+				Level.Head levelHead = new Level.Head();
+				levelHead.name = json.getString("name");
+				levelHead.id = json.getInt("id");
+				levelHead.file = file;
+				levels.add(levelHead);
+			}
 		}
 		return levels;
 	}
-	
-	public Level.Head getChosedLevel()
-	{
-		if( chosenLevel == null)
-		{
+
+	public String getLevelName(int levelID) {
+		for (Level.Head level : getLevelList()) {
+			if (level.id == levelID) {
+				return level.name;
+			}
+		}
+		return Integer.toString(levelID);
+	}
+
+	public Level.Head getChosedLevel() {
+		if (chosenLevel == null) {
 			chosenLevel = getLevelList().get(0);
 		}
 		return chosenLevel;
 	}
 
-	public void SetChosedLevel(Level.Head levelHead)
-	{
+	public void setChosedLevel(Level.Head levelHead) {
 		chosenLevel = levelHead;
 	}
 

@@ -19,6 +19,15 @@ public class Player {
 	private Level level;
 	private String name;
 	private int id;
+	private int flyID;
+
+	public int getFlyID() {
+		return flyID;
+	}
+
+	public void setFlyID(int flyID) {
+		this.flyID = flyID;
+	}
 
 	/** The lives the player has at the moment. If lives is lower or equal zero the player is dead. */
 	private int lives;
@@ -164,14 +173,36 @@ public class Player {
 	 * Creates the SettingManager and all the Settings.
 	 */
 	public void createSettings() {
-		settingManager = new SettingManager("fly_user_preferences_" + getId());
+		if (settingManager == null) {
+			settingManager = new SettingManager("fly_user_preferences_" + getId());
+		}
 
-		settingManager.addBooleanSetting(SettingManager.USE_TOUCH, I18n.t("use.touch"), false);
-		settingManager.addBooleanSetting(SettingManager.USE_ROLL_STEERING, I18n.t("use.rolling"), false);
+		settingManager.addBooleanSetting(SettingManager.USE_TOUCH, false);
+		settingManager.addBooleanSetting(SettingManager.USE_ROLL_STEERING, false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.USE_LOW_PASS_FILTER, "Use LowPassFilter:", false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
-		settingManager.addBooleanSetting(SettingManager.SHOW_PAUSE, I18n.t("show.pause"), false);
-		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, I18n.t("show.steering"), false);
+		settingManager.addBooleanSetting(SettingManager.SHOW_PAUSE, false);
+		settingManager.addBooleanSetting(SettingManager.SHOW_STEERING, false);
+		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
+		// removed for release: settingManager.addBooleanSetting(SettingManager.FIRST_PERSON, "First Person", false);
+		
+		// removed for release: settingManager.addFloatSetting(SettingManager.ALPHA_SLIDER, "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
+		// removed for release: settingManager.addFloatSetting(SettingManager.BUFFER_SLIDER, "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
+		// removed for release: settingManager.addFloatSetting(SettingManager.CAMERA_OFFSET, "Camera Distance:", 50.0f, 0.0f, 100.0f, 1.0f);
+	}
+	
+	/**
+	 * Creates the SettingManager and all the Settings.
+	 */
+	public void createSettingsUI() {
+		settingManager = new SettingManager("fly_user_preferences_" + getId());
+
+		settingManager.addBooleanSettingUI(SettingManager.USE_TOUCH, I18n.t("use.touch"), false);
+		settingManager.addBooleanSettingUI(SettingManager.USE_ROLL_STEERING, I18n.t("use.rolling"), false);
+		// removed for release: settingManager.addBooleanSetting(SettingManager.USE_LOW_PASS_FILTER, "Use LowPassFilter:", false);
+		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_GATE_INDICATOR, "Show next Gate:", true);
+		settingManager.addBooleanSettingUI(SettingManager.SHOW_PAUSE, I18n.t("show.pause"), false);
+		settingManager.addBooleanSettingUI(SettingManager.SHOW_STEERING, I18n.t("show.steering"), false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.SHOW_FPS, "Show FPS:", false);
 		// removed for release: settingManager.addBooleanSetting(SettingManager.FIRST_PERSON, "First Person", false);
 		
