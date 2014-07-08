@@ -23,7 +23,6 @@ import java.util.Map;
  * The manager for the whole collision detection and handling stuff.
  * 
  * @author Tobi
- *
  */
 public class CollisionDetector implements Disposable {
 
@@ -41,7 +40,6 @@ public class CollisionDetector implements Disposable {
 	 * It transmits the collision events to the added collision listeners.
 	 * 
 	 * @author Tobi
-	 *
 	 */
 	class CollisionContactListener extends ContactListener {
 		private ArrayList<ICollisionListener> listeners;
@@ -167,19 +165,19 @@ public class CollisionDetector implements Disposable {
 	 * <p>
 	 * It also sets the filter group and mask.
 	 * 
-	 * @param o			The game object with the rigid body to add.
+	 * @param gameObject		The game object with the rigid body to add.
 	 */
-	public void addRigidBody(final GameObject o) {
-		dynamicsWorld.addRigidBody(o.getRigidBody(), o.filterGroup, o.filterMask);
+	public void addRigidBody(final GameObject gameObject) {
+		dynamicsWorld.addRigidBody(gameObject.getRigidBody(), gameObject.filterGroup, gameObject.filterMask);
 	}
 	
 	/**
-	 * Removes a rigid body from the dyamics world from a goven game object.
+	 * Removes a rigid body from the dynamics world from a given game object.
 	 * 
-	 * @param o - The game object with the rigid body to remove.
+	 * @param gameObject		The game object with the rigid body to remove.
 	 */
-	public void removeRigidBody(final GameObject o) {
-		dynamicsWorld.removeRigidBody(o.getRigidBody());
+	public void removeRigidBody(final GameObject gameObject) {
+		dynamicsWorld.removeRigidBody(gameObject.getRigidBody());
 	}
 
 	/**

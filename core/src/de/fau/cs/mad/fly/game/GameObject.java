@@ -78,7 +78,14 @@ public class GameObject extends ModelInstance implements Disposable {
 	 */
 	public short filterMask = CollisionDetector.ALL_FLAG;
 
+	/**
+	 * Id of the game object.
+	 */
 	public String id;
+	
+	/**
+	 * Id of the model of this game object.
+	 */
 	public String modelId;
 
 	// TODO: create more constructors to match the ModelInstance constructors
@@ -88,9 +95,19 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * @param model
 	 */
 	public GameObject(GameModel model) {
+		this(model, "");
+	}
+	
+	/**
+	 * Contructs a new game object without any collision detection.
+	 * @param model
+	 * @param id
+	 */
+	public GameObject(GameModel model, String id) {
 		super(model.display);
 		this.gmodel = model;
 		this.userData = this;
+		this.id = id;
 		initBoundingBox();
 	}
 	
@@ -99,16 +116,10 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * @param shape
 	 * @param rigidBodyInfo
 	 */
-	public void setRigidBody(btCollisionShape shape, btRigidBody.btRigidBodyConstructionInfo rigidBodyInfo) {
-		setRigidBody(CollisionDetector.createRigidBody(this, shape, this, rigidBodyInfo));
-	}
-
-	/**
-	 * Sets the rigid body of the game object.
-	 * @param rigidBody
-	 */
-	public void setRigidBody(btRigidBody rigidBody) {
-		this.rigidBody = rigidBody;
+	public void createRigidBody(btCollisionShape shape, btRigidBody.btRigidBodyConstructionInfo rigidBodyInfo, short filterGroup, short filterMask) {
+		this.filterGroup = filterGroup;
+		this.filterMask = filterMask;
+		this.rigidBody = CollisionDetector.createRigidBody(this, shape, this, rigidBodyInfo);
 	}
 
 	/**
@@ -122,6 +133,9 @@ public class GameObject extends ModelInstance implements Disposable {
 		dimensions.set(bounds.getDimensions().cpy().scl(2.0f));
 	}
 	
+	/**
+	 * Updates the scale of the bounding box if the transform matrix was scaled.
+	 */
 	public void scaleBoundingBox() {
 		Vector3 dummy = new Vector3();
 		center.scl(transform.getScale(dummy));
@@ -203,6 +217,16 @@ public class GameObject extends ModelInstance implements Disposable {
 	}
 	
 	/**
+	 * Adds a motion state to the game object which cares about the updating of the transform matrix if the rigid body is updated by the dynamic world.
+	 */
+	public void addMotionState() {
+		GameObjectMotionState motionState = new GameObjectMotionState();
+		motionState = motionState;
+		motionState.transform = transform;
+		rigidBody.setMotionState(motionState);
+	}
+	
+	/**
 	 * Getter for the rigid body.
 	 */
 	public btRigidBody getRigidBody() {
@@ -235,10 +259,11 @@ public class GameObject extends ModelInstance implements Disposable {
 	 */
 	public void render(ModelBatch batch, Environment environment, PerspectiveCamera cam) {		
 		if(visible && isVisible(cam)) {
-			if(environment == null)
+			if(environment == null) {
 				batch.render(this);
-			else
+			} else {
 				batch.render(this, environment);
+			}
 		}
 	}
 
@@ -278,7 +303,8 @@ public class GameObject extends ModelInstance implements Disposable {
 	@Override
 	public void dispose() {
 		//Gdx.app.log("GameObject.dispose", "dispose " + id);
-		if ( rigidBody != null )
+		if(rigidBody != null) {
 			rigidBody.dispose();
+		}
 	}
 }

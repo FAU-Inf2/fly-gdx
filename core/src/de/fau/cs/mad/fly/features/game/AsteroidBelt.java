@@ -82,7 +82,7 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	 * @return GameObject
 	 */
 	private GameObject createAsteroid(GameModel model, int id) {
-		GameObject asteroid = new GameObject(model);
+		GameObject asteroid = new GameObject(model, "asteroid_" + id);
 		
 		Vector3 position;
 		do {
@@ -93,11 +93,8 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 
 		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, asteroid);
 		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 1.0f);
-		asteroid.filterGroup = CollisionDetector.OBJECT_FLAG;
-		asteroid.filterMask = CollisionDetector.ALL_FLAG;
-		asteroid.setRigidBody(shape, info);
+		asteroid.createRigidBody(shape, info, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
 		asteroid.setRestitution(1.0f);
-		asteroid.id = "Asteroid_" + id;
 		gameController.getCollisionDetector().addRigidBody(asteroid);
 		
 		asteroid.setMovement(getRandomVector(-2.0f, 2.0f));

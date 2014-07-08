@@ -9,9 +9,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Disposable;
 
-import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.game.CollisionDetector;
@@ -21,8 +19,6 @@ import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
-import de.fau.cs.mad.fly.profile.ScoreManager;
-import de.fau.cs.mad.fly.script.FlyEngine;
 
 import java.util.*;
 

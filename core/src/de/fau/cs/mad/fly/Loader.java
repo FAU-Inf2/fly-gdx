@@ -1,13 +1,7 @@
 package de.fau.cs.mad.fly;
 
-import com.badlogic.gdx.Gdx;
-
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
-import de.fau.cs.mad.fly.profile.LevelManager;
-import de.fau.cs.mad.fly.profile.PlayerManager;
-import de.fau.cs.mad.fly.res.Assets;
-import de.fau.cs.mad.fly.res.Level;
 
 import java.util.ArrayList;
 import java.util.Collection;

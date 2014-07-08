@@ -1,7 +1,5 @@
 package de.fau.cs.mad.fly.features;
 
-import de.fau.cs.mad.fly.game.GameObject;
-
 /**
  * Implement this interface when you want to receive collision events.
  * 

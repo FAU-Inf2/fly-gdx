@@ -1,6 +1,6 @@
 package de.fau.cs.mad.fly.player;
 
-import com.badlogic.gdx.Preferences;
+
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -21,7 +21,6 @@ import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.game.GameObjectMotionState;
 import de.fau.cs.mad.fly.res.Assets;
-import de.fau.cs.mad.fly.settings.SettingManager;
 
 public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
 	private GameController gameController;
@@ -56,19 +55,17 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		
 		GameModel model = Assets.manager.get(modelRef, GameModel.class);
 		
-		instance = new GameObject(model);
+		instance = new GameObject(model, "spaceship");
 
 		instance.transform.setToTranslation(game.getLevel().start.position);
 		
 		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, instance);
-		
 		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 1.0f);
-		instance.filterGroup = CollisionDetector.PLAYER_FLAG;
-		instance.filterMask = CollisionDetector.ALL_FLAG;
-		instance.id = "spaceship";
 
 		instance.scaleBoundingBox();
-		instance.setRigidBody(shape, info);
+		instance.createRigidBody(shape, info, CollisionDetector.PLAYER_FLAG, CollisionDetector.ALL_FLAG);
+		
+		instance.addMotionState();
 		
 		GameObjectMotionState motionState = new GameObjectMotionState();
 		instance.motionState = motionState;
@@ -83,14 +80,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	
 	@Override
 	public void update(float delta) {
-		//instance.transform.translate(movingDir.cpy().scl(2.f * delta));
-		//instance.getRigidBody().setWorldTransform(instance.transform);
-	
-		//instance.updateRigidBody();
-
-		//Vector3 trans = new Vector3();
-		//instance.transform.getTranslation(trans);
-		//System.out.println("IN: " + instance.transform);
+		// currently not used, perhaps in the future.
 	}
 
 	@Override

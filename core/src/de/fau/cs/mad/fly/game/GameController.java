@@ -420,9 +420,7 @@ public class GameController implements TimeIsUpListener{
 					Gdx.app.log("Builder.init", "Display RigidBody == null");
 					btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
 					btRigidBodyConstructionInfo displayInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(g.display.modelId, displayShape, 0.0f);
-					g.display.filterGroup = CollisionDetector.OBJECT_FLAG;
-					g.display.filterMask = CollisionDetector.ALL_FLAG;
-					g.display.setRigidBody(displayShape, displayInfo);
+					g.display.createRigidBody(displayShape, displayInfo, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
 				}
 				collisionDetector.addRigidBody(g.display);
 
@@ -432,9 +430,7 @@ public class GameController implements TimeIsUpListener{
 					btRigidBodyConstructionInfo goalInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(g.display.modelId, goalShape, 0.0f);
 					g.goal.hide();
 					g.goal.userData = g;
-					g.goal.filterGroup = CollisionDetector.DUMMY_FLAG;
-					g.goal.filterMask = CollisionDetector.PLAYER_FLAG;
-					g.goal.setRigidBody(goalShape, goalInfo);
+					g.goal.createRigidBody(goalShape, goalInfo, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
 					g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
 				}
 				collisionDetector.addRigidBody(g.goal);

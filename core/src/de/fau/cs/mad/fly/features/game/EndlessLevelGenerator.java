@@ -143,7 +143,6 @@ public class EndlessLevelGenerator {
 		goal.modelId = "hole";
 		goal.id = "gate" + Integer.toString(currGate) + "hole"; 
 		
-		
 		display.transform = predecessor.display.transform.cpy();
 		
 		display.transform.rotate(lastDirection, newDirection);
@@ -164,9 +163,7 @@ public class EndlessLevelGenerator {
 			//Gdx.app.log("Builder.init", "Display RigidBody == null");
 			btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(newGate.display.modelId, newGate.display);
 			btRigidBodyConstructionInfo displayInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(newGate.display.modelId, displayShape, 0.0f);
-			newGate.display.filterGroup = CollisionDetector.OBJECT_FLAG;
-			newGate.display.filterMask = CollisionDetector.ALL_FLAG;
-			newGate.display.setRigidBody(displayShape, displayInfo);
+			newGate.display.createRigidBody(displayShape, displayInfo, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
 		}
 		
 		collisionDetector.addRigidBody(newGate.display);
@@ -177,9 +174,7 @@ public class EndlessLevelGenerator {
 			btRigidBodyConstructionInfo goalInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(newGate.display.modelId, goalShape, 0.0f);
 			newGate.goal.hide();
 			newGate.goal.userData = newGate;
-			newGate.goal.filterGroup = CollisionDetector.DUMMY_FLAG;
-			newGate.goal.filterMask = CollisionDetector.PLAYER_FLAG;
-			newGate.goal.setRigidBody(goalShape, goalInfo);
+			newGate.goal.createRigidBody(goalShape, goalInfo, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
 			newGate.goal.getRigidBody().setCollisionFlags(newGate.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
 		}
 		collisionDetector.addRigidBody(newGate.goal);
@@ -195,5 +190,5 @@ public class EndlessLevelGenerator {
 		
 		return newGate;
 	}
-	
+
 }

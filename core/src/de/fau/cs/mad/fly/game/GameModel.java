@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.utils.Disposable;
 
