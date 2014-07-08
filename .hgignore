@@ -63,3 +63,7 @@ build/
 
 ## databae
 fau.mad.fly.db
+
+## Desktop assets
+desktop/levels
+desktop/scripts
