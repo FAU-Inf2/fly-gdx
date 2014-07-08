@@ -95,8 +95,8 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 
 	@Override
 	public void render(float delta) {
-		float rollDir = lastRoll * 10.f;
-		float azimuthDir = lastAzimuth * 50f;
+		float rollDir = lastRoll * 10.f / delta / 60.f;
+		float azimuthDir = lastAzimuth * 50f / delta / 60.f;
 		
 		instance.transform.rotate(movingDir.cpy().crs(up), rollDir);
 		instance.transform.rotate(movingDir, -azimuthDir);

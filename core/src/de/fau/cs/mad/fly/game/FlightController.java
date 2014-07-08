@@ -121,6 +121,9 @@ public class FlightController implements InputProcessor {
 			interpretSensorInput();
 		}
 		
+		rollDir *= delta * 60.f;
+		azimuthDir *= delta * 60.f;
+		
 		if(!firstPerson)
 			player.getPlane().rotate(rollDir, azimuthDir);
 		
