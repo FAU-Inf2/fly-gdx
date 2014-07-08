@@ -48,17 +48,19 @@ import de.fau.cs.mad.fly.ui.UI;
  * optional Features and calls the load(), init(), render(), finish() and
  * dispose() methods of those.
  * <p>
- * Optional Feature Interfaces: load(): - called before the game starts while
- * the loading screen is shown - should be stuff like loading models, creating
- * instances, which takes a while init(): - called the moment the game starts
- * after switchting to the game screen - should be stuff like setting values,
- * resetting counter update(): - called every frame while the game is running
- * and not paused - should be stuff like calculating and updating values
- * render(): - called every frame while the game is running or paused, in pause
- * the delta time is 0 - should be stuff like rendering models, showing overlays
- * finish(): - called at the moment the game is over, still in game screen -
- * should be stuff like showing points, saving the highscore dispose(): - called
- * when the game screen is left - should be stuff like disposing models
+ * Optional Feature Interfaces:
+ *		load():		- called before the game starts while the loading screen is shown
+ *					- should be stuff like loading models, creating instances, which takes a while
+ * 		init():		- called the moment the game starts after switching to the game screen
+ * 					- should be stuff like setting values, resetting counter
+ * 		update(): 	- called every frame while the game is running and not paused
+ * 					- should be stuff like calculating and updating values
+ * 		render(): 	- called every frame while the game is running or paused, in pause the delta time is 0
+ * 					- should be stuff like rendering models, showing overlays
+ * 		finish(): 	- called at the moment the game is over, still in game screen
+ * 					- should be stuff like showing points, saving the highscore
+ * 		dispose(): 	- called when the game screen is left
+ * 					- should be stuff like disposing models
  * 
  * @author Lukas Hahmann
  */
