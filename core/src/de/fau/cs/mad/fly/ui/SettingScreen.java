@@ -43,7 +43,7 @@ public class SettingScreen extends BasicScreen {
 				settingTable.add(settingManager.getSettingMap().get(s).getActor()).pad(padding,
 						3 * padding, padding, padding);
 			}
-			displayPlayer = PlayerManager.getInstance().getCurrentPlayer().getName();
+			displayPlayer = player.getName();
 		}
 	}
 
