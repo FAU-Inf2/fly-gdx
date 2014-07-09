@@ -60,7 +60,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             } else if (o == null || getClass() != o.getClass()) {
                 return false;
             } else {
-                return id == ((Level) o).hashCode();
+                return id == ((Gate) o).hashCode();
             }
         }
         
