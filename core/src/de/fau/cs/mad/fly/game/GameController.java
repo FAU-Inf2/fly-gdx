@@ -295,6 +295,7 @@ public class GameController implements TimeIsUpListener{
 	 * features in {@link #optionalFeaturesToFinish} are finished.
 	 */
 	public void endGame() {
+	    pauseGame();
 		for (IFeatureFinish optionalFeature : optionalFeaturesToFinish) {
 			optionalFeature.finish();
 		}

@@ -1,6 +1,9 @@
 package de.fau.cs.mad.fly.player;
 
+import java.util.List;
+
 import de.fau.cs.mad.fly.I18n;
+import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
@@ -139,6 +142,23 @@ public class Player {
 	 */
 	public void setLastLevel(Level.Head lastLevel) {
 		this.lastLevel = lastLevel;
+	}
+	
+	/**
+	 * If possible lastLevel is set to the next level
+	 */
+	public void nextLevel() {
+	    int nextLevelIndex = 0;
+	    List<Level.Head> allLevels = LevelManager.getInstance().getLevelList();
+	    for(int level = 0; level < allLevels.size(); level++) {
+	        if(allLevels.get(level) == lastLevel) {
+	            nextLevelIndex = level+1;
+	            level = allLevels.size();
+	        }
+	    }
+	    if(nextLevelIndex < allLevels.size()) {
+	        lastLevel = allLevels.get(nextLevelIndex);
+	    }
 	}
 
 	/**

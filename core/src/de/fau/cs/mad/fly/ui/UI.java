@@ -66,10 +66,8 @@ public final class UI {
 		/** Max. number of buttons for level to show in a row */
 		public static final int BUTTONS_IN_A_ROW = 2;
 
-		public static final int BUTTONS_IN_A_COLUMN = 3;
-
-		public static final float SPACE_WIDTH = Window.SPACE_WIDTH;
-		public static final float SPACE_HEIGHT = Window.SPACE_HEIGHT;
+		public static final float SPACE_WIDTH = 100;
+		public static final float SPACE_HEIGHT = 100;
 		
 		/** Style used for settings button in main menu */
 		public static final String SETTING_BUTTON_STYLE = "settings";
