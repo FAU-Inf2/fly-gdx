@@ -22,6 +22,7 @@ import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 
 /**
@@ -29,7 +30,7 @@ import de.fau.cs.mad.fly.profile.PlayerManager;
  * 
  * @author Tobi
  */
-public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureRender, IFeatureDispose, ICollisionListener<Object, GameObject> {
+public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureRender, IFeatureDispose, ICollisionListener<Spaceship, GameObject> {
 	private GameController gameController;
 	private ModelBatch batch;
 	private Environment environment;
@@ -38,7 +39,6 @@ public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureR
 	private String collectibleType;
 	private String modelRef;
 	private List<GameObject> collectibleObjects;
-	private Vector3 rotation;
 	
 	private List<ICollectListener> collectListeners;
 	
@@ -47,12 +47,10 @@ public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureR
 	 * 
 	 * @param collectibleType		The type of the collectible object in the level file.
 	 * @param modelRef				The model reference in the level file used to display the collectible objects.
-	 * @param rotation				The rotation of the collectible objects.
 	 */
-	public CollectibleObjects(String collectibleType, String modelRef, Vector3 rotation) {
+	public CollectibleObjects(String collectibleType, String modelRef) {
 		this.collectibleType = collectibleType;
 		this.modelRef = modelRef;
-		this.rotation = rotation;
 	}
 	
 	/**
@@ -78,8 +76,10 @@ public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureR
 				gameObject.createRigidBody(modelRef, shape, 10.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
 				gameObject.getRigidBody().setCollisionFlags(gameObject.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
 				CollisionDetector.getInstance().addRigidBody(gameObject);
-				
+
+				gameObject.addMotionState();
 				gameObject.setDummy(true);
+				gameObject.getRigidBody().setSleepingThresholds(0.01f, 0.01f);
 
 				collectibleObjects.add(gameObject);
 			}
@@ -95,15 +95,12 @@ public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureR
 	
 	@Override
 	public void render(float delta) {
-		//batch.begin(camera);
+		/*batch.begin(camera);
 		for(GameObject gameObject : collectibleObjects) {
-			gameObject.updateRigidBody();
-			
-			//System.out.println(gameObject.getRigidBody().getAngularVelocity());
-			
-			//gameObject.render(batch, environment, camera);
+			gameObject.updateRigidBody();			
+			gameObject.render(batch, environment, camera);
 		}
-		//batch.end();
+		batch.end();*/
 	}
 
 	@Override
@@ -114,17 +111,19 @@ public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureR
 	}
 
 	@Override
-	public void onCollision(Object o1, GameObject o2) {
-		if(!collectibleObjects.contains(o2))
+	public void onCollision(Spaceship ship, GameObject gameObject) {		
+		if(!collectibleObjects.contains(gameObject)) {
 			return;
+		}
 		
-		o2.hide();
-		collectibleObjects.remove(o2);
-		o2.dispose();
+		gameObject.hide();
+		collectibleObjects.remove(gameObject);
+		gameObject.removeRigidBody();
+		
+		//PlayerManager.getInstance().getCurrentPlayer().getPlane().setSpeed(5.0f);
 		
 		for(ICollectListener listener : collectListeners) {
 			listener.onCollect(collectibleType);
 		}
 	}
-
 }
