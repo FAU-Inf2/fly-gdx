@@ -68,6 +68,11 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * Determines if the game object is currently visible.
 	 */
 	private boolean visible = true;
+	
+	/**
+	 * Determines if the game object is only a dummy object and the player does not lose life if colliding with it.
+	 */
+	private boolean dummy = true;
 
 	/**
 	 * Collision group of the game object for filtering.
@@ -88,6 +93,9 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * Id of the model of this game object.
 	 */
 	public String modelId;
+	
+	private Vector3 startLinearVelocity = new Vector3();
+	private Vector3 startAngularVelocity = new Vector3();
 
 	// TODO: create more constructors to match the ModelInstance constructors
 
@@ -123,6 +131,9 @@ public class GameObject extends ModelInstance implements Disposable {
 		this.filterGroup = filterGroup;
 		this.filterMask = filterMask;
 		this.rigidBody = CollisionDetector.createRigidBody(this, shape, this, info);
+
+		rigidBody.setLinearVelocity(startLinearVelocity);
+		rigidBody.setAngularVelocity(startAngularVelocity);
 	}
 
 	/**
@@ -175,6 +186,24 @@ public class GameObject extends ModelInstance implements Disposable {
 		transform.getTranslation(position);
 		position.add(center);
 		return camera.frustum.boundsInFrustum(position, dimensions);
+	}
+	
+	/**
+	 * Setter if the game object is only a dummy object.
+	 * 
+	 * @param isDummy
+	 */
+	public void setDummy(boolean isDummy) {
+		dummy = isDummy;
+	}
+	
+	/**
+	 * Checks if the game object is only a dummy object.
+	 * 
+	 * @return true, if the object is a dummy, otherwise false.
+	 */
+	public boolean isDummy() {
+		return dummy;
 	}
 
 	/**
@@ -294,6 +323,22 @@ public class GameObject extends ModelInstance implements Disposable {
 	 */
 	public void setMovement(Vector3 vel) {
 		rigidBody.setLinearVelocity(vel);
+	}
+	
+	/**
+	 * Setter for the start linear velocity which is used for the movement when the rigid body is created.
+	 * @param vel
+	 */
+	public void setStartLinearVelocity(Vector3 vel) {
+		startLinearVelocity = vel;
+	}
+	
+	/**
+	 * Setter for the start angular velocity which is used for the rotation when the rigid body is created.
+	 * @param vel
+	 */
+	public void setStartAngularVelocity(Vector3 vel) {
+		startAngularVelocity = vel;
 	}
 	
 	/**

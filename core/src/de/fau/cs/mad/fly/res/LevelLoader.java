@@ -176,6 +176,16 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 					o.transform = new Matrix4();
 					//Gdx.app.log("LevelLoader.getComponents", "No 3D info found: " + o.transform.toString());
 				}
+				
+				JsonValue linearVelocity = e.get("linear_velocity");
+				if(linearVelocity != null) {
+					o.setStartLinearVelocity(new Vector3(linearVelocity.getFloat(0), linearVelocity.getFloat(1), linearVelocity.getFloat(2)));
+				}
+				JsonValue angularVelocity = e.get("angular_velocity");
+				if(angularVelocity != null) {
+					o.setStartAngularVelocity(new Vector3(angularVelocity.getFloat(0), angularVelocity.getFloat(1), angularVelocity.getFloat(2)));
+				}
+				
 				components.put(id, o);
 			}
 		}

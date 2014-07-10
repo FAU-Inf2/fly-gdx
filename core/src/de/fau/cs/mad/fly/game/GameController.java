@@ -26,6 +26,7 @@ import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.AsteroidBelt;
+import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
@@ -397,6 +398,10 @@ public class GameController implements TimeIsUpListener{
 			collisionDetector.getCollisionContactListener().addListener(new ICollisionListener<Spaceship, GameObject>() {
 				@Override
 				public void onCollision(Spaceship ship, GameObject g) {
+					if(g.isDummy()) {
+						return;
+					}
+					
 					Gdx.input.vibrate(500);
 					Player player = PlayerManager.getInstance().getCurrentPlayer();
 					if (player.decreaseLives()) {
@@ -472,6 +477,8 @@ public class GameController implements TimeIsUpListener{
 			// if needed for debugging: Debug.init(game.getSkin(), stage, 1);
 
 			addAsteroidBelt();
+			
+			//addSpeedUpgrade();
 
 			Preferences preferences = player.getSettingManager().getPreferences();
 			addGateIndicator();
@@ -619,7 +626,7 @@ public class GameController implements TimeIsUpListener{
 		 * Adds a {@link IPlane} to the GameController, that is initialized,
 		 * updated every frame and updated when the game is finished.
 		 * 
-		 * @return Builder instance with collisionDetector
+		 * @return Builder instance with IPlane
 		 */
 		private Builder addPlayerPlane() {
 			IPlane plane = player.getPlane();
@@ -628,6 +635,21 @@ public class GameController implements TimeIsUpListener{
 			optionalFeaturesToUpdate.add(plane);
 			optionalFeaturesToRender.add(plane);
 			optionalFeaturesToDispose.add(plane);
+			return this;
+		}
+		
+		/**
+		 * Adds a {@link CollectibleObjects} to the GameController, that is initialized,
+		 * updated every frame and updated when the game is finished.
+		 * 
+		 * @return Builder instance with CollectibleObjects
+		 */
+		private Builder addSpeedUpgrade() {
+			CollectibleObjects collectibleObjects = new CollectibleObjects("speedUpgrade", "speedUpgrade", new Vector3());
+			optionalFeaturesToLoad.add(collectibleObjects);
+			optionalFeaturesToInit.add(collectibleObjects);
+			optionalFeaturesToRender.add(collectibleObjects);
+			optionalFeaturesToDispose.add(collectibleObjects);
 			return this;
 		}
 
