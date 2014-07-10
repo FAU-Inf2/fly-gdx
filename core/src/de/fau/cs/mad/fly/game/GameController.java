@@ -560,7 +560,6 @@ public class GameController implements TimeIsUpListener{
 		 * @return Builder instance with SteeringOverlay
 		 */
 		private Builder addSteeringOverlay() {
-			Gdx.app.log("Builder.addSteeringOverlay", "enter");
 			SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, game.getShapeRenderer(), stage);
 			optionalFeaturesToRender.add(steeringOverlay);
 			optionalFeaturesToDispose.add(steeringOverlay);
@@ -645,11 +644,13 @@ public class GameController implements TimeIsUpListener{
 		 * @return Builder instance with CollectibleObjects
 		 */
 		private Builder addSpeedUpgrade() {
-			CollectibleObjects collectibleObjects = new CollectibleObjects("speedUpgrade", "speedUpgrade", new Vector3());
+			CollectibleObjects collectibleObjects = new CollectibleObjects("speedUpgrade", "speedUpgrade");
 			optionalFeaturesToLoad.add(collectibleObjects);
 			optionalFeaturesToInit.add(collectibleObjects);
 			optionalFeaturesToRender.add(collectibleObjects);
 			optionalFeaturesToDispose.add(collectibleObjects);
+			CollisionDetector.getInstance().getCollisionContactListener().addListener(collectibleObjects);
+			
 			return this;
 		}
 

@@ -40,6 +40,10 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	private float lastRoll = 0.f;
 	private float lastAzimuth = 0.f;
 	
+	private float speed = 2.0f;
+	private float azimuthSpeed = 9.0f;
+	private float rollingSpeed = 9.0f;
+	
 	public Spaceship(String modelRef) {
 		this.modelRef = modelRef;
 	}
@@ -64,13 +68,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		instance.scaleBoundingBox();
 		instance.createRigidBody(modelRef, shape, 1.0f, CollisionDetector.PLAYER_FLAG, CollisionDetector.ALL_FLAG);
 		
-		instance.addMotionState();
-		
-		GameObjectMotionState motionState = new GameObjectMotionState();
-		instance.motionState = motionState;
-		instance.motionState.transform = instance.transform;
-		instance.getRigidBody().setMotionState(motionState);
-		
+		instance.addMotionState();		
 		instance.getRigidBody().setDamping(0.0f, 0.5f);
 
 		instance.userData = this;
@@ -105,20 +103,25 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	public Model getModel() {
 		return model;
 	}
+	
+	@Override
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
 
 	@Override
 	public float getSpeed() {
-		return 2;
+		return speed;
 	}
 
 	@Override
 	public float getAzimuthSpeed() {
-		return 9.0f;
+		return azimuthSpeed;
 	}
 
 	@Override
 	public float getRollingSpeed() {
-		return 9.0f;
+		return rollingSpeed;
 	}
 
 	@Override

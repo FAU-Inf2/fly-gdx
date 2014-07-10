@@ -252,8 +252,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * Adds a motion state to the game object which cares about the updating of the transform matrix if the rigid body is updated by the dynamic world.
 	 */
 	public void addMotionState() {
-		GameObjectMotionState motionState = new GameObjectMotionState();
-		motionState = motionState;
+		motionState = new GameObjectMotionState();
 		motionState.transform = transform;
 		rigidBody.setMotionState(motionState);
 	}
@@ -347,12 +346,21 @@ public class GameObject extends ModelInstance implements Disposable {
 	public void flipDirection() {		
 		rigidBody.setLinearVelocity(rigidBody.getLinearVelocity().scl(-1.0f));
 	}
+	
+	/**
+	 * Removes the rigid body from the collision world and disposes it.
+	 */
+	public void removeRigidBody() {
+		if(rigidBody != null) {
+			CollisionDetector.getInstance().removeRigidBody(this);
+			rigidBody.dispose();
+			rigidBody = null;
+		}
+	}
 
 	@Override
 	public void dispose() {
 		//Gdx.app.log("GameObject.dispose", "dispose " + id);
-		if(rigidBody != null) {
-			rigidBody.dispose();
-		}
+		removeRigidBody();
 	}
 }

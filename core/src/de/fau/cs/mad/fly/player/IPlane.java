@@ -30,6 +30,11 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	public Model getModel();
 	
 	/**
+	 * Setter for the speed of the plane.
+	 */
+	public void setSpeed(float speed);
+	
+	/**
 	 * Getter for the speed of the plane.
 	 * @return speed
 	 */
