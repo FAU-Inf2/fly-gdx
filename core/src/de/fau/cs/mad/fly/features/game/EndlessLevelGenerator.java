@@ -157,13 +157,12 @@ public class EndlessLevelGenerator {
 		newGate.successors = new ArrayList<Level.Gate>();
 		
 		// add display and goal to the collisionDetector
-		CollisionDetector collisionDetector = ((Fly) Gdx.app.getApplicationListener()).getGameController().getCollisionDetector();
+		CollisionDetector collisionDetector = CollisionDetector.getInstance();
 		/////////////////////////////////////////////////////////////////////////////////////
 		if (newGate.display.getRigidBody() == null) {
 			//Gdx.app.log("Builder.init", "Display RigidBody == null");
 			btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(newGate.display.modelId, newGate.display);
-			btRigidBodyConstructionInfo displayInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(newGate.display.modelId, displayShape, 0.0f);
-			newGate.display.createRigidBody(displayShape, displayInfo, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+			newGate.display.createRigidBody(newGate.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
 		}
 		
 		collisionDetector.addRigidBody(newGate.display);
@@ -171,10 +170,9 @@ public class EndlessLevelGenerator {
 		if (newGate.goal.getRigidBody() == null) {
 			//Gdx.app.log("Builder.init", "Goal RigidBody == null");
 			btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(newGate.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-			btRigidBodyConstructionInfo goalInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(newGate.display.modelId, goalShape, 0.0f);
 			newGate.goal.hide();
 			newGate.goal.userData = newGate;
-			newGate.goal.createRigidBody(goalShape, goalInfo, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+			newGate.goal.createRigidBody(newGate.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
 			newGate.goal.getRigidBody().setCollisionFlags(newGate.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
 		}
 		collisionDetector.addRigidBody(newGate.goal);

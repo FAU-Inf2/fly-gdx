@@ -23,6 +23,7 @@ import java.util.Map;
  * @author Tobias Zangl
  */
 public class CollisionShapeManager implements Disposable {
+	
 	/**
 	 * Maps to save the different shape types.
 	 */

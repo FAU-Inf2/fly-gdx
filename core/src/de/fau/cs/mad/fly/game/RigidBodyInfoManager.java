@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Disposable;
  * @author Tobias Zangl
  */
 public class RigidBodyInfoManager implements Disposable {
+
 	/**
 	 * Map to save the different rigid body construction infos.
 	 */

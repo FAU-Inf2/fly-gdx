@@ -59,11 +59,10 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 
 		instance.transform.setToTranslation(game.getLevel().start.position);
 		
-		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, instance);
-		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 1.0f);
+		btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(modelRef, instance);
 
 		instance.scaleBoundingBox();
-		instance.createRigidBody(shape, info, CollisionDetector.PLAYER_FLAG, CollisionDetector.ALL_FLAG);
+		instance.createRigidBody(modelRef, shape, 1.0f, CollisionDetector.PLAYER_FLAG, CollisionDetector.ALL_FLAG);
 		
 		instance.addMotionState();
 		
@@ -75,7 +74,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		instance.getRigidBody().setDamping(0.0f, 0.5f);
 
 		instance.userData = this;
-		gameController.getCollisionDetector().addRigidBody(instance);
+		CollisionDetector.getInstance().addRigidBody(instance);
 	}
 	
 	@Override

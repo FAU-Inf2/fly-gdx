@@ -91,9 +91,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         
         @Override
         public void dispose() {
-            CollisionDetector collisionDetector = ((Fly) Gdx.app.getApplicationListener()).getGameController().getCollisionDetector();
-            collisionDetector.removeRigidBody(display);
-            collisionDetector.removeRigidBody(goal);
+            CollisionDetector.getInstance().removeRigidBody(display);
+            CollisionDetector.getInstance().removeRigidBody(goal);
             
             display.dispose();
             goal.dispose();
@@ -289,7 +288,6 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     private void levelFinished() {
         gameOver = true;
         for (EventListener s : eventListeners) {
-            Gdx.app.log("Level.activeGatePassed", "s=" + s);
             s.onFinished();
         }
     }

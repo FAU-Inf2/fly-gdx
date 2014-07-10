@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
@@ -116,10 +117,12 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * @param shape
 	 * @param rigidBodyInfo
 	 */
-	public void createRigidBody(btCollisionShape shape, btRigidBody.btRigidBodyConstructionInfo rigidBodyInfo, short filterGroup, short filterMask) {
+	public void createRigidBody(String id, btCollisionShape shape, float mass, short filterGroup, short filterMask) {
+		btRigidBodyConstructionInfo info = CollisionDetector.getInstance().getRigidBodyInfoManager().createRigidBodyInfo(id, shape, mass);
+		
 		this.filterGroup = filterGroup;
 		this.filterMask = filterMask;
-		this.rigidBody = CollisionDetector.createRigidBody(this, shape, this, rigidBodyInfo);
+		this.rigidBody = CollisionDetector.createRigidBody(this, shape, this, info);
 	}
 
 	/**

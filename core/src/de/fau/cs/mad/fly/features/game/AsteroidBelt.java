@@ -76,7 +76,7 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	/**
 	 * Creates an asteroid with the given model.
 	 * <p>
-	 * Calculates moving and rotation randomly between specific values after cheking if the position is not colling with anything else.
+	 * Calculates moving and rotation randomly between specific values after checking if the position is not colliding with anything else.
 	 * Creates the collision object of the asteroid.
 	 * @param model			The model used for the asteroid.
 	 * @return GameObject
@@ -91,11 +91,10 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 		
 		asteroid.transform.setToTranslation(position);
 
-		btCollisionShape shape = gameController.getCollisionDetector().getShapeManager().createConvexShape(modelRef, asteroid);
-		btRigidBodyConstructionInfo info = gameController.getCollisionDetector().getRigidBodyInfoManager().createRigidBodyInfo(modelRef, shape, 1.0f);
-		asteroid.createRigidBody(shape, info, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+		btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(modelRef, asteroid);
+		asteroid.createRigidBody(modelRef, shape, 1.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
 		asteroid.setRestitution(1.0f);
-		gameController.getCollisionDetector().addRigidBody(asteroid);
+		CollisionDetector.getInstance().addRigidBody(asteroid);
 		
 		asteroid.setMovement(getRandomVector(-2.0f, 2.0f));
 		asteroid.setRotation(getRandomVector(-0.5f, 0.5f));
@@ -127,6 +126,8 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 		
 		return false;
 	}
+	
+	// TODO: put random calculation methods in a helper class.
 	
 	/**
 	 * Calculates a random vector with x, y and z value between 0.0f and max value.

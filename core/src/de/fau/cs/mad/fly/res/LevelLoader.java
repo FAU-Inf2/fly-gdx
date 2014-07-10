@@ -83,7 +83,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 		Level.Gate dummy = null;
 		for (JsonValue e : gates) {
 			JsonValue gid = e.get("id");
-			Gdx.app.log("LevelLoader.fromJson", "gid " + gid);
+			//Gdx.app.log("LevelLoader.fromJson", "gid " + gid);
 			Level.Gate p;
 			if ( gid != null )
 				p = ps.get(gid.asInt());
@@ -157,7 +157,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 					JsonValue euler = e.get("euler");
 					JsonValue quaternion = e.get("quaternion");					
 					if( euler != null ) {
-						Gdx.app.log("LevelLoader.getComponents", "Euler: " + euler.getFloat(0) + ", " + euler.getFloat(1) + ", " + euler.getFloat(2));
+						//Gdx.app.log("LevelLoader.getComponents", "Euler: " + euler.getFloat(0) + ", " + euler.getFloat(1) + ", " + euler.getFloat(2));
 						
 						Quaternion quat = new Quaternion();
 						quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
@@ -226,7 +226,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 		getDependencies();
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 		for( String name : dependencies.values() ) {
-			Gdx.app.log("LevelLoader.getDependencies", name);
+			//Gdx.app.log("LevelLoader.getDependencies", name);
 			deps.add(new AssetDescriptor<GameModel>(name, GameModel.class));
 		}
 		return deps;

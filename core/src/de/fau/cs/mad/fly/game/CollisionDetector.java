@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSol
 import com.badlogic.gdx.utils.Disposable;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
+import de.fau.cs.mad.fly.profile.PlayerManager;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -25,14 +26,40 @@ import java.util.Map;
  * @author Tobi
  */
 public class CollisionDetector implements Disposable {
-
+	
+	/**
+	 * The collision shape manager used to store the shape for the objects.
+	 */
 	CollisionShapeManager shapeManager;
+	
+	/**
+	 * The rigid body info manager used to store the rigid body construction info for the objects.
+	 */
 	RigidBodyInfoManager rigidBodyInfoManager;
+	
+	/**
+	 * Singleton collision detector instance.
+	 */
+	private static CollisionDetector instance;
+	
+	/**
+	 * Creates the collision detector if there is not already an instance created.
+	 */
+	public static void createCollisionDetector() {
+		if(instance == null) {
+			instance = new CollisionDetector();
+		}
+	}
 
-	public final static short DUMMY_FLAG = 1 << 7;
-	public final static short OBJECT_FLAG = 1 << 8;
-	public final static short PLAYER_FLAG = 1 << 9;
-	public final static short ALL_FLAG = -1;
+	/**
+	 * Getter for the collision detector singleton.
+	 * @return instance
+	 */
+	public static CollisionDetector getInstance() {
+		return instance;
+	}
+
+
 
 	/**
 	 * The main listener for the collision detection.
@@ -63,7 +90,7 @@ public class CollisionDetector implements Disposable {
 		public void onContactStarted(btCollisionObject o1, btCollisionObject o2) {
 			GameObject g1 = (GameObject) o1.userData;
 			GameObject g2 = (GameObject) o2.userData;
-			Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.id + " (userData = " + g1.userData.getClass() + "), g2 = " + g2.id + " (userData = " + g2.userData.getClass() + ")" );
+			//Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.id + " (userData = " + g1.userData.getClass() + "), g2 = " + g2.id + " (userData = " + g2.userData.getClass() + ")" );
 			m.clear();
 			// Store in hash to pass values in correct order later.
 			m.put(g1.userData.getClass(), g1.userData);
@@ -90,6 +117,14 @@ public class CollisionDetector implements Disposable {
 			}
 		}
 	}
+	
+	/**
+	 * The flags to filter collisions.
+	 */
+	public final static short DUMMY_FLAG = 1 << 7;
+	public final static short OBJECT_FLAG = 1 << 8;
+	public final static short PLAYER_FLAG = 1 << 9;
+	public final static short ALL_FLAG = -1;
 
 	btCollisionConfiguration collisionConfig;
 	btDispatcher dispatcher;
@@ -101,7 +136,7 @@ public class CollisionDetector implements Disposable {
 	
 	DebugDrawer debugDrawer;
 
-	public CollisionDetector() {
+	protected CollisionDetector() {
 		shapeManager = new CollisionShapeManager();
 		rigidBodyInfoManager = new RigidBodyInfoManager();
 
@@ -147,8 +182,6 @@ public class CollisionDetector implements Disposable {
 		btRigidBody rigidBody = new btRigidBody(rigidBodyInfo);
 		rigidBody.setCollisionShape(shape);
 		rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | btRigidBody.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
-		// TODO: add parameter to check if the rigid body should not respond to collisions
-		//  | btRigidBody..CollisionFlags.CF_NO_CONTACT_RESPONSE
 		
 		rigidBody.setWorldTransform(instance.transform);
 		rigidBody.userData = userData;
@@ -211,5 +244,7 @@ public class CollisionDetector implements Disposable {
 		rigidBodyInfoManager.dispose();
 		shapeManager.dispose();
 		Gdx.app.log("CollisionDetector", "Collision disposed.");
+		
+		instance = null;
 	}
 }

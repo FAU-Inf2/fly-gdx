@@ -71,7 +71,6 @@ public class GameController implements TimeIsUpListener{
 	}
 
 	private Stage stage;
-	private CollisionDetector collisionDetector;
 	private List<IFeatureLoad> optionalFeaturesToLoad;
 	private List<IFeatureInit> optionalFeaturesToInit;
 	private List<IFeatureUpdate> optionalFeaturesToUpdate;
@@ -123,15 +122,6 @@ public class GameController implements TimeIsUpListener{
 	 */
 	public PerspectiveCamera getCamera() {
 		return camera;
-	}
-
-	/**
-	 * Getter for the collision detector.
-	 * 
-	 * @return {@link #collisionDetector}
-	 */
-	public CollisionDetector getCollisionDetector() {
-		return collisionDetector;
 	}
 
 	/**
@@ -268,7 +258,7 @@ public class GameController implements TimeIsUpListener{
 				optionalFeature.update(delta);
 			}
 
-			collisionDetector.perform(delta);
+			CollisionDetector.getInstance().perform(delta);
 			timeController.checkTime();
 		}
 
@@ -307,10 +297,10 @@ public class GameController implements TimeIsUpListener{
 	 */
 	public void disposeGame() {
 		for (IFeatureDispose optionalFeature : optionalFeaturesToDispose) {
-			Gdx.app.log("GameController.disposeGame", "dispose: " + optionalFeature.getClass().getSimpleName());
+			//Gdx.app.log("GameController.disposeGame", "dispose: " + optionalFeature.getClass().getSimpleName());
 			optionalFeature.dispose();
 		}
-		collisionDetector.dispose();
+		CollisionDetector.getInstance().dispose();
 		optionalFeaturesToUpdate.clear();
 		optionalFeaturesToRender.clear();
 	}
@@ -345,7 +335,6 @@ public class GameController implements TimeIsUpListener{
 		private Player player;
 		private Stage stage;
 		private Level level;
-		private CollisionDetector collisionDetector;
 		private ArrayList<IFeatureLoad> optionalFeaturesToLoad;
 		private ArrayList<IFeatureInit> optionalFeaturesToInit;
 		private ArrayList<IFeatureUpdate> optionalFeaturesToUpdate;
@@ -401,7 +390,8 @@ public class GameController implements TimeIsUpListener{
 			// engine.load(Gdx.files.internal( "scripts/app/" + s ));
 
 			addPlayerPlane();
-			collisionDetector = new CollisionDetector();
+			CollisionDetector.createCollisionDetector();
+			CollisionDetector collisionDetector = CollisionDetector.getInstance();
 
 			collisionDetector.getCollisionContactListener().addListener(level);
 			collisionDetector.getCollisionContactListener().addListener(new ICollisionListener<Spaceship, GameObject>() {
@@ -418,25 +408,20 @@ public class GameController implements TimeIsUpListener{
 				}
 			});
 
-			Gdx.app.log("Builder.init", "Setting up collision for level gates...");
+			Gdx.app.log("Builder.init", "Setting up collision for level gates.");
 
 			for (Level.Gate g : level.allGates()) {
-				Gdx.app.log("Builder.init", "Gate " + g);
 				if (g.display.getRigidBody() == null) {
-					Gdx.app.log("Builder.init", "Display RigidBody == null");
 					btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
-					btRigidBodyConstructionInfo displayInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(g.display.modelId, displayShape, 0.0f);
-					g.display.createRigidBody(displayShape, displayInfo, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+					g.display.createRigidBody(g.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
 				}
 				collisionDetector.addRigidBody(g.display);
 
 				if (g.goal.getRigidBody() == null) {
-					Gdx.app.log("Builder.init", "Goal RigidBody == null");
 					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-					btRigidBodyConstructionInfo goalInfo = collisionDetector.getRigidBodyInfoManager().createRigidBodyInfo(g.display.modelId, goalShape, 0.0f);
 					g.goal.hide();
 					g.goal.userData = g;
-					g.goal.createRigidBody(goalShape, goalInfo, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+					g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
 					g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
 				}
 				collisionDetector.addRigidBody(g.goal);
@@ -654,7 +639,6 @@ public class GameController implements TimeIsUpListener{
 		 */
 		public GameController build() {
 			gc.stage = stage;
-			gc.collisionDetector = collisionDetector;
 			gc.optionalFeaturesToLoad = optionalFeaturesToLoad;
 			gc.optionalFeaturesToInit = optionalFeaturesToInit;
 			gc.optionalFeaturesToUpdate = optionalFeaturesToUpdate;
