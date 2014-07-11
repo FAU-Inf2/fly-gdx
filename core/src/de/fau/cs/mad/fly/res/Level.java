@@ -315,6 +315,9 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         return virtualGate;
     }
     
+    /**
+     * Creates the rigid bodies with convenient parameters for the gate models and the gate goals in the level.
+     */
     public void createGateRigidBodies() {
 		CollisionDetector collisionDetector = CollisionDetector.getInstance();
 		
