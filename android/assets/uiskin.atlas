@@ -29,17 +29,17 @@ default-select
 default-round-large
   rotate: false
   xy: 57, 29
-  size: 20, 20
+  size: 40, 20
   split: 5, 5, 5, 4
-  orig: 20, 20
+  orig: 40, 20
   offset: 0, 0
   index: -1
 default-scroll
   rotate: false
-  xy: 78, 29
-  size: 20, 20
+  xy: 57, 8
+  size: 40, 20
   split: 2, 2, 2, 2
-  orig: 20, 20
+  orig: 40, 20
   offset: 0, 0
   index: -1
 default-slider-knob
