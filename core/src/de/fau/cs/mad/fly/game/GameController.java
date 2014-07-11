@@ -574,9 +574,8 @@ public class GameController implements TimeIsUpListener{
 		 * @return Builder instance with TouchScreenOverlay
 		 */
 		private Builder addTouchScreenOverlay() {
-			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(flightController, game.getShapeRenderer(), stage);
+			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(game.getShapeRenderer(), stage, game.getSkin());
 			optionalFeaturesToRender.add(touchScreenOverlay);
-			optionalFeaturesToDispose.add(touchScreenOverlay);
 			return this;
 		}
 
