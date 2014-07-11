@@ -72,7 +72,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	/**
 	 * Determines if the game object is only a dummy object and the player does not lose life if colliding with it.
 	 */
-	private boolean dummy = true;
+	private boolean dummy = false;
 
 	/**
 	 * Collision group of the game object for filtering.
