@@ -25,15 +25,17 @@ public class SkinManager implements Disposable {
 	/**
 	 * Creates the skin manager.
 	 */
-	public SkinManager(String skinFile, String fontFile) {
-		createSkin(skinFile, fontFile);
+	public SkinManager(String skinFile) {
+		createSkin(skinFile);
 	}	
 	
 	/**
 	 * Creates the skin for the UI.
 	 */
-	public void createSkin(String skinFile, String fontFile) {
-		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(fontFile));
+	public void createSkin(String skinFile) {
+		Assets.load(Assets.font);
+
+		FreeTypeFontGenerator fontGenerator = Assets.manager.get(Assets.font);
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
 		fontParameter.size = UI.Buttons.FONT_SIZE;
 		BitmapFont buttonFont = fontGenerator.generateFont(fontParameter);

@@ -57,7 +57,7 @@ public class Fly extends Game {
 //		FlyEngine.get();
 		Assets.init();
 
-		skinManager = new SkinManager("uiskin.json", "OpenSans-Regular.ttf");
+		skinManager = new SkinManager("uiskin.json");
 		
 		shapeRenderer = new ShapeRenderer();
 
