@@ -45,19 +45,16 @@ public class TimeLeftOverlay implements IntegerTimeListener {
         
         TextureRegion textureRegion = new TextureRegion(skin.getRegion("watch"));
         Image watchIcon = new Image(textureRegion);
-        // sorry for those magic numbers, but the image is not properly placed, when added to the table
-        watchIcon.setPosition(150, 180);
         
         timeCounter = new Label("", labelStyle);
-        
-        innerTable.add(timeCounter).pad(0, 200, 0, 0);
+        innerTable.add(watchIcon);
+        innerTable.add(timeCounter).pad(0, 50, 0, 0);
         innerTable.row().expand();
         
         outerTable.row().expand();
-        outerTable.add(innerTable).pad(UI.Window.BORDER_SPACE).left().bottom();
+        outerTable.add(innerTable).pad(UI.Window.BORDER_SPACE).left().top();
         outerTable.row().expand();
         stage.addActor(outerTable);
-        stage.addActor(watchIcon);
 	}
 
 	@Override

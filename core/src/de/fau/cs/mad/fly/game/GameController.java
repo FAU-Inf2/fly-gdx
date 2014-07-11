@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -578,7 +581,7 @@ public class GameController implements TimeIsUpListener{
 		 * @return Builder instance with TouchScreenOverlay
 		 */
 		private Builder addTouchScreenOverlay() {
-			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(flightController, game.getShapeRenderer(), stage);
+			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(game.getShapeRenderer(), stage, game.getSkin());
 			addFeatureToLists(touchScreenOverlay);
 			return this;
 		}
@@ -592,7 +595,8 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addGameFinishedOverlay() {
 			GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(game.getSkin(), stage);
-			addFeatureToLists(gameFinishedOverlay);
+			optionalFeaturesToInit.add(gameFinishedOverlay);
+			optionalFeaturesToFinish.add(gameFinishedOverlay);
 			return this;
 		}
 
@@ -604,7 +608,8 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addPauseGameOverlay() {
 			PauseGameOverlay pauseGameOverlay = new PauseGameOverlay(game.getSkin(), stage);
-			addFeatureToLists(pauseGameOverlay);
+			optionalFeaturesToInit.add(pauseGameOverlay);
+			optionalFeaturesToDispose.add(pauseGameOverlay);
 			return this;
 		}
 
@@ -642,6 +647,7 @@ public class GameController implements TimeIsUpListener{
 			CollectibleObjects collectibleObjects = new CollectibleObjects("speedUpgrade", "speedUpgrade");
 			addFeatureToLists(collectibleObjects);
 			CollisionDetector.getInstance().getCollisionContactListener().addListener(collectibleObjects);
+			
 			return this;
 		}
 
