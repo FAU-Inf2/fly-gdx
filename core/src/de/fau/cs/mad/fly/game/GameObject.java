@@ -351,7 +351,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * Removes the rigid body from the collision world and disposes it.
 	 */
 	public void removeRigidBody() {
-		if(rigidBody != null) {
+		if(rigidBody != null && CollisionDetector.getInstance() != null) {
 			CollisionDetector.getInstance().removeRigidBody(this);
 			rigidBody.dispose();
 			rigidBody = null;
