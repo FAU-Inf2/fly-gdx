@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.features.overlay;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -15,18 +16,13 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.ui.UI;
 
 public class PauseGameOverlay implements IFeatureInit, IFeatureDispose {
-	private final Fly game;
-	
-	private final Skin skin;
 	private final Stage stage;
 	private final Table table;
 	
 	private final TextButton pauseButton;
 
-	public PauseGameOverlay(final Fly game, final Stage stage) {
-		this.game = game;
+	public PauseGameOverlay(final Skin skin, final Stage stage) {
 		this.stage = stage;
-		skin = game.getSkin();
 		
 		table = new Table();
 		table.setFillParent(true);
@@ -46,6 +42,8 @@ public class PauseGameOverlay implements IFeatureInit, IFeatureDispose {
 		pauseButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
+				Fly game = (Fly) Gdx.app.getApplicationListener();
+				
 				if(game.getGameController().isRunning()) {
 					game.getGameController().pauseGame();
 					pauseButton.setText(I18n.t("run"));

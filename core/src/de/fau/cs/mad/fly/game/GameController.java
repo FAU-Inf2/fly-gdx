@@ -594,7 +594,7 @@ public class GameController implements TimeIsUpListener{
 		 * @return Builder instance with SteeringOverlay
 		 */
 		private Builder addGameFinishedOverlay() {
-			GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(game, stage);
+			GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(game.getSkin(), stage);
 			addFeatureToLists(gameFinishedOverlay);
 			return this;
 		}
@@ -606,7 +606,7 @@ public class GameController implements TimeIsUpListener{
 		 * @return Builder instance with PauseGameOverlay
 		 */
 		private Builder addPauseGameOverlay() {
-			PauseGameOverlay pauseGameOverlay = new PauseGameOverlay(game, stage);
+			PauseGameOverlay pauseGameOverlay = new PauseGameOverlay(game.getSkin(), stage);
 			addFeatureToLists(pauseGameOverlay);
 			return this;
 		}

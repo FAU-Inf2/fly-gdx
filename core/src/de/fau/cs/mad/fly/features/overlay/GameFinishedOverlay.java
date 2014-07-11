@@ -32,14 +32,12 @@ import de.fau.cs.mad.fly.ui.UI;
  */
 public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private GameController gameController;
-    private Fly game;
     private final Skin skin;
     private final Stage stage;
     
-    public GameFinishedOverlay(final Fly game, final Stage stage) {
-        this.game = game;
+    public GameFinishedOverlay(final Skin skin, final Stage stage) {
         this.stage = stage;
-        skin = game.getSkin();
+        this.skin = skin;
     }
     
     @Override
@@ -68,7 +66,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setMainMenuScreen();
+            	((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
             }
         });
         

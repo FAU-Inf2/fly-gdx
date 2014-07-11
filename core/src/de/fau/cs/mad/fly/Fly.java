@@ -19,6 +19,7 @@ import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.SplashScreen;
 import de.fau.cs.mad.fly.ui.StatisticsScreen;
 import de.fau.cs.mad.fly.ui.UI;
@@ -45,8 +46,9 @@ public class Fly extends Game {
 	private GlobalHighScoreScreen globalHighScoreScreen;
 
 	private GameController gameController;
+	
+	private SkinManager skinManager;
 
-	private Skin skin;
 	private ShapeRenderer shapeRenderer;
 
 	@Override
@@ -54,7 +56,9 @@ public class Fly extends Game {
 		Bullet.init();
 //		FlyEngine.get();
 		Assets.init();
-		createSkin();
+
+		skinManager = new SkinManager("uiskin.json", "OpenSans-Regular.ttf");
+		
 		shapeRenderer = new ShapeRenderer();
 
 		//here start to init the databse staff, by fan
@@ -76,7 +80,7 @@ public class Fly extends Game {
 		disposeScreen(statisticsScreen);
 		disposeScreen(gameScreen);
 		disposeScreen(globalHighScoreScreen);
-		skin.dispose();
+		skinManager.dispose();
 	}
 	
 	public void disposeScreen(Screen screen) {
@@ -86,32 +90,15 @@ public class Fly extends Game {
 		}
 	}
 
-	/**
-	 * Creates the Skin for the UI.
-	 */
-	public void createSkin() {
-		
-		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
-		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
-		fontParameter.size = UI.Buttons.FONT_SIZE;
-		BitmapFont buttonFont = fontGenerator.generateFont(fontParameter);
-
-		Assets.load(Assets.textureAtlas);
-		skin = new Skin(Assets.manager.get(Assets.textureAtlas));
-		skin.add("default-font", buttonFont);
-
-		skin.load(Gdx.files.internal("uiskin.json"));
-	}
-
 	public GameController getGameController() {
 		return gameController;
 	}
 
 	/**
-	 * Getter for the Skin.
+	 * Getter for the Skin which is stored in the skin manager.
 	 */
 	public Skin getSkin() {
-		return skin;
+		return skinManager.getSkin();
 	}
 	
 	/**

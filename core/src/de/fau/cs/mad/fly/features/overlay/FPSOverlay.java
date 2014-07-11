@@ -27,7 +27,7 @@ public class FPSOverlay implements IFeatureRender {
 		skin = game.getSkin();
 		
 		LabelStyle labelStyle = skin.get("red", LabelStyle.class);
-		fpsDescription = new Label("FPS:", labelStyle);
+		fpsDescription = new Label(I18n.t("fps"), labelStyle);
 		fpsDescription.setPosition(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE*4);
         stage.addActor(fpsDescription);
         fpsCounter = new Label("", labelStyle);

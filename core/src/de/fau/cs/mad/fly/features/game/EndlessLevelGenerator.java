@@ -2,26 +2,18 @@ package de.fau.cs.mad.fly.features.game;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 
-import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.game.CollisionDetector;
-import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.res.Level.Gate;
-import de.fau.cs.mad.fly.res.Perspective;
 /**
  * generates an endless random level
  * @author Sebastian
