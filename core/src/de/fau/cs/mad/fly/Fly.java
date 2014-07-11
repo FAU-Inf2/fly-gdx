@@ -3,14 +3,12 @@ package de.fau.cs.mad.fly;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
@@ -22,7 +20,6 @@ import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.SplashScreen;
 import de.fau.cs.mad.fly.ui.StatisticsScreen;
-import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Manages the different game screens.
@@ -186,7 +183,7 @@ public class Fly extends Game {
 	 * Initializes the GameController for the current level
 	 */
 	public void initGameController() {
-		GameController.Builder builder = new GameController.Builder();
+		GameControllerBuilder builder = new GameControllerBuilder();
 		builder.init(this);
 
 		gameController = builder.build();
