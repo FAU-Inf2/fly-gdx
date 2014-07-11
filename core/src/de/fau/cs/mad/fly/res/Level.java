@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.utils.Disposable;
 
 import de.fau.cs.mad.fly.Fly;
@@ -310,6 +313,29 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     
     public Iterable<Gate> remainingGates() {
         return virtualGate;
+    }
+    
+    public void createGateRigidBodies() {
+		CollisionDetector collisionDetector = CollisionDetector.getInstance();
+		
+		Gdx.app.log("Level.createGateRigidBodies", "Setting up collision for level gates.");
+
+		for (Gate g : allGates()) {
+			if (g.display.getRigidBody() == null) {
+				btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
+				g.display.createRigidBody(g.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+			}
+			collisionDetector.addRigidBody(g.display);
+
+			if (g.goal.getRigidBody() == null) {
+				btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
+				g.goal.hide();
+				g.goal.userData = g;
+				g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+				g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+			}
+			collisionDetector.addRigidBody(g.goal);
+		}
     }
     
     /**

@@ -413,24 +413,7 @@ public class GameController implements TimeIsUpListener{
 				}
 			});
 
-			Gdx.app.log("Builder.init", "Setting up collision for level gates.");
-
-			for (Level.Gate g : level.allGates()) {
-				if (g.display.getRigidBody() == null) {
-					btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
-					g.display.createRigidBody(g.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-				}
-				collisionDetector.addRigidBody(g.display);
-
-				if (g.goal.getRigidBody() == null) {
-					btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-					g.goal.hide();
-					g.goal.userData = g;
-					g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-					g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-				}
-				collisionDetector.addRigidBody(g.goal);
-			}
+			level.createGateRigidBodies();
 
 			Gdx.app.log("Builder.init", "Registering EventListeners for level.");
 
@@ -499,6 +482,37 @@ public class GameController implements TimeIsUpListener{
 			}
 			addGameFinishedOverlay();
 		}
+		
+		/**
+		 * Puts the feature in the optional feature lists depending on the interfaces it implements.
+		 * 
+		 * @param feature		The feature to put in the lists.
+		 */
+		private void addFeatureToLists(Object feature) {
+			if(feature instanceof IFeatureLoad) {
+				optionalFeaturesToLoad.add((IFeatureLoad) feature);
+			}
+			
+			if(feature instanceof IFeatureInit) {
+				optionalFeaturesToInit.add((IFeatureInit) feature);
+			}
+			
+			if(feature instanceof IFeatureUpdate) {
+				optionalFeaturesToUpdate.add((IFeatureUpdate) feature);
+			}
+			
+			if(feature instanceof IFeatureRender) {
+				optionalFeaturesToRender.add((IFeatureRender) feature);
+			}
+			
+			if(feature instanceof IFeatureFinish) {
+				optionalFeaturesToFinish.add((IFeatureFinish) feature);
+			}
+			
+			if(feature instanceof IFeatureDispose) {
+				optionalFeaturesToDispose.add((IFeatureDispose) feature);
+			}
+		}
 
 		/**
 		 * Adds a {@link GateIndicator} to the GameController, that is
@@ -508,8 +522,7 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addGateIndicator() {
 			GateIndicator gateIndicator = new GateIndicator();
-			optionalFeaturesToInit.add(gateIndicator);
-			optionalFeaturesToRender.add(gateIndicator);
+			addFeatureToLists(gateIndicator);
 			return this;
 		}
 
@@ -521,11 +534,7 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addAsteroidBelt() {
 			AsteroidBelt asteroidBelt = new AsteroidBelt(10, "asteroid", new Vector3(20.0f, 20.0f, 20.0f));
-			optionalFeaturesToLoad.add(asteroidBelt);
-			optionalFeaturesToInit.add(asteroidBelt);
-			optionalFeaturesToUpdate.add(asteroidBelt);
-			optionalFeaturesToRender.add(asteroidBelt);
-			optionalFeaturesToDispose.add(asteroidBelt);
+			addFeatureToLists(asteroidBelt);
 			return this;
 		}
 
@@ -549,7 +558,7 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addFPSOverlay() {
 			FPSOverlay fpsOverlay = new FPSOverlay(game, stage);
-			optionalFeaturesToRender.add(fpsOverlay);
+			addFeatureToLists(fpsOverlay);
 			return this;
 		}
 
@@ -561,9 +570,7 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addSteeringOverlay() {
 			SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, game.getShapeRenderer(), stage);
-			optionalFeaturesToRender.add(steeringOverlay);
-			optionalFeaturesToDispose.add(steeringOverlay);
-			Gdx.app.log("Builder.addSteeringOverlay", "exit");
+			addFeatureToLists(steeringOverlay);
 			return this;
 		}
 
@@ -575,8 +582,7 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addTouchScreenOverlay() {
 			TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(flightController, game.getShapeRenderer(), stage);
-			optionalFeaturesToRender.add(touchScreenOverlay);
-			optionalFeaturesToDispose.add(touchScreenOverlay);
+			addFeatureToLists(touchScreenOverlay);
 			return this;
 		}
 
@@ -589,8 +595,7 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addGameFinishedOverlay() {
 			GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(game, stage);
-			optionalFeaturesToInit.add(gameFinishedOverlay);
-			optionalFeaturesToFinish.add(gameFinishedOverlay);
+			addFeatureToLists(gameFinishedOverlay);
 			return this;
 		}
 
@@ -602,8 +607,7 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addPauseGameOverlay() {
 			PauseGameOverlay pauseGameOverlay = new PauseGameOverlay(game, stage);
-			optionalFeaturesToInit.add(pauseGameOverlay);
-			optionalFeaturesToDispose.add(pauseGameOverlay);
+			addFeatureToLists(pauseGameOverlay);
 			return this;
 		}
 
@@ -615,9 +619,7 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addSteeringResetOverlay() {
 			SteeringResetOverlay steeringResetOverlay = new SteeringResetOverlay(game.getSkin(), flightController, stage);
-			optionalFeaturesToInit.add(steeringResetOverlay);
-			optionalFeaturesToRender.add(steeringResetOverlay);
-			optionalFeaturesToDispose.add(steeringResetOverlay);
+			addFeatureToLists(steeringResetOverlay);
 			return this;
 		}
 
@@ -629,11 +631,7 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addPlayerPlane() {
 			IPlane plane = player.getPlane();
-			optionalFeaturesToInit.add(plane);
-			optionalFeaturesToLoad.add(plane);
-			optionalFeaturesToUpdate.add(plane);
-			optionalFeaturesToRender.add(plane);
-			optionalFeaturesToDispose.add(plane);
+			addFeatureToLists(plane);
 			return this;
 		}
 		
@@ -645,12 +643,8 @@ public class GameController implements TimeIsUpListener{
 		 */
 		private Builder addSpeedUpgrade() {
 			CollectibleObjects collectibleObjects = new CollectibleObjects("speedUpgrade", "speedUpgrade");
-			optionalFeaturesToLoad.add(collectibleObjects);
-			optionalFeaturesToInit.add(collectibleObjects);
-			optionalFeaturesToRender.add(collectibleObjects);
-			optionalFeaturesToDispose.add(collectibleObjects);
+			addFeatureToLists(collectibleObjects);
 			CollisionDetector.getInstance().getCollisionContactListener().addListener(collectibleObjects);
-			
 			return this;
 		}
 
