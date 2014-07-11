@@ -48,4 +48,8 @@ public class Assets {
 			manager.load(spaceship);
 		manager.finishLoading();
 	}
+	
+	public static void unload(String assetName) {
+		manager.unload(assetName);
+	}
 }

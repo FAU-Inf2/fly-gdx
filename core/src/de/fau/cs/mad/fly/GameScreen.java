@@ -3,6 +3,8 @@ package de.fau.cs.mad.fly;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+
+import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.BackProcessor;
 
@@ -47,6 +49,10 @@ public class GameScreen implements Screen {
 	public void hide() {
 		Gdx.app.log("GameScreen.hide", "hide game screen");
 		game.getGameController().disposeGame();
+
+		String levelPath = PlayerManager.getInstance().getCurrentPlayer().getLastLevel().file.path();
+		Gdx.app.log("Gamescreen.hide", "dispose level: " + levelPath);
+		Assets.unload(levelPath);
 	}
 
 	@Override
