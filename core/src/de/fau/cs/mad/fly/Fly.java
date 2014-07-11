@@ -123,7 +123,7 @@ public class Fly extends Game {
 	 */
 	public void setSplashScreen() {
 		if (splashScreen == null) {
-			splashScreen = new SplashScreen(this);
+			splashScreen = new SplashScreen();
 		}
 		setScreen(splashScreen);
 	}

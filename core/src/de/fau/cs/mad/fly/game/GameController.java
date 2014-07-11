@@ -9,9 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -374,7 +371,7 @@ public class GameController implements TimeIsUpListener{
 
 			stage = new Stage();
 			timeController = new TimeController();
-            TimeUpOverlay timeUpOverlay = new TimeUpOverlay(game, stage);
+            TimeUpOverlay timeUpOverlay = new TimeUpOverlay(game.getSkin(), stage);
             timeController.registerTimeIsUpListener(timeUpOverlay);
             
 			float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
@@ -557,7 +554,7 @@ public class GameController implements TimeIsUpListener{
 		 * @return Builder instance with FPSOverlay
 		 */
 		private Builder addFPSOverlay() {
-			FPSOverlay fpsOverlay = new FPSOverlay(game, stage);
+			FPSOverlay fpsOverlay = new FPSOverlay(game.getSkin(), stage);
 			addFeatureToLists(fpsOverlay);
 			return this;
 		}

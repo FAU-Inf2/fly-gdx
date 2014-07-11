@@ -17,14 +17,12 @@ import de.fau.cs.mad.fly.ui.UI;
  * @author Tobias Zangl
  */
 public class FPSOverlay implements IFeatureRender {
-	
-	private final Skin skin;
+
 	private final Stage stage;
 	private Label fpsDescription, fpsCounter;
 	
-	public FPSOverlay(final Fly game, final Stage stage) {
+	public FPSOverlay(final Skin skin, final Stage stage) {
 		this.stage = stage;
-		skin = game.getSkin();
 		
 		LabelStyle labelStyle = skin.get("red", LabelStyle.class);
 		fpsDescription = new Label(I18n.t("fps"), labelStyle);

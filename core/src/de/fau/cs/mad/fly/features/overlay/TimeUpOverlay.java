@@ -21,14 +21,12 @@ import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.UI;
 
 public class TimeUpOverlay implements TimeIsUpListener {
-    
-    private Fly game;
-    private Skin skin;
+
+    private final Skin skin;
     private Stage stage;
     
-    public TimeUpOverlay(Fly game, Stage stage) {
-        this.game = game;
-        this.skin = game.getSkin();
+    public TimeUpOverlay(final Skin skin, Stage stage) {
+        this.skin = skin;
         this.stage = stage;
     }
     
@@ -42,6 +40,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+            	Fly game = (Fly) Gdx.app.getApplicationListener();
                 game.getGameController().endGame();
                 game.setMainMenuScreen();
             }

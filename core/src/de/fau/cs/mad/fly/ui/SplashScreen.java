@@ -13,18 +13,14 @@ import de.fau.cs.mad.fly.Fly;
  * 
  * @author Tobias Zangl
  */
-public class SplashScreen implements Screen {
-	private final Fly game;
-	
+public class SplashScreen implements Screen {	
 	private final SpriteBatch batch;
 	private Texture splashImg;
 	
 	private long startTime;
 	private final static long splashDuration = 2000;
 	
-	public SplashScreen(final Fly game) {
-		this.game = game;
-		
+	public SplashScreen() {		
 		batch = new SpriteBatch();
 		splashImg = new Texture("Fly.png");
 	}
@@ -39,7 +35,7 @@ public class SplashScreen implements Screen {
 		batch.end();
 		
 		if(TimeUtils.millis() > startTime + splashDuration) {
-			game.setMainMenuScreen();
+			((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
 		}
 	}
 
