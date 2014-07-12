@@ -26,10 +26,12 @@ public class EndlessLevelGenerator {
 	private int currGate = 4;
 	
 	private List<Gate> gates;
+	private List<Gate> predecessors;
 	
 	private Gate lastGate;
+	private Gate lastGatePassed;
 	
-	private float maxAngle = 90;
+	private float maxAngle = 45;
 	private int lastGateId = -1;
 	
 	/**
@@ -40,8 +42,12 @@ public class EndlessLevelGenerator {
 		this.level = level;
 		
 		this.gates = new ArrayList<Gate>();
+		this.predecessors = new ArrayList<Gate>();
 		Collection<GameObject> coll =  new ArrayList<GameObject>();
 		coll.addAll(level.components);
+		
+		lastGatePassed = new Gate(-2);
+		lastGatePassed.successors = new ArrayList<Gate>();
 		
 		level.components = coll;
 		
@@ -49,13 +55,12 @@ public class EndlessLevelGenerator {
 			this.gates.add(g);
 			
 			if(lastGate != null) {
-				Gdx.app.log("myApp", "lastGate:  x: " + lastGate.display.getPosition().x + "| y: " + lastGate.display.getPosition().y + "| z: " + lastGate.display.getPosition().z);
-				Gdx.app.log("myApp", "g:  x: " + g.display.getPosition().x + "| y: " + g.display.getPosition().y + "| z: " + g.display.getPosition().z);
 				lastDirection = g.display.getPosition().cpy().sub(lastGate.display.getPosition().cpy());
 				lastDirection.nor();
 			}
 			lastGate = g;
 		}
+		predecessors.add(lastGate);
 	}
 	
 	public List<Gate> getGates() {
@@ -68,117 +73,132 @@ public class EndlessLevelGenerator {
 	 * @param passed - the gate that was passed and now should be removed from the level
 	 */
 	public void addRandomGate(Gate passed) {
-		
+		Gdx.app.log("myApp", "addRandomGate");
 		if(passed.id != lastGateId) {
-			Gate newGate = generateRandomGate(gates.get(gates.size()-1));
+			//Gate newGate = generateRandomGate(gates.get(gates.size()-1));
+			List<Gate> newGates = generateRandomGates(predecessors);
+			
+			predecessors.clear();
+			for(Gate newGate : newGates) {
+				Gdx.app.log("myApp", "newGate");
+				level.components.add(newGate.display);
+				//level.components.add(newGate.goal);
+				
+				gates.add(newGate);
+				predecessors.add(newGate);
+			}
 			
 			
-			
-			level.components.add(newGate.display);
-			//level.components.add(newGate.goal);
-			
-			gates.add(newGate);
-			
-			for(Gate g : passed.successors) {
+			// for restart (not needed now)
+			/*for(Gate g : passed.successors) {
 				level.setStartGate(g);
+				level.start.viewDirection = g.display.getPosition().cpy();
 				break;
 			}
-			level.start.position = passed.display.getPosition().cpy().sub(lastDirection.cpy().scl(5));
-			//level.start.viewDirection = lastDirection.cpy().scl(-1);
-			level.start.viewDirection = gates.get(1).display.getPosition().cpy();
+			level.start.position = passed.display.getPosition().cpy().sub(lastDirection.cpy().scl(5));*/
+			
 			lastGateId = passed.id;
 			
-			// removing passed gate
-			level.components.remove(passed.display);
-			level.components.remove(passed.goal);
 			
+			// removing passed gate and all possible parallel gates
+			for(Gate successor : lastGatePassed.successors) {
+				level.components.remove(successor.display);
+				level.components.remove(successor.goal);
+				
+				gates.remove(successor);
+				successor.dispose();
+			}
 			
-			passed.dispose();
-			/*CollisionDetector collisionDetector = ((Fly) Gdx.app.getApplicationListener()).getGameController().getCollisionDetector();
-			collisionDetector.removeRigidBody(passed.display);
-			collisionDetector.removeRigidBody(passed.goal);
-			
-			if(passed.display != null) {
-				passed.display.dispose();
-				passed.goal.dispose();
-			}*/
-			
-			gates.remove(passed);
+			lastGatePassed = passed;
 			
 		}
 	}
 	
 	/**
-	 * generates a random Gate depending on the position and direction of the previous gate
+	 * generates a random number of Gates depending on the positions and directions of the previous gates
 	 * 
 	 * @param predecessor - the previous Gate
 	 * @return - the randomly generated Gate
 	 */
-	private Gate generateRandomGate(Gate predecessor) {
-		
+	private List<Gate> generateRandomGates(List<Gate> predecessors) {
+
+		List<Gate> newGates = new ArrayList<Gate>();
+		float rand = 1.f;
 		float distance = MathUtils.random(5) + 5.f;
+		Vector3 newLastDirection = new Vector3(0,0,0);
 		
-		Vector3 newDirection = lastDirection.cpy();
-		newDirection.rotate(new Vector3(0,0,1), MathUtils.random(maxAngle) - maxAngle/2);
-		newDirection.rotate(new Vector3(0,1,0), MathUtils.random(maxAngle) - maxAngle/2);
-		newDirection.rotate(new Vector3(1,0,0), MathUtils.random(maxAngle) - maxAngle/2);
-		newDirection.nor();
-		
-		Gate newGate = new Gate(currGate);
-		
-		// Creating display and goal for the new Gate
-		GameObject display = new GameObject(level.getDependency("torus"));
-		display.modelId = "torus";
-		display.id = "gate" + Integer.toString(currGate); 
-		
-		GameObject goal = new GameObject(level.getDependency("hole"));
-		goal.modelId = "hole";
-		goal.id = "gate" + Integer.toString(currGate) + "hole"; 
-		
-		display.transform = predecessor.display.transform.cpy();
-		
-		display.transform.rotate(lastDirection, newDirection);
-		display.transform.translate(new Vector3(0,1,0).scl(distance));
-		
-		goal.transform = display.transform.cpy();
-		
-		
-		// add display and goal to the new Gate
-		newGate.display = display;
-		newGate.goal = goal;
-		newGate.successors = new ArrayList<Level.Gate>();
-		
-		// add display and goal to the collisionDetector
-		CollisionDetector collisionDetector = CollisionDetector.getInstance();
-		/////////////////////////////////////////////////////////////////////////////////////
-		if (newGate.display.getRigidBody() == null) {
-			//Gdx.app.log("Builder.init", "Display RigidBody == null");
-			btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(newGate.display.modelId, newGate.display);
-			newGate.display.createRigidBody(newGate.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+		while(rand > 0.8f) {
+			Gdx.app.log("myApp", "generateRandomGate");
+			Vector3 newDirection = lastDirection.cpy();
+			newDirection.rotate(new Vector3(0,0,1), MathUtils.random(maxAngle * 2) - maxAngle);
+			newDirection.rotate(new Vector3(0,1,0), MathUtils.random(maxAngle * 2) - maxAngle);
+			newDirection.rotate(new Vector3(1,0,0), MathUtils.random(maxAngle * 2) - maxAngle);
+			newDirection.nor();
+			
+			Gate newGate = new Gate(currGate);
+			
+			// Creating display and goal for the new Gate
+			GameObject display = new GameObject(level.getDependency("torus"));
+			display.modelId = "torus";
+			display.id = "gate" + Integer.toString(currGate); 
+			
+			GameObject goal = new GameObject(level.getDependency("hole"));
+			goal.modelId = "hole";
+			goal.id = "gate" + Integer.toString(currGate) + "hole"; 
+			
+			// TODO: should be average of all predecessors
+			display.transform = predecessors.get(0).display.transform.cpy();
+			
+			display.transform.rotate(lastDirection, newDirection);
+			display.transform.translate(new Vector3(0,1,0).scl(distance));
+			
+			goal.transform = display.transform.cpy();
+			
+			
+			// add display and goal to the new Gate
+			newGate.display = display;
+			newGate.goal = goal;
+			newGate.successors = new ArrayList<Level.Gate>();
+			
+			// add display and goal to the collisionDetector
+			CollisionDetector collisionDetector = CollisionDetector.getInstance();
+			/////////////////////////////////////////////////////////////////////////////////////
+			if (newGate.display.getRigidBody() == null) {
+				//Gdx.app.log("Builder.init", "Display RigidBody == null");
+				btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(newGate.display.modelId, newGate.display);
+				newGate.display.createRigidBody(newGate.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+			}
+			
+			collisionDetector.addRigidBody(newGate.display);
+			/////////////////////////////////////////////////////////////////////////////////////////////
+			if (newGate.goal.getRigidBody() == null) {
+				//Gdx.app.log("Builder.init", "Goal RigidBody == null");
+				btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(newGate.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
+				newGate.goal.hide();
+				newGate.goal.userData = newGate;
+				newGate.goal.createRigidBody(newGate.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+				newGate.goal.getRigidBody().setCollisionFlags(newGate.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+			}
+			collisionDetector.addRigidBody(newGate.goal);
+			
+			//////////////////////////////////////////////////////////
+			
+			//lastDirection = newDirection.cpy();
+			newLastDirection.add(newDirection.cpy());
+			currGate++;
+			
+			newGates.add(newGate);
+			rand = MathUtils.random();
 		}
 		
-		collisionDetector.addRigidBody(newGate.display);
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		if (newGate.goal.getRigidBody() == null) {
-			//Gdx.app.log("Builder.init", "Goal RigidBody == null");
-			btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(newGate.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-			newGate.goal.hide();
-			newGate.goal.userData = newGate;
-			newGate.goal.createRigidBody(newGate.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-			newGate.goal.getRigidBody().setCollisionFlags(newGate.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+		newLastDirection.scl(1.f / newGates.size());
+		lastDirection = newLastDirection.cpy();
+		
+		for(Gate predecessor : predecessors) {
+			predecessor.successors = newGates;
 		}
-		collisionDetector.addRigidBody(newGate.goal);
 		
-		//////////////////////////////////////////////////////////
-		
-		lastDirection = newDirection.cpy();
-		currGate++;
-		
-		Collection<Level.Gate> successors = new ArrayList<Level.Gate>();
-		successors.add(newGate);
-		predecessor.successors = successors;
-		
-		return newGate;
+		return newGates;
 	}
 
 }
