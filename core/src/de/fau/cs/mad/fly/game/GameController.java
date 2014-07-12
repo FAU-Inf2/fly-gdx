@@ -58,8 +58,6 @@ public class GameController implements TimeIsUpListener{
 	protected Level level;
 	private GameState gameState;
 	private TimeController timeController;
-	private float timePerFrame = 0;
-	private int frameCounter = 0;
 
 	/** Use Builder to initiate GameController */
 	protected GameController() {
@@ -237,21 +235,15 @@ public class GameController implements TimeIsUpListener{
 		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
-		
-		frameCounter++;
-		
 		batch.begin(camera);
 		level.render(delta, batch, camera);
 		batch.end();
 		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer
 		// etc., split render up?
-
-		long millis = System.currentTimeMillis();
 		// render optional features
 		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
 			optionalFeature.render(delta);
 		}
-		timePerFrame += System.currentTimeMillis()-millis;
 		
 		stage.draw();
 		
@@ -262,7 +254,6 @@ public class GameController implements TimeIsUpListener{
 	 * features in {@link #optionalFeaturesToFinish} are finished.
 	 */
 	public void endGame() {
-	    Gdx.app.log("Timing", "Time per frame: " + String.valueOf(timePerFrame/frameCounter));
 	    pauseGame();
 		for (IFeatureFinish optionalFeature : optionalFeaturesToFinish) {
 			optionalFeature.finish();
