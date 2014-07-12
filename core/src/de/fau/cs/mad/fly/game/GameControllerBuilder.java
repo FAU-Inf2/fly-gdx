@@ -289,7 +289,7 @@ public class GameControllerBuilder {
 	 * @return Builder instance with SteeringOverlay
 	 */
 	private GameControllerBuilder addSteeringOverlay() {
-		SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, stage);
+		SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, game.getSkin());
 		addFeatureToLists(steeringOverlay);
 		return this;
 	}

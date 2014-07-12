@@ -18,7 +18,6 @@ import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
-import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;

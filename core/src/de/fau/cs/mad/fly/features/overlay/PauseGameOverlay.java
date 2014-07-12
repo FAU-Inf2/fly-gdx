@@ -15,7 +15,7 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.ui.UI;
 
-public class PauseGameOverlay implements IFeatureInit, IFeatureDispose {
+public class PauseGameOverlay implements IFeatureInit {
 	private final Stage stage;
 	private final Table table;
 	
@@ -30,11 +30,6 @@ public class PauseGameOverlay implements IFeatureInit, IFeatureDispose {
 		table.row().expand();
 		table.add(pauseButton).right().pad(UI.Window.BORDER_SPACE);
 		table.row().expand();
-	}
-	
-	@Override
-	public void dispose() {
-		stage.dispose();
 	}
 
 	@Override
