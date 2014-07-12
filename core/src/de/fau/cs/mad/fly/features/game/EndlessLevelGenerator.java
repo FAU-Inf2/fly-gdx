@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
@@ -128,15 +129,9 @@ public class EndlessLevelGenerator {
 		Vector3 newLastDirection = new Vector3(0,0,0);
 		
 		while(rand > 0.8f) {
-			Gdx.app.log("myApp", "generateRandomGate");
-			Vector3 newDirection = lastDirection.cpy();
-			newDirection.rotate(new Vector3(0,0,1), MathUtils.random(maxAngle * 2) - maxAngle);
-			newDirection.rotate(new Vector3(0,1,0), MathUtils.random(maxAngle * 2) - maxAngle);
-			newDirection.rotate(new Vector3(1,0,0), MathUtils.random(maxAngle * 2) - maxAngle);
-			newDirection.nor();
-			
+			//Gdx.app.log("myApp", "generateRandomGate");
 			Gate newGate = new Gate(currGate);
-			
+
 			// Creating display and goal for the new Gate
 			GameObject display = new GameObject(level.getDependency("torus"));
 			display.modelId = "torus";
@@ -145,43 +140,38 @@ public class EndlessLevelGenerator {
 			GameObject goal = new GameObject(level.getDependency("hole"));
 			goal.modelId = "hole";
 			goal.id = "gate" + Integer.toString(currGate) + "hole"; 
+
+			Vector3 newDirection;
 			
-			// TODO: should be average of all predecessors
-			display.transform = predecessors.get(0).display.transform.cpy();
-			
-			display.transform.rotate(lastDirection, newDirection);
-			display.transform.translate(new Vector3(0,1,0).scl(distance));
-			
+			do {
+				newDirection = lastDirection.cpy();
+				newDirection.rotate(new Vector3(0,0,1), MathUtils.random(maxAngle * 2) - maxAngle);
+				newDirection.rotate(new Vector3(0,1,0), MathUtils.random(maxAngle * 2) - maxAngle);
+				newDirection.rotate(new Vector3(1,0,0), MathUtils.random(maxAngle * 2) - maxAngle);
+				newDirection.nor();
+				
+				
+				Matrix4[] t = new Matrix4[predecessors.size()];
+				for(int i = 0; i < predecessors.size(); i++) {
+					t[i] = predecessors.get(i).display.transform.cpy();
+				}
+				
+				//display.transform = predecessors.get(0).display.transform.cpy();
+				display.transform.avg(t);
+				
+				display.transform.rotate(lastDirection, newDirection);
+				display.transform.translate(new Vector3(0,1,0).scl(distance));
+				
+			} while(checkForSpawnCollision(display.getPosition(), newGates, 5.0f));
+
 			goal.transform = display.transform.cpy();
-			
 			
 			// add display and goal to the new Gate
 			newGate.display = display;
 			newGate.goal = goal;
 			newGate.successors = new ArrayList<Level.Gate>();
 			
-			// add display and goal to the collisionDetector
-			CollisionDetector collisionDetector = CollisionDetector.getInstance();
-			/////////////////////////////////////////////////////////////////////////////////////
-			if (newGate.display.getRigidBody() == null) {
-				//Gdx.app.log("Builder.init", "Display RigidBody == null");
-				btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(newGate.display.modelId, newGate.display);
-				newGate.display.createRigidBody(newGate.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-			}
-			
-			collisionDetector.addRigidBody(newGate.display);
-			/////////////////////////////////////////////////////////////////////////////////////////////
-			if (newGate.goal.getRigidBody() == null) {
-				//Gdx.app.log("Builder.init", "Goal RigidBody == null");
-				btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(newGate.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-				newGate.goal.hide();
-				newGate.goal.userData = newGate;
-				newGate.goal.createRigidBody(newGate.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-				newGate.goal.getRigidBody().setCollisionFlags(newGate.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-			}
-			collisionDetector.addRigidBody(newGate.goal);
-			
-			//////////////////////////////////////////////////////////
+			addRigidBody(newGate);
 			
 			//lastDirection = newDirection.cpy();
 			newLastDirection.add(newDirection.cpy());
@@ -199,6 +189,40 @@ public class EndlessLevelGenerator {
 		}
 		
 		return newGates;
+	}
+	
+	private void addRigidBody(Gate newGate) {
+		// add display and goal to the collisionDetector
+		CollisionDetector collisionDetector = CollisionDetector.getInstance();
+		/////////////////////////////////////////////////////////////////////////////////////
+		if (newGate.display.getRigidBody() == null) {
+			//Gdx.app.log("Builder.init", "Display RigidBody == null");
+			btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(newGate.display.modelId, newGate.display);
+			newGate.display.createRigidBody(newGate.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+		}
+		
+		collisionDetector.addRigidBody(newGate.display);
+		/////////////////////////////////////////////////////////////////////////////////////////////
+		if (newGate.goal.getRigidBody() == null) {
+			//Gdx.app.log("Builder.init", "Goal RigidBody == null");
+			btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(newGate.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
+			newGate.goal.hide();
+			newGate.goal.userData = newGate;
+			newGate.goal.createRigidBody(newGate.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+			newGate.goal.getRigidBody().setCollisionFlags(newGate.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+		}
+		collisionDetector.addRigidBody(newGate.goal);
+		
+		//////////////////////////////////////////////////////////
+	}
+	
+	private boolean checkForSpawnCollision(Vector3 position, List<Gate> gates, float distance) {
+		for(Gate gate : gates) {
+			if(position.dst(gate.display.getPosition()) < distance) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
