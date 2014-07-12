@@ -14,16 +14,19 @@ import de.fau.cs.mad.fly.player.Player;
 public class CameraController {
 	
 	private PerspectiveCamera camera;
-	private float cameraOffset;
+	private final float cameraOffset;
+	private final float cameraDistance;
 	private Player player;
 	
 	private float screenHeight = Gdx.graphics.getHeight();
 	private float screenWidth = Gdx.graphics.getWidth();
+	private float[] values;
 	
 	public CameraController(Player player) {
 		this.player = player;
 		
-		this.cameraOffset = 0.2f;
+		this.cameraOffset = 0.5f;
+		this.cameraDistance = 2.0f;
 		
 		setUpCamera();
 	}
@@ -42,16 +45,12 @@ public class CameraController {
 	 */
 	public PerspectiveCamera updateCamera() {
 		
-		float[] values = player.getPlane().getInstance().transform.getValues();
-		Vector3 newDir = new Vector3(values[8], values[9], values[10]).nor();
-		camera.direction.set(newDir).nor();
-		Vector3 newUp = new Vector3(values[4], values[5], values[6]).nor();
-		camera.up.set(newUp);
+		values = player.getPlane().getInstance().transform.getValues();
+		camera.direction.set(values[8], values[9], values[10]).nor();
+		camera.up.set(values[4], values[5], values[6]).nor();
 		
-		Vector3 dir = new Vector3(camera.direction.x, camera.direction.y, camera.direction.z);
-		
-		camera.position.set(player.getPlane().getPosition().cpy().sub(dir.scl(2.f /* * cameraOffset*/)));
-		camera.position.add(camera.up.cpy().scl(0.3f + cameraOffset));
+		camera.position.set(player.getPlane().getPosition().cpy().sub(camera.direction.cpy().scl(cameraDistance)));
+		camera.position.add(camera.up.x*cameraOffset, camera.up.y*cameraOffset, camera.up.z*cameraOffset);
 
 		camera.update();
 		
