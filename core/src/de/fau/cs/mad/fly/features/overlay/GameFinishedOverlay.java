@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
+import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
@@ -102,11 +103,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 public void clicked(InputEvent event, float x, float y) {
                     PlayerManager.getInstance().getCurrentPlayer().nextLevel();
                     Level.Head levelHead = PlayerManager.getInstance().getCurrentPlayer().getLastLevel();
-                    if (levelHead == null) {
-                        Gdx.app.log("Loader.continueLevel", "No last level set for player. Defaulting to first level..");
-                        levelHead = LevelManager.getInstance().getLevelList().get(0);
-                    }
-                    ((Fly) Gdx.app.getApplicationListener()).loadLevel(levelHead);
+                    Loader.loadLevel(levelHead);
                 }
             });
             messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH);
@@ -120,11 +117,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     Level.Head levelHead = PlayerManager.getInstance().getCurrentPlayer().getLastLevel();
-                    if (levelHead == null) {
-                        Gdx.app.log("Loader.continueLevel", "No last level set for player. Defaulting to first level..");
-                        levelHead = LevelManager.getInstance().getLevelList().get(0);
-                    }
-                    ((Fly) Gdx.app.getApplicationListener()).loadLevel(levelHead);
+                    Loader.loadLevel(levelHead);
                 }
             });
             messageTable.row().expand();

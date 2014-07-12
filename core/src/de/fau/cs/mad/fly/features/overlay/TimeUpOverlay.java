@@ -14,8 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
+import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.game.TimeIsUpListener;
-import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.UI;
@@ -51,11 +51,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Level.Head levelHead = PlayerManager.getInstance().getCurrentPlayer().getLastLevel();
-                if (levelHead == null) {
-                    Gdx.app.log("Loader.continueLevel", "No last level set for player. Defaulting to first level..");
-                    levelHead = LevelManager.getInstance().getLevelList().get(0);
-                }
-                ((Fly) Gdx.app.getApplicationListener()).loadLevel(levelHead);
+                Loader.loadLevel(levelHead);
             }
         });
         

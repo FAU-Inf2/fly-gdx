@@ -1,49 +1,22 @@
 package de.fau.cs.mad.fly.game;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.fau.cs.mad.fly.Debug;
-import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
-import de.fau.cs.mad.fly.features.game.AsteroidBelt;
-import de.fau.cs.mad.fly.features.game.CollectibleObjects;
-import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
-import de.fau.cs.mad.fly.features.game.GateIndicator;
-import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
-import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
-import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
-import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
-import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
-import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
-import de.fau.cs.mad.fly.features.overlay.TimeUpOverlay;
-import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
-import de.fau.cs.mad.fly.player.IPlane;
-import de.fau.cs.mad.fly.player.Player;
-import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.settings.SettingManager;
-import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Manages the Player, the Level, the UI, the CameraController and all the

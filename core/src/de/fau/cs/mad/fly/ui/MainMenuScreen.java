@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
+import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.profile.PlayerManager;
@@ -75,9 +76,10 @@ public class MainMenuScreen extends BasicScreen {
 				Level.Head levelHead = player.getLastLevel();
 				if(levelHead == null) {
 					Gdx.app.log("Loader.continueLevel", "No last level set for player. Defaulting to first level..");
-					player.setLastLevel(LevelManager.getInstance().getLevelList().get(0));
+					levelHead = LevelManager.getInstance().getLevelList().get(0);
+					player.setLastLevel(levelHead);
 				}
-				((Fly) Gdx.app.getApplicationListener()).loadLevel(player.getLastLevel());
+				Loader.loadLevel(levelHead);
 			}
 		});
 		

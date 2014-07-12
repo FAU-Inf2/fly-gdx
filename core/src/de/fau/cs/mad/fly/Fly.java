@@ -11,10 +11,8 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
-import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
-import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
@@ -34,7 +32,6 @@ import de.fau.cs.mad.fly.ui.StatisticsScreen;
  */
 public class Fly extends Game {
 	private SplashScreen splashScreen;
-	private LoadingScreen loadingScreen;
 	private LevelChooserScreen levelChooserScreen;
 	private MainMenuScreen mainMenuScreen;
 	private SettingScreen settingScreen;
@@ -70,7 +67,6 @@ public class Fly extends Game {
 		Gdx.app.log("Fly", "dispose game");
 		
 		disposeScreen(splashScreen);
-		disposeScreen(loadingScreen);
 		disposeScreen(levelChooserScreen);
 		disposeScreen(mainMenuScreen);
 		disposeScreen(settingScreen);
@@ -123,27 +119,6 @@ public class Fly extends Game {
 			splashScreen = new SplashScreen();
 		}
 		setScreen(splashScreen);
-	}
-
-	/**
-	 * Switches the current screen to the LoadingScreen
-	 */
-	public void loadLevel(Level.Head head) {
-		if (loadingScreen == null) {
-			loadingScreen = new LoadingScreen();
-		}
-		Loader<Level> loader = Loader.create(Assets.manager, head.file.path(), Level.class);
-		loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
-			@Override
-			public void progressFinished(Level level) {
-				level.reset();
-				PlayerManager.getInstance().getCurrentPlayer().setLevel(level);
-				initGameController();
-				setGameScreen();
-			}
-		});
-		loadingScreen.initiate(loader);
-		setScreen(loadingScreen);
 	}
 
 	/**
