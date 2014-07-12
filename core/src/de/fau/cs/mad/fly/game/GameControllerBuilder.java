@@ -59,6 +59,7 @@ public class GameControllerBuilder {
 	private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
 	private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
 	private FlightController flightController;
+	private CameraController cameraController;
 	private TimeController timeController;
 	private EndlessLevelGenerator generator;
 
@@ -87,6 +88,7 @@ public class GameControllerBuilder {
 		player = PlayerManager.getInstance().getCurrentPlayer();
 		level = player.getLevel();
 		flightController = new FlightController(player);
+		cameraController = new CameraController(player);
 
 		stage = new Stage();
 		timeController = new TimeController();
@@ -381,6 +383,7 @@ public class GameControllerBuilder {
 		gc.optionalFeaturesToDispose = optionalFeaturesToDispose;
 		gc.level = level;
 		gc.flightController = flightController;
+		gc.cameraController = cameraController;
 		gc.batch = new ModelBatch();
 		gc.setTimeController(timeController);
 

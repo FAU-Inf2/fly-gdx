@@ -15,23 +15,22 @@ import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
+/**
+ * controls the flight of the player regarding to user-input 
+ * @author Sebastian
+ *
+ */
 public class FlightController implements InputProcessor {
     
     private boolean useSensorData;
     private boolean useRolling;
-    private boolean useLowPass;
-    private boolean useAveraging = true;
-    
-    private boolean firstPerson = false;
     
     private Player player;
-    private PerspectiveCamera camera;
-    private float cameraOffset;
     
     private float startRoll, startAzimuth;
     
-    private float rollDir = 0.0f;
-    private float azimuthDir = 0.0f;
+    private float rollFactor = 0.0f;
+    private float azimuthFactor = 0.0f;
     
     private int currentEvent = -1;
     
@@ -39,14 +38,10 @@ public class FlightController implements InputProcessor {
     private float screenWidth = Gdx.graphics.getWidth();
     
     // variables for Sensor input smoothing
-    private float alpha = 0.15f;
     private int bufferSize;
     private List<Float> rollInput;
-    private List<Float> rollOutput;
     private List<Float> pitchInput;
-    private List<Float> pitchOutput;
     private List<Float> azimuthInput;
-    private List<Float> azimuthOutput;
     
     float maxRotate = 45.f;
     
@@ -60,31 +55,33 @@ public class FlightController implements InputProcessor {
         Preferences preferences = player.getSettingManager().getPreferences();
         this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
         this.useRolling = preferences.getBoolean(SettingManager.USE_ROLL_STEERING);
-        this.useLowPass = false;
         
         this.bufferSize = 10;
-        this.alpha = 0.15f;
-        this.cameraOffset = 0.2f;
         
-        setUpCamera();
+        resetSteering();
+        resetBuffers();
     }
     
-    public PerspectiveCamera getCamera() {
-        return camera;
-    }
-    
+    /**
+     * sets the parameter that indicates whether the player wants to control the game by sensor or touch-screen
+     * @param useSensorData	      true if sensor-values should be used, false if touch-screen should be used
+     */
     public void setUseSensorData(boolean useSensorData) {
         this.useSensorData = useSensorData;
     }
     
+    /**
+     * sets the parameter that indicates whether the player should roll or fly curves
+     * @param useRolling	true if player should roll instead of flying curves
+     */
     public void setUseRolling(boolean useRolling) {
         this.useRolling = useRolling;
     }
     
-    public void setUseLowPass(boolean useLowPass) {
-        this.useLowPass = useLowPass;
-    }
-    
+    /**
+     * setter for the size of buffers used for averaging the sensorvalues
+     * @param bufferSize
+     */
     public void setBufferSize(int bufferSize) {
         resetBuffers();
         
@@ -92,16 +89,20 @@ public class FlightController implements InputProcessor {
         
     }
     
-    public void setAlpha(float alpha) {
-        this.alpha = alpha;
+    /**
+     * getter for the factor by which the player rotate up/down
+     * @return
+     */
+    public float getRollFactor() {
+        return rollFactor;
     }
     
-    public float getRollDir() {
-        return rollDir;
-    }
-    
-    public float getAzimuthDir() {
-        return azimuthDir;
+    /**
+     * getter for the factor by which the player should fly curves
+     * @return
+     */
+    public float getAzimuthFactor() {
+        return azimuthFactor;
     }
     
     public void resetSteering() {
@@ -116,84 +117,26 @@ public class FlightController implements InputProcessor {
     }
     
     /**
-     * recomputes camera position and rotation
-     * 
-     * @param delta
-     *            - time since last frame
-     * @return
-     */
-    public PerspectiveCamera recomputeCamera(float delta) {
+	 * computes the new position to fly to regarding to the userinput
+	 * @param delta		time since last frame
+	 */
+    public void update(float delta) {
         // rotating the camera according to UserInput
         if (useSensorData) {
             interpretSensorInput();
         }
         
-        if (!firstPerson)
-            player.getPlane().rotate(rollDir, azimuthDir);
-        
-        // rotating the camera
-        rotateCamera(rollDir, azimuthDir);
-        camera.update();
-        
-        if (!firstPerson) {
-            // workaround for computing new Camera-Orientation
-            float[] values = player.getPlane().getInstance().transform.getValues();
-            Vector3 newDir = new Vector3(values[8], values[9], values[10]).nor();
-            camera.direction.set(newDir).nor();
-            Vector3 newUp = new Vector3(values[4], values[5], values[6]).nor();
-            camera.up.set(newUp);
-        }
-        // move the camera (first person flight)
-        Vector3 dir = new Vector3(camera.direction.x, camera.direction.y, camera.direction.z);
-        
-        if (firstPerson) {
-            camera.translate(dir.scl(player.getPlane().getSpeed() * delta));
-        } else {
-            camera.position.set(player.getPlane().getPosition().cpy().sub(dir.scl(2.f /*
-                                                                                       * *
-                                                                                       * cameraOffset
-                                                                                       */)));
-            camera.position.add(camera.up.cpy().scl(0.3f + cameraOffset));
-        }
-        
-        camera.update();
-        
-        return camera;
-    }
-    
-    /**
-     * Sets up the camera for the initial view.
-     */
-    public final void setUpCamera() {
-        
-        // initializing Roll- and Pitch-Values for later comparison
-        resetSteering();
-        
-        // setting up the camera
-        camera = new PerspectiveCamera(67, screenWidth, screenHeight);
-        
-        camera.position.set(player.getLevel().start.position);
-        camera.lookAt(player.getLevel().start.viewDirection);
-        camera.near = 0.1f;
-        // within a sphere it should not happen that not everything of this
-        // sphere is displayed. Therefore use the diameter as far plane
-        camera.far = player.getLevel().radius * 2;
-        camera.update();
-        
-        resetBuffers();
+        player.getPlane().rotate(rollFactor, azimuthFactor);
     }
     
     private void resetBuffers() {
         rollInput = new ArrayList<Float>();
-        rollOutput = new ArrayList<Float>();
         pitchInput = new ArrayList<Float>();
-        pitchOutput = new ArrayList<Float>();
         azimuthInput = new ArrayList<Float>();
-        azimuthOutput = new ArrayList<Float>();
     }
     
     /**
-     * Interprets the rotation of the smartphone and calls camera rotation
+     * Interprets the rotation of the smartphone
      */
     private void interpretSensorInput() {
         float roll = Gdx.input.getRoll();
@@ -215,23 +158,9 @@ public class FlightController implements InputProcessor {
         pitchInput.add(pitch);
         azimuthInput.add(azimuth);
         
-        if (useLowPass) {
-            rollOutput = lowPassFilter(rollInput, rollOutput, alpha);
-            pitchOutput = lowPassFilter(pitchInput, pitchOutput, alpha);
-            azimuthOutput = lowPassFilter(azimuthInput, azimuthOutput, alpha);
-            
-            if (useAveraging) {
-                roll = average(rollOutput);
-                pitch = average(pitchOutput);
-                azimuth = average(azimuthOutput);
-            }
-        } else {
-            if (useAveraging) {
-                roll = average(rollInput);
-                pitch = average(pitchInput);
-                azimuth = average(azimuthInput);
-            }
-        }
+        roll = average(rollInput);
+        pitch = average(pitchInput);
+        azimuth = average(azimuthInput);
         
         azimuth = computeAzimuth(roll, pitch, azimuth);
         
@@ -254,53 +183,32 @@ public class FlightController implements InputProcessor {
             difAzimuth = maxRotate * Math.signum(difAzimuth);
         }
         
-        rollDir = 0.0f;
-        azimuthDir = 0.0f;
+        rollFactor = 0.0f;
+        azimuthFactor = 0.0f;
         
         // camera rotation according to smartphone rotation
-        setAzimuthDir(difAzimuth / -maxRotate);
-        setRollDir(difRoll / -maxRotate);
+        setAzimuthFactor(difAzimuth / -maxRotate);
+        setRollFactor(difRoll / -maxRotate);
     }
     
     /**
      * Setter for the {@link #azimuthDir}. Values greater than the azimuthSpeed
      * of the plane are reduced to the azimuth speed of the plane.
      * 
-     * @param azimuthDir
+     * @param azimuthFactor
      */
-    private void setAzimuthDir(float azimuthDir) {
-        this.azimuthDir = limitSpeed(azimuthDir, player.getPlane().getAzimuthSpeed());
+    private void setAzimuthFactor(float azimuthFactor) {
+        this.azimuthFactor = limitSpeed(azimuthFactor, player.getPlane().getAzimuthSpeed());
     }
     
     /**
      * Setter for the {@link #rollDir}. Values greater than the rollingSpeed of
      * the plane are reduced to the azimuth speed of the plane.
      * 
-     * @param rollDir
+     * @param rollFactor
      */
-    private void setRollDir(float rollDir) {
-        this.rollDir = limitSpeed(rollDir, player.getPlane().getRollingSpeed());
-    }
-    
-    /**
-     * Rotates the camera according to rollDir and pitchDir
-     * 
-     * @param rollDir
-     *            - defines if the camera should be rotated up or down
-     * @param azimuthDir
-     *            - defines if the camera should be rotated left or right
-     */
-    private void rotateCamera(float rollDir, float azimuthDir) {
-        // rotation up or down
-        camera.rotate(camera.direction.cpy().crs(camera.up), 1.0f * rollDir);
-        
-        // rotation around camera.direction/viewDirection (roll)
-        if (useRolling) {
-            camera.rotate(camera.direction, 1.0f * -azimuthDir);
-        } else {
-            // rotation around camera.up (turning left/right)
-            camera.rotate(camera.up, 1.0f * azimuthDir);
-        }
+    private void setRollFactor(float rollFactor) {
+        this.rollFactor = limitSpeed(rollFactor, player.getPlane().getRollingSpeed());
     }
     
     /**
@@ -345,30 +253,6 @@ public class FlightController implements InputProcessor {
         return (float) Math.acos(z.dot(new Vector3(newFront.x, newFront.y, newFront.z)) / (float) Math.sqrt(newFront.x * newFront.x + newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f / (float) Math.PI;
     }
     
-    private List<Float> lowPassFilter(List<Float> input, List<Float> output, float alpha) {
-        float result = 0.0f;
-        
-        /*
-         * if(output.size() <= 2){ return input; }
-         */
-        
-        if (output.size() < bufferSize) {
-            output.add(0.0f);
-            output.set(output.size() - 1, input.get(output.size() - 1));
-        }
-        
-        for (int i = 1; i < output.size(); i++) {
-            result = output.get(i) + alpha * (input.get(i) - output.get(i));
-            output.set(i, result);
-        }
-        
-        if (output.size() > bufferSize) {
-            output.remove(0);
-        }
-        
-        return output;
-    }
-    
     private float average(List<Float> input) {
         float result = 0.0f;
         
@@ -408,14 +292,14 @@ public class FlightController implements InputProcessor {
             float length = (float) Math.sqrt(xDif * xDif + yDif * yDif);
             
             if (length <= radius) {
-                setAzimuthDir(-xDif / screenWidth / 0.075f);
-                setRollDir(-yDif / screenHeight / 0.075f);
+                setAzimuthFactor(-xDif / screenWidth / 0.075f);
+                setRollFactor(-yDif / screenHeight / 0.075f);
             }
             
             currentEvent = pointer;
         } else {
-            setAzimuthDir(0);
-            setRollDir(0);
+            setAzimuthFactor(0);
+            setRollFactor(0);
         }
         
         return false;
@@ -425,8 +309,8 @@ public class FlightController implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         // set camera rotation to 0 when finger is lifted from touchscreen
         if (button == Buttons.LEFT) {
-            rollDir = 0;
-            azimuthDir = 0;
+            rollFactor = 0;
+            azimuthFactor = 0;
         }
         return false;
     }
@@ -441,11 +325,11 @@ public class FlightController implements InputProcessor {
             float length = (float) Math.sqrt(xDif * xDif + yDif * yDif);
             
             if (length <= radius) {
-                setAzimuthDir(-xDif / screenWidth / 0.075f);
-                setRollDir(-yDif / screenHeight / 0.075f);
+            	setAzimuthFactor(-xDif / screenWidth / 0.075f);
+            	setRollFactor(-yDif / screenHeight / 0.075f);
             } else {
-                setAzimuthDir(-xDif / length * radius / screenWidth / 0.075f);
-                setRollDir(-yDif / length * radius / screenHeight / 0.075f);
+            	setAzimuthFactor(-xDif / length * radius / screenWidth / 0.075f);
+            	setRollFactor(-yDif / length * radius / screenHeight / 0.075f);
             }
             
         }

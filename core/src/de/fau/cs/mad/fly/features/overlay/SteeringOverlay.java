@@ -52,8 +52,8 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender, IFeatureDi
 
 	@Override
 	public void render(float delta) {
-		steeringX = -20 * flightController.getAzimuthDir();
-		steeringY = 20 * flightController.getRollDir();
+		steeringX = -20 * flightController.getAzimuthFactor();
+		steeringY = 20 * flightController.getRollFactor();
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 

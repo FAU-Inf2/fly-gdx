@@ -52,6 +52,7 @@ public class GameController implements TimeIsUpListener{
 	protected List<IFeatureDispose> optionalFeaturesToDispose;
 	protected List<IFeatureFinish> optionalFeaturesToFinish;
 	protected FlightController flightController;
+	protected CameraController cameraController;
 	protected PerspectiveCamera camera;
 	protected ModelBatch batch;
 	protected Level level;
@@ -133,7 +134,7 @@ public class GameController implements TimeIsUpListener{
 	 * initialized.
 	 */
 	public void initGame() {
-		camera = flightController.getCamera();
+		camera = cameraController.getCamera();
 
 		// initializes all optional features
 		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
@@ -223,7 +224,8 @@ public class GameController implements TimeIsUpListener{
 		stage.act(delta);
 
 		if (gameState == GameState.RUNNING) {
-			camera = flightController.recomputeCamera(delta);
+			flightController.update(delta);
+			camera = cameraController.updateCamera();
 
 			level.update(delta, camera);
 
