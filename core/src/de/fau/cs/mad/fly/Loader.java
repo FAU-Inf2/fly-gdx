@@ -73,7 +73,7 @@ public class Loader<T> {
         Loader<Level> loader = Loader.create(Assets.manager, head.file.path(), Level.class);
         loadingScreen.initiate(loader);
         ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
-        Assets.load(new AssetDescriptor<Level>(head.file.path(), Level.class));
+        Assets.manager.load(new AssetDescriptor<Level>(head.file.path(), Level.class));
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
             public void progressFinished(Level level) {
