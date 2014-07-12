@@ -154,7 +154,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		if(!useRolling) {
 			rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
 		} else {
-			rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(movingDir, azimuthDir * deltaFactor);
+			rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(movingDir, -azimuthDir * deltaFactor);
 		}
 		instance.getRigidBody().setCenterOfMassTransform(rotationTransform);
 		
