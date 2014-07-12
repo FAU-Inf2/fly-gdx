@@ -12,7 +12,7 @@ import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.settings.AppSettingsManager;
 
-/*
+/**
  * Manage players.
  * 
  * @author Qufang Fan

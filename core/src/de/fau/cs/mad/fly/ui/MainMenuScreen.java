@@ -31,6 +31,12 @@ public class MainMenuScreen extends BasicScreen {
      * Includes buttons for Start, Options, Help, Exit.
      */
     protected void generateContent() {
+        // Search for all levels and put them in a list
+        LevelManager.getInstance().getLevelList();
+        // Create an instance of the PlayerManager, which needs an access to the
+        // database
+        PlayerManager.getInstance();
+        
         Table table = new Table();
         table.defaults().width(viewport.getWorldWidth() / 3);
         table.setFillParent(true);
@@ -73,10 +79,6 @@ public class MainMenuScreen extends BasicScreen {
                 Player player = PlayerManager.getInstance().getCurrentPlayer();
                 Level.Head levelHead = player.getLastLevel();
                 if (levelHead == null) {
-                    // TODO: LevelManager.getInstance().getLevelList() takes
-                    // very long when called first and should therefore be
-                    // called asynchronously
-                    // when the MainMenuScreen is loaded
                     levelHead = LevelManager.getInstance().getLevelList().get(0);
                     player.setLastLevel(levelHead);
                 }

@@ -26,11 +26,11 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender, IFeatureDi
 
 	private float steeringX, steeringY;
 
-	public SteeringOverlay(final FlightController cameraController, final ShapeRenderer shapeRenderer, final Stage stage) {
+	public SteeringOverlay(final FlightController cameraController, final Stage stage) {
 		this.stage = stage;
 		this.flightController = cameraController;
 
-		this.shapeRenderer = shapeRenderer;
+		this.shapeRenderer = new ShapeRenderer();
 
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}

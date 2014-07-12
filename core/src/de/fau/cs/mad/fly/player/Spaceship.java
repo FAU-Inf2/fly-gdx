@@ -56,7 +56,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		this.environment = gameController.getLevel().getEnvironment();
 		this.camera = gameController.getCamera();
 		
-		Assets.loadSpaceship();
+		Assets.load(Assets.spaceship);
 		
 		GameModel model = Assets.manager.get(modelRef, GameModel.class);
 		

@@ -23,8 +23,8 @@ public class TouchScreenOverlay implements IFeatureRender {
 	private final OrthographicCamera camera;
 	private final ShapeRenderer shapeRenderer;
 	
-	public TouchScreenOverlay(final ShapeRenderer shapeRenderer, final Stage stage, Skin skin) {
-		this.shapeRenderer = shapeRenderer;
+	public TouchScreenOverlay(final Stage stage, Skin skin) {
+		this.shapeRenderer = new ShapeRenderer();
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		COLOR_OF_STEERING_CIRCLE = skin.getColor("lightGrey");
 	}

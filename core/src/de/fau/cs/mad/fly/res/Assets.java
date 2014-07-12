@@ -42,12 +42,6 @@ public class Assets {
         manager.finishLoading();
     }
     
-    public static void loadSpaceship() {
-        if (!manager.isLoaded(spaceship.fileName, spaceship.type))
-            manager.load(spaceship);
-        manager.finishLoading();
-    }
-    
     public static void unload(String assetName) {
         if (manager.containsAsset(assetName)) {
             manager.unload(assetName);

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -109,6 +110,7 @@ public class GameControllerBuilder {
 		// engine.load(Gdx.files.internal( "scripts/app/" + s ));
 
 		addPlayerPlane();
+		Bullet.init();
 		CollisionDetector.createCollisionDetector();
 		CollisionDetector collisionDetector = CollisionDetector.getInstance();
 
@@ -287,7 +289,7 @@ public class GameControllerBuilder {
 	 * @return Builder instance with SteeringOverlay
 	 */
 	private GameControllerBuilder addSteeringOverlay() {
-		SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, game.getShapeRenderer(), stage);
+		SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, stage);
 		addFeatureToLists(steeringOverlay);
 		return this;
 	}
@@ -299,7 +301,7 @@ public class GameControllerBuilder {
 	 * @return Builder instance with TouchScreenOverlay
 	 */
 	private GameControllerBuilder addTouchScreenOverlay() {
-		TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(game.getShapeRenderer(), stage, game.getSkin());
+		TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(stage, game.getSkin());
 		addFeatureToLists(touchScreenOverlay);
 		return this;
 	}
