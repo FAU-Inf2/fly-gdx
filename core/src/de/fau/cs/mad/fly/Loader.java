@@ -1,17 +1,16 @@
 package de.fau.cs.mad.fly;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 
-import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Created by Jakob Falke on 18.06.14.
@@ -71,8 +70,9 @@ public class Loader<T> {
      */
     public static void loadLevel(Level.Head head) {
         final LoadingScreen loadingScreen = new LoadingScreen();
-        Gdx.app.log("loadLevel", head.file.path());
         Loader<Level> loader = Loader.create(Assets.manager, head.file.path(), Level.class);
+        loadingScreen.initiate(loader);
+        ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
         Assets.load(new AssetDescriptor<Level>(head.file.path(), Level.class));
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
@@ -84,7 +84,5 @@ public class Loader<T> {
                 loadingScreen.dispose();
             }
         });
-        loadingScreen.initiate(loader);
-        ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
     }
 }

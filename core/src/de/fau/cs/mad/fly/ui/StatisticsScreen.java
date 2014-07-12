@@ -60,7 +60,6 @@ public class StatisticsScreen extends BasicScreen {
 		protected void result(Object o) {
 			if (o instanceof Player) {
 				Player player = (Player) o;
-				player.createSettings();
 				PlayerManager.getInstance().setCurrentPlayer(player);
 				AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.CHOSEN_USER,
 						player.getId());
