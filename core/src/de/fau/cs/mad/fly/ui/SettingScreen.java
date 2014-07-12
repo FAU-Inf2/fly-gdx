@@ -34,7 +34,6 @@ public class SettingScreen extends BasicScreen {
 		Player player = PlayerManager.getInstance().getCurrentPlayer();
 		if (displayPlayer == null || (!displayPlayer.equals(player.getName()))) {
 			settingTable.clear();
-			player.createSettingsUI();
 			settingManager = player.getSettingManager();
 			for (String s : settingManager.getSettingList()) {
 				settingTable.row().expand();

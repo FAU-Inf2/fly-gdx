@@ -8,6 +8,8 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import de.fau.cs.mad.fly.I18n;
+
 /**
  * Stores all the settings in a HashMap
  * 
@@ -16,13 +18,14 @@ import com.badlogic.gdx.Preferences;
 public class SettingManager {
 
 	public static final String USE_TOUCH = "useTouch";
-	public static final String USE_ROLL_STEERING = "useRoll";
+	public static final String USE_ROLL_STEERING = "useRolling";
 	public static final String USE_LOW_PASS_FILTER = "useLowPass";
 	public static final String SHOW_GATE_INDICATOR = "showGateIndicator";
 	public static final String SHOW_PAUSE = "showPause";
 	public static final String SHOW_STEERING = "showSteering";
 	public static final String SHOW_FPS = "showFPS";
 	public static final String FIRST_PERSON = "firstPerson";
+	public static final String SHOW_RESET_STEERING = "showResetSteering";
 
 	public static final String ALPHA_SLIDER = "alphaSlider";
 	public static final String BUFFER_SLIDER = "bufferSlider";
@@ -36,6 +39,7 @@ public class SettingManager {
 		prefs = Gdx.app.getPreferences(preferenceFileName);
 		settingMap = new HashMap<String, ISetting>();
 		settingList = new ArrayList<String>();
+		createSettings();
 	}
 
 	/**
@@ -48,8 +52,9 @@ public class SettingManager {
 	 * @param defaultValue
 	 *            the default value of the Setting
 	 */
-	public void addBooleanSettingUI(String id, String description, boolean defaultValue) {
-		boolean value = defaultValue;
+	public void addBooleanSetting(String id, boolean defaultValue) {
+		String description = I18n.t(id);
+	    boolean value = defaultValue;
 		if (!prefs.contains(id)) {
 			prefs.putBoolean(id, defaultValue);
 			prefs.flush();
@@ -61,22 +66,6 @@ public class SettingManager {
 		settingList.add(id);
 	}
 	
-	/**
-	 * Adds a new Setting without UI staff like a CheckBox and a boolean value.
-	 * 
-	 * @param id
-	 *            the id of the Setting
-	 * @param description
-	 *            the description of the Setting
-	 * @param defaultValue
-	 *            the default value of the Setting
-	 */
-	public void addBooleanSetting(String id, boolean defaultValue) {
-		if (!prefs.contains(id)) {
-			prefs.putBoolean(id, defaultValue);
-			prefs.flush();
-		}		
-	}
 
 	/**
 	 * Adds a new Setting with a Slider and a float value.
@@ -127,4 +116,23 @@ public class SettingManager {
 	public List<String> getSettingList() {
 		return settingList;
 	}
+	
+    /**
+     * Creates the SettingManager and all the Settings.
+     */
+    private void createSettings() {
+        addBooleanSetting(USE_TOUCH, false);
+        addBooleanSetting(USE_ROLL_STEERING, false);
+        // removed for release: addBooleanSetting(USE_LOW_PASS_FILTER, "Use LowPassFilter:", false);
+        // removed for release: addBooleanSetting(SHOW_GATE_INDICATOR, "Show next Gate:", true);
+        addBooleanSetting(SHOW_PAUSE, false);
+        addBooleanSetting(SHOW_STEERING, false);
+        addBooleanSetting(SHOW_FPS, false);
+        addBooleanSetting(SHOW_RESET_STEERING, false);
+        // removed for release: addBooleanSetting(FIRST_PERSON, "First Person", false);
+        
+        // removed for release: addFloatSetting(ALPHA_SLIDER, "Alpha:", 15.0f, 0.0f, 100.0f, 1.0f);
+        // removed for release: addFloatSetting(BUFFER_SLIDER, "Buffersize:", 30.0f, 0.0f, 100.0f, 1.0f);
+        // removed for release: addFloatSetting(CAMERA_OFFSET, "Camera Distance:", 50.0f, 0.0f, 100.0f, 1.0f);
+    }
 }

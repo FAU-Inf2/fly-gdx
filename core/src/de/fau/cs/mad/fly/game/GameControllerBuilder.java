@@ -195,7 +195,7 @@ public class GameControllerBuilder {
 		}
 		if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
 			addTouchScreenOverlay();
-		} else {
+		} else if(preferences.getBoolean(SettingManager.SHOW_RESET_STEERING)){
 			addSteeringResetOverlay();
 		}
 		addGameFinishedOverlay();

@@ -43,7 +43,6 @@ public class PlayerManager {
 			savePlayer(player);
 		}
 
-		player.createSettings();
 		setCurrentPlayer(player);
 		AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.CHOSEN_USER,
 				player.getId());
