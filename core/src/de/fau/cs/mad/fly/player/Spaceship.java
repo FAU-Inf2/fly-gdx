@@ -31,6 +31,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	private Model model;
 	
 	private boolean firstPerson;
+	private boolean useRolling;
 
 	private String modelRef;
 	
@@ -93,6 +94,10 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		instance.transform.rotate(movingDir, azimuthDir);
 		instance.transform.rotate(movingDir.cpy().crs(up), -rollDir);
 	}
+	
+	public void setRolling(boolean rolling) {
+		this.useRolling = rolling;
+	}
 
 	@Override
 	public GameObject getInstance() {
@@ -144,9 +149,13 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	}
 
 	@Override
-	public void rotate(float rollDir, float azimuthDir) {		
+	public void rotate(float rollDir, float azimuthDir, float deltaFactor) {		
 		Matrix4 rotationTransform = instance.getRigidBody().getCenterOfMassTransform();
-		rotationTransform.rotate(movingDir.cpy().crs(up), rollDir).rotate(up, azimuthDir);
+		if(!useRolling) {
+			rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
+		} else {
+			rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(movingDir, azimuthDir * deltaFactor);
+		}
 		instance.getRigidBody().setCenterOfMassTransform(rotationTransform);
 		
 		float[] transformValues = rotationTransform.getValues();

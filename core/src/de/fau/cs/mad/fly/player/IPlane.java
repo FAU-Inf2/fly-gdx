@@ -18,6 +18,12 @@ import de.fau.cs.mad.fly.game.GameObject;
  */
 public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
 	/**
+	 * Setter for the parameter which indicates whether the plane should fly curves or roll
+	 * @param rolling
+	 */
+	public void setRolling(boolean rolling);
+	
+	/**
 	 * Getter for the game object instance.
 	 * @return GameObject
 	 */
@@ -64,5 +70,5 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	 * @param rollDir
 	 * @param azimuthDir
 	 */
-	public void rotate(float rollDir, float azimuthDir);
+	public void rotate(float rollDir, float azimuthDir, float deltaFactor);
 }

@@ -24,6 +24,7 @@ public class FlightController implements InputProcessor {
     
     private boolean useSensorData;
     private boolean useRolling;
+    private boolean inTouch = false;
     
     private Player player;
     
@@ -58,6 +59,8 @@ public class FlightController implements InputProcessor {
         
         this.bufferSize = 10;
         
+        player.getPlane().setRolling(useRolling);
+        
         resetSteering();
         resetBuffers();
     }
@@ -76,6 +79,7 @@ public class FlightController implements InputProcessor {
      */
     public void setUseRolling(boolean useRolling) {
         this.useRolling = useRolling;
+        player.getPlane().setRolling(useRolling);
     }
     
     /**
@@ -126,7 +130,9 @@ public class FlightController implements InputProcessor {
             interpretSensorInput();
         }
         
-        player.getPlane().rotate(rollFactor, azimuthFactor);
+        float deltaFactor = delta * 60.f;
+        
+        player.getPlane().rotate(rollFactor, azimuthFactor, deltaFactor);
     }
     
     private void resetBuffers() {
@@ -294,6 +300,9 @@ public class FlightController implements InputProcessor {
             if (length <= radius) {
                 setAzimuthFactor(-xDif / screenWidth / 0.075f);
                 setRollFactor(-yDif / screenHeight / 0.075f);
+                inTouch = true;
+            } else {
+            	inTouch = false;
             }
             
             currentEvent = pointer;
@@ -327,7 +336,7 @@ public class FlightController implements InputProcessor {
             if (length <= radius) {
             	setAzimuthFactor(-xDif / screenWidth / 0.075f);
             	setRollFactor(-yDif / screenHeight / 0.075f);
-            } else {
+            } else if(inTouch) {
             	setAzimuthFactor(-xDif / length * radius / screenWidth / 0.075f);
             	setRollFactor(-yDif / length * radius / screenHeight / 0.075f);
             }
