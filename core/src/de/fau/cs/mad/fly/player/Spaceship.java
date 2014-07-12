@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
@@ -19,7 +18,6 @@ import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.game.GameObjectMotionState;
 import de.fau.cs.mad.fly.res.Assets;
 
 public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
@@ -29,6 +27,9 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	private PerspectiveCamera camera;
 	private GameObject instance;
 	private Model model;
+	private Matrix4 rotationTransform;
+	private float[] transformValues;
+	private Matrix4 startTransform;
 	
 	private boolean firstPerson;
 	private boolean useRolling;
@@ -138,11 +139,11 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	public void init(GameController game) {
 		camera = gameController.getCamera();
 
-		Matrix4 startTransform = instance.getRigidBody().getCenterOfMassTransform().rotate(new Vector3(0,0,1), camera.direction);
+		startTransform = instance.getRigidBody().getCenterOfMassTransform().rotate(new Vector3(0,0,1), camera.direction);
 		
 		instance.getRigidBody().setCenterOfMassTransform(startTransform);
 		
-		float[] transformValues = startTransform.getValues();
+		transformValues = startTransform.getValues();
 		Vector3 linearMovement = new Vector3(transformValues[8], transformValues[9], transformValues[10]);
 		linearMovement.scl(getSpeed());
 		instance.setMovement(linearMovement);
@@ -150,7 +151,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 
 	@Override
 	public void rotate(float rollDir, float azimuthDir, float deltaFactor) {		
-		Matrix4 rotationTransform = instance.getRigidBody().getCenterOfMassTransform();
+		rotationTransform = instance.getRigidBody().getCenterOfMassTransform();
 		if(!useRolling) {
 			rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
 		} else {

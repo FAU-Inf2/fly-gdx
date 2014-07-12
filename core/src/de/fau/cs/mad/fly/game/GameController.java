@@ -58,6 +58,8 @@ public class GameController implements TimeIsUpListener{
 	protected Level level;
 	private GameState gameState;
 	private TimeController timeController;
+	private float timePerFrame = 0;
+	private int frameCounter = 0;
 
 	/** Use Builder to initiate GameController */
 	protected GameController() {
@@ -197,9 +199,7 @@ public class GameController implements TimeIsUpListener{
 	 * @return true if the game is running, otherwise false.
 	 */
 	public boolean isRunning() {
-		if (gameState == GameState.RUNNING)
-			return true;
-		return false;
+		return gameState == GameState.RUNNING;
 	}
 
 	/**
@@ -208,9 +208,7 @@ public class GameController implements TimeIsUpListener{
 	 * @return true if the game is paused, otherwise false.
 	 */
 	public boolean isPaused() {
-		if (gameState == GameState.PAUSED)
-			return true;
-		return false;
+		return (gameState == GameState.PAUSED);
 	}
 
 	/**
@@ -221,12 +219,11 @@ public class GameController implements TimeIsUpListener{
 	 *            Time after the last call.
 	 */
 	public void renderGame(float delta) {
-		stage.act(delta);
-
+	    stage.act(delta);
+	    
 		if (gameState == GameState.RUNNING) {
-			flightController.update(delta);
+		    flightController.update(delta);
 			camera = cameraController.updateCamera();
-
 			level.update(delta, camera);
 
 			// update optional features if the game is not paused
@@ -237,12 +234,11 @@ public class GameController implements TimeIsUpListener{
 			CollisionDetector.getInstance().perform(delta);
 			timeController.checkTime();
 		}
-
-		long millis = System.currentTimeMillis();
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		Gdx.app.log("render", String.valueOf(System.currentTimeMillis()-millis));
+		
+		
+		frameCounter++;
 		
 		batch.begin(camera);
 		level.render(delta, batch, camera);
@@ -250,12 +246,15 @@ public class GameController implements TimeIsUpListener{
 		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer
 		// etc., split render up?
 
+		long millis = System.currentTimeMillis();
 		// render optional features
 		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
 			optionalFeature.render(delta);
 		}
-
+		timePerFrame += System.currentTimeMillis()-millis;
+		
 		stage.draw();
+		
 	}
 
 	/**
@@ -263,6 +262,7 @@ public class GameController implements TimeIsUpListener{
 	 * features in {@link #optionalFeaturesToFinish} are finished.
 	 */
 	public void endGame() {
+	    Gdx.app.log("Timing", "Time per frame: " + String.valueOf(timePerFrame/frameCounter));
 	    pauseGame();
 		for (IFeatureFinish optionalFeature : optionalFeaturesToFinish) {
 			optionalFeature.finish();

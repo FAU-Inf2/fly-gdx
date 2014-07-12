@@ -23,6 +23,13 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
 	private GameController gameController;
 	private ModelBatch batch;
 	private Environment environment;
+	private Vector3 targetPosition;
+	private Vector3 vectorToTarget;
+	private Vector3 cross;
+	private Vector3 cameraDirection;
+	private Vector3 up;
+	private Vector3 down;
+	private Vector3 gatePositionRelativeToCamera;
 
 	private GameObject arrowModel;
 
@@ -33,22 +40,22 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
 		arrowModel = new GameObject(Assets.manager.get(Assets.arrow));
 		batch = game.getBatch();
 		environment = gameController.getLevel().getEnvironment();
+		vectorToTarget = new Vector3();
+		cross = new Vector3();
 	}
 
 	@Override
 	public void render(float delta) {
 		for (Level.Gate gate : gameController.getLevel().currentGates()) {
-			Vector3 targetPosition = gate.goal.getPosition();
-			Vector3 vectorToTarget = new Vector3();
-			Vector3 cross = new Vector3();
-			Vector3 cameraDirection = gameController.getCamera().direction.cpy();
-			Vector3 up = gameController.getCamera().up.cpy();
-			Vector3 down = up.cpy().scl(-1);
+			targetPosition = gate.goal.getPosition();
+			cameraDirection = gameController.getCamera().direction.cpy();
+			up = gameController.getCamera().up.cpy();
+			down = up.cpy().scl(-1.4f);
 
 			// The arrow should be in the middle of the screen, a little before
 			// the camera, that it is always visible and below the vertical
 			// midpoint.
-			Vector3 gatePositionRelativeToCamera = cameraDirection.scl(3).add(gameController.getCamera().position).add(down.scl(1.4f));
+			gatePositionRelativeToCamera = cameraDirection.scl(3).add(gameController.getCamera().position).add(down);
 
 			vectorToTarget.set(targetPosition.cpy().sub(gameController.getCamera().position).scl(-1).nor());
 
