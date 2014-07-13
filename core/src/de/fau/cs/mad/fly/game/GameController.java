@@ -277,22 +277,13 @@ public class GameController implements TimeIsUpListener{
 		}
 		CollisionDetector.getInstance().dispose();
 
-		clearAndNull(optionalFeaturesToLoad);
-		clearAndNull(optionalFeaturesToInit);
-		clearAndNull(optionalFeaturesToUpdate);
-		clearAndNull(optionalFeaturesToRender);
-		clearAndNull(optionalFeaturesToDraw);
-		clearAndNull(optionalFeaturesToDispose);
-		clearAndNull(optionalFeaturesToFinish);
-	}
-	
-	/**
-	 * Clears a list and changes the reference to null.
-	 * @param list		The list to clear and reference to null.
-	 */
-	public void clearAndNull(List list) {
-		list.clear();
-		list = null;
+		optionalFeaturesToLoad.clear();
+		optionalFeaturesToInit.clear();
+		optionalFeaturesToUpdate.clear();
+		optionalFeaturesToRender.clear();
+		optionalFeaturesToDraw.clear();
+		optionalFeaturesToDispose.clear();
+		optionalFeaturesToFinish.clear();
 	}
 	
 	/**
