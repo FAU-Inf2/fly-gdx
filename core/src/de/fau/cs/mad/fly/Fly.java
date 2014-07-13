@@ -72,8 +72,10 @@ public class Fly extends Game {
         disposeScreen(statisticsScreen);
         disposeScreen(gameScreen);
         disposeScreen(globalHighScoreScreen);
-        skinManager.dispose();
-        skinManager = null;
+        
+        // TODO: enable after the bug with disappearing widgets after restarting the app is fixed
+        //skinManager.dispose();
+        //skinManager = null;
     }
     
     public void disposeScreen(Screen screen) {
