@@ -172,4 +172,9 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	public Vector3 getPosition() {
 		return instance.getPosition();
 	}
+
+	@Override
+	public int getMaxHealth() {
+		return 10;
+	}
 }

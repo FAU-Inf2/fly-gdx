@@ -31,9 +31,9 @@ import de.fau.cs.mad.fly.res.Level;
  * 					- should be stuff like setting values, resetting counter
  * 		update(): 	- called every frame while the game is running and not paused
  * 					- should be stuff like calculating and updating values
- * 		render(): 	- called every frame while the game is running or paused, in pause the delta time is 0
+ * 		render(): 	- called every frame while the game is running or paused
  * 					- should be stuff like rendering models
- *		draw(): 	- called every frame while the game is running or paused, in pause the delta time is 0
+ *		draw(): 	- called every frame while the game is running or paused
  * 					- should be stuff like drawing overlays
  * 		finish(): 	- called at the moment the game is over, still in game screen
  * 					- should be stuff like showing points, saving the highscore
@@ -145,9 +145,8 @@ public class GameController implements TimeIsUpListener{
 			optionalFeature.init(this);
 		}
 
-		//TODO: number of lives should not be defined statically
-		PlayerManager.getInstance().getCurrentPlayer().setLives(10);
-		Debug.setOverlay(0, PlayerManager.getInstance().getCurrentPlayer().getLives());
+		PlayerManager.getInstance().getCurrentPlayer().resetLives();
+		//Debug.setOverlay(0, PlayerManager.getInstance().getCurrentPlayer().getLives());
 
 		startGame();
 		Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
@@ -237,7 +236,7 @@ public class GameController implements TimeIsUpListener{
 			CollisionDetector.getInstance().perform(delta);
 			timeController.checkTime();
 		}
-		
+
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);		
 
 		// render features

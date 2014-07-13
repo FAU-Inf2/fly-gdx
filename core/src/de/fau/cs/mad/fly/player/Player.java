@@ -88,6 +88,13 @@ public class Player {
 	}
 	
 	/**
+	 * Resets the lives of the player to the max health of the currently used plane.
+	 */
+	public void resetLives() {
+		lives = plane.getMaxHealth();
+	}
+	
+	/**
 	 * Getter for the lives of the player.
 	 * @return lives
 	 */
