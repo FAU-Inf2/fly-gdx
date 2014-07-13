@@ -43,6 +43,10 @@ public class FlightController implements InputProcessor {
     private List<Float> pitchInput;
     private List<Float> azimuthInput;
     
+    private float roll;
+    private float pitch;
+    private float azimuth;
+    
     float maxRotate = 45.f;
     
     private float centerX = TouchScreenOverlay.X_POS_OF_STEERING_CIRCLE + screenWidth / 2;
@@ -56,7 +60,7 @@ public class FlightController implements InputProcessor {
         this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
         this.useRolling = preferences.getBoolean(SettingManager.USE_ROLL_STEERING);
         
-        this.bufferSize = 10;
+        this.bufferSize = 8;
         
         player.getPlane().setRolling(useRolling);
         
@@ -129,9 +133,7 @@ public class FlightController implements InputProcessor {
             interpretSensorInput();
         }
         
-        float deltaFactor = delta * 60.f;
-        
-        player.getPlane().rotate(rollFactor, azimuthFactor, deltaFactor);
+        player.getPlane().rotate(rollFactor, azimuthFactor, delta * 60.f);
     }
     
     private void resetBuffers() {
@@ -144,9 +146,9 @@ public class FlightController implements InputProcessor {
      * Interprets the rotation of the smartphone
      */
     private void interpretSensorInput() {
-        float roll = Gdx.input.getRoll();
-        float pitch = Gdx.input.getPitch();
-        float azimuth = Gdx.input.getAzimuth();
+        roll = Gdx.input.getRoll();
+        pitch = Gdx.input.getPitch();
+        azimuth = Gdx.input.getAzimuth();
         
         // Gdx.app.log("myApp", "roll: " + roll + "; pitch: " + pitch +
         // "; azimuth: " + azimuth);

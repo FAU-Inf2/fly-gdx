@@ -315,29 +315,30 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     }
     
     /**
-     * Creates the rigid bodies with convenient parameters for the gate models and the gate goals in the level.
+     * Creates the rigid bodies with convenient parameters for the gate models
+     * and the gate goals in the level.
      */
     public void createGateRigidBodies() {
-		CollisionDetector collisionDetector = CollisionDetector.getInstance();
-		
-		Gdx.app.log("Level.createGateRigidBodies", "Setting up collision for level gates.");
-
-		for (Gate g : allGates()) {
-			if (g.display.getRigidBody() == null) {
-				btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
-				g.display.createRigidBody(g.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-			}
-			collisionDetector.addRigidBody(g.display);
-
-			if (g.goal.getRigidBody() == null) {
-				btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-				g.goal.hide();
-				g.goal.userData = g;
-				g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-				g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-			}
-			collisionDetector.addRigidBody(g.goal);
-		}
+        CollisionDetector collisionDetector = CollisionDetector.getInstance();
+        
+        Gdx.app.log("Level.createGateRigidBodies", "Setting up collision for level gates.");
+        
+        for (Gate g : allGates()) {
+            if (g.display.getRigidBody() == null) {
+                btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
+                g.display.createRigidBody(g.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+            }
+            collisionDetector.addRigidBody(g.display);
+            
+            if (g.goal.getRigidBody() == null) {
+                btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
+                g.goal.hide();
+                g.goal.userData = g;
+                g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+                g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+            }
+            collisionDetector.addRigidBody(g.goal);
+        }
     }
     
     /**
@@ -382,14 +383,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         for (EventListener l : eventListeners)
             l.onRender();
         for (GameObject c : components) {
-            if (c == borderObject) {
-                borderObject.render(batch, camera);
-            } else {
-                // c.updateRigidBody();
-                c.render(batch, environment, camera);
-            }
+            c.render(batch, environment, camera);
         }
-        
     }
     
     /**
