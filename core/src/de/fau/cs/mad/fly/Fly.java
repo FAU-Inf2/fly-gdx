@@ -73,6 +73,7 @@ public class Fly extends Game {
         disposeScreen(gameScreen);
         disposeScreen(globalHighScoreScreen);
         skinManager.dispose();
+        skinManager = null;
     }
     
     public void disposeScreen(Screen screen) {
