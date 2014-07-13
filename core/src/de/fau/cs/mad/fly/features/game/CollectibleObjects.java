@@ -95,12 +95,10 @@ public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureR
 	
 	@Override
 	public void render(float delta) {
-		/*batch.begin(camera);
-		for(GameObject gameObject : collectibleObjects) {
+		/*for(GameObject gameObject : collectibleObjects) {
 			gameObject.updateRigidBody();			
 			gameObject.render(batch, environment, camera);
-		}
-		batch.end();*/
+		}*/
 	}
 
 	@Override

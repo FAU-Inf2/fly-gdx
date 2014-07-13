@@ -216,12 +216,10 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	
 	@Override
 	public void render(float delta) {		
-		batch.begin(camera);
 		for(GameObject asteroid : asteroids) {
 			asteroid.updateRigidBody();
 			asteroid.render(batch, environment, camera);
 		}
-		batch.end();
 	}
 
 	@Override

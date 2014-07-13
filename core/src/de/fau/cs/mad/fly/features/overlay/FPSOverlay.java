@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.IFeatureDraw;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -15,7 +15,7 @@ import de.fau.cs.mad.fly.ui.UI;
  * 
  * @author Tobias Zangl
  */
-public class FPSOverlay implements IFeatureRender {
+public class FPSOverlay implements IFeatureDraw {
 
 	private final Stage stage;
 	private Label fpsDescription, fpsCounter;
@@ -51,7 +51,7 @@ public class FPSOverlay implements IFeatureRender {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void draw(float delta) {
 		fpsCounter.setText(String.valueOf((int)(1.0 / delta)));
 	}
 }

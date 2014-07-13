@@ -15,6 +15,7 @@ import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
+import de.fau.cs.mad.fly.features.IFeatureDraw;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
@@ -57,6 +58,7 @@ public class GameControllerBuilder {
 	private ArrayList<IFeatureInit> optionalFeaturesToInit;
 	private ArrayList<IFeatureUpdate> optionalFeaturesToUpdate;
 	private ArrayList<IFeatureRender> optionalFeaturesToRender;
+	private ArrayList<IFeatureDraw> optionalFeaturesToDraw;
 	private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
 	private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
 	private FlightController flightController;
@@ -82,6 +84,7 @@ public class GameControllerBuilder {
 		optionalFeaturesToInit = new ArrayList<IFeatureInit>();
 		optionalFeaturesToUpdate = new ArrayList<IFeatureUpdate>();
 		optionalFeaturesToRender = new ArrayList<IFeatureRender>();
+		optionalFeaturesToDraw = new ArrayList<IFeatureDraw>();
 		optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
 		optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
 		
@@ -223,6 +226,10 @@ public class GameControllerBuilder {
 		
 		if(feature instanceof IFeatureRender) {
 			optionalFeaturesToRender.add((IFeatureRender) feature);
+		}
+		
+		if(feature instanceof IFeatureDraw) {
+			optionalFeaturesToDraw.add((IFeatureDraw) feature);
 		}
 		
 		if(feature instanceof IFeatureFinish) {
@@ -381,6 +388,7 @@ public class GameControllerBuilder {
 		gc.optionalFeaturesToInit = optionalFeaturesToInit;
 		gc.optionalFeaturesToUpdate = optionalFeaturesToUpdate;
 		gc.optionalFeaturesToRender = optionalFeaturesToRender;
+		gc.optionalFeaturesToDraw = optionalFeaturesToDraw;
 		gc.optionalFeaturesToFinish = optionalFeaturesToFinish;
 		gc.optionalFeaturesToDispose = optionalFeaturesToDispose;
 		gc.level = level;

@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.features.IFeatureDispose;
+import de.fau.cs.mad.fly.features.IFeatureDraw;
 import de.fau.cs.mad.fly.features.IFeatureInit;
-import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.game.FlightController;
 import de.fau.cs.mad.fly.game.GameController;
 
@@ -19,7 +19,7 @@ import de.fau.cs.mad.fly.game.GameController;
  * 
  * @author Tobias Zangl
  */
-public class SteeringOverlay implements IFeatureInit, IFeatureRender, IFeatureDispose {
+public class SteeringOverlay implements IFeatureInit, IFeatureDraw, IFeatureDispose {
 
 	private final FlightController flightController;
 
@@ -52,7 +52,7 @@ public class SteeringOverlay implements IFeatureInit, IFeatureRender, IFeatureDi
 	}
 
 	@Override
-	public void render(float delta) {
+	public void draw(float delta) {
 		steeringX = -20 * flightController.getAzimuthFactor();
 		steeringY = 20 * flightController.getRollFactor();
 

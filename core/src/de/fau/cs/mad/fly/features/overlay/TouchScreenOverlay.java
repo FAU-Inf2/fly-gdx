@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import de.fau.cs.mad.fly.features.IFeatureRender;
+import de.fau.cs.mad.fly.features.IFeatureDraw;
 
-public class TouchScreenOverlay implements IFeatureRender {
+public class TouchScreenOverlay implements IFeatureDraw {
 	
     public static final int X_POS_OF_STEERING_CIRCLE = (int) (Gdx.graphics.getWidth()/3.2);
     
@@ -30,7 +30,7 @@ public class TouchScreenOverlay implements IFeatureRender {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void draw(float delta) {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(COLOR_OF_STEERING_CIRCLE);
