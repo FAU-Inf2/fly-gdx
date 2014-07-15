@@ -7,8 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
-import de.fau.cs.mad.fly.profile.LevelManager;
-import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;

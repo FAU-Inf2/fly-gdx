@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.player.Player;
 
