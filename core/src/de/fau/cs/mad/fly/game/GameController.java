@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
+import de.fau.cs.mad.fly.features.IFeatureDraw;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
@@ -30,8 +31,10 @@ import de.fau.cs.mad.fly.res.Level;
  * 					- should be stuff like setting values, resetting counter
  * 		update(): 	- called every frame while the game is running and not paused
  * 					- should be stuff like calculating and updating values
- * 		render(): 	- called every frame while the game is running or paused, in pause the delta time is 0
- * 					- should be stuff like rendering models, showing overlays
+ * 		render(): 	- called every frame while the game is running or paused
+ * 					- should be stuff like rendering models
+ *		draw(): 	- called every frame while the game is running or paused
+ * 					- should be stuff like drawing overlays
  * 		finish(): 	- called at the moment the game is over, still in game screen
  * 					- should be stuff like showing points, saving the highscore
  * 		dispose(): 	- called when the game screen is left
@@ -49,6 +52,7 @@ public class GameController implements TimeIsUpListener{
 	protected List<IFeatureInit> optionalFeaturesToInit;
 	protected List<IFeatureUpdate> optionalFeaturesToUpdate;
 	protected List<IFeatureRender> optionalFeaturesToRender;
+	protected List<IFeatureDraw> optionalFeaturesToDraw;
 	protected List<IFeatureDispose> optionalFeaturesToDispose;
 	protected List<IFeatureFinish> optionalFeaturesToFinish;
 	protected FlightController flightController;
@@ -121,7 +125,7 @@ public class GameController implements TimeIsUpListener{
 	 * {@link #optionalFeaturesToLoad} are loaded.
 	 */
 	public void loadGame() {
-		// loads all optional features
+		// load features
 		for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
 			optionalFeature.load(this);
 		}
@@ -136,14 +140,13 @@ public class GameController implements TimeIsUpListener{
 	public void initGame() {
 		camera = cameraController.getCamera();
 
-		// initializes all optional features
+		// initialize features
 		for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
 			optionalFeature.init(this);
 		}
 
-		//TODO: number of lifes should not be defined statically
-		PlayerManager.getInstance().getCurrentPlayer().setLives(10);
-		Debug.setOverlay(0, PlayerManager.getInstance().getCurrentPlayer().getLives());
+		PlayerManager.getInstance().getCurrentPlayer().resetLives();
+		//Debug.setOverlay(0, PlayerManager.getInstance().getCurrentPlayer().getLives());
 
 		startGame();
 		Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
@@ -220,11 +223,12 @@ public class GameController implements TimeIsUpListener{
 	    stage.act(delta);
 	    
 		if (gameState == GameState.RUNNING) {
+			// update features if the game is not paused
+			
 		    flightController.update(delta);
 			camera = cameraController.updateCamera();
 			level.update(delta, camera);
 
-			// update optional features if the game is not paused
 			for (IFeatureUpdate optionalFeature : optionalFeaturesToUpdate) {
 				optionalFeature.update(delta);
 			}
@@ -232,21 +236,22 @@ public class GameController implements TimeIsUpListener{
 			CollisionDetector.getInstance().perform(delta);
 			timeController.checkTime();
 		}
-		
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
+
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);		
+
+		// render features
 		batch.begin(camera);
 		level.render(delta, batch, camera);
-		batch.end();
-		// TODO: care about begin()/end() from Batch / Stage / ShapeRenderer
-		// etc., split render up?
-		// render optional features
 		for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
 			optionalFeature.render(delta);
 		}
+		batch.end();
 		
+		// draw features
+		for (IFeatureDraw optionalFeature : optionalFeaturesToDraw) {
+			optionalFeature.draw(delta);
+		}
 		stage.draw();
-		
 	}
 
 	/**
@@ -265,21 +270,36 @@ public class GameController implements TimeIsUpListener{
 	 * features in {@link #optionalFeaturesToDispose} are disposed.
 	 */
 	public void disposeGame() {
+		// dispose features		
 		for (IFeatureDispose optionalFeature : optionalFeaturesToDispose) {
 			//Gdx.app.log("GameController.disposeGame", "dispose: " + optionalFeature.getClass().getSimpleName());
 			optionalFeature.dispose();
 		}
 		CollisionDetector.getInstance().dispose();
+
+		optionalFeaturesToLoad.clear();
+		optionalFeaturesToInit.clear();
 		optionalFeaturesToUpdate.clear();
 		optionalFeaturesToRender.clear();
+		optionalFeaturesToDraw.clear();
+		optionalFeaturesToDispose.clear();
+		optionalFeaturesToFinish.clear();
 	}
 	
+	/**
+	 * Setter for the time controller.
+	 * @param timeController		The time controller to use.
+	 */
 	public void setTimeController(TimeController timeController) {
 		this.timeController = timeController;
 		timeController.registerTimeIsUpListener(this);
 
 	}
 	
+	/**
+	 * Getter for the time controller.
+	 * @return {@link #timeController}
+	 */
 	public TimeController getTimeController() {
 		return timeController;
 	}

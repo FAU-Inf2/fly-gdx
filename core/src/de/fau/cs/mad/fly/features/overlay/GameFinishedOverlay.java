@@ -80,7 +80,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             infoLabel = new Label(I18n.t("level.congratulations"), skin);
             messageTable.add(infoLabel);
             Score newScore = gameController.getLevel().getScore();
-            ScoreManager.getInstance().saveBestScore(newScore);
             String scoreString = I18n.t("newScore") + newScore.getTotalScore();
             final Label scoreLabel = new Label(scoreString, skin);
             messageTable.add(scoreLabel).pad(15f);

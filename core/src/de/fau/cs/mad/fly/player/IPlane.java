@@ -36,6 +36,12 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	public Model getModel();
 	
 	/**
+	 * Getter for the maximum health of the spaceship.
+	 * @return maximum health of the spaceship.
+	 */
+	public int getMaxHealth();
+
+	/**
 	 * Setter for the speed of the plane.
 	 */
 	public void setSpeed(float speed);

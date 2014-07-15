@@ -43,7 +43,7 @@ public class Fly extends Game {
     private SkinManager skinManager;
     
     @Override
-    public void create() {
+    public void create() {    	
         // FlyEngine.get();
         Assets.init();
         skinManager = new SkinManager("uiskin.json");
@@ -51,6 +51,15 @@ public class Fly extends Game {
         // disabled for debugging reasons
         // setSplashScreen();
     }
+    
+	@Override
+	public void resume () {
+		super.resume();
+		
+		if(skinManager == null) {
+			skinManager = new SkinManager("uiskin.json");
+		}
+	}
     
     @Override
     public void dispose() {
@@ -63,7 +72,10 @@ public class Fly extends Game {
         disposeScreen(statisticsScreen);
         disposeScreen(gameScreen);
         disposeScreen(globalHighScoreScreen);
+        
+        // TODO: enable after the bug with disappearing widgets after restarting the app is fixed
         //skinManager.dispose();
+        //skinManager = null;
     }
     
     public void disposeScreen(Screen screen) {
