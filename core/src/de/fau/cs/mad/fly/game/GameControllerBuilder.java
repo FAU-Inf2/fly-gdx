@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
@@ -39,6 +40,7 @@ import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
+import de.fau.cs.mad.fly.ui.BackProcessor;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -396,6 +398,7 @@ public class GameControllerBuilder {
 		gc.cameraController = cameraController;
 		gc.batch = new ModelBatch();
 		gc.setTimeController(timeController);
+		gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
 
 		level.addEventListener(new Level.EventAdapter() {
 			@Override

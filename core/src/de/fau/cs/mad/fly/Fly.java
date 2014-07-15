@@ -121,9 +121,8 @@ public class Fly extends Game {
      */
     public void setGameScreen() {
         if (gameScreen == null) {
-            gameScreen = new GameScreen(getGameController());
+            gameScreen = new GameScreen(this);
         }
-        Gdx.app.log("Fly.setGameScreen", "Just a little bit more...");
         setScreen(gameScreen);
     }
     

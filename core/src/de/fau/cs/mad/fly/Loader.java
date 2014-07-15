@@ -83,6 +83,7 @@ public class Loader<T> {
                 PlayerManager.getInstance().getCurrentPlayer().setLevel(level);
                 ((Fly) Gdx.app.getApplicationListener()).initGameController();
                 ((Fly) Gdx.app.getApplicationListener()).setGameScreen();
+                ((Fly) Gdx.app.getApplicationListener()).getGameController().initGame();
                 loadingScreen.dispose();
             }
         });

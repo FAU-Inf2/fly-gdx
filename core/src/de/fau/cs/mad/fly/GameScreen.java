@@ -1,13 +1,11 @@
 package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
-import de.fau.cs.mad.fly.ui.BackProcessor;
 
 /**
  * Provides a screen for the game itself.
@@ -15,12 +13,12 @@ import de.fau.cs.mad.fly.ui.BackProcessor;
  * @author Tobias Zangl
  */
 public class GameScreen implements Screen {
-    private final GameController gameController;
+    private GameController gameController;
+    private final Fly game;
     
-    private InputMultiplexer inputProcessor;
-    
-    public GameScreen(final GameController game) {
-        this.gameController = game;
+    public GameScreen(final Fly game) {
+        this.gameController = game.getGameController();
+        this.game = game;
     }
     
     @Override
@@ -38,19 +36,11 @@ public class GameScreen implements Screen {
         // delegate all inputs to the #inputProcessor
         // TODO: put stage in GameScreen and new InputMultiplexer back to the
         // constructor
-        Gdx.app.log("GameScreen.show", "Setting up Multiplexer!");
-        inputProcessor = new InputMultiplexer(gameController.getStage(), gameController.getCameraController(), new BackProcessor());
-        Gdx.input.setCatchBackKey(true);
-        Gdx.input.setInputProcessor(inputProcessor);
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        
-        Gdx.app.log("GameScreen.show", "Now, init your game!");
-        gameController.initGame();
+        this.gameController = game.getGameController();
     }
     
     @Override
     public void hide() {
-        Gdx.app.log("GameScreen.hide", "hide game screen");
         gameController.disposeGame();
         
         // TODO: check if the following statement causes a reproduceable
