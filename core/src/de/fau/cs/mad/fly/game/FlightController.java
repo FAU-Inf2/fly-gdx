@@ -53,6 +53,14 @@ public class FlightController implements InputProcessor {
     private float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;
     private float radius = TouchScreenOverlay.RADIUS_OF_STEERING_CIRCLE;
     
+    private Matrix3 mX;
+    private Matrix3 mY;
+    private Matrix3 mZ;
+    
+    private Vector3 newFront;
+    
+    private static final Vector3 z = new Vector3(0.f, 0.f, 1.f);
+    
     public FlightController(Player player) {
         this.player = player;
         
@@ -63,6 +71,12 @@ public class FlightController implements InputProcessor {
         this.bufferSize = 8;
         
         player.getPlane().setRolling(useRolling);
+        
+        mX = new Matrix3();
+        mY = new Matrix3();
+        mZ = new Matrix3();
+        
+        newFront = new Vector3();
         
         resetSteering();
         resetBuffers();
@@ -132,7 +146,6 @@ public class FlightController implements InputProcessor {
         if (useSensorData) {
             interpretSensorInput();
         }
-        
         player.getPlane().rotate(rollFactor, azimuthFactor, delta * 60.f);
     }
     
@@ -227,9 +240,9 @@ public class FlightController implements InputProcessor {
      * @return
      */
     private float computeAzimuth(float roll, float pitch, float azimuth) {
-        Matrix3 mX = new Matrix3();
-        Matrix3 mY = new Matrix3();
-        Matrix3 mZ = new Matrix3();
+        mX.idt();
+        mY.idt();
+        mZ.idt();
         
         roll = roll * (float) Math.PI / 180.f;
         pitch = pitch * (float) Math.PI / 180.f;
@@ -251,19 +264,15 @@ public class FlightController implements InputProcessor {
         float[] values3 = { cos, sin, 0.f, -sin, cos, 0.f, 0.f, 0.f, 1.f };
         mZ.set(values3);
         
-        Matrix3 mat = mZ.mul(mY.mul(mX));
+        newFront.set(0.f, 1.f, 0.f).mul(mZ.mul(mY.mul(mX)));
         
-        Vector3 newFront = new Vector3(0.f, 1.f, 0.f).mul(mat);
-        
-        Vector3 z = new Vector3(0.f, 0.f, 1.f);
-        
-        return (float) Math.acos(z.dot(new Vector3(newFront.x, newFront.y, newFront.z)) / (float) Math.sqrt(newFront.x * newFront.x + newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f / (float) Math.PI;
+        return (float) Math.acos(z.dot(newFront.x, newFront.y, newFront.z) / (float) Math.sqrt(newFront.x * newFront.x + newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f / (float) Math.PI;
     }
     
     private float average(List<Float> input) {
         float result = 0.0f;
-        
-        for (int i = 0; i < input.size(); i++) {
+        int size = input.size();
+        for (int i = 0; i < size; i++) {
             result += input.get(i);
         }
         

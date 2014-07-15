@@ -31,13 +31,13 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	private float[] transformValues;
 	private Matrix4 startTransform;
 	
-	private boolean firstPerson;
 	private boolean useRolling;
 
 	private String modelRef;
 	
 	private Vector3 movingDir = new Vector3(0,0,1);
-	private Vector3 up =  new Vector3(0,1,0);
+	private final Vector3 up =  new Vector3(0,1,0);
+	Vector3 linearMovement; 
 	
 	private float lastRoll = 0.f;
 	private float lastAzimuth = 0.f;
@@ -56,6 +56,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		this.batch = gameController.getBatch();
 		this.environment = gameController.getLevel().getEnvironment();
 		this.camera = gameController.getCamera();
+		linearMovement = new Vector3();
 		
 		Assets.load(Assets.spaceship);
 		
@@ -144,8 +145,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		instance.getRigidBody().setCenterOfMassTransform(startTransform);
 		
 		transformValues = startTransform.getValues();
-		Vector3 linearMovement = new Vector3(transformValues[8], transformValues[9], transformValues[10]);
-		linearMovement.scl(getSpeed());
+		linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(speed);
 		instance.setMovement(linearMovement);
 	}
 
@@ -160,8 +160,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		instance.getRigidBody().setCenterOfMassTransform(rotationTransform);
 		
 		float[] transformValues = rotationTransform.getValues();
-		Vector3 linearMovement = new Vector3(transformValues[8], transformValues[9], transformValues[10]);
-		linearMovement.scl(getSpeed());
+		linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
 		instance.setMovement(linearMovement);
 
 		lastRoll = rollDir;

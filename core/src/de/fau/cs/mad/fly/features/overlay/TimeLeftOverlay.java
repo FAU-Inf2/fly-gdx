@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -22,9 +21,7 @@ public class TimeLeftOverlay implements IntegerTimeListener {
 
 	private Label timeCounter;
 
-	public TimeLeftOverlay(Skin skin, final Stage stage) {
-		LabelStyle labelStyle = skin.get("default", LabelStyle.class);
-	    
+	public TimeLeftOverlay(final Skin skin, final Stage stage) {	    
 	    Table outerTable = new Table();
         outerTable.setFillParent(true);
         
@@ -35,7 +32,7 @@ public class TimeLeftOverlay implements IntegerTimeListener {
         TextureRegion textureRegion = new TextureRegion(skin.getRegion("watch"));
         Image watchIcon = new Image(textureRegion);
         
-        timeCounter = new Label("", labelStyle);
+        timeCounter = new Label("", skin);
         innerTable.add(watchIcon);
         innerTable.add(timeCounter).pad(0, 50, 0, 0);
         innerTable.row().expand();
