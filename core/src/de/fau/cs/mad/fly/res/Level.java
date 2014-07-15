@@ -157,6 +157,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     // public final Collection<String> scripts;
     
     private GameObject borderObject = null;
+    private int CollisionTime = 0;
+    private int leftCollisionTime = 0;
     
     // private float initTime = 0;
     private float leftTime = 0;
@@ -176,9 +178,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         }
         return count;
     }
-    
-    private int CollisionTime = 0;
-    private int leftCollisionTime = 0;
+
     
     public int getLeftCollisionTime() {
         return leftCollisionTime;

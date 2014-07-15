@@ -1,5 +1,8 @@
 package de.fau.cs.mad.fly.features.game;
 
+import java.util.Collection;
+
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
@@ -10,6 +13,7 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.res.Level.Gate;
 
 /**
  * This class implements the function to show in the game small arrows that
@@ -46,18 +50,20 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
 
 	@Override
 	public void render(float delta) {
+	    final Camera camera = gameController.getCamera();
+	    final Collection<Gate> gates = gameController.getLevel().currentGates();
 		for (Level.Gate gate : gameController.getLevel().currentGates()) {
 			targetPosition = gate.goal.getPosition();
-			cameraDirection = gameController.getCamera().direction.cpy();
-			up = gameController.getCamera().up.cpy();
+			cameraDirection = camera.direction.cpy();
+			up = camera.up.cpy();
 			down = up.cpy().scl(-1.4f);
 
 			// The arrow should be in the middle of the screen, a little before
 			// the camera, that it is always visible and below the vertical
 			// midpoint.
-			gatePositionRelativeToCamera = cameraDirection.scl(3).add(gameController.getCamera().position).add(down);
+			gatePositionRelativeToCamera = cameraDirection.scl(3).add(camera.position).add(down);
 
-			vectorToTarget.set(targetPosition.cpy().sub(gameController.getCamera().position).scl(-1).nor());
+			vectorToTarget.set(targetPosition.cpy().sub(camera.position).scl(-1).nor());
 
 			// calculate orthogonal up vector
 			up.crs(vectorToTarget).crs(vectorToTarget).nor();
