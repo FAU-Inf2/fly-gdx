@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 
+import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.BackProcessor;
@@ -14,22 +15,22 @@ import de.fau.cs.mad.fly.ui.BackProcessor;
  * @author Tobias Zangl
  */
 public class GameScreen implements Screen {
-    private final Fly game;
+    private final GameController gameController;
     
     private InputMultiplexer inputProcessor;
     
-    public GameScreen(final Fly game) {
-        this.game = game;
+    public GameScreen(final GameController game) {
+        this.gameController = game;
     }
     
     @Override
     public void render(float delta) {
-        game.getGameController().renderGame(delta);
+        gameController.renderGame(delta);
     }
     
     @Override
     public void resize(int width, int height) {
-        game.getGameController().getStage().getViewport().update(width, height, true);
+        gameController.getStage().getViewport().update(width, height, true);
     }
     
     @Override
@@ -38,18 +39,19 @@ public class GameScreen implements Screen {
         // TODO: put stage in GameScreen and new InputMultiplexer back to the
         // constructor
         Gdx.app.log("GameScreen.show", "Setting up Multiplexer!");
-        inputProcessor = new InputMultiplexer(game.getGameController().getStage(), game.getGameController().getCameraController(), new BackProcessor());
+        inputProcessor = new InputMultiplexer(gameController.getStage(), gameController.getCameraController(), new BackProcessor());
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(inputProcessor);
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         
         Gdx.app.log("GameScreen.show", "Now, init your game!");
-        game.getGameController().initGame();
+        gameController.initGame();
     }
     
     @Override
     public void hide() {
         Gdx.app.log("GameScreen.hide", "hide game screen");
-        game.getGameController().disposeGame();
+        gameController.disposeGame();
         
         // TODO: check if the following statement causes a reproduceable
         // Null-Pointer. I got it once but could not reproduce it
