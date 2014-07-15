@@ -353,7 +353,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     }
     
     /**
-     * Update the level.
+     * Update the level. Checks whether the level is finished or not.
      * 
      * @param delta
      *            time after the last call.
@@ -362,8 +362,10 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
      */
     public void update(float delta, PerspectiveCamera camera) {
         borderObject.transform.setToTranslation(camera.position);
-        for (EventListener l : eventListeners)
-            l.onUpdate();
+        final int numberOfEventListeners = eventListeners.size();
+        for (int i = 0; i < numberOfEventListeners; i++) {
+            eventListeners.get(i).onUpdate();
+        }
         if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
             levelFinished();
         }
@@ -380,8 +382,12 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
      *            that displays the level.
      */
     public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
-        for (EventListener l : eventListeners)
-            l.onRender();
+        final int numberOfEventListeners = eventListeners.size();
+        for (int i = 0; i < numberOfEventListeners; i++) {
+            eventListeners.get(i).onRender();
+        }
+        // TODO: use some Array like structure for components so that it can be
+        // used in a for (i...) loop, due to performance reasons
         for (GameObject c : components) {
             c.render(batch, environment, camera);
         }
