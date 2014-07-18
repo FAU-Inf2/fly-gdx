@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureDraw;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
@@ -19,25 +18,34 @@ import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.ui.BackProcessor;
 
 /**
  * Manages the Player, the Level, the UI, the CameraController and all the
  * optional Features and calls the load(), init(), render(), finish() and
  * dispose() methods of those.
  * <p>
- * Optional Feature Interfaces: load(): - called before the game starts while
- * the loading screen is shown - should be stuff like loading models, creating
- * instances, which takes a while init(): - called the moment the game starts
- * after switching to the game screen - should be stuff like setting values,
- * resetting counter update(): - called every frame while the game is running
- * and not paused - should be stuff like calculating and updating values
+ * Optional Feature Interfaces:
+ * <p>
+ * load(): - called before the game starts while the loading screen is shown -
+ * should be stuff like loading models, creating instances, which takes a while
+ * <p>
+ * init(): - called the moment the game starts after switching to the game
+ * screen - should be stuff like setting values, resetting counter
+ * <p>
+ * update(): - called every frame while the game is running and not paused -
+ * should be stuff like calculating and updating values
+ * <p>
  * render(): - called every frame while the game is running or paused - should
- * be stuff like rendering models draw(): - called every frame while the game is
- * running or paused - should be stuff like drawing overlays finish(): - called
- * at the moment the game is over, still in game screen - should be stuff like
- * showing points, saving the highscore dispose(): - called when the game screen
- * is left - should be stuff like disposing models
+ * be stuff like rendering models
+ * <p>
+ * draw(): - called every frame while the game is running or paused - should be
+ * stuff like drawing overlays
+ * <p>
+ * finish(): - called at the moment the game is over, still in game screen -
+ * should be stuff like showing points, saving the highscore
+ * <p>
+ * dispose(): - called when the game screen is left - should be stuff like
+ * disposing models
  * 
  * @author Lukas Hahmann
  */
@@ -184,7 +192,6 @@ public class GameController implements TimeIsUpListener {
      * Sets the game state to finished and ends the game.
      */
     public void finishGame() {
-        System.out.println("FINISHED");
         gameState = GameState.FINISHED;
         endGame();
     }

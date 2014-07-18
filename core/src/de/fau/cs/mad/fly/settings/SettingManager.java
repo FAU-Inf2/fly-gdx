@@ -26,6 +26,7 @@ public class SettingManager {
 	public static final String SHOW_FPS = "showFPS";
 	public static final String FIRST_PERSON = "firstPerson";
 	public static final String SHOW_RESET_STEERING = "showResetSteering";
+	public static final String VIBRATE_WHEN_COLLIDE = "vibrateWhenCollide";
 
 	public static final String ALPHA_SLIDER = "alphaSlider";
 	public static final String BUFFER_SLIDER = "bufferSlider";
@@ -43,25 +44,22 @@ public class SettingManager {
 	}
 
 	/**
-	 * Adds a new Setting with a CheckBox and a boolean value.
+	 * Adds a new setting with a CheckBox and a boolean value.
 	 * 
 	 * @param id
-	 *            the id of the Setting
-	 * @param description
-	 *            the description of the Setting
+	 *            the id of the Setting. Also used to find the description in the I18N files.
 	 * @param defaultValue
 	 *            the default value of the Setting
 	 */
 	public void addBooleanSetting(String id, boolean defaultValue) {
-		String description = I18n.t(id);
 	    boolean value = defaultValue;
-		if (!prefs.contains(id)) {
-			prefs.putBoolean(id, defaultValue);
-			prefs.flush();
+		if (prefs.contains(id)) {
+		    value = prefs.getBoolean(id);
 		} else {
-			value = prefs.getBoolean(id);
+		    prefs.putBoolean(id, defaultValue);
+            prefs.flush();
 		}
-		ISetting newBooleanSetting = new BooleanSetting(this, id, description, value);
+		ISetting newBooleanSetting = new BooleanSetting(this, id, I18n.t(id), value);
 		settingMap.put(id, newBooleanSetting);
 		settingList.add(id);
 	}
@@ -118,10 +116,11 @@ public class SettingManager {
 	}
 	
     /**
-     * Creates the SettingManager and all the Settings.
+     * Creates all settings that should be displayed in the {@link ui#SettingScreen}.
      */
     private void createSettings() {
         addBooleanSetting(USE_TOUCH, false);
+        addBooleanSetting(VIBRATE_WHEN_COLLIDE, true);
         addBooleanSetting(USE_ROLL_STEERING, false);
         // removed for release: addBooleanSetting(USE_LOW_PASS_FILTER, "Use LowPassFilter:", false);
         // removed for release: addBooleanSetting(SHOW_GATE_INDICATOR, "Show next Gate:", true);

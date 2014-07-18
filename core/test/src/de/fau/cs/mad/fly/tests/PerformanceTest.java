@@ -185,7 +185,6 @@ public class PerformanceTest {
         System.out.println("Accessing member: final: " + delta + " ys. test: " + test);
     }
     
-    
     /**
      * AWhenever possible use final member for read only test.
      */
@@ -215,5 +214,37 @@ public class PerformanceTest {
         }
         delta = (System.nanoTime() - millis) / 100;
         System.out.println("Accessing constants: use member constant: " + delta + " ys. test: " + test);
+    }
+    
+    /**
+     * For {@link Matrix3}, recreating the Object has only little performance impact,
+     * but it creates a lot of garbage object, which could be avoided, when
+     * using {@link Matrix3#idt()} of an existing {@link Matrix3}. The performance difference becomes
+     * visible, when creating a huge amount of objects, so that the garbage
+     * collector is called.
+     */
+    @Test
+    public void testMat3Performance() {
+        
+        // Method 1
+        Matrix3 mat = new Matrix3();
+        int size = 100000;
+        float test = 0;
+        long millis = System.nanoTime();
+        for (int i = size - 1; i >= 0; i--) {
+            mat.inv();
+            mat.idt();
+        }
+        long delta = (System.nanoTime() - millis) / 100;
+        System.out.println("Mat3 performance: resetting the mat: " + delta + " ys. test: " + test);
+        
+        // Method 2
+        millis = System.nanoTime();
+        for (int i = size - 1; i >= 0; i--) {
+            mat.inv();
+            mat = new Matrix3();
+        }
+        delta = (System.nanoTime() - millis) / 100;
+        System.out.println("Mat3 performance: recreating object: " + delta + " ys. test: " + test);
     }
 }
