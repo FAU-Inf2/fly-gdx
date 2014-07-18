@@ -1,11 +1,16 @@
 package de.fau.cs.mad.fly.res;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Matrix4;
@@ -18,8 +23,6 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
-
-import java.util.*;
 
 /**
  * Created by danyel on 26/05/14.
@@ -46,11 +49,12 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         super(new InternalFileHandleResolver());
         this.reader = new JsonReader();
         this.auto = new Json();
+        models = new HashMap<String, GameModel>();
     }
     
     public Level fromJson() {
         getJson();
-        models = new HashMap<String, GameModel>();
+        models.clear();
         for (Map.Entry<String, String> e : dependencies.entrySet())
             models.put(e.getKey(), dependencyFor(e.getKey()));
         getComponents();
@@ -214,7 +218,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         fileName = null;
         parameter = null;
         manager = null;
-        models = null;
+        models.clear();
     }
     
     @Override
