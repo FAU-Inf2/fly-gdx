@@ -31,12 +31,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     Level level;
     private final JsonReader reader;
     private final Json auto;
-    private Map<String, GameModel> models;
     private JsonValue json;
+    private Map<String, GameModel> models;
     private Map<String, String> dependencies;
     private Map<String, GameObject> components;
     private AssetManager manager;
-    private String fileName;
     private FileHandle file;
     private LevelParameters parameter;
     
@@ -47,17 +46,18 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
      * */
     public LevelLoader() {
         super(new InternalFileHandleResolver());
-        this.reader = new JsonReader();
-        this.auto = new Json();
+        reader = new JsonReader();
+        auto = new Json();
         models = new HashMap<String, GameModel>();
+        components = new HashMap<String, GameObject>();
     }
     
     public Level fromJson() {
-        getJson();
+        parseJson();
         models.clear();
         for (Map.Entry<String, String> e : dependencies.entrySet())
             models.put(e.getKey(), dependencyFor(e.getKey()));
-        getComponents();
+        parseComponents();
         int levelID = json.getInt("id");
         String name = json.getString("name");
         Perspective start = auto.fromJson(Perspective.class, json.get("start").toString());
@@ -114,14 +114,14 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         return level;
     }
     
-    private void getJson() {
+    private void parseJson() {
         if (json == null)
             json = reader.parse(file);
     }
     
-    private void getDependencies() {
+    private void parseDependencies() {
         if (dependencies == null) {
-            getJson();
+            parseJson();
             dependencies = new HashMap<String, String>();
             for (JsonValue e : json.get("dependencies")) {
                 String fileName = e.asString();
@@ -130,78 +130,74 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         }
     }
     
-
-    
-    private void getComponents() {
-        if (components == null) {
-            getJson();
-            components = new HashMap<String, GameObject>();
-            for (JsonValue e : json.get("components")) {
-                String id = e.getString("id");
-                String ref = e.getString("ref");
-                GameObject o = new GameObject(models.get(ref));
-                o.modelId = ref;
-                o.id = id;
-                JsonValue transform = e.get("transformMatrix");
-                JsonValue position = e.get("position");
-                if (transform != null) {
-                    o.transform = new Matrix4(transform.asFloatArray());
+    private void parseComponents() {
+        parseJson();
+        components.clear();
+        GameObject o;
+        for (JsonValue e : json.get("components")) {
+            String ref = e.getString("ref");
+            o = new GameObject(models.get(ref));
+            o.modelId = ref;
+            o.id = e.getString("id");
+            JsonValue transform = e.get("transformMatrix");
+            JsonValue position = e.get("position");
+            if (transform != null) {
+                o.transform = new Matrix4(transform.asFloatArray());
+                // Gdx.app.log("LevelLoader.getComponents",
+                // "TransformMatrix: " + o.transform.toString());
+            } else if (position != null) {
+                Vector3 pos = new Vector3(position.asFloatArray());
+                // Gdx.app.log("LevelLoader.getComponents", "Position: " +
+                // pos.toString());
+                
+                Vector3 scl = new Vector3(1.0f, 1.0f, 1.0f);
+                JsonValue scale = e.get("scale");
+                if (scale != null) {
+                    scl.set(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
+                    // Gdx.app.log("LevelLoader.getComponents", "Scaling: "
+                    // + scl.toString());
+                }
+                
+                JsonValue euler = e.get("euler");
+                JsonValue quaternion = e.get("quaternion");
+                if (euler != null) {
+                    // Gdx.app.log("LevelLoader.getComponents", "Euler: " +
+                    // euler.getFloat(0) + ", " + euler.getFloat(1) + ", " +
+                    // euler.getFloat(2));
+                    
+                    Quaternion quat = new Quaternion();
+                    quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
+                    o.transform = new Matrix4(pos, quat, scl);
+                } else if (quaternion != null) {
                     // Gdx.app.log("LevelLoader.getComponents",
-                    // "TransformMatrix: " + o.transform.toString());
-                } else if (position != null) {
-                    Vector3 pos = new Vector3(position.asFloatArray());
-                    // Gdx.app.log("LevelLoader.getComponents", "Position: " +
-                    // pos.toString());
+                    // "Quaternion: " + quaternion.getFloat(0) + ", " +
+                    // quaternion.getFloat(1) + ", " +
+                    // quaternion.getFloat(2) + ", " +
+                    // quaternion.getFloat(3));
                     
-                    Vector3 scl = new Vector3(1.0f, 1.0f, 1.0f);
-                    JsonValue scale = e.get("scale");
-                    if (scale != null) {
-                        scl.set(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
-                        // Gdx.app.log("LevelLoader.getComponents", "Scaling: "
-                        // + scl.toString());
-                    }
-                    
-                    JsonValue euler = e.get("euler");
-                    JsonValue quaternion = e.get("quaternion");
-                    if (euler != null) {
-                        // Gdx.app.log("LevelLoader.getComponents", "Euler: " +
-                        // euler.getFloat(0) + ", " + euler.getFloat(1) + ", " +
-                        // euler.getFloat(2));
-                        
-                        Quaternion quat = new Quaternion();
-                        quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
-                        o.transform = new Matrix4(pos, quat, scl);
-                    } else if (quaternion != null) {
-                        // Gdx.app.log("LevelLoader.getComponents",
-                        // "Quaternion: " + quaternion.getFloat(0) + ", " +
-                        // quaternion.getFloat(1) + ", " +
-                        // quaternion.getFloat(2) + ", " +
-                        // quaternion.getFloat(3));
-                        
-                        Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
-                        o.transform = new Matrix4(pos, quat, scl);
-                    } else {
-                        o.transform = new Matrix4();
-                        o.transform.trn(pos);
-                        o.transform.scl(scl);
-                    }
+                    Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
+                    o.transform = new Matrix4(pos, quat, scl);
                 } else {
                     o.transform = new Matrix4();
-                    // Gdx.app.log("LevelLoader.getComponents",
-                    // "No 3D info found: " + o.transform.toString());
+                    o.transform.trn(pos);
+                    o.transform.scl(scl);
                 }
-                
-                JsonValue linearVelocity = e.get("linear_velocity");
-                if (linearVelocity != null) {
-                    o.setStartLinearVelocity(new Vector3(linearVelocity.getFloat(0), linearVelocity.getFloat(1), linearVelocity.getFloat(2)));
-                }
-                JsonValue angularVelocity = e.get("angular_velocity");
-                if (angularVelocity != null) {
-                    o.setStartAngularVelocity(new Vector3(angularVelocity.getFloat(0), angularVelocity.getFloat(1), angularVelocity.getFloat(2)));
-                }
-                
-                components.put(id, o);
+            } else {
+                o.transform = new Matrix4();
+                // Gdx.app.log("LevelLoader.getComponents",
+                // "No 3D info found: " + o.transform.toString());
             }
+            
+            JsonValue linearVelocity = e.get("linear_velocity");
+            if (linearVelocity != null) {
+                o.setStartLinearVelocity(new Vector3(linearVelocity.getFloat(0), linearVelocity.getFloat(1), linearVelocity.getFloat(2)));
+            }
+            JsonValue angularVelocity = e.get("angular_velocity");
+            if (angularVelocity != null) {
+                o.setStartAngularVelocity(new Vector3(angularVelocity.getFloat(0), angularVelocity.getFloat(1), angularVelocity.getFloat(2)));
+            }
+            
+            components.put(o.id, o);
         }
     }
     
@@ -212,10 +208,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private void deinit() {
         level = null;
         json = null;
+        //TODO: warum darf hier kein component.clear gemacht werden?
         components = null;
         dependencies = null;
         file = null;
-        fileName = null;
         parameter = null;
         manager = null;
         models.clear();
@@ -240,9 +236,8 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     @Override
     public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, LevelParameters parameter) {
         this.file = file;
-        this.fileName = fileName;
         this.parameter = parameter;
-        getDependencies();
+        parseDependencies();
         Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
         for (String name : dependencies.values()) {
             // Gdx.app.log("LevelLoader.getDependencies", name);
