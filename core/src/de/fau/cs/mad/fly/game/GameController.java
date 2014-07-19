@@ -240,6 +240,7 @@ public class GameController implements TimeIsUpListener {
      */
     public void renderGame(float delta) {
         stage.act(delta);
+        int len, i;
         
         if (gameState == GameState.RUNNING) {
             // update features if the game is not paused
@@ -248,8 +249,9 @@ public class GameController implements TimeIsUpListener {
             camera = cameraController.updateCamera();
             level.update(delta, camera);
             
-            for (IFeatureUpdate optionalFeature : optionalFeaturesToUpdate) {
-                optionalFeature.update(delta);
+            len = optionalFeaturesToUpdate.size();
+            for (i = 0; i< len; i++) {
+                optionalFeaturesToUpdate.get(i).update(delta);
             }
             
             CollisionDetector.getInstance().perform(delta);
@@ -261,14 +263,16 @@ public class GameController implements TimeIsUpListener {
         // render features
         batch.begin(camera);
         level.render(delta, batch, camera);
-        for (IFeatureRender optionalFeature : optionalFeaturesToRender) {
-            optionalFeature.render(delta);
+        len = optionalFeaturesToRender.size();
+        for (i = 0; i< len; i++) {
+            optionalFeaturesToRender.get(i).render(delta);
         }
         batch.end();
         
         // draw features
-        for (IFeatureDraw optionalFeature : optionalFeaturesToDraw) {
-            optionalFeature.draw(delta);
+        len = optionalFeaturesToDraw.size();
+        for (i = 0; i< len; i++) {
+            optionalFeaturesToDraw.get(i).draw(delta);
         }
         stage.draw();
     }

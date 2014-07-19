@@ -387,13 +387,13 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
      */
     public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
         final int numberOfEventListeners = eventListeners.size();
-        for (int i = 0; i < numberOfEventListeners; i++) {
+        int i;
+        for (i = 0; i < numberOfEventListeners; i++) {
             eventListeners.get(i).onRender();
         }
-        // TODO: use some Array like structure for components so that it can be
-        // used in a for (i...) loop, due to performance reasons
-        for (GameObject c : components) {
-            c.render(batch, environment, camera);
+        final int numberOfComponents = components.size();
+        for (i = 0; i < numberOfComponents; i++) {
+            components.get(i).render(batch, environment, camera);
         }
     }
     
