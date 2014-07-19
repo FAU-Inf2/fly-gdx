@@ -54,7 +54,6 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     }
     
     public Level fromJson() {
-        long millis = System.currentTimeMillis();
         parseJson();
         for (Map.Entry<String, String> e : dependencies.entrySet()) {
             models.put(e.getKey(), dependencyFor(e.getKey()));
@@ -97,7 +96,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         level.setGates(gateMap);
         level.head.id = json.getInt("id");
         level.setLeftTime(json.getInt("time"));
-        Gdx.app.log("LevelLoader.fromJson", "duration: " + String.valueOf(System.currentTimeMillis()-millis));
+        
         return level;
     }
     
@@ -122,6 +121,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     }
     
     private void parseComponents() {
+        long millis = System.currentTimeMillis();
         parseJson();
         components.clear();
         GameObject o;
@@ -133,7 +133,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             JsonValue transform = e.get("transformMatrix");
             JsonValue position = e.get("position");
             if (transform != null) {
-                o.transform = new Matrix4(transform.asFloatArray());
+                o.transform.set(transform.asFloatArray());
                 // Gdx.app.log("LevelLoader.getComponents",
                 // "TransformMatrix: " + o.transform.toString());
             } else if (position != null) {
@@ -158,7 +158,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                     
                     Quaternion quat = new Quaternion();
                     quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
-                    o.transform = new Matrix4(pos, quat, scl);
+                    o.transform.set(pos, quat, scl);
                 } else if (quaternion != null) {
                     // Gdx.app.log("LevelLoader.getComponents",
                     // "Quaternion: " + quaternion.getFloat(0) + ", " +
@@ -167,14 +167,14 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                     // quaternion.getFloat(3));
                     
                     Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
-                    o.transform = new Matrix4(pos, quat, scl);
+                    o.transform.set(pos, quat, scl);
                 } else {
-                    o.transform = new Matrix4();
+                    o.transform.idt();
                     o.transform.trn(pos);
                     o.transform.scl(scl);
                 }
             } else {
-                o.transform = new Matrix4();
+                o.transform.idt();
                 // Gdx.app.log("LevelLoader.getComponents",
                 // "No 3D info found: " + o.transform.toString());
             }
@@ -190,6 +190,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             
             components.put(o.id, o);
         }
+        Gdx.app.log("LevelLoader.parseComponents", "duration: " + String.valueOf(System.currentTimeMillis()-millis));
     }
     
     private GameModel dependencyFor(String ref) {

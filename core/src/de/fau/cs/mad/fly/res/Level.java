@@ -392,6 +392,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             eventListeners.get(i).onRender();
         }
         final int numberOfComponents = components.size();
+        Gdx.app.log("components:", String.valueOf(numberOfComponents));
         for (i = 0; i < numberOfComponents; i++) {
             components.get(i).render(batch, environment, camera);
         }
