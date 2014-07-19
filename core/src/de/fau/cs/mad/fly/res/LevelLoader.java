@@ -138,8 +138,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                 // "TransformMatrix: " + o.transform.toString());
             } else if (position != null) {
                 Vector3 pos = new Vector3(position.asFloatArray());
-                // Gdx.app.log("LevelLoader.getComponents", "Position: " +
-                // pos.toString());
+                // Gdx.app.log("LevelLoader.getComponents", "Position: " + pos.toString());
                 
                 Vector3 scl = new Vector3(1.0f, 1.0f, 1.0f);
                 JsonValue scale = e.get("scale");

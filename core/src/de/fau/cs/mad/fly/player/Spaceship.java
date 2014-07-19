@@ -140,7 +140,11 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	public void init(GameController game) {
 		camera = gameController.getCamera();
 
-		startTransform = instance.getRigidBody().getCenterOfMassTransform().rotate(new Vector3(0,0,1), camera.direction);
+		// TODO: store up vector in level.json
+		startTransform = instance.getRigidBody().getCenterOfMassTransform().setToLookAt(game.getLevel().start.viewDirection, new Vector3(0, 0, 1));
+		startTransform.rotate(new Vector3(0, 0, 1), 180.0f);
+		startTransform.translate(game.getLevel().start.position);
+		System.out.println(startTransform);
 		
 		instance.getRigidBody().setCenterOfMassTransform(startTransform);
 		
