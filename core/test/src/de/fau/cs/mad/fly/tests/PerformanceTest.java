@@ -186,7 +186,7 @@ public class PerformanceTest {
     }
     
     /**
-     * AWhenever possible use final member for read only test.
+     * Whenever possible use final member for read only test.
      */
     @Test
     public void testFinalMemberOrNot() {

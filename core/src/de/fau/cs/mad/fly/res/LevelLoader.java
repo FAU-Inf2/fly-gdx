@@ -38,6 +38,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private AssetManager manager;
     private FileHandle file;
     private LevelParameters parameter;
+    private final Matrix4 identityMatrix = new Matrix4();
     
     /**
      * Constructor, sets the
@@ -55,64 +56,46 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     public Level fromJson() {
         long millis = System.currentTimeMillis();
         parseJson();
-        for (Map.Entry<String, String> e : dependencies.entrySet())
+        for (Map.Entry<String, String> e : dependencies.entrySet()) {
             models.put(e.getKey(), dependencyFor(e.getKey()));
+        }
         parseComponents();
-        int levelID = json.getInt("id");
         Perspective start = auto.fromJson(Perspective.class, json.get("start").toString());
         JsonValue gates = json.get("gates");
-        Map<Integer, Level.Gate> ps = new HashMap<Integer, Level.Gate>();
-        Matrix4 identityMatrix = new Matrix4();
+        Map<Integer, Level.Gate> gateMap = new HashMap<Integer, Level.Gate>();
         
         Level.Gate p;
         Level.Gate dummy = null;
-        for (JsonValue e : gates) {
-            JsonValue gid = e.get("id");
+        int len = gates.size;
+        JsonValue jsonGate;
+        for (int i = 0; i < len; i++) {
+            jsonGate = gates.get(i);
+            JsonValue gid = jsonGate.get("id");
             if (gid != null) {
                 p = new Level.Gate(gid.asInt());
-                p.display = components.get(e.getString("display"));
-                p.goal = components.get(e.getString("goal"));
+                p.display = components.get(jsonGate.getString("display"));
+                p.goal = components.get(jsonGate.getString("goal"));
                 // TODO: make this explicit (don't just blacklist identity
                 // matrix...). Currently this makes sure that the right gate is marked as next gate
                 if (Arrays.equals(p.goal.transform.getValues(), identityMatrix.getValues()))
                     p.goal.transform = p.display.transform.cpy();
-                ps.put(p.id, p);
+                gateMap.put(p.id, p);
             }
             else {
                 p = new Level.Gate(-1);
                 dummy = p;
             }
-            p.successors = e.get("successors").asIntArray();
+            p.successors = jsonGate.get("successors").asIntArray();
         }
         
-        
-        
-//        for (JsonValue e : gates) {
-//            JsonValue gid = e.get("id");
-//            // Gdx.app.log("LevelLoader.fromJson", "gid " + gid);
-//            if (gid != null)
-//                p = ps.get(gid.asInt());
-//            else {
-//                p = new Level.Gate(-1);
-//                dummy = p;
-//            }
-//            Collection<Level.Gate> successors = new ArrayList<Level.Gate>();
-//            int[] ss = e.get("successors").asIntArray();
-//            for (int s : ss)
-//                successors.add(ps.get(s));
-//            p.successors = successors;
-//        }
         if (dummy == null)
             throw new RuntimeException("No dummy gate found.");
-        
-        // Collection<String> scripts =
-        // Arrays.asList(json.get("scripts").asStringArray());
         
         ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
         componentsList.addAll(components.values());
         Level level = new Level(json.getString("name"), start, componentsList, models, dummy);
-        level.setGates(ps);
-        level.head.id = levelID;
+        level.setGates(gateMap);
+        level.head.id = json.getInt("id");
         level.setLeftTime(json.getInt("time"));
         Gdx.app.log("LevelLoader.fromJson", "duration: " + String.valueOf(System.currentTimeMillis()-millis));
         return level;
@@ -127,7 +110,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         if (dependencies == null) {
             parseJson();
             dependencies = new HashMap<String, String>();
-            for (JsonValue e : json.get("dependencies")) {
+            JsonValue e;
+            JsonValue jsonDependencies = json.get("dependencies"); 
+            int len = jsonDependencies.size;
+            for (int i = 0; i < len; i++) {
+                e = jsonDependencies.get(i);
                 String fileName = e.asString();
                 dependencies.put(e.name(), fileName);
             }
