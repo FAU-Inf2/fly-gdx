@@ -19,6 +19,7 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.res.Perspective;
 
 public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
 	private GameController gameController;
@@ -140,10 +141,10 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	public void init(GameController game) {
 		camera = gameController.getCamera();
 
-		// TODO: store up vector in level.json
-		startTransform = instance.getRigidBody().getCenterOfMassTransform().setToLookAt(game.getLevel().start.viewDirection, new Vector3(0, 0, 1));
-		startTransform.rotate(new Vector3(0, 0, 1), 180.0f);
-		startTransform.translate(game.getLevel().start.position);
+		Perspective start = game.getLevel().start;
+		startTransform = instance.getRigidBody().getCenterOfMassTransform().setToLookAt(start.viewDirection, start.upDirection);
+		startTransform.rotate(start.upDirection, 180.0f);
+		startTransform.translate(start.position);
 		System.out.println(startTransform);
 		
 		instance.getRigidBody().setCenterOfMassTransform(startTransform);

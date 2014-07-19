@@ -54,11 +54,15 @@ class LevelExporter:
 		player = bpy.data.objects["Player"]
     
 		viewDir = Vector((0.0, 0.0, -1.0))
-		viewDir.rotate(player.rotation_euler) 
+		viewDir.rotate(player.rotation_euler)
+		
+		upDir = Vector((0.0, 1.0, 0.0))
+		upDir.rotate(player.rotation_euler)
 		
 		start = { }
 		start['position'] = { 'x': ConvertHelper.convert_pos(player.location.x), 'y': ConvertHelper.convert_pos(player.location.y), 'z': ConvertHelper.convert_pos(player.location.z) }
 		start['viewDirection'] = { 'x': ConvertHelper.convert_pos(viewDir.x), 'y': ConvertHelper.convert_pos(viewDir.y), 'z': ConvertHelper.convert_pos(viewDir.z) }
+		start['upDirection'] = { 'x': ConvertHelper.convert_pos(upDir.x), 'y': ConvertHelper.convert_pos(upDir.y), 'z': ConvertHelper.convert_pos(upDir.z) }
 		return start
 		
 	def setupDependencies(self):
