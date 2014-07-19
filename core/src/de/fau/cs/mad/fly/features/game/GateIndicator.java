@@ -54,7 +54,11 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
     
     @Override
     public void render(float delta) {
-        for (Level.Gate gate : gameController.getLevel().currentGates()) {
+        int[] nextLevels = gameController.getLevel().currentGates();
+        int len = nextLevels.length;
+        Level.Gate gate;
+        for (int i = 0; i<len; i++) {
+            gate = gameController.getLevel().getGateById(i);
             targetPosition = gate.goal.getPosition();
             cameraDirection.set(camera.direction);
             up.set(camera.up);

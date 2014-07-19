@@ -30,13 +30,13 @@ import java.util.*;
  * 
  */
 public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Level.Gate> {
-    public static class Gate implements Iterable<Gate>, Disposable {
+    public static class Gate implements Disposable {
         public final int id;
         public int score;
         public GameObject display;
         public GameObject goal;
         public int passedTimes = 0;
-        public Collection<Gate> successors;
+        public int[] successors;
         
         public Gate(Integer id) {
             this.id = id;
@@ -76,21 +76,6 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             return "#<Gate " + id + ">";
         }
         
-        private void buildIterator(Collection<Gate> gs) {
-            for (Gate g : successors)
-                if (!gs.contains(g)) {
-                    gs.add(g);
-                    g.buildIterator(gs);
-                }
-        }
-        
-        @Override
-        public Iterator<Gate> iterator() {
-            final Set<Gate> set = new HashSet<Gate>();
-            buildIterator(set);
-            return set.iterator();
-        }
-        
         @Override
         public void dispose() {
             CollisionDetector.getInstance().removeRigidBody(display);
@@ -110,7 +95,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     public static interface EventListener {
         public void onFinished();
         
-        public void onGatePassed(Gate gate, Iterable<Gate> current);
+        public void onGatePassed(Gate gate);
         
         public void onUpdate();
         
@@ -123,7 +108,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         }
         
         @Override
-        public void onGatePassed(Gate gate, Iterable<Gate> current) {
+        public void onGatePassed(Gate gate) {
         }
         
         @Override
@@ -147,13 +132,18 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
      */
     public final float radius = 100.0f;
     public final Head head;
-    public Collection<GameObject> components;
+    public List<GameObject> components;
     public final Perspective start;
+    /** gate that has been passed recently, at the beginning the dummy gate */
     private Gate virtualGate;
     private Gate startingGate;
     private final Environment environment;
     private List<EventListener> eventListeners = new ArrayList<EventListener>();
     private final Map<String, GameModel> dependencies;
+    
+    /** Maps the id to the corresponding gate */
+    private Map<Integer, Gate> gates = new HashMap<Integer, Gate>();
+    private List<Gate> allGates = new ArrayList<Gate>();
     // public final Collection<String> scripts;
     
     private GameObject borderObject = null;
@@ -178,10 +168,24 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         }
         return count;
     }
-
     
     public int getLeftCollisionTime() {
         return leftCollisionTime;
+    }
+    
+    public Gate getGateById(int id) {
+        return gates.get(id);
+    }
+    
+    /**
+     * Fills the Map that maps id to the corresponding gate and the list of all
+     * gates.
+     * 
+     * @param gates
+     */
+    public void setGates(Map<Integer, Gate> gates) {
+        this.gates = gates;
+        this.allGates.addAll(gates.values());
     }
     
     public void setLeftCollisionTime(int leftCollisionTime) {
@@ -236,7 +240,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         }
     }
     
-    public Level(String name, Perspective start, Collection<GameObject> components, Map<String, GameModel> dependencies, Gate startingGate) {
+    public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies, Gate startingGate) {
         this.head = new Head();
         this.head.name = name;
         this.virtualGate = startingGate;
@@ -263,9 +267,13 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     }
     
     public void gatePassed(Gate gate) {
-        if (currentGates().contains(gate)) {
-            gate.passedTimes++;
-            activeGatePassed(gate);
+        int numberOfSuccessorGates = virtualGate.successors.length;
+        for (int i = 0; i < numberOfSuccessorGates; i++) {
+            if (gate.id == virtualGate.successors[i]) {
+                gate.passedTimes++;
+                activeGatePassed(gate);
+                i = numberOfSuccessorGates;
+            }
         }
     }
     
@@ -279,9 +287,9 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     
     public void activeGatePassed(Gate gate) {
         for (EventListener s : eventListeners)
-            s.onGatePassed(gate, virtualGate.successors);
+            s.onGatePassed(gate);
         virtualGate = gate;
-        if (gate.successors.isEmpty()) {
+        if (gate.successors.length == 0) {
             reachedLastGate = true;
             levelFinished();
         }
@@ -302,16 +310,12 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         this.startingGate = startingGate;
     }
     
-    public Collection<Gate> currentGates() {
-        return Collections.unmodifiableCollection(virtualGate.successors);
+    public int[] currentGates() {
+        return virtualGate.successors;
     }
     
     public Iterable<Gate> allGates() {
-        return startingGate;
-    }
-    
-    public Iterable<Gate> remainingGates() {
-        return virtualGate;
+        return allGates;
     }
     
     /**

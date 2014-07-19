@@ -53,64 +53,68 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     }
     
     public Level fromJson() {
+        long millis = System.currentTimeMillis();
         parseJson();
-        models.clear();
         for (Map.Entry<String, String> e : dependencies.entrySet())
             models.put(e.getKey(), dependencyFor(e.getKey()));
         parseComponents();
         int levelID = json.getInt("id");
-        String name = json.getString("name");
         Perspective start = auto.fromJson(Perspective.class, json.get("start").toString());
-        System.out.println(start);
         JsonValue gates = json.get("gates");
         Map<Integer, Level.Gate> ps = new HashMap<Integer, Level.Gate>();
         Matrix4 identityMatrix = new Matrix4();
-        Gdx.app.log("LevelLoader.fromJson", "first iteration on gates");
+        
+        Level.Gate p;
+        Level.Gate dummy = null;
         for (JsonValue e : gates) {
             JsonValue gid = e.get("id");
             if (gid != null) {
-                Level.Gate p = new Level.Gate(gid.asInt());
-                JsonValue scoreJS = gid.get("score");
-                if (scoreJS != null)
-                    p.score = scoreJS.asInt();
+                p = new Level.Gate(gid.asInt());
                 p.display = components.get(e.getString("display"));
                 p.goal = components.get(e.getString("goal"));
                 // TODO: make this explicit (don't just blacklist identity
-                // matrix...)
+                // matrix...). Currently this makes sure that the right gate is marked as next gate
                 if (Arrays.equals(p.goal.transform.getValues(), identityMatrix.getValues()))
                     p.goal.transform = p.display.transform.cpy();
                 ps.put(p.id, p);
             }
-        }
-        
-        Gdx.app.log("LevelLoader.fromJson", "second iteration on gates");
-        Level.Gate dummy = null;
-        for (JsonValue e : gates) {
-            JsonValue gid = e.get("id");
-            // Gdx.app.log("LevelLoader.fromJson", "gid " + gid);
-            Level.Gate p;
-            if (gid != null)
-                p = ps.get(gid.asInt());
             else {
                 p = new Level.Gate(-1);
                 dummy = p;
             }
-            Collection<Level.Gate> successors = new ArrayList<Level.Gate>();
-            int[] ss = e.get("successors").asIntArray();
-            for (int s : ss)
-                successors.add(ps.get(s));
-            p.successors = successors;
+            p.successors = e.get("successors").asIntArray();
         }
+        
+        
+        
+//        for (JsonValue e : gates) {
+//            JsonValue gid = e.get("id");
+//            // Gdx.app.log("LevelLoader.fromJson", "gid " + gid);
+//            if (gid != null)
+//                p = ps.get(gid.asInt());
+//            else {
+//                p = new Level.Gate(-1);
+//                dummy = p;
+//            }
+//            Collection<Level.Gate> successors = new ArrayList<Level.Gate>();
+//            int[] ss = e.get("successors").asIntArray();
+//            for (int s : ss)
+//                successors.add(ps.get(s));
+//            p.successors = successors;
+//        }
         if (dummy == null)
             throw new RuntimeException("No dummy gate found.");
         
         // Collection<String> scripts =
         // Arrays.asList(json.get("scripts").asStringArray());
         
-        Gdx.app.log("LevelLoader.fromJson", "Exit.");
-        Level level = new Level(name, start, components.values(), models, dummy);
+        ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
+        componentsList.addAll(components.values());
+        Level level = new Level(json.getString("name"), start, componentsList, models, dummy);
+        level.setGates(ps);
         level.head.id = levelID;
         level.setLeftTime(json.getInt("time"));
+        Gdx.app.log("LevelLoader.fromJson", "duration: " + String.valueOf(System.currentTimeMillis()-millis));
         return level;
     }
     
@@ -208,8 +212,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private void deinit() {
         level = null;
         json = null;
-        //TODO: warum darf hier kein component.clear gemacht werden?
-        components = null;
+        components.clear();;
         dependencies = null;
         file = null;
         parameter = null;

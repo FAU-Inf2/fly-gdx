@@ -44,11 +44,11 @@ public class EndlessLevelGenerator {
 		
 		this.gates = new ArrayList<Gate>();
 		this.predecessors = new ArrayList<Gate>();
-		Collection<GameObject> coll =  new ArrayList<GameObject>();
+		List<GameObject> coll =  new ArrayList<GameObject>();
 		coll.addAll(level.components);
 		
 		lastGatePassed = new Gate(-2);
-		lastGatePassed.successors = new ArrayList<Gate>();
+		//TODO: lastGatePassed.successors = new ArrayList<Gate>();
 		
 		level.components = coll;
 		
@@ -102,13 +102,13 @@ public class EndlessLevelGenerator {
 			
 			
 			// removing passed gate and all possible parallel gates
-			for(Gate successor : lastGatePassed.successors) {
-				level.components.remove(successor.display);
-				level.components.remove(successor.goal);
-				
-				gates.remove(successor);
-				successor.dispose();
-			}
+//			TODO: for(Gate successor : lastGatePassed.successors) {
+//				level.components.remove(successor.display);
+//				level.components.remove(successor.goal);
+//				
+//				gates.remove(successor);
+//				successor.dispose();
+//			}
 			
 			lastGatePassed = passed;
 			
@@ -169,7 +169,7 @@ public class EndlessLevelGenerator {
 			// add display and goal to the new Gate
 			newGate.display = display;
 			newGate.goal = goal;
-			newGate.successors = new ArrayList<Level.Gate>();
+			// TODO: newGate.successors = new ArrayList<Level.Gate>();
 			
 			addRigidBody(newGate);
 			
@@ -185,7 +185,7 @@ public class EndlessLevelGenerator {
 		lastDirection = newLastDirection.cpy();
 		
 		for(Gate predecessor : predecessors) {
-			predecessor.successors = newGates;
+			//TODO: predecessor.successors = newGates;
 		}
 		
 		return newGates;

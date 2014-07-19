@@ -142,7 +142,7 @@ public class GameControllerBuilder {
         
         level.addEventListener(new Level.EventAdapter() {
             @Override
-            public void onGatePassed(Level.Gate passed, Iterable<Level.Gate> current) {
+            public void onGatePassed(Level.Gate passed) {
                 if (level.head.name.equals("Endless")) {
                     for (Level.Gate g : generator.getGates())
                         g.unmark();
@@ -150,8 +150,10 @@ public class GameControllerBuilder {
                     for (Level.Gate g : level.allGates())
                         g.unmark();
                 }
-                for (Level.Gate g : passed.successors)
-                    g.mark();
+                int len = passed.successors.length;
+                for (int i = 0; i < len; i++) {
+                    level.getGateById(passed.successors[i]).mark();
+                }
             }
         });
         
@@ -160,8 +162,7 @@ public class GameControllerBuilder {
             
             PlayerManager.getInstance().getCurrentPlayer().getLevel().addEventListener(new Level.EventAdapter() {
                 @Override
-                public void onGatePassed(Level.Gate passed, Iterable<Level.Gate> current) {
-                    
+                public void onGatePassed(Level.Gate passed) {
                     generator.addRandomGate(passed);
                 }
             });
