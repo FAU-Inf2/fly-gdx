@@ -187,8 +187,8 @@ public class GameControllerBuilder {
         
         addAsteroidBelt();
         
-        addInstantSpeedUpgrade();
-        addAddTimeUpgrade();
+        //addInstantSpeedUpgrade();
+        //addAddTimeUpgrade();
         
         Preferences preferences = player.getSettingManager().getPreferences();
         addGateIndicator();
