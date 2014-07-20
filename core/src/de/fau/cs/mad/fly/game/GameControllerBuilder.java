@@ -187,8 +187,8 @@ public class GameControllerBuilder {
         
         addAsteroidBelt();
         
-        //addInstantSpeedUpgrade();
-        //addAddTimeUpgrade();
+        addInstantSpeedUpgrade();
+        addAddTimeUpgrade();
         
         Preferences preferences = player.getSettingManager().getPreferences();
         addGateIndicator();
@@ -385,7 +385,7 @@ public class GameControllerBuilder {
      * @return Builder instance with InstantSpeedUpgrade
      */
     private GameControllerBuilder addInstantSpeedUpgrade() {
-    	InstantSpeedUpgrade instantSpeedUpgrade = new InstantSpeedUpgrade("speedUpgrade", 10.0f, 0.0f);
+    	InstantSpeedUpgrade instantSpeedUpgrade = new InstantSpeedUpgrade("speedUpgrade", 4.0f, 10.0f);
         addFeatureToLists(instantSpeedUpgrade);
         CollisionDetector.getInstance().getCollisionContactListener().addListener(instantSpeedUpgrade);
         
@@ -399,7 +399,7 @@ public class GameControllerBuilder {
      * @return Builder instance with AddTimeUpgrade
      */
     private GameControllerBuilder addAddTimeUpgrade() {
-    	AddTimeUpgrade addTimeUpgrade = new AddTimeUpgrade("timeUpgrade", 10);
+    	AddTimeUpgrade addTimeUpgrade = new AddTimeUpgrade("timeUpgrade", 10.0f);
         addFeatureToLists(addTimeUpgrade);
         CollisionDetector.getInstance().getCollisionContactListener().addListener(addTimeUpgrade);
         

@@ -13,6 +13,8 @@ public class TimeController {
     private float pauseTimeInSeconds;
     private long pauseTimeStampInMilliSeconds;
     
+    private float bonusTime;
+    
     private List<IntegerTimeListener> integerTimeListeners;
     private List<TimeIsUpListener> timeIsUpListeners;
     
@@ -37,6 +39,7 @@ public class TimeController {
         currentTimeInSeconds = initTimeInSeconds;
         pauseTimeStampInMilliSeconds = 0;
         pauseTimeInSeconds = 0;
+        bonusTime = 0;
         paused = false;
         integerTimeChanged();
     }
@@ -53,7 +56,7 @@ public class TimeController {
     public void checkTime() {
         if (!paused) {
             int timeBefore = (int) Math.ceil(currentTimeInSeconds);
-            currentTimeInSeconds = initTimeInSeconds - (System.currentTimeMillis() - initTimeStampInMilliSeconds) / 1000 + pauseTimeInSeconds;
+            currentTimeInSeconds = initTimeInSeconds - (System.currentTimeMillis() - initTimeStampInMilliSeconds) / 1000 + pauseTimeInSeconds + bonusTime;
             if (currentTimeInSeconds < 1) {
                 currentTimeInSeconds = 0;
                 timeIsUp();
@@ -62,6 +65,14 @@ public class TimeController {
                 integerTimeChanged();
             }
         }
+    }
+    
+    /**
+     * Adds bonus time in seconds to the bonus time.
+     * @param bonusTime		The bonus time in seconds to add.
+     */
+    public void addBonusTime(float bonusTime) {
+    	this.bonusTime += bonusTime;
     }
     
     /**
