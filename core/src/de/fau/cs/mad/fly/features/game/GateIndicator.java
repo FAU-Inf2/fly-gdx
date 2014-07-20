@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.features.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -39,7 +40,9 @@ public class GateIndicator implements IFeatureInit, IFeatureRender {
     public void init(final GameController gameController) {
         this.gameController = gameController;
         Assets.load(Assets.arrow);
+        long millis = System.currentTimeMillis();
         arrowModel = new GameObject(Assets.manager.get(Assets.arrow));
+        Gdx.app.log("GateIndicator", String.valueOf(System.currentTimeMillis()-millis));
         batch = gameController.getBatch();
         environment = gameController.getLevel().getEnvironment();
         camera = gameController.getCamera();
