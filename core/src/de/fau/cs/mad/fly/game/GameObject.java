@@ -131,7 +131,7 @@ public class GameObject extends ModelInstance implements Disposable {
 		this.filterGroup = filterGroup;
 		this.filterMask = filterMask;
 		this.rigidBody = CollisionDetector.createRigidBody(this, shape, this, info);
-
+		
 		rigidBody.setLinearVelocity(startLinearVelocity);
 		rigidBody.setAngularVelocity(startAngularVelocity);
 	}

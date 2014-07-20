@@ -34,6 +34,8 @@ import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeUpOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
+import de.fau.cs.mad.fly.features.upgrades.AddTimeUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgrade;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
@@ -185,7 +187,8 @@ public class GameControllerBuilder {
         
         addAsteroidBelt();
         
-        // addSpeedUpgrade();
+        addInstantSpeedUpgrade();
+        addAddTimeUpgrade();
         
         Preferences preferences = player.getSettingManager().getPreferences();
         addGateIndicator();
@@ -376,15 +379,29 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Adds a {@link CollectibleObjects} to the GameController, that is
+     * Adds a {@link InstantSpeedUpgrade} to the GameController, that is
      * initialized, updated every frame and updated when the game is finished.
      * 
-     * @return Builder instance with CollectibleObjects
+     * @return Builder instance with InstantSpeedUpgrade
      */
-    private GameControllerBuilder addSpeedUpgrade() {
-        CollectibleObjects collectibleObjects = new CollectibleObjects("speedUpgrade", "speedUpgrade");
-        addFeatureToLists(collectibleObjects);
-        CollisionDetector.getInstance().getCollisionContactListener().addListener(collectibleObjects);
+    private GameControllerBuilder addInstantSpeedUpgrade() {
+    	InstantSpeedUpgrade instantSpeedUpgrade = new InstantSpeedUpgrade("speedUpgrade", 10.0f, 0.0f);
+        addFeatureToLists(instantSpeedUpgrade);
+        CollisionDetector.getInstance().getCollisionContactListener().addListener(instantSpeedUpgrade);
+        
+        return this;
+    }
+    
+    /**
+     * Adds a {@link AddTimeUpgrade} to the GameController, that is
+     * initialized, updated every frame and updated when the game is finished.
+     * 
+     * @return Builder instance with AddTimeUpgrade
+     */
+    private GameControllerBuilder addAddTimeUpgrade() {
+    	AddTimeUpgrade addTimeUpgrade = new AddTimeUpgrade("timeUpgrade", 10);
+        addFeatureToLists(addTimeUpgrade);
+        CollisionDetector.getInstance().getCollisionContactListener().addListener(addTimeUpgrade);
         
         return this;
     }

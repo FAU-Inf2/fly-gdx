@@ -145,7 +145,6 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		startTransform = instance.getRigidBody().getCenterOfMassTransform().setToLookAt(start.viewDirection, start.upDirection);
 		startTransform.rotate(start.upDirection, 180.0f);
 		startTransform.translate(start.position);
-		System.out.println(startTransform);
 		
 		instance.getRigidBody().setCenterOfMassTransform(startTransform);
 		

@@ -7,40 +7,49 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 
-import de.fau.cs.mad.fly.features.ICollectListener;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
-import de.fau.cs.mad.fly.features.IFeatureRender;
-import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
-import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.player.Spaceship;
-import de.fau.cs.mad.fly.profile.PlayerManager;
 
 /**
  * Used do display and handle any sort of collectible objects in the game.
  * 
  * @author Tobi
  */
-public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureRender, IFeatureDispose, ICollisionListener<Spaceship, GameObject> {
-	private GameController gameController;
+public abstract class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureDispose, ICollisionListener<Spaceship, GameObject> {
+
+	/**
+	 * ModelBatch used to render the collectible objects.
+	 */
 	private ModelBatch batch;
+	
+	/**
+	 * Environment used to render the collectible objects.
+	 */
 	private Environment environment;
+	
+	/**
+	 * Camera used to render the collectible objects.
+	 */
 	private PerspectiveCamera camera;
-	
-	private String collectibleType;
+
+	/**
+	 * The model reference for the collectible objects.
+	 */
 	private String modelRef;
-	private List<GameObject> collectibleObjects;
 	
-	private List<ICollectListener> collectListeners;
+	/**
+	 * List of the currently active collectible objects.
+	 */
+	private List<GameObject> collectibleObjects;
 	
 	/**
 	 * Creates a new collectible objects game feature.
@@ -48,32 +57,21 @@ public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureR
 	 * @param collectibleType		The type of the collectible object in the level file.
 	 * @param modelRef				The model reference in the level file used to display the collectible objects.
 	 */
-	public CollectibleObjects(String collectibleType, String modelRef) {
-		this.collectibleType = collectibleType;
+	public CollectibleObjects(String modelRef) {
 		this.modelRef = modelRef;
-	}
-	
-	/**
-	 * Adds a new collect listener.
-	 * @param listener				The collect listener.
-	 */
-	public void addCollectListener(ICollectListener listener) {
-		collectListeners.add(listener);
 	}
 	
 	@Override
 	public void load(GameController game) {
-		this.gameController = game;
-		batch = gameController.getBatch();
-		environment = gameController.getLevel().getEnvironment();
+		batch = game.getBatch();
+		environment = game.getLevel().getEnvironment();
 
-		collectibleObjects = new ArrayList<GameObject>();
-		collectListeners = new ArrayList<ICollectListener>();		
+		collectibleObjects = new ArrayList<GameObject>();		
 		
-		for(GameObject gameObject : gameController.getLevel().components) {
-			if(gameObject.id.equals("speedUpgrade")) {
+		for(GameObject gameObject : game.getLevel().components) {
+			if(gameObject.modelId.equals(modelRef)) {
 				btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(modelRef, gameObject);
-				gameObject.createRigidBody(modelRef, shape, 10.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+				gameObject.createRigidBody(modelRef, shape, 1.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
 				gameObject.getRigidBody().setCollisionFlags(gameObject.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
 				CollisionDetector.getInstance().addRigidBody(gameObject);
 
@@ -90,26 +88,23 @@ public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureR
 	
 	@Override
 	public void init(GameController game) {
-		camera = gameController.getCamera();
-	}
-	
-	@Override
-	public void render(float delta) {
-		/*for(GameObject gameObject : collectibleObjects) {
-			gameObject.updateRigidBody();			
-			gameObject.render(batch, environment, camera);
-		}*/
+		camera = game.getCamera();
 	}
 
 	@Override
 	public void dispose() {
-		for(GameObject object : collectibleObjects) {
-			//object.dispose();
-		}
+		// TODO: needed?
 	}
+	
+	/**
+	 * Starts the handling after the collectible object was collected.
+	 * <p>
+	 * Removes the collected object from the collision world and hides it in the rendered world.
+	 */
+	protected abstract void handleCollecting();
 
 	@Override
-	public void onCollision(Spaceship ship, GameObject gameObject) {		
+	public void onCollision(Spaceship ship, GameObject gameObject) {
 		if(!collectibleObjects.contains(gameObject)) {
 			return;
 		}
@@ -118,10 +113,6 @@ public class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureR
 		collectibleObjects.remove(gameObject);
 		gameObject.removeRigidBody();
 		
-		//PlayerManager.getInstance().getCurrentPlayer().getPlane().setSpeed(5.0f);
-		
-		for(ICollectListener listener : collectListeners) {
-			listener.onCollect(collectibleType);
-		}
+		handleCollecting();
 	}
 }

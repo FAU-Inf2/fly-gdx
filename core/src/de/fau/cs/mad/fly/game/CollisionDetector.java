@@ -90,7 +90,7 @@ public class CollisionDetector implements Disposable {
 		public void onContactStarted(btCollisionObject o1, btCollisionObject o2) {
 			GameObject g1 = (GameObject) o1.userData;
 			GameObject g2 = (GameObject) o2.userData;
-			//Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.id + " (userData = " + g1.userData.getClass() + "), g2 = " + g2.id + " (userData = " + g2.userData.getClass() + ")" );
+			Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.id + " (userData = " + g1.userData.getClass() + "), g2 = " + g2.id + " (userData = " + g2.userData.getClass() + ")" );
 			m.clear();
 			// Store in hash to pass values in correct order later.
 			m.put(g1.userData.getClass(), g1.userData);
@@ -100,16 +100,19 @@ public class CollisionDetector implements Disposable {
 				for ( Type t : listener.getClass().getGenericInterfaces() )
 					if ( t instanceof ParameterizedType ) {
 						ParameterizedType type = (ParameterizedType) t;
-						if ( type.getRawType() != ICollisionListener.class )
+						if ( type.getRawType() != ICollisionListener.class ) {
 							continue;
+						}
 						// Retrieve from map.
 						Object first = m.get(type.getActualTypeArguments()[0]);
 						Object second = m.get(type.getActualTypeArguments()[1]);
 						// in case if same class, maintain Bullet's order
-						if ( first == second )
+						if ( first == second ) {
 							first = ret;
-						if ( first != null && second != null ) // the listener wants to know about this collision
+						}
+						if ( first != null && second != null ) { // the listener wants to know about this collision
 							listener.onCollision(first, second);
+						}
 						continue outer; // go to the next listener.
 					}
 				// Should never come to this
