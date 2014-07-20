@@ -121,13 +121,15 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     }
     
     private void parseComponents() {
-        long millis = System.currentTimeMillis();
+        
         parseJson();
         components.clear();
         GameObject o;
         for (JsonValue e : json.get("components")) {
             String ref = e.getString("ref");
+            long millis = System.currentTimeMillis();
             o = new GameObject(models.get(ref));
+            Gdx.app.log("LevelLoader.parseComponents", "GameObject: " + String.valueOf(System.currentTimeMillis()-millis));
             o.modelId = ref;
             o.id = e.getString("id");
             JsonValue visible = e.get("visible");
@@ -194,7 +196,6 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             
             components.put(o.id, o);
         }
-        Gdx.app.log("LevelLoader.parseComponents", "duration: " + String.valueOf(System.currentTimeMillis()-millis));
     }
     
     private GameModel dependencyFor(String ref) {
