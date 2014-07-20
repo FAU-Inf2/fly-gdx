@@ -48,7 +48,8 @@
 		},
 		{
 			"id": "gate1hole",
-			"ref": "hole"
+			"ref": "hole",
+			"visible": false
 		},
 		{
 			"id": "gate2",
@@ -58,7 +59,8 @@
 		},
 		{
 			"id": "gate2hole",
-			"ref": "hole"
+			"ref": "hole",
+			"visible": false
 		},
 		{
 			"id": "gate3",
@@ -68,7 +70,8 @@
 		},
 		{
 			"id": "gate3hole",
-			"ref": "hole"
+			"ref": "hole",
+			"visible": false
 		}
 	]
 }

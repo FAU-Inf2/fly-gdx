@@ -36,7 +36,8 @@
         },
         {
             "id": "Gate.000hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         },
         {
             "euler": [
@@ -54,7 +55,8 @@
         },
         {
             "id": "Gate.001hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         },
         {
             "euler": [
@@ -72,7 +74,8 @@
         },
         {
             "id": "Gate.002hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         },
         {
             "euler": [
@@ -90,7 +93,8 @@
         },
         {
             "id": "Gate.003hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         },
         {
             "euler": [
@@ -108,7 +112,8 @@
         },
         {
             "id": "Gate.004hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         },
         {
             "euler": [
@@ -126,7 +131,8 @@
         },
         {
             "id": "Gate.005hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         },
         {
             "euler": [
@@ -144,7 +150,8 @@
         },
         {
             "id": "Gate.006hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         },
         {
             "euler": [
@@ -162,7 +169,8 @@
         },
         {
             "id": "Gate.007hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         },
         {
             "euler": [
@@ -180,7 +188,8 @@
         },
         {
             "id": "Gate.008hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         },
         {
             "euler": [
@@ -198,7 +207,8 @@
         },
         {
             "id": "Gate.009hole",
-            "ref": "hole"
+            "ref": "hole",
+			"visible": false
         }
     ],
     "dependencies": {

@@ -336,7 +336,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             
             if (g.goal.getRigidBody() == null) {
                 btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-                g.goal.hide();
+                //g.goal.hide();
                 g.goal.userData = g;
                 g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
                 g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
@@ -392,7 +392,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             eventListeners.get(i).onRender();
         }
         final int numberOfComponents = components.size();
-        Gdx.app.log("components:", String.valueOf(numberOfComponents));
+        //Gdx.app.log("components:", String.valueOf(numberOfComponents));
         for (i = 0; i < numberOfComponents; i++) {
             components.get(i).render(batch, environment, camera);
         }

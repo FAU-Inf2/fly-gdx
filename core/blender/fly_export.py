@@ -118,12 +118,16 @@ class LevelExporter:
 				component['euler'] = [ ConvertHelper.convert_angle(item.rotation_euler.x) - 90.0, ConvertHelper.convert_angle(item.rotation_euler.y), ConvertHelper.convert_angle(item.rotation_euler.z) ]
 				if item.scale.x != 1.0 or item.scale.y != 1.0 or item.scale.z != 1.0:
 					component['scale'] = [ ConvertHelper.convert_pos(item.scale.x), ConvertHelper.convert_pos(item.scale.y), ConvertHelper.convert_pos(item.scale.z) ]
+				if "Visible" in item:
+					if "false" in item['Visible']:
+						component['visible'] = False
 				components.append(component)
 				
 				if "Gate" in item.name:
 					component = { }
 					component['id'] = item.name + "hole"
 					component['ref'] = item['HoleModel']
+					component['visible'] = False
 					components.append(component)
 			
 		return components

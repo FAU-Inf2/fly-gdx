@@ -130,6 +130,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             o = new GameObject(models.get(ref));
             o.modelId = ref;
             o.id = e.getString("id");
+            JsonValue visible = e.get("visible");
+            if (visible != null && !visible.asBoolean()) {
+            	o.hide();
+            }
+            
             JsonValue transform = e.get("transformMatrix");
             JsonValue position = e.get("position");
             if (transform != null) {
