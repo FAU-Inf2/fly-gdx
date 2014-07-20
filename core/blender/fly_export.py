@@ -118,9 +118,17 @@ class LevelExporter:
 				component['euler'] = [ ConvertHelper.convert_angle(item.rotation_euler.x) - 90.0, ConvertHelper.convert_angle(item.rotation_euler.y), ConvertHelper.convert_angle(item.rotation_euler.z) ]
 				if item.scale.x != 1.0 or item.scale.y != 1.0 or item.scale.z != 1.0:
 					component['scale'] = [ ConvertHelper.convert_pos(item.scale.x), ConvertHelper.convert_pos(item.scale.y), ConvertHelper.convert_pos(item.scale.z) ]
+
 				if "Visible" in item:
 					if "false" in item['Visible']:
 						component['visible'] = False
+
+				if len(item.game.actuators) > 0:
+					if "Motion" in item.game.actuators[0].name:
+						act = item.game.actuators[0]
+						component['linear_velocity'] = [ act.linear_velocity.x, act.linear_velocity.y, act.linear_velocity.z ]
+						component['angular_velocity'] = [ act.angular_velocity.x, act.angular_velocity.y, act.angular_velocity.z ]
+						
 				components.append(component)
 				
 				if "Gate" in item.name:
