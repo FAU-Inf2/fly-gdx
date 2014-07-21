@@ -43,8 +43,10 @@ public class Assets {
     }
     
     public static void unload(String assetName) {
-        if (manager.containsAsset(assetName)) {
+    	//TODO: manager.contains needs the assetName but manager.unload the fileName
+    	// currently assetName is actually the fileName so manager.contains is always false
+        //if (manager.containsAsset(assetName)) {
             manager.unload(assetName);
-        }
+        //}
     }
 }
