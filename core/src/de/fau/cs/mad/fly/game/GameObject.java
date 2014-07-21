@@ -100,7 +100,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	// TODO: create more constructors to match the ModelInstance constructors
 
 	/**
-	 * Contructs a new game object without any collision detection.
+	 * Constructs a new game object without any collision detection.
 	 * @param model
 	 */
 	public GameObject(GameModel model) {
@@ -108,7 +108,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	}
 	
 	/**
-	 * Contructs a new game object without any collision detection.
+	 * Constructs a new game object without any collision detection.
 	 * @param model
 	 * @param id
 	 */

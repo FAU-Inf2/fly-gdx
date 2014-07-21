@@ -254,6 +254,13 @@ watch
   rotate: false
   xy: 245, 289
   size: 155, 155
-  orig: 0, 0
+  orig: 155, 155
+  offset: 0, 0
+  index: -1
+arrow
+  rotate: false
+  xy: 260, 149
+  size: 78, 140
+  orig: 78, 140
   offset: 0, 0
   index: -1

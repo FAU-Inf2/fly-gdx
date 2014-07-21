@@ -300,7 +300,7 @@ public class GameControllerBuilder {
      * @return Builder instance with GateIndicator
      */
     private GameControllerBuilder addGateIndicator() {
-        GateIndicator gateIndicator = new GateIndicator();
+        GateIndicator gateIndicator = new GateIndicator(game.getSkin());
         addFeatureToLists(gateIndicator);
         return this;
     }

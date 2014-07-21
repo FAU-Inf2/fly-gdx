@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.features.overlay;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -8,9 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.ui.UI;
@@ -37,13 +34,12 @@ public class PauseGameOverlay implements IFeatureInit {
 		pauseButton.addListener(new ClickListener() {
 			@Override 
 			public void clicked(InputEvent event, float x, float y) {
-				Fly game = (Fly) Gdx.app.getApplicationListener();
 				
-				if(game.getGameController().isRunning()) {
-					game.getGameController().pauseGame();
+				if(gameController.isRunning()) {
+				    gameController.pauseGame();
 					pauseButton.setText(I18n.t("run"));
-				} else if(game.getGameController().isPaused()) {
-					game.getGameController().resumeGame();
+				} else if(gameController.isPaused()) {
+				    gameController.resumeGame();
 					pauseButton.setText(I18n.t("pause"));
 				}
 			}
