@@ -1,6 +1,8 @@
 package de.fau.cs.mad.fly.features.upgrades;
 
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
+import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.TimeController;
 
 /**
  * 
@@ -8,16 +10,23 @@ import de.fau.cs.mad.fly.features.game.CollectibleObjects;
  *
  */
 public class AddTimeUpgrade extends CollectibleObjects {
-	private int addedTime;
+	private TimeController timeController;
+	private float addedTime;
 
-	public AddTimeUpgrade(String modelRef, int addedTime) {
+	public AddTimeUpgrade(String modelRef, float addedTime) {
 		super(modelRef);
 		this.addedTime = addedTime;
+	}
+	
+	@Override
+	public void init(GameController game) {
+		super.init(game);
+		timeController = game.getTimeController();
 	}
 
 	@Override
 	protected void handleCollecting() {
-		//+= addedTime;
+		timeController.addBonusTime(addedTime);
 	}
 
 }
