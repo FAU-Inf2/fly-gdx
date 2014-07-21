@@ -180,6 +180,11 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         return gates.get(id);
     }
     
+    public void addGate(Gate gate) {
+    	gates.put(gate.id, gate);
+    	allGates.add(gate);
+    }
+    
     /**
      * Fills the Map that maps id to the corresponding gate and the list of all
      * gates.
@@ -317,7 +322,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         return virtualGate.successors;
     }
     
-    public Iterable<Gate> allGates() {
+    public List<Gate> allGates() {
         return allGates;
     }
     

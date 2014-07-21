@@ -44,22 +44,18 @@ public class EndlessLevelGenerator {
 		
 		this.gates = new ArrayList<Gate>();
 		this.predecessors = new ArrayList<Gate>();
-		List<GameObject> coll =  new ArrayList<GameObject>();
-		coll.addAll(level.components);
 		
 		lastGatePassed = new Gate(-2);
-		//TODO: lastGatePassed.successors = new ArrayList<Gate>();
+		lastGatePassed.successors = new int[0];
 		
-		level.components = coll;
+		this.gates = level.allGates();
+		int size = gates.size();
 		
-		for(Gate g : level.allGates()) {
-			this.gates.add(g);
-			
-			if(lastGate != null) {
-				lastDirection = g.display.getPosition().cpy().sub(lastGate.display.getPosition().cpy());
-				lastDirection.nor();
-			}
-			lastGate = g;
+		lastGate = gates.get(size - 1);
+		if(size > 1) {
+			lastDirection = lastGate.display.getPosition().cpy().sub(gates.get(size - 2).display.getPosition());
+		} else {
+			lastDirection = level.start.viewDirection;
 		}
 		predecessors.add(lastGate);
 	}
@@ -76,15 +72,18 @@ public class EndlessLevelGenerator {
 	public void addRandomGate(Gate passed) {
 		Gdx.app.log("myApp", "addRandomGate");
 		if(passed.id != lastGateId) {
-			//Gate newGate = generateRandomGate(gates.get(gates.size()-1));
 			List<Gate> newGates = generateRandomGates(predecessors);
 			
 			predecessors.clear();
-			for(Gate newGate : newGates) {
+			int size = newGates.size();
+			for(int i = 0; i < size; i++) {
+				Gate newGate = newGates.get(i);
+				
 				Gdx.app.log("myApp", "newGate");
 				level.components.add(newGate.display);
 				//level.components.add(newGate.goal);
 				
+				level.addGate(newGate);
 				gates.add(newGate);
 				predecessors.add(newGate);
 			}
@@ -102,13 +101,17 @@ public class EndlessLevelGenerator {
 			
 			
 			// removing passed gate and all possible parallel gates
-//			TODO: for(Gate successor : lastGatePassed.successors) {
-//				level.components.remove(successor.display);
-//				level.components.remove(successor.goal);
-//				
-//				gates.remove(successor);
-//				successor.dispose();
-//			}
+			size = lastGatePassed.successors.length;
+			for(int i = 0; i < size; i++) {
+				int id = lastGatePassed.successors[i];
+				Gate successor = level.getGateById(id);
+				
+				level.components.remove(successor.display);
+				level.components.remove(successor.goal);
+				
+				gates.remove(successor);
+				successor.dispose();
+			}
 			
 			lastGatePassed = passed;
 			
@@ -143,6 +146,7 @@ public class EndlessLevelGenerator {
 
 			Vector3 newDirection;
 			
+			// places the gate at a random position until it is far enough to any other gate
 			do {
 				newDirection = lastDirection.cpy();
 				newDirection.rotate(new Vector3(0,0,1), MathUtils.random(maxAngle * 2) - maxAngle);
@@ -169,23 +173,31 @@ public class EndlessLevelGenerator {
 			// add display and goal to the new Gate
 			newGate.display = display;
 			newGate.goal = goal;
-			// TODO: newGate.successors = new ArrayList<Level.Gate>();
+			newGate.successors = new int[0];
 			
 			addRigidBody(newGate);
 			
 			//lastDirection = newDirection.cpy();
 			newLastDirection.add(newDirection.cpy());
-			currGate++;
 			
 			newGates.add(newGate);
 			rand = MathUtils.random();
+			currGate++;
 		}
 		
 		newLastDirection.scl(1.f / newGates.size());
 		lastDirection = newLastDirection.cpy();
 		
-		for(Gate predecessor : predecessors) {
-			//TODO: predecessor.successors = newGates;
+		int size = newGates.size();
+		int[] newGateIds = new int[size];
+		for(int i = 0; i < size; i++) {
+			newGateIds[i] = newGates.get(i).id;
+		}
+		
+		size = predecessors.size();
+		for(int i = 0; i < size; i++) {
+			Gate predecessor = predecessors.get(i);
+			predecessor.successors = newGateIds;
 		}
 		
 		return newGates;
@@ -217,7 +229,9 @@ public class EndlessLevelGenerator {
 	}
 	
 	private boolean checkForSpawnCollision(Vector3 position, List<Gate> gates, float distance) {
-		for(Gate gate : gates) {
+		int size = gates.size();
+		for(int i = 0; i < size; i++) {
+			Gate gate = gates.get(i);
 			if(position.dst(gate.display.getPosition()) < distance) {
 				return true;
 			}
