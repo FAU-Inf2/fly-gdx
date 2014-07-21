@@ -43,9 +43,9 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	private float lastRoll = 0.f;
 	private float lastAzimuth = 0.f;
 	
-	private float speed = 2.0f;
-	private float azimuthSpeed = 9.0f;
-	private float rollingSpeed = 9.0f;
+	private float speed;
+	private float azimuthSpeed;
+	private float rollingSpeed;
 	
 	public Spaceship(String modelRef) {
 		this.modelRef = modelRef;
@@ -58,6 +58,8 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		this.environment = gameController.getLevel().getEnvironment();
 		this.camera = gameController.getCamera();
 		linearMovement = new Vector3();
+		
+		resetSpeed();
 		
 		Assets.load(Assets.spaceship);
 		
@@ -179,5 +181,12 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	@Override
 	public int getMaxHealth() {
 		return 10;
+	}
+
+	@Override
+	public void resetSpeed() {
+		speed = 2.0f;
+		azimuthSpeed = 9.0f;
+		rollingSpeed = 9.0f;
 	}
 }

@@ -71,6 +71,11 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	public Vector3 getPosition();
 	
 	/**
+	 * Resets the speed to the normal plane value without upgrades.
+	 */
+	public void resetSpeed();
+	
+	/**
 	 * Rotates the plane with given roll and azimuth dir.
 	 * 
 	 * @param rollDir

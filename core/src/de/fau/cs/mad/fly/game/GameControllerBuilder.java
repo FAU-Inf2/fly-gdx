@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -23,7 +22,6 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
-import de.fau.cs.mad.fly.features.game.AsteroidBelt;
 import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
@@ -34,8 +32,6 @@ import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeUpOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
-import de.fau.cs.mad.fly.features.upgrades.AddTimeUpgrade;
-import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgrade;
 import de.fau.cs.mad.fly.levels.DefaultLevel;
 import de.fau.cs.mad.fly.levels.ILevel;
 import de.fau.cs.mad.fly.player.IPlane;
@@ -263,7 +259,7 @@ public class GameControllerBuilder {
      * @param feature
      *            The feature to put in the lists.
      */
-    private void addFeatureToLists(Object feature) {
+    public void addFeatureToLists(Object feature) {
         if (feature instanceof IFeatureLoad) {
             optionalFeaturesToLoad.add((IFeatureLoad) feature);
         }
@@ -291,6 +287,10 @@ public class GameControllerBuilder {
         if (feature instanceof IFeatureDispose) {
             optionalFeaturesToDispose.add((IFeatureDispose) feature);
         }
+        
+    	if (feature instanceof ICollisionListener) {
+    		CollisionDetector.getInstance().getCollisionContactListener().addListener((ICollisionListener) feature);
+    	}
     }
     
     /**
@@ -398,46 +398,6 @@ public class GameControllerBuilder {
     private GameControllerBuilder addPlayerPlane() {
         IPlane plane = player.getPlane();
         addFeatureToLists(plane);
-        return this;
-    }
-    
-    /**
-     * Adds a {@link AsteroidBelt} to the GameController, that is loaded,
-     * initialized, updated every frame and disposed.
-     * 
-     * @return Builder instance with AsteroidBelt
-     */
-    public GameControllerBuilder addAsteroidBelt() {
-        AsteroidBelt asteroidBelt = new AsteroidBelt(10, "asteroid", new Vector3(20.0f, 20.0f, 20.0f));
-        addFeatureToLists(asteroidBelt);
-        return this;
-    }
-    
-    /**
-     * Adds a {@link InstantSpeedUpgrade} to the GameController, that is
-     * initialized, updated every frame and updated when the game is finished.
-     * 
-     * @return Builder instance with InstantSpeedUpgrade
-     */
-    public GameControllerBuilder addInstantSpeedUpgrade() {
-    	InstantSpeedUpgrade instantSpeedUpgrade = new InstantSpeedUpgrade("speedUpgrade", 4.0f, 10.0f);
-        addFeatureToLists(instantSpeedUpgrade);
-        CollisionDetector.getInstance().getCollisionContactListener().addListener(instantSpeedUpgrade);
-        
-        return this;
-    }
-    
-    /**
-     * Adds a {@link AddTimeUpgrade} to the GameController, that is
-     * initialized, updated every frame and updated when the game is finished.
-     * 
-     * @return Builder instance with AddTimeUpgrade
-     */
-    public GameControllerBuilder addAddTimeUpgrade() {
-    	AddTimeUpgrade addTimeUpgrade = new AddTimeUpgrade("timeUpgrade", 10.0f);
-        addFeatureToLists(addTimeUpgrade);
-        CollisionDetector.getInstance().getCollisionContactListener().addListener(addTimeUpgrade);
-        
         return this;
     }
     

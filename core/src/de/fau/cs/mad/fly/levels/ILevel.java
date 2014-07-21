@@ -1,7 +1,5 @@
 package de.fau.cs.mad.fly.levels;
 
-import java.util.List;
-
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 
 /**

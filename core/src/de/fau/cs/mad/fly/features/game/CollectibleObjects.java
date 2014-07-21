@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
-import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
@@ -24,22 +20,7 @@ import de.fau.cs.mad.fly.player.Spaceship;
  * 
  * @author Tobi
  */
-public abstract class CollectibleObjects implements IFeatureLoad, IFeatureInit, IFeatureDispose, ICollisionListener<Spaceship, GameObject> {
-
-	/**
-	 * ModelBatch used to render the collectible objects.
-	 */
-	private ModelBatch batch;
-	
-	/**
-	 * Environment used to render the collectible objects.
-	 */
-	private Environment environment;
-	
-	/**
-	 * Camera used to render the collectible objects.
-	 */
-	private PerspectiveCamera camera;
+public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispose, ICollisionListener<Spaceship, GameObject> {
 
 	/**
 	 * The model reference for the collectible objects.
@@ -63,9 +44,6 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureInit, 
 	
 	@Override
 	public void load(GameController game) {
-		batch = game.getBatch();
-		environment = game.getLevel().getEnvironment();
-
 		collectibleObjects = new ArrayList<GameObject>();		
 		
 		for(GameObject gameObject : game.getLevel().components) {
@@ -84,11 +62,6 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureInit, 
 		}
 
 		Gdx.app.log("CollectibleObjects.load", "Collectible objects created.");
-	}
-	
-	@Override
-	public void init(GameController game) {
-		camera = game.getCamera();
 	}
 
 	@Override
