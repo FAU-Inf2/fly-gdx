@@ -11,8 +11,11 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
+import com.badlogic.gdx.assets.loaders.ModelLoader;
+import com.badlogic.gdx.assets.loaders.ModelLoader.ModelParameters;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
@@ -238,7 +241,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         this.file = file;
         this.parameter = parameter;
         parseDependencies();
-        Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
+        Array<AssetDescriptor> deps = new Array<AssetDescriptor>();        
         for (String name : dependencies.values()) {
             // Gdx.app.log("LevelLoader.getDependencies", name);
             deps.add(new AssetDescriptor<GameModel>(name, GameModel.class));
