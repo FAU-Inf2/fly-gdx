@@ -6,7 +6,7 @@ import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 
 /**
- * Used to display and handle speed upgrades.
+ * Used to display and handle instant speed upgrades.
  * 
  * @author Tobi
  *

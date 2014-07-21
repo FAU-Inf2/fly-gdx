@@ -6,6 +6,7 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.TimeController;
 
 /**
+ * Used to display and handle add time upgrades.
  * 
  * @author Tobi
  *
@@ -21,6 +22,12 @@ public class AddTimeUpgrade extends CollectibleObjects implements IFeatureInit {
 	 */
 	private float addedTime;
 
+	/**
+	 * Creates an add time upgrade with specific model for the upgrade display and specific time which is added to the current time used by the player.
+	 * 
+	 * @param modelRef		The model reference.
+	 * @param addedTime		The time to add in seconds.
+	 */
 	public AddTimeUpgrade(String modelRef, float addedTime) {
 		super(modelRef);
 		this.addedTime = addedTime;

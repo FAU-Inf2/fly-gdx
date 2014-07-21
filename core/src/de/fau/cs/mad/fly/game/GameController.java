@@ -197,7 +197,7 @@ public class GameController implements TimeIsUpListener {
     }
     
     /**
-     * Sets the game from paused to running
+     * Sets the game from paused to running.
      */
     public void resumeGame() {
         gameState = GameState.RUNNING;
@@ -228,7 +228,7 @@ public class GameController implements TimeIsUpListener {
      * @return true if the game is paused, otherwise false.
      */
     public boolean isPaused() {
-        return (gameState == GameState.PAUSED);
+        return gameState == GameState.PAUSED;
     }
     
     /**
@@ -250,7 +250,7 @@ public class GameController implements TimeIsUpListener {
             level.update(delta, camera);
             
             len = optionalFeaturesToUpdate.size();
-            for (i = 0; i< len; i++) {
+            for (i = 0; i < len; i++) {
                 optionalFeaturesToUpdate.get(i).update(delta);
             }
             
@@ -264,7 +264,7 @@ public class GameController implements TimeIsUpListener {
         batch.begin(camera);
         level.render(delta, batch, camera);
         len = optionalFeaturesToRender.size();
-        for (i = 0; i< len; i++) {
+        for (i = 0; i < len; i++) {
             optionalFeaturesToRender.get(i).render(delta);
         }
         batch.end();
