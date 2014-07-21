@@ -132,6 +132,9 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
      */
     public final float radius = 100.0f;
     public final Head head;
+    
+    public String levelClass = "DefaultLevel";
+    
     public List<GameObject> components;
     public final Perspective start;
     /** gate that has been passed recently, at the beginning the dummy gate */

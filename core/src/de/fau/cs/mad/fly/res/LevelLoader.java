@@ -93,6 +93,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
         componentsList.addAll(components.values());
         Level level = new Level(json.getString("name"), start, componentsList, models, dummy);
+        JsonValue levelClass = json.get("class");
+        if (levelClass != null) {
+        	level.levelClass = levelClass.asString();
+        }
         level.setGates(gateMap);
         level.head.id = json.getInt("id");
         level.setLeftTime(json.getInt("time"));
@@ -204,12 +208,13 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private void deinit() {
         level = null;
         json = null;
-        components.clear();;
+        components.clear();
         dependencies = null;
         file = null;
         parameter = null;
         manager = null;
-        models.clear();
+        // Models are needed for the features, dont clear them!
+        //models.clear();
     }
     
     @Override

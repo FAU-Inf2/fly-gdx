@@ -263,6 +263,7 @@
     "id": 7,
     "name": "Level 7",
     "scripts": [],
+	"class": "AsteroidLevel",
     "start": {
         "position": {
             "x": 0.0,

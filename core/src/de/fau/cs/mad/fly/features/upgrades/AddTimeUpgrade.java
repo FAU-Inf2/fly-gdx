@@ -10,7 +10,14 @@ import de.fau.cs.mad.fly.game.TimeController;
  *
  */
 public class AddTimeUpgrade extends CollectibleObjects {
+	/**
+	 * Time controller to add the time to.
+	 */
 	private TimeController timeController;
+	
+	/**
+	 * The amount of time to add.
+	 */
 	private float addedTime;
 
 	public AddTimeUpgrade(String modelRef, float addedTime) {

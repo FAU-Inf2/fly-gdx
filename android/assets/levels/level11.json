@@ -123,6 +123,7 @@
     "id": 11,
     "name": "Level 11",
     "scripts": [],
+	"class": "Level_11",
     "start": {
         "position": {
             "x": 0.0,

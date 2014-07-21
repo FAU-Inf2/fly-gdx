@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.game;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -23,7 +24,6 @@ import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.AsteroidBelt;
-import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
@@ -36,6 +36,8 @@ import de.fau.cs.mad.fly.features.overlay.TimeUpOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.features.upgrades.AddTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgrade;
+import de.fau.cs.mad.fly.levels.DefaultLevel;
+import de.fau.cs.mad.fly.levels.ILevel;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
@@ -173,22 +175,19 @@ public class GameControllerBuilder {
         
         Gdx.app.log("Builder.init", "Final work for level done.");
         
-        checkAndAddFeatures();
+        checkAndAddSettingFeatures();
+        
+        addLevelFeatures(level);
         
         return this;
     }
     
     /**
-     * Checks the preferences if the features should be used and adds them to
+     * Checks the preferences if the standard features should be used and adds them to
      * the game controller if necessary.
      */
-    private void checkAndAddFeatures() {
+    private void checkAndAddSettingFeatures() {
         // if needed for debugging: Debug.init(game.getSkin(), stage, 1);
-        
-        addAsteroidBelt();
-        
-        addInstantSpeedUpgrade();
-        addAddTimeUpgrade();
         
         Preferences preferences = player.getSettingManager().getPreferences();
         addGateIndicator();
@@ -219,6 +218,42 @@ public class GameControllerBuilder {
             });
         }
         addGameFinishedOverlay();
+    }
+    
+    /**
+     * Checks the {@link Level.levelClass} value and uses the default class features or the features of a given class if found and invoked correctly.
+     * 
+     * @param level			The currently used level with a specific level class if stored in the json.
+     */
+    private void addLevelFeatures(Level level) {
+    	if(level.levelClass == null || level.levelClass.equals("") || level.levelClass.equals("DefaultClass")) {
+    		addDefaultLevel();
+    	} else {
+    		try {
+				Class<?> c = Class.forName("de.fau.cs.mad.fly.levels." + level.levelClass);
+				Object obj = c.newInstance();
+				
+				@SuppressWarnings("rawtypes")
+				Class[] parameterTypes = new Class[1];	
+				parameterTypes[0] = GameControllerBuilder.class;
+				
+				Method method = c.getDeclaredMethod("create", parameterTypes);
+				method.invoke(obj, this);
+				
+				Gdx.app.log("Builder", level.levelClass + " used.");
+			} catch (Exception e) {
+				addDefaultLevel();
+			}
+    	}
+    }
+    
+    /**
+     * Adds the default level features.
+     */
+    private void addDefaultLevel() {
+    	ILevel defaultLevel = new DefaultLevel();
+		defaultLevel.create(this);
+		Gdx.app.log("Builder", "DefaultLevel used.");
     }
     
     /**
@@ -267,18 +302,6 @@ public class GameControllerBuilder {
     private GameControllerBuilder addGateIndicator() {
         GateIndicator gateIndicator = new GateIndicator();
         addFeatureToLists(gateIndicator);
-        return this;
-    }
-    
-    /**
-     * Adds a {@link AsteroidBelt} to the GameController, that is loaded,
-     * initialized, updated every frame and disposed.
-     * 
-     * @return Builder instance with AsteroidBelt
-     */
-    private GameControllerBuilder addAsteroidBelt() {
-        AsteroidBelt asteroidBelt = new AsteroidBelt(10, "asteroid", new Vector3(20.0f, 20.0f, 20.0f));
-        addFeatureToLists(asteroidBelt);
         return this;
     }
     
@@ -379,12 +402,24 @@ public class GameControllerBuilder {
     }
     
     /**
+     * Adds a {@link AsteroidBelt} to the GameController, that is loaded,
+     * initialized, updated every frame and disposed.
+     * 
+     * @return Builder instance with AsteroidBelt
+     */
+    public GameControllerBuilder addAsteroidBelt() {
+        AsteroidBelt asteroidBelt = new AsteroidBelt(10, "asteroid", new Vector3(20.0f, 20.0f, 20.0f));
+        addFeatureToLists(asteroidBelt);
+        return this;
+    }
+    
+    /**
      * Adds a {@link InstantSpeedUpgrade} to the GameController, that is
      * initialized, updated every frame and updated when the game is finished.
      * 
      * @return Builder instance with InstantSpeedUpgrade
      */
-    private GameControllerBuilder addInstantSpeedUpgrade() {
+    public GameControllerBuilder addInstantSpeedUpgrade() {
     	InstantSpeedUpgrade instantSpeedUpgrade = new InstantSpeedUpgrade("speedUpgrade", 4.0f, 10.0f);
         addFeatureToLists(instantSpeedUpgrade);
         CollisionDetector.getInstance().getCollisionContactListener().addListener(instantSpeedUpgrade);
@@ -398,7 +433,7 @@ public class GameControllerBuilder {
      * 
      * @return Builder instance with AddTimeUpgrade
      */
-    private GameControllerBuilder addAddTimeUpgrade() {
+    public GameControllerBuilder addAddTimeUpgrade() {
     	AddTimeUpgrade addTimeUpgrade = new AddTimeUpgrade("timeUpgrade", 10.0f);
         addFeatureToLists(addTimeUpgrade);
         CollisionDetector.getInstance().getCollisionContactListener().addListener(addTimeUpgrade);

@@ -317,6 +317,7 @@
     "id": 5,
     "name": "Level 5",
     "scripts": [],
+	"class": "AsteroidLevel",
     "start": {
         "position": {
             "x": 0.0,

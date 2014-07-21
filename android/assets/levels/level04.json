@@ -236,6 +236,7 @@
     "id": 4,
     "name": "Level 4",
     "scripts": [],
+	"class": "AsteroidLevel",
     "start": {
         "position": {
             "x": 0.0,
