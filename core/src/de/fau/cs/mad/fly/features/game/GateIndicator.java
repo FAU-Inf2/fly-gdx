@@ -29,14 +29,13 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
      */
     private Vector3 vectorToTarget;
     /**
-     * Vector that points right, compared to the camera direction. It should always have the length 1.
+     * Vector that points right, compared to the camera direction. It should
+     * always have the length 1.
      */
     private Vector3 cross;
     /**
      * Local copy of the camera direction to calculate with.
      */
-    private Vector3 cameraDirection;
-    private Vector3 up;
     private Vector3 midPoint;
     
     // the following 4 Vectors are made members, to avoid recreating them every
@@ -46,10 +45,12 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
     private static Vector3 tmp1 = new Vector3();
     private static Vector3 tmp2 = new Vector3();
     
+    /** Local copy of the camera for performance reasons. */
     private Camera camera;
     
     /** Texture that is used to draw the indicator for the next gate */
     private final TextureRegion arrow;
+    
     /** Batch that is used for rendering the indicators */
     private final Batch batch;
     
@@ -67,69 +68,87 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
      * the arrows cover.
      */
     private final float horizontalCenter = Gdx.graphics.getWidth() / 2;
+    
     /**
      * Vertical center of the screen. It defines the mid point of the circle the
      * arrows cover.
      */
     private final float verticalCenter = Gdx.graphics.getHeight() / 2;
+    
     /**
      * Horizontal starting position, where the arrow is placed when angle = 0°
      */
     private final float startPosX;
+    
     /**
      * Vertical starting position, where the arrow is placed when angle = 0°
      */
     private final float startPosY = verticalCenter + radius;
     
+    /** Height of the arrow to indicate the next gate */
     private final float arrowHeigth;
+    
+    /** Width of the arrow to indicate the next gate */
     private final float arrowWidth;
     
+    /** X-Coordinate of origin relative to the arrow, used for rotation */
     private final float originX;
+    
+    /** Y-Coordinate of origin relative to the arrow, used for rotation */
     private final float originY;
+    
+    /** Rotation angle of the arrow. */
     private float angle = 0;
     
+    /** Reference to the current gate. */
+    private GameObject gate;
+    
+    /**
+     * Flag which indicates weather batch.begin() has been called. Used to avoid
+     * unnecessary batch calls in the case nothing has to be drawn.
+     */
+    private boolean batchBegin;
+    
+    
+    
     public GateIndicator(final Skin skin) {
-        arrow = skin.getRegion("arrow");
-        arrowWidth = arrow.getRegionWidth();
-        arrowHeigth = arrow.getRegionHeight();
-        originX = arrow.getRegionWidth() / 2;
-        originY = -radius;
-        startPosX = horizontalCenter - arrow.getRegionWidth() / 2;
-        midPoint = new Vector3();
+        this.arrow = skin.getRegion("arrow");
+        this.arrowWidth = arrow.getRegionWidth();
+        this.arrowHeigth = arrow.getRegionHeight();
+        
+        this.originX = arrow.getRegionWidth() / 2;
+        this.originY = -radius;
+        
+        this.startPosX = horizontalCenter - arrow.getRegionWidth() / 2;
+        this.midPoint = new Vector3();
+        
         this.batch = new SpriteBatch();
     }
     
     @Override
     public void init(final GameController gameController) {
         this.level = gameController.getLevel();
-        
-        camera = gameController.getCamera();
-        
-        vectorToTarget = new Vector3();
-        cross = new Vector3();
-        cameraDirection = new Vector3();
-        up = new Vector3();
+        this.camera = gameController.getCamera();
+        this.vectorToTarget = new Vector3();
+        this.cross = new Vector3();
+        this.batchBegin = false;
     }
     
     @Override
     public void draw(float delta) {
-        int[] gates = level.currentGates();
-        up.set(camera.up);
-        cameraDirection.set(camera.direction);
         // vector orthogonal to up and cameraDirection
-        cross.set(up).crs(cameraDirection).nor();
-        GameObject gate;
-        batch.begin();
-        for (int i = 0; i < gates.length; i++) {
-            gate = level.getGateById(gates[i]).goal;
+        cross.set(camera.up).crs(camera.direction);
+        for (int i = 0; i < level.currentGates().length; i++) {
+            gate = level.getGateById(level.currentGates()[i]).goal;
             // only draw a gate indicator when the next gate is not visible. If
             // it is visible, the gate itself is highlighted
             if (!gate.isVisible(camera)) {
                 // get the midpoint in the near plane to compute the vector to
                 // the projected point
-                midPoint.set(camera.position).add(cameraDirection.scl(camera.near));
-                vectorToTarget = projectPointToPlane(gate.getPosition(), cross, up).sub(camera.position);
-                angle = angleBetweenTwoVectors(up, vectorToTarget);
+                midPoint.set(camera.direction).scl(camera.near).add(camera.position);
+                vectorToTarget.set(projectPointToPlane(gate.getPosition(), cross, camera.up));
+                vectorToTarget.sub(camera.position);
+                angle = angleBetweenTwoVectors(camera.up, vectorToTarget);
                 // as the angle is only computed from 0 to 180°, it is necessary
                 // to flip the direction, if it has the other direction than the
                 // reference vector. Otherwise the indicator would only point
@@ -137,13 +156,22 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
                 if (vectorToTarget.hasOppositeDirection(cross)) {
                     angle = 360 - angle;
                 }
+                if (!batchBegin) {
+                    batch.begin();
+                    batchBegin = true;
+                }
                 batch.draw(arrow, startPosX, startPosY, originX, originY, arrowWidth, arrowHeigth, 1f, 1f, angle);
             }
         }
-        batch.end();
+        if (batchBegin) {
+            batch.end();
+            batchBegin = false;
+        }
     }
     
     /**
+     * Projects a point onto a plane.
+     * <p>
      * A plane is defined by the two plane-vectors. The point outside the plane
      * is projected orthogonally to the plane on the plane. The result is a
      * point the plane with the smallest distance to the given point outside the
