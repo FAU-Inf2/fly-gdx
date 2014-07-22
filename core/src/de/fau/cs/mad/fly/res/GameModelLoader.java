@@ -67,10 +67,14 @@ public class GameModelLoader extends AsynchronousAssetLoader<GameModel, GameMode
 		Array<AssetDescriptor> arr = new Array<AssetDescriptor>();
 
         ObjLoaderParameters modelParameters = new ObjLoaderParameters();
-        modelParameters.textureParameter.genMipMaps = true;
-        // TODO: check if the mag and min filter parameter are correct.
-        modelParameters.textureParameter.magFilter = TextureFilter.MipMap;
-        modelParameters.textureParameter.minFilter = TextureFilter.Nearest;
+        
+        // TODO: bad workaround for the spacesphere
+        if(!fileName.equals("spacesphere.obj")) {
+	        modelParameters.textureParameter.genMipMaps = true;
+	        // TODO: check if the mag and min filter parameter are correct.
+	        modelParameters.textureParameter.magFilter = TextureFilter.MipMap;
+	        modelParameters.textureParameter.minFilter = TextureFilter.Nearest;
+        }
 		
 		arr.add(new AssetDescriptor<Model>(fileName, Model.class, modelParameters));
 		if ( hitboxExists )
