@@ -44,7 +44,7 @@ public class LevelChooserScreen extends BasicScreen {
 			// fill a row with buttons
 			for (int column = 0; column < maxColumns; column++) {
 				final Level.Head level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
-				final TextButton button = new TextButton(level.name, skin.get(UI.Buttons.STYLE, TextButtonStyle.class));
+				final TextButton button = new TextButton(level.name, skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
 				button.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {

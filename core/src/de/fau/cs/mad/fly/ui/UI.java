@@ -65,9 +65,14 @@ public final class UI {
         public static final int MAIN_BUTTON_HEIGHT = 380;
         
         /** This is the default font size for all Buttons */
-        public static final int FONT_SIZE = 150;
+        public static final int DEFAULT_FONT_SIZE = 150;
         
-        public static final String STYLE = "rounded";
+        /** This is the default font size for all Buttons */
+        public static final int HELP_BUTTON_FONT_SIZE = 270;
+        
+        public static final String DEFAULT_STYLE = "rounded";
+        
+        public static final String BIG_FONT_SIZE_STYLE = "roundedBigSize";
         
         /** Max. number of buttons for level to show in a row */
         public static final int BUTTONS_IN_A_ROW = 2;

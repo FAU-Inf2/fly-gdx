@@ -43,10 +43,12 @@ public class MainMenuScreen extends BasicScreen {
         table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
         stage.addActor(table);
         
-        TextButtonStyle textButtonStyle = skin.get(UI.Buttons.STYLE, TextButtonStyle.class);
+        TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
         final Button continueButton = new TextButton(I18n.t("play"), textButtonStyle);
         final Button chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
         final ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+        
+        textButtonStyle = skin.get(UI.Buttons.BIG_FONT_SIZE_STYLE, TextButtonStyle.class);
         final Button helpButton = new TextButton("?", textButtonStyle);
         // final Button statsButton = new TextButton(I18n.t("highscores"),
         // textButtonStyle);

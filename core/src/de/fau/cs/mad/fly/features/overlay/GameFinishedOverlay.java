@@ -61,7 +61,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         
-        TextButtonStyle textButtonStyle = skin.get(UI.Buttons.STYLE, TextButtonStyle.class);
+        TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
         TextButton backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), textButtonStyle);
         backToMainMenuButton.addListener(new ClickListener() {
             @Override

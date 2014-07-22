@@ -101,7 +101,7 @@ public class StatisticsScreen extends BasicScreen {
 	}
 
 	public void initButtons() {
-		textButtonStyle = skin.get(UI.Buttons.STYLE, TextButtonStyle.class);
+		textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
 
 		changeUserButton = new TextButton(I18n.t("changeUserButtonText"), textButtonStyle);
 		addUserButton = new TextButton(I18n.t("addUserButtonText"), textButtonStyle);
