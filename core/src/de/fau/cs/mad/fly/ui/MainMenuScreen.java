@@ -47,10 +47,11 @@ public class MainMenuScreen extends BasicScreen {
         final Button continueButton = new TextButton(I18n.t("play"), textButtonStyle);
         final Button chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
         final ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+        final Button helpButton = new TextButton("?", textButtonStyle);
         // final Button statsButton = new TextButton(I18n.t("highscores"),
         // textButtonStyle);
         
-        table.add();
+        table.add(helpButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).left();
         table.add();
         table.add(settingsButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).right();
         table.row().expand();
