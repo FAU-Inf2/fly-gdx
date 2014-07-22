@@ -5,10 +5,17 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.ProgressListener;
+import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.ScalableProgressBar.ScalableProgressBarStyle;
@@ -28,6 +35,8 @@ public class LoadingScreen extends BasicScreen {
 	private Loader<Level> loader;
 	private Batch batch;
 	private float progressBarWidth = 2000f;
+	
+	private Table table;
 
 
 	public void initiate(Loader<Level> loader) {
@@ -54,7 +63,7 @@ public class LoadingScreen extends BasicScreen {
 		progressBar = new ScalableProgressBar(style);
 		progressBar.setWidth(progressBarWidth);
 		
-		Table table = new Table();
+		table = new Table();
 		table.setFillParent(true);
 		table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
 		stage.addActor(table);
@@ -71,6 +80,29 @@ public class LoadingScreen extends BasicScreen {
 			}
 		});
 		loader.initiate();
+	}
+	private boolean add = true;
+	public void addButton(Level level) {
+		if(add) {
+			progressBar.setVisible(false);
+			
+			final Level chosenLevel = level;
+	    	final TextButton button = new TextButton(I18n.t("play"), skin.get(UI.Buttons.STYLE, TextButtonStyle.class));
+			button.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					chosenLevel.reset();
+	                PlayerManager.getInstance().getCurrentPlayer().setLevel(chosenLevel);
+	                ((Fly) Gdx.app.getApplicationListener()).initGameController();
+	                ((Fly) Gdx.app.getApplicationListener()).setGameScreen();
+	                ((Fly) Gdx.app.getApplicationListener()).getGameController().initGame();
+	                ((Fly) Gdx.app.getApplicationListener()).getGameController().getFlightController().resetSteering();
+	                dispose();
+				}
+			});
+			table.add(button).top();
+		}
+		add = false;
 	}
 
 

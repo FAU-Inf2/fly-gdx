@@ -78,12 +78,7 @@ public class Loader<T> {
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
             public void progressFinished(Level level) {
-                level.reset();
-                PlayerManager.getInstance().getCurrentPlayer().setLevel(level);
-                ((Fly) Gdx.app.getApplicationListener()).initGameController();
-                ((Fly) Gdx.app.getApplicationListener()).setGameScreen();
-                ((Fly) Gdx.app.getApplicationListener()).getGameController().initGame();
-                loadingScreen.dispose();
+            	loadingScreen.addButton(level);
             }
         });
     }
