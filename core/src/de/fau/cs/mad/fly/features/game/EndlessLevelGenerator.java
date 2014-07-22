@@ -31,9 +31,14 @@ public class EndlessLevelGenerator {
 	
 	private Gate lastGate;
 	private Gate lastGatePassed;
+	private Gate lastRemoved;
 	
 	private float maxAngle = 45;
+	private float minAngle = 0.1f;
 	private int lastGateId = -1;
+	
+	private float difficulty;
+	private boolean increasingDifficulty;
 	
 	/**
 	 * 
@@ -42,11 +47,17 @@ public class EndlessLevelGenerator {
 	public EndlessLevelGenerator(Level level) {
 		this.level = level;
 		
+		this.difficulty = 0.f;
+		this.maxAngle = 45.f + 4.5f * difficulty;
+		this.increasingDifficulty = true;
+		
 		this.gates = new ArrayList<Gate>();
 		this.predecessors = new ArrayList<Gate>();
 		
 		lastGatePassed = new Gate(-2);
 		lastGatePassed.successors = new int[0];
+		lastRemoved = new Gate(-3);
+		lastRemoved.successors = new int[0];
 		
 		this.gates = level.allGates();
 		int size = gates.size();
@@ -101,9 +112,9 @@ public class EndlessLevelGenerator {
 			
 			
 			// removing passed gate and all possible parallel gates
-			size = lastGatePassed.successors.length;
+			size = lastRemoved.successors.length;
 			for(int i = 0; i < size; i++) {
-				int id = lastGatePassed.successors[i];
+				int id = lastRemoved.successors[i];
 				Gate successor = level.getGateById(id);
 				
 				level.components.remove(successor.display);
@@ -112,7 +123,7 @@ public class EndlessLevelGenerator {
 				gates.remove(successor);
 				successor.dispose();
 			}
-			
+			lastRemoved = lastGatePassed;
 			lastGatePassed = passed;
 			
 		}
@@ -128,10 +139,13 @@ public class EndlessLevelGenerator {
 
 		List<Gate> newGates = new ArrayList<Gate>();
 		float rand = 1.f;
-		float distance = MathUtils.random(5) + 5.f;
+		float min = 0.8f;
 		Vector3 newLastDirection = new Vector3(0,0,0);
 		
-		while(rand > 0.8f) {
+		while(rand > min) {
+			float distance = (MathUtils.random(5) + 6.f);
+			distance -= difficulty / 2.f;
+			
 			//Gdx.app.log("myApp", "generateRandomGate");
 			Gate newGate = new Gate(currGate);
 
@@ -149,9 +163,9 @@ public class EndlessLevelGenerator {
 			// places the gate at a random position until it is far enough to any other gate
 			do {
 				newDirection = lastDirection.cpy();
-				newDirection.rotate(new Vector3(0,0,1), MathUtils.random(maxAngle * 2) - maxAngle);
-				newDirection.rotate(new Vector3(0,1,0), MathUtils.random(maxAngle * 2) - maxAngle);
-				newDirection.rotate(new Vector3(1,0,0), MathUtils.random(maxAngle * 2) - maxAngle);
+				newDirection.rotate(new Vector3(0,0,1), randomAngle());
+				newDirection.rotate(new Vector3(0,1,0), randomAngle());
+				newDirection.rotate(new Vector3(1,0,0), randomAngle());
 				newDirection.nor();
 				
 				
@@ -183,6 +197,7 @@ public class EndlessLevelGenerator {
 			newGates.add(newGate);
 			rand = MathUtils.random();
 			currGate++;
+			min += 0.05f;
 		}
 		
 		newLastDirection.scl(1.f / newGates.size());
@@ -198,6 +213,13 @@ public class EndlessLevelGenerator {
 		for(int i = 0; i < size; i++) {
 			Gate predecessor = predecessors.get(i);
 			predecessor.successors = newGateIds;
+		}
+		
+		if(increasingDifficulty && (difficulty < 10.f)) {
+			//difficulty = 10.f + (float) currGate;
+			difficulty = (float) Math.log10(currGate);
+			maxAngle = 45.f + 4.5f * difficulty;
+			minAngle = 0.1f + difficulty;
 		}
 		
 		return newGates;
@@ -226,6 +248,16 @@ public class EndlessLevelGenerator {
 		collisionDetector.addRigidBody(newGate.goal);
 		
 		//////////////////////////////////////////////////////////
+	}
+	
+	private float randomAngle() {
+		float angle = MathUtils.random(maxAngle * 2) - maxAngle;
+		
+		if(Math.abs(angle) < minAngle) {
+			angle += Math.signum(angle) * minAngle;
+		}
+		
+		return angle;
 	}
 	
 	private boolean checkForSpawnCollision(Vector3 position, List<Gate> gates, float distance) {
