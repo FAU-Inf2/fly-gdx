@@ -7,8 +7,9 @@ public class TestIntegerTimeUpdateListener implements IntegerTimeListener {
 	int time = 0;
 	
 	@Override
-	public void integerTimeChanged(int newTime) {
+	public boolean integerTimeChanged(int newTime) {
 		time = newTime;
+		return false;
 	}
 	
 	public int getTime() {

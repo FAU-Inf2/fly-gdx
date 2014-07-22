@@ -7,8 +7,9 @@ public class TestTimeIsUpListener implements TimeIsUpListener {
 	boolean timeIsUp = false;
 	
 	@Override
-	public void timeIsUp() {
+	public boolean timeIsUp() {
 		timeIsUp = true;
+		return false;
 	}
 	
 	public boolean isTimeUp() {

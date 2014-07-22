@@ -84,6 +84,15 @@ public class CollisionDetector implements Disposable {
 		public void addListener(ICollisionListener listener) {
 			listeners.add(listener);
 		}
+		
+		/**
+		 * Removes a listener from the list. Can be used to save performance if the interface does not need to get informed for collisions anymore.
+		 * 
+		 * @param listener		Collision listener which has to implement the ICollisionListener interface.
+		 */
+		public void removeListener(ICollisionListener listener) {
+			listeners.remove(listener);
+		}
 
 		@Override @SuppressWarnings("unchecked")
 		public void onContactStarted(btCollisionObject o1, btCollisionObject o2) {

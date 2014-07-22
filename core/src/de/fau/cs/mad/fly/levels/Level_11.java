@@ -41,8 +41,9 @@ public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener
 	}
 
 	@Override
-	public void integerTimeChanged(int newTime) {
+	public boolean integerTimeChanged(int newTime) {
 		//Gdx.app.log("Level_11", "Time: " + newTime);
+		return false;
 	}
 
 	@Override

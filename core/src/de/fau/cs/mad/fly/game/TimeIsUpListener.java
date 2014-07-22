@@ -1,5 +1,11 @@
 package de.fau.cs.mad.fly.game;
 
 public interface TimeIsUpListener {
-	public void timeIsUp();
+	
+	/**
+	 * Is called if the time of the level is other.
+	 * 
+	 * @return true, if the listener wants to be removed from the list after the call, false otherwise.
+	 */
+	public boolean timeIsUp();
 }

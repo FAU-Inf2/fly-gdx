@@ -44,7 +44,8 @@ public class TimeLeftOverlay implements IntegerTimeListener {
 	}
 
 	@Override
-	public void integerTimeChanged(int newTime) {
+	public boolean integerTimeChanged(int newTime) {
 		timeCounter.setText(String.valueOf(newTime));
+		return false;
 	}
 }
