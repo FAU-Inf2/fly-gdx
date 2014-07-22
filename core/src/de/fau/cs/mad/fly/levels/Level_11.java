@@ -19,7 +19,7 @@ public class Level_11 implements ILevel {
 
 	@Override
 	public void create(GameControllerBuilder builder) {
-		FlyingObjects asteroidBelt = new FlyingObjects(10, "asteroid", new Vector3(20.0f, 20.0f, 20.0f));
+		FlyingObjects asteroidBelt = new FlyingObjects("asteroid", 100, "asteroid", new Vector3(20.0f, 20.0f, 20.0f));
 		builder.addFeatureToLists(asteroidBelt);
 		
 		InstantSpeedUpgrade instantSpeedUpgrade = new InstantSpeedUpgrade("speedUpgrade", 4.0f, 10.0f);

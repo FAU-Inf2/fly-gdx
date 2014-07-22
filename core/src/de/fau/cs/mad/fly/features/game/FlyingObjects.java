@@ -34,6 +34,7 @@ public class FlyingObjects implements IFeatureLoad, IFeatureInit, IFeatureUpdate
 	
 	private Vector3 spawnSize;
 	
+	private String id;
 	private int count = 0;
 	private String modelRef;
 	private List<GameObject> objects;
@@ -44,7 +45,8 @@ public class FlyingObjects implements IFeatureLoad, IFeatureInit, IFeatureUpdate
 	 * @param modelRef			The model used for the flying objects.
 	 * @param spawnSize			The size of the box in positive and negative direction where the flying objects have to be created inside.
 	 */
-	public FlyingObjects(int count, String modelRef, Vector3 spawnSize) {
+	public FlyingObjects(String id, int count, String modelRef, Vector3 spawnSize) {
+		this.id = id;
 		this.count = count;
 		this.modelRef = modelRef;
 		this.spawnSize = spawnSize;
@@ -80,7 +82,7 @@ public class FlyingObjects implements IFeatureLoad, IFeatureInit, IFeatureUpdate
 	 * @return GameObject
 	 */
 	private GameObject createFlyingObject(GameModel model, int id) {
-		GameObject flyingObject = new GameObject(model, "flying_object_" + id);
+		GameObject flyingObject = new GameObject(model, this.id + "_" + id);
 		
 		Vector3 position;
 		do {
