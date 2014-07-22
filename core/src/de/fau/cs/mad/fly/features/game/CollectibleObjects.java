@@ -23,6 +23,11 @@ import de.fau.cs.mad.fly.player.Spaceship;
 public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispose, ICollisionListener<Spaceship, GameObject> {
 
 	/**
+	 * The id of the collectible objects.
+	 */
+	private String id;
+	
+	/**
 	 * The model reference for the collectible objects.
 	 */
 	private String modelRef;
@@ -38,7 +43,8 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispos
 	 * @param collectibleType		The type of the collectible object in the level file.
 	 * @param modelRef				The model reference in the level file used to display the collectible objects.
 	 */
-	public CollectibleObjects(String modelRef) {
+	public CollectibleObjects(String id, String modelRef) {
+		this.id = id;
 		this.modelRef = modelRef;
 	}
 	
@@ -47,7 +53,7 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispos
 		collectibleObjects = new ArrayList<GameObject>();		
 		
 		for(GameObject gameObject : game.getLevel().components) {
-			if(gameObject.modelId.equals(modelRef)) {
+			if(gameObject.id.contains(id)) {
 				btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(modelRef, gameObject);
 				gameObject.createRigidBody(modelRef, shape, 1.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
 				gameObject.getRigidBody().setCollisionFlags(gameObject.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);

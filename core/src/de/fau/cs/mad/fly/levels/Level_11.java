@@ -3,11 +3,15 @@ package de.fau.cs.mad.fly.levels;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 
+import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.game.FlyingObjects;
 import de.fau.cs.mad.fly.features.upgrades.AddTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.LinearSpeedUpgrade;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
+import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.game.IntegerTimeListener;
+import de.fau.cs.mad.fly.player.Spaceship;
 
 /**
  * Level script file for level 11.
@@ -17,7 +21,7 @@ import de.fau.cs.mad.fly.game.IntegerTimeListener;
  * @author Tobi
  *
  */
-public class Level_11 implements ILevel, IntegerTimeListener {
+public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener<Spaceship, GameObject> {
 
 	@Override
 	public void create(GameControllerBuilder builder) {
@@ -29,12 +33,21 @@ public class Level_11 implements ILevel, IntegerTimeListener {
 		InstantSpeedUpgrade instantSpeedUpgrade = new InstantSpeedUpgrade("speedUpgrade", 4.0f, 10.0f);
 		builder.addFeatureToLists(instantSpeedUpgrade);
 		
+		LinearSpeedUpgrade linearSpeedUpgrade = new LinearSpeedUpgrade("speedUpgrade", 2.0f, 10.0f, 4.0f);
+		builder.addFeatureToLists(linearSpeedUpgrade);
+		
 		AddTimeUpgrade addTimeUpgrade = new AddTimeUpgrade("timeUpgrade", 10.0f);
 		builder.addFeatureToLists(addTimeUpgrade);
 	}
 
 	@Override
 	public void integerTimeChanged(int newTime) {
-		Gdx.app.log("Level_11", "Time: " + newTime);
+		//Gdx.app.log("Level_11", "Time: " + newTime);
+	}
+
+	@Override
+	public void onCollision(Spaceship o1, GameObject o2) {
+		// TODO Auto-generated method stub
+		
 	}
 }

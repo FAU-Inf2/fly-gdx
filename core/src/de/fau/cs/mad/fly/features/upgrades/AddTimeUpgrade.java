@@ -29,7 +29,7 @@ public class AddTimeUpgrade extends CollectibleObjects implements IFeatureInit {
 	 * @param addedTime		The time to add in seconds.
 	 */
 	public AddTimeUpgrade(String modelRef, float addedTime) {
-		super(modelRef);
+		super("addTimeUpgrade", modelRef);
 		this.addedTime = addedTime;
 	}
 	
