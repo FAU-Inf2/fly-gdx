@@ -54,6 +54,7 @@ public class Loader<T> {
                 l.progressUpdated(100f);
                 l.progressFinished(manager.get(target));
             }
+            listeners.clear();
         }
     }
     
