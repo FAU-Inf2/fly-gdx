@@ -22,11 +22,11 @@ import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 
 /**
- * Creates an asteroid belt inside a given level size with a given asteroid model and a given count of asteroids.
+ * Used to display flying objects inside a given size around the player with a given model and a given count of flying objects.
  * 
  * @author Tobias Zangl
  */
-public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
+public class FlyingObjects implements IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
 	private GameController gameController;
 	private ModelBatch batch;
 	private Environment environment;
@@ -34,18 +34,18 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	
 	private Vector3 spawnSize;
 	
-	private int asteroidCount = 0;
+	private int count = 0;
 	private String modelRef;
-	private List<GameObject> asteroids;
+	private List<GameObject> objects;
 
 	/**
 	 * Constructor for the AstroidBelt
-	 * @param asteroidCount		The count of asteroids to display and update.
-	 * @param modelRef			The model used for the asteroids.
-	 * @param spawnSize			The size of the box in positive and negative direction where the asteroids have to be created inside.
+	 * @param count				The count of flying objects to display.
+	 * @param modelRef			The model used for the flying objects.
+	 * @param spawnSize			The size of the box in positive and negative direction where the flying objects have to be created inside.
 	 */
-	public AsteroidBelt(int asteroidCount, String modelRef, Vector3 spawnSize) {
-		this.asteroidCount = asteroidCount;
+	public FlyingObjects(int count, String modelRef, Vector3 spawnSize) {
+		this.count = count;
 		this.modelRef = modelRef;
 		this.spawnSize = spawnSize;
 	}
@@ -56,68 +56,69 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 		batch = gameController.getBatch();
 		environment = gameController.getLevel().getEnvironment();
 		
-		asteroids = new ArrayList<GameObject>(asteroidCount);
+		objects = new ArrayList<GameObject>(count);
 
 		GameModel model = gameController.getLevel().getDependency(modelRef);
 		if(model == null) {
-			Gdx.app.log("AsteroidBelt.load", "Asteroid model " + modelRef + " not found in the level!");
+			Gdx.app.log("FlyingObjects.load", "Flying objects model " + modelRef + " not found in the level!");
 			return;
 		}
 		
-		for(int i = 0; i < asteroidCount; i++) {
-			asteroids.add(createAsteroid(model, i));
+		for(int i = 0; i < count; i++) {
+			objects.add(createFlyingObject(model, i));
 		}
 
-		Gdx.app.log("AsteroidBelt.load", "Asteroid belt created.");
+		Gdx.app.log("FlyingObjectst.load", "Flying objects created.");
 	}
 	
 	/**
-	 * Creates an asteroid with the given model.
+	 * Creates a flying object with the given model.
 	 * <p>
 	 * Calculates moving and rotation randomly between specific values after checking if the position is not colliding with anything else.
-	 * Creates the collision object of the asteroid.
-	 * @param model			The model used for the asteroid.
+	 * Creates the collision object of the flying object.
+	 * @param model			The model used for the flying object.
 	 * @return GameObject
 	 */
-	private GameObject createAsteroid(GameModel model, int id) {
-		GameObject asteroid = new GameObject(model, "asteroid_" + id);
+	private GameObject createFlyingObject(GameModel model, int id) {
+		GameObject flyingObject = new GameObject(model, "flying_object_" + id);
 		
 		Vector3 position;
 		do {
 			position = getRandomVectorInSize(spawnSize);
-		} while(checkForSpawnCollision(position, asteroids, 20.0f));
+		} while(checkForSpawnCollision(position, objects, 20.0f));
 		
-		asteroid.transform.setToTranslation(position);
+		flyingObject.transform.setToTranslation(position);
 
-		btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(modelRef, asteroid);
-		asteroid.createRigidBody(modelRef, shape, 1.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-		asteroid.setRestitution(1.0f);
-		CollisionDetector.getInstance().addRigidBody(asteroid);
+		btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(modelRef, flyingObject);
+		flyingObject.createRigidBody(modelRef, shape, 1.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+		flyingObject.setRestitution(1.0f);
+		CollisionDetector.getInstance().addRigidBody(flyingObject);
 		
-		asteroid.setMovement(getRandomVector(-2.0f, 2.0f));
-		asteroid.setRotation(getRandomVector(-0.5f, 0.5f));
+		flyingObject.setMovement(getRandomVector(-2.0f, 2.0f));
+		flyingObject.setRotation(getRandomVector(-0.5f, 0.5f));
 
-		return asteroid;
+		return flyingObject;
 	}
 	
 	/**
-	 * Checks if the calculated position is colliding with an already created asteroid or any other component of the level.
+	 * Checks if the calculated position is colliding with an already created flying object or any other component of the level.
 	 * @param position		The currently calculated position.
-	 * @param asteroids		The list of the already created asteroids.
-	 * @param distance2		The minimum distance between a created asteroid and the other objects.
+	 * @param objects		The list of the already created flying objects
+	 * @param distance2		The minimum distance between a created flying object and the other objects.
 	 * @return true if the position is too close to anything else, false otherwise.
 	 */
-	private boolean checkForSpawnCollision(Vector3 position, List<GameObject> asteroids, float distance2) {
-		for(GameObject asteroid : asteroids) {
-			if(position.dst2(asteroid.getPosition()) < distance2) {
-				Gdx.app.log("AsteroidBelt.checkForSpawnCollision", "SpawnCollision with other asteroid");
+	private boolean checkForSpawnCollision(Vector3 position, List<GameObject> objects, float distance2) {
+		int size = objects.size();
+		for(int i = 0; i < size; i++) {
+			if(position.dst2(objects.get(i).getPosition()) < distance2) {
+				//Gdx.app.log("FlyingObjects.checkForSpawnCollision", "SpawnCollision with other flying object.");
 				return true;
 			}
 		}
 		
 		for(GameObject component : gameController.getLevel().components) {
 			if(position.dst2(component.getPosition()) < distance2) {
-				Gdx.app.log("AsteroidBelt.checkForSpawnCollision", "SpawnCollision with level component");
+				//dx.app.log("FlyingObjects.checkForSpawnCollision", "SpawnCollision with level component.");
 				return true;
 			}
 		}
@@ -187,14 +188,14 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	}
 	
 	/**
-	 * Checks if the asteroid is too far away of a given position.
-	 * @param asteroid		The asteroid to check.
+	 * Checks if the flying object is too far away of a given position.
+	 * @param object		The object to check.
 	 * @param target		The target position to check.
-	 * @param distance2		The minimum distance between the astroid and the target.
+	 * @param distance2		The minimum distance between the object and the target.
 	 * @return true, if it is too far away, otherwise false.
 	 */
-	private boolean checkOutOfBound(GameObject asteroid, Vector3 target, float distance2) {
-		if(asteroid.getPosition().dst2(target) > distance2) {
+	private boolean checkOutOfBound(GameObject object, Vector3 target, float distance2) {
+		if(object.getPosition().dst2(target) > distance2) {
 			return true;
 		}
 		return false;
@@ -207,25 +208,25 @@ public class AsteroidBelt implements IFeatureLoad, IFeatureInit, IFeatureUpdate,
 	
 	@Override
 	public void update(float delta) {		
-		for(GameObject asteroid : asteroids) {
-			if(checkOutOfBound(asteroid, gameController.getCamera().position, 2000.0f)) {
-				asteroid.flipDirection();
+		for(int i = 0; i < count; i++) {
+			if(checkOutOfBound(objects.get(i), gameController.getCamera().position, 2000.0f)) {
+				objects.get(i).flipDirection();
 			}
 		}
 	}
 	
 	@Override
 	public void render(float delta) {		
-		for(GameObject asteroid : asteroids) {
-			asteroid.updateRigidBody();
-			asteroid.render(batch, environment, camera);
+		for(int i = 0; i < count; i++) {
+			objects.get(i).updateRigidBody();
+			objects.get(i).render(batch, environment, camera);
 		}
 	}
 
 	@Override
 	public void dispose() {
-		for(GameObject asteroid : asteroids) {
-			asteroid.dispose();
+		for(int i = 0; i < count; i++) {
+			objects.get(i).dispose();
 		}
 	}
 }

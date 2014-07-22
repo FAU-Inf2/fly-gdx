@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
     public void show() {
         // delegate all inputs to the #inputProcessor
         // TODO: put stage in GameScreen and new InputMultiplexer back to the
-        // constructor
+        // constructor    	
         this.gameController = game.getGameController();
     }
     
