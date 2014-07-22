@@ -92,12 +92,12 @@
         }
     ],
     "dependencies": {
-        "asteroid": "asteroid",
+        "asteroid": "asteroidBox",
         "hole": "torusHoleBox",
         "space": "spacesphere",
         "speedUpgrade": "speedUpgrade",
         "timeUpgrade": "timeUpgrade",
-        "torus": "torus"
+        "torus": "torusLowPoly"
     },
     "gates": [
         {
