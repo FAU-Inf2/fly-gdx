@@ -23,7 +23,10 @@ import de.fau.cs.mad.fly.res.Level;
  * 
  * @author Tobias Zangl
  */
-public class MainMenuScreen extends BasicScreen {
+public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
+    
+    private HelpOverlayMainMenu helpOverlay;
+    private boolean showHelpScreen = false;
     
     /**
      * Adds the main menu to the main menu screen.
@@ -96,6 +99,10 @@ public class MainMenuScreen extends BasicScreen {
             }
         });
         
+        this.helpOverlay = new HelpOverlayMainMenu(skin, this);
+        helpButton.addListener(helpOverlay);
+        showHelpScreen = false;
+        
         // statsButton.addListener(new ClickListener() {
         // @Override
         // public void clicked(InputEvent event, float x, float y) {
@@ -105,7 +112,28 @@ public class MainMenuScreen extends BasicScreen {
     }
     
     @Override
+    public void render(float delta) {
+        super.render(delta);
+        if (showHelpScreen) {
+            helpOverlay.getStage().act(delta);
+            helpOverlay.getStage().draw();
+        }
+    }
+    
+    @Override
     public void dispose() {
         stage.dispose();
+    }
+    
+    @Override
+    public void startHelp() {
+        showHelpScreen = true;
+        Gdx.input.setInputProcessor(helpOverlay);
+    }
+    
+    @Override
+    public void endHelp() {
+        showHelpScreen = false;
+        Gdx.input.setInputProcessor(inputProcessor);
     }
 }

@@ -51,7 +51,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: black },
-	red: { font: default-font, fontColor: red }
+	red: { font: default-font, fontColor: red },
+	black: { font: default-font, fontColor: black }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: { selection: selection, background: textfield, font: default-font, fontColor: black, cursor: cursor }

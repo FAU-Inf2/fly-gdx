@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -18,6 +17,7 @@ public abstract class BasicScreen implements Screen {
 	protected final Skin skin;
 	protected final Stage stage;
 	protected final Viewport viewport;
+	protected final Color backgroundColor;
 
 	/**
 	 * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the
@@ -34,6 +34,7 @@ public abstract class BasicScreen implements Screen {
 		viewport = new FillViewport(Gdx.graphics.getWidth()*scalingFactor, Gdx.graphics.getHeight()*scalingFactor, stage.getCamera());
 		stage.setViewport(viewport);
 		inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
+		backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
 		generateContent();
 	}
 
@@ -42,12 +43,10 @@ public abstract class BasicScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		Color backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(delta);
 		stage.draw();
-		Table.drawDebug(stage);
 	}
 
 	@Override

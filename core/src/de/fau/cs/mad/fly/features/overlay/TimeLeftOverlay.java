@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.game.IntegerTimeListener;
-import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Optional Feature to display the used time.
@@ -19,28 +18,25 @@ import de.fau.cs.mad.fly.ui.UI;
  */
 public class TimeLeftOverlay implements IntegerTimeListener {
 
-	private Label timeCounter;
+	private final Label timeCounter;
 
 	public TimeLeftOverlay(final Skin skin, final Stage stage) {	    
-	    Table outerTable = new Table();
-        outerTable.setFillParent(true);
         
         final Table innerTable = new Table();
-        NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
+        final NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
         innerTable.setBackground(background);
         
-        TextureRegion textureRegion = new TextureRegion(skin.getRegion("watch"));
-        Image watchIcon = new Image(textureRegion);
+        final TextureRegion textureRegion = new TextureRegion(skin.getRegion("watch"));
+        final Image watchIcon = new Image(textureRegion);
         
         timeCounter = new Label("", skin);
+        
+        innerTable.row().expand();
         innerTable.add(watchIcon);
         innerTable.add(timeCounter).pad(0, 50, 0, 0);
         innerTable.row().expand();
-        
-        outerTable.row().expand();
-        outerTable.add(innerTable).pad(UI.Window.BORDER_SPACE).left().top();
-        outerTable.row().expand();
-        stage.addActor(outerTable);
+        stage.addActor(innerTable);
+        innerTable.setBounds(50, 2050, 600, 300);
 	}
 
 	@Override
