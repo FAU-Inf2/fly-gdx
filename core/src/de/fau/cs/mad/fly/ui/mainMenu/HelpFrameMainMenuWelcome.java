@@ -15,21 +15,17 @@ import de.fau.cs.mad.fly.ui.HelpFrame;
  * @author Lukas Hahmann
  * 
  */
-public class HelpFrameMainMenuPlay extends HelpFrame {
-    
-    private final TextureRegion arrow;
+public class HelpFrameMainMenuWelcome extends HelpFrame {
     
     /**
      * Create the content of the frame, a describing text and an arrow.
      * @param skin
      */
-    public HelpFrameMainMenuPlay(Skin skin) {
+    public HelpFrameMainMenuWelcome(Skin skin) {
         super.setupBatchAndStage();
         
         LabelStyle labelStyle = skin.get("black", LabelStyle.class);
-        Label helpToPlay = new Label(I18n.t("helpPlay"), labelStyle);
-        
-        this.arrow = skin.getRegion("helpArrowDown");
+        Label helpToPlay = new Label(I18n.t("welcome"), labelStyle);
         
         stage.addActor(helpToPlay);
         helpToPlay.setPosition(650, 1900);
@@ -39,9 +35,6 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
     
     @Override
     public void render() {
-        batch.begin();
-        batch.draw(arrow, 1900 / scalingFactor, 1800 / scalingFactor, 0, 0, arrow.getRegionWidth() / scalingFactor, arrow.getRegionHeight() / scalingFactor, 1f, 1f, 0);
-        batch.end();
         stage.draw();
     }
     

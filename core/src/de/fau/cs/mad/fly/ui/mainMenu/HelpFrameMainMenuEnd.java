@@ -15,24 +15,24 @@ import de.fau.cs.mad.fly.ui.HelpFrame;
  * @author Lukas Hahmann
  * 
  */
-public class HelpFrameMainMenuPlay extends HelpFrame {
+public class HelpFrameMainMenuEnd extends HelpFrame {
     
-    private final TextureRegion arrow;
+    private final TextureRegion arrowDown;
     
     /**
      * Create the content of the frame, a describing text and an arrow.
      * @param skin
      */
-    public HelpFrameMainMenuPlay(Skin skin) {
+    public HelpFrameMainMenuEnd(Skin skin) {
         super.setupBatchAndStage();
         
         LabelStyle labelStyle = skin.get("black", LabelStyle.class);
-        Label helpToPlay = new Label(I18n.t("helpPlay"), labelStyle);
+        Label helpToPlay = new Label(I18n.t("helpEnd"), labelStyle);
         
-        this.arrow = skin.getRegion("helpArrowDown");
+        this.arrowDown = skin.getRegion("helpArrowDown");
         
         stage.addActor(helpToPlay);
-        helpToPlay.setPosition(650, 1900);
+        helpToPlay.setPosition(900, 300);
         
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
@@ -40,7 +40,7 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
     @Override
     public void render() {
         batch.begin();
-        batch.draw(arrow, 1900 / scalingFactor, 1800 / scalingFactor, 0, 0, arrow.getRegionWidth() / scalingFactor, arrow.getRegionHeight() / scalingFactor, 1f, 1f, 0);
+        batch.draw(arrowDown, 3800 / scalingFactor, 350 / scalingFactor, 0, 0, arrowDown.getRegionWidth() / scalingFactor, arrowDown.getRegionHeight() / scalingFactor, 1f, 1f, 90);
         batch.end();
         stage.draw();
     }

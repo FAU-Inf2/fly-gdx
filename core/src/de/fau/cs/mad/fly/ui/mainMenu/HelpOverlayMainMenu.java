@@ -20,7 +20,11 @@ public class HelpOverlayMainMenu extends ClickListener implements InputProcessor
     public HelpOverlayMainMenu(Skin skin, WithHelpScreen backListener) {
         this.backListener = backListener;
         helpFrames = new ArrayList<HelpFrame>();
+        helpFrames.add(new HelpFrameMainMenuWelcome(skin));
         helpFrames.add(new HelpFrameMainMenuPlay(skin));
+        helpFrames.add(new HelpFrameMainMenuSelectLevel(skin));
+        helpFrames.add(new HelpFrameMainMenuSettings(skin));
+        helpFrames.add(new HelpFrameMainMenuEnd(skin));
         currentHelpFrame = 0;
     }
     
@@ -29,6 +33,7 @@ public class HelpOverlayMainMenu extends ClickListener implements InputProcessor
             currentHelpFrame++;
         }
         else {
+            currentHelpFrame = 0;
             backListener.endHelp();
         }
     }
