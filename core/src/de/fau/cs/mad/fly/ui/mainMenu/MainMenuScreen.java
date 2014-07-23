@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.mainMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,6 +17,11 @@ import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.ui.BasicScreen;
+import de.fau.cs.mad.fly.ui.UI;
+import de.fau.cs.mad.fly.ui.WithHelpScreen;
+import de.fau.cs.mad.fly.ui.UI.Buttons;
+import de.fau.cs.mad.fly.ui.UI.Window;
 
 /**
  * Displays the main menu with Start, Options, Help and Exit buttons.
@@ -115,8 +120,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
     public void render(float delta) {
         super.render(delta);
         if (showHelpScreen) {
-            helpOverlay.getStage().act(delta);
-            helpOverlay.getStage().draw();
+            helpOverlay.render();
         }
     }
     

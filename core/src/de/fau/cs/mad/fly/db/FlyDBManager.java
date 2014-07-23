@@ -10,8 +10,8 @@ import com.badlogic.gdx.sql.SQLiteGdxException;
 
 import de.fau.cs.mad.fly.settings.AppSettingsManager;
 
-/*
- * Manager the database of fly 
+/**
+ * Manages the database of fly 
  *
  * @ Qufang Fan
  */

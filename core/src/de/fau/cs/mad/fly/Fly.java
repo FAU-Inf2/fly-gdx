@@ -10,11 +10,11 @@ import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
-import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.SplashScreen;
 import de.fau.cs.mad.fly.ui.StatisticsScreen;
+import de.fau.cs.mad.fly.ui.mainMenu.MainMenuScreen;
 
 /**
  * Manages the different game screens.
