@@ -7,7 +7,6 @@ public interface ProgressListener<T> {
 	public void progressStarted();
 	public void progressUpdated(float percent);
 	public void progressFinished(T t);
-//	public void progressFinished();
 
 	public static abstract class ProgressAdapter<T> implements ProgressListener<T> {
 		@Override
@@ -17,12 +16,7 @@ public interface ProgressListener<T> {
 		@Override
 		public void progressUpdated(float percent) {
 		}
-
-//		@Override
-//		public void progressFinished() {
-//
-//		}
-
+		
 		@Override
 		public void progressFinished(T t) {
 		}

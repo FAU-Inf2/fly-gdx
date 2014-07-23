@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.assets.AssetManager;
 
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Assets;
@@ -14,52 +13,56 @@ import de.fau.cs.mad.fly.ui.LoadingScreen;
 
 /**
  * Created by Jakob Falke on 18.06.14.
+ * 
+ * Controller of the loading screen. Only used to load levels.
  */
-public class Loader<T> {
+public class Loader {
     
-    private Collection<ProgressListener<T>> listeners = new ArrayList<ProgressListener<T>>();
+    private Collection<ProgressListener<Level>> listeners = new ArrayList<ProgressListener<Level>>();
     private float progress = 0;
-    private AssetManager manager;
-    private AssetDescriptor<T> target;
+    private AssetDescriptor<Level> target;
+    private static Loader instance;
     
-    public Loader(AssetManager manager, String target, Class<T> type) {
-        this(manager, new AssetDescriptor<T>(target, type));
-    }
-    
-    public Loader(AssetManager manager, AssetDescriptor<T> target) {
-        this.manager = manager;
+    public void setTarget(AssetDescriptor<Level> target) {
         this.target = target;
     }
     
-    public void addProgressListener(ProgressListener<T> listener) {
+    public void addProgressListener(ProgressListener<Level> listener) {
         this.listeners.add(listener);
     }
     
     public void initiate() {
-        manager.load(target);
-        for (ProgressListener l : listeners)
+        Assets.manager.load(target);
+        for (ProgressListener<Level> l : listeners)
             l.progressStarted();
     }
     
     public void update() {
-        if (!manager.update()) {
-            float currentProgress = ((float) manager.getLoadedAssets() / (float) (manager.getLoadedAssets() + manager.getQueuedAssets())) * 100f;
+        if (!Assets.manager.update()) {
+            float currentProgress = ((float) Assets.manager.getLoadedAssets() / (float) (Assets.manager.getLoadedAssets() + Assets.manager.getQueuedAssets())) * 100f;
             if (currentProgress > progress) {
                 progress = currentProgress;
-                for (ProgressListener l : listeners)
+                for (ProgressListener<Level> l : listeners)
                     l.progressUpdated(currentProgress);
             }
         } else {
-            for (ProgressListener<T> l : listeners) {
+            for (ProgressListener<Level> l : listeners) {
                 l.progressUpdated(100f);
-                l.progressFinished(manager.get(target));
+                l.progressFinished(Assets.manager.get(target));
             }
+            // clean loader
+            progress = 0;
             listeners.clear();
         }
     }
     
-    public static <P> Loader<P> create(AssetManager manager, String target, Class<P> type) {
-        return new Loader<P>(manager, target, type);
+    public static Loader create(String target) {
+        if(instance == null) {
+            instance = new Loader();
+        }
+        Gdx.app.log("Loader.create", target);
+        instance.setTarget(new AssetDescriptor<Level>(target, Level.class));
+        return instance;
     }
     
     /**
@@ -71,8 +74,9 @@ public class Loader<T> {
      */
     public static void loadLevel(Level.Head head) {
         final LoadingScreen loadingScreen = new LoadingScreen();
-        Loader<Level> loader = Loader.create(Assets.manager, head.file.path(), Level.class);
+        Loader loader = Loader.create(head.file.path());
         loadingScreen.initiate(loader);
+        loader.initiate();
         ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
         //Assets.manager.load(new AssetDescriptor<Level>(head.file.path(), Level.class));
         PlayerManager.getInstance().getCurrentPlayer().setLastLevel(head);

@@ -22,6 +22,7 @@ import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
+import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.UI;
 
@@ -66,7 +67,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
+                ((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
             }
         });
         
@@ -99,6 +100,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             nextLevelButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    // unload old level
+                    String levelPath = PlayerManager.getInstance().getCurrentPlayer().getLastLevel().file.path();
+                    Assets.unload(levelPath);
+                    
+                    // set and load new level
                     PlayerManager.getInstance().getCurrentPlayer().nextLevel();
                     Level.Head levelHead = PlayerManager.getInstance().getCurrentPlayer().getLastLevel();
                     Loader.loadLevel(levelHead);

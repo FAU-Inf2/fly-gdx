@@ -42,12 +42,6 @@ public class GameScreen implements Screen {
     @Override
     public void hide() {
         gameController.disposeGame();
-        
-        // TODO: check if the following statement causes a reproduceable
-        // Null-Pointer. I got it once but could not reproduce it
-        String levelPath = PlayerManager.getInstance().getCurrentPlayer().getLastLevel().file.path();
-        Gdx.app.log("Gamescreen.hide", "dispose level: " + levelPath);
-        Assets.unload(levelPath);
     }
     
     @Override

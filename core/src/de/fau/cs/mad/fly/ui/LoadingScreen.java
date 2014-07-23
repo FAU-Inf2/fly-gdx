@@ -32,14 +32,14 @@ public class LoadingScreen extends BasicScreen {
 	private Sprite background;
 
 	private ScalableProgressBar progressBar;
-	private Loader<Level> loader;
+	private Loader loader;
 	private Batch batch;
 	private float progressBarWidth = 2000f;
 	
 	private Table table;
 
 
-	public void initiate(Loader<Level> loader) {
+	public void initiate(Loader loader) {
 		batch = new SpriteBatch();
 		Assets.load(Assets.background);
 		background = new Sprite(Assets.manager.get(Assets.background));
@@ -79,7 +79,6 @@ public class LoadingScreen extends BasicScreen {
 				progressBar.setProgress(percent/100f);
 			}
 		});
-		loader.initiate();
 	}
 	private boolean add = true;
 	public void addButton(Level level) {
@@ -110,15 +109,15 @@ public class LoadingScreen extends BasicScreen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		
 		batch.begin();
 		background.draw(batch);
 		batch.end();
 		
 		stage.act(delta);
-		stage.draw();
+        stage.draw();
 
-		loader.update();
+        loader.update();
 	}
 
 	@Override
