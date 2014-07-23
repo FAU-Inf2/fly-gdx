@@ -29,95 +29,12 @@ import java.util.*;
  * @author Lukas Hahmann
  * 
  */
-public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Level.Gate> {
-    public static class Gate implements Disposable {
-        public final int id;
-        public int score;
-        public GameObject display;
-        public GameObject goal;
-        public int passedTimes = 0;
-        public int[] successors;
-        
-        public Gate(Integer id) {
-            this.id = id;
-            this.score = 50;
-        }
-        
-        public void mark() {
-            if (display != null) {
-                display.mark();
-            }
-        }
-        
-        public void unmark() {
-            if (display != null) {
-                display.unmark();
-            }
-        }
-        
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            } else if (o == null || getClass() != o.getClass()) {
-                return false;
-            } else {
-                return id == ((Gate) o).hashCode();
-            }
-        }
-        
-        @Override
-        public int hashCode() {
-            return id;
-        }
-        
-        @Override
-        public String toString() {
-            return "#<Gate " + id + ">";
-        }
-        
-        @Override
-        public void dispose() {
-            CollisionDetector.getInstance().removeRigidBody(display);
-            CollisionDetector.getInstance().removeRigidBody(goal);
-            
-            display.dispose();
-            goal.dispose();
-        }
-    }
+public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Gate> {
     
     public static class Head {
         public String name;
         public int id;
         public FileHandle file;
-    }
-    
-    public static interface EventListener {
-        public void onFinished();
-        
-        public void onGatePassed(Gate gate);
-        
-        public void onUpdate();
-        
-        public void onRender();
-    }
-    
-    public static class EventAdapter implements EventListener {
-        @Override
-        public void onFinished() {
-        }
-        
-        @Override
-        public void onGatePassed(Gate gate) {
-        }
-        
-        @Override
-        public void onUpdate() {
-        }
-        
-        @Override
-        public void onRender() {
-        }
     }
     
     @Override
@@ -165,11 +82,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     }
     
     public int getGatesNumber() {
-        int count = 0;
-        for (Gate gate : allGates()) {
-            count++;
-        }
-        return count;
+        return allGates().size();
     }
     
     public int getLeftCollisionTime() {
@@ -181,8 +94,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     }
     
     public void addGate(Gate gate) {
-    	gates.put(gate.id, gate);
-    	allGates.add(gate);
+        gates.put(gate.id, gate);
+        allGates.add(gate);
     }
     
     /**
@@ -344,7 +257,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             
             if (g.goal.getRigidBody() == null) {
                 btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-                //g.goal.hide();
+                // g.goal.hide();
                 g.goal.userData = g;
                 g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
                 g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
@@ -374,10 +287,6 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
      */
     public void update(float delta, PerspectiveCamera camera) {
         borderObject.transform.setToTranslation(camera.position);
-        final int numberOfEventListeners = eventListeners.size();
-        for (int i = 0; i < numberOfEventListeners; i++) {
-            eventListeners.get(i).onUpdate();
-        }
         if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
             levelFinished();
         }
@@ -394,13 +303,9 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
      *            that displays the level.
      */
     public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
-        final int numberOfEventListeners = eventListeners.size();
         int i;
-        for (i = 0; i < numberOfEventListeners; i++) {
-            eventListeners.get(i).onRender();
-        }
         final int numberOfComponents = components.size();
-        //Gdx.app.log("components:", String.valueOf(numberOfComponents));
+        // Gdx.app.log("components:", String.valueOf(numberOfComponents));
         for (i = 0; i < numberOfComponents; i++) {
             components.get(i).render(batch, environment, camera);
         }

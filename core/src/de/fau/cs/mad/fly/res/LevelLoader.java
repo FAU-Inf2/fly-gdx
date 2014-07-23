@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly.res;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,11 +10,8 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
-import com.badlogic.gdx.assets.loaders.ModelLoader;
-import com.badlogic.gdx.assets.loaders.ModelLoader.ModelParameters;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
@@ -64,17 +60,17 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         parseComponents();
         Perspective start = auto.fromJson(Perspective.class, json.get("start").toString());
         JsonValue gates = json.get("gates");
-        Map<Integer, Level.Gate> gateMap = new HashMap<Integer, Level.Gate>();
+        Map<Integer, Gate> gateMap = new HashMap<Integer, Gate>();
         
-        Level.Gate p;
-        Level.Gate dummy = null;
+        Gate p;
+        Gate dummy = null;
         int len = gates.size;
         JsonValue jsonGate;
         for (int i = 0; i < len; i++) {
             jsonGate = gates.get(i);
             JsonValue gid = jsonGate.get("id");
             if (gid != null) {
-                p = new Level.Gate(gid.asInt());
+                p = new Gate(gid.asInt());
                 p.display = components.get(jsonGate.getString("display"));
                 p.goal = components.get(jsonGate.getString("goal"));
                 // TODO: make this explicit (don't just blacklist identity
@@ -84,7 +80,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                 gateMap.put(p.id, p);
             }
             else {
-                p = new Level.Gate(-1);
+                p = new Gate(-1);
                 dummy = p;
             }
             p.successors = jsonGate.get("successors").asIntArray();

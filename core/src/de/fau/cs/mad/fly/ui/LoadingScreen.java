@@ -87,7 +87,7 @@ public class LoadingScreen extends BasicScreen {
 			progressBar.setVisible(false);
 			
 			final Level chosenLevel = level;
-	    	final TextButton button = new TextButton(I18n.t("play"), skin.get(UI.Buttons.STYLE, TextButtonStyle.class));
+	    	final TextButton button = new TextButton(I18n.t("play"), skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
 			button.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {

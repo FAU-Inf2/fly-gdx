@@ -38,6 +38,8 @@ import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.profile.PlayerManager;
+import de.fau.cs.mad.fly.res.EventAdapter;
+import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.BackProcessor;
@@ -140,14 +142,14 @@ public class GameControllerBuilder {
         
         Gdx.app.log("Builder.init", "Registering EventListeners for level.");
         
-        level.addEventListener(new Level.EventAdapter() {
+        level.addEventListener(new EventAdapter() {
             @Override
-            public void onGatePassed(Level.Gate passed) {
+            public void onGatePassed(Gate passed) {
                 if (level.head.name.equals("Endless")) {
-                    for (Level.Gate g : generator.getGates())
+                    for (Gate g : generator.getGates())
                         g.unmark();
                 } else {
-                    for (Level.Gate g : level.allGates())
+                    for (Gate g : level.allGates())
                         g.unmark();
                 }
                 int len = passed.successors.length;
@@ -160,9 +162,9 @@ public class GameControllerBuilder {
         if (level.head.name.equals("Endless")) {
             generator = new EndlessLevelGenerator(PlayerManager.getInstance().getCurrentPlayer().getLevel());
             
-            PlayerManager.getInstance().getCurrentPlayer().getLevel().addEventListener(new Level.EventAdapter() {
+            PlayerManager.getInstance().getCurrentPlayer().getLevel().addEventListener(new EventAdapter() {
                 @Override
-                public void onGatePassed(Level.Gate passed) {
+                public void onGatePassed(Gate passed) {
                     generator.addRandomGate(passed);
                 }
             });
@@ -427,7 +429,7 @@ public class GameControllerBuilder {
         gc.setTimeController(timeController);
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
         
-        level.addEventListener(new Level.EventAdapter() {
+        level.addEventListener(new EventAdapter() {
             @Override
             public void onFinished() {
                 gc.finishGame();

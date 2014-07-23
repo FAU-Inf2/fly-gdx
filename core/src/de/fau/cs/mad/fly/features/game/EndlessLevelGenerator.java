@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.res.Level.Gate;
+import de.fau.cs.mad.fly.res.Gate;
 /**
  * generates an endless random level
  * @author Sebastian
