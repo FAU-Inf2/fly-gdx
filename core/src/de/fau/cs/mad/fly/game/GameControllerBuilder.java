@@ -291,6 +291,10 @@ public class GameControllerBuilder {
     	if (feature instanceof ICollisionListener) {
     		CollisionDetector.getInstance().getCollisionContactListener().addListener((ICollisionListener) feature);
     	}
+    	
+    	if (feature instanceof IntegerTimeListener) {
+    		timeController.registerIntegerTimeListener((IntegerTimeListener) feature);
+    	}
     }
     
     /**

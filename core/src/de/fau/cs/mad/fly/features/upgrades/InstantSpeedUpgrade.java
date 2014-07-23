@@ -56,7 +56,7 @@ public class InstantSpeedUpgrade extends CollectibleObjects implements IFeatureU
 	 * @param upgradeDuration			The duration of the speed upgrade. A value <= 0.0f means infinite duration.
 	 */
 	public InstantSpeedUpgrade(String modelRef, float upgradeSpeedFactor, float upgradeDuration) {
-		super(modelRef);
+		super("instantSpeedUpgrade", modelRef);
 		plane = PlayerManager.getInstance().getCurrentPlayer().getPlane();
 		
 		this.upgradeSpeedFactor = upgradeSpeedFactor;

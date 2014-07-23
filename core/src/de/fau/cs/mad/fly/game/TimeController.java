@@ -18,6 +18,8 @@ public class TimeController {
     private List<IntegerTimeListener> integerTimeListeners;
     private List<TimeIsUpListener> timeIsUpListeners;
     
+    private int size;
+    
     public TimeController() {
         initTimeInSeconds = 0f;
         integerTimeListeners = new ArrayList<IntegerTimeListener>();
@@ -103,15 +105,31 @@ public class TimeController {
     
     /** Notifies all {@link TimeIsUpListener}s. */
     private void timeIsUp() {
-        for (TimeIsUpListener listener : timeIsUpListeners) {
-            listener.timeIsUp();
+    	size = timeIsUpListeners.size();
+        for (int i = 0; i < size; i++) {
+            if(timeIsUpListeners.get(i).timeIsUp()) {
+            	removeTimeIsUpListener(timeIsUpListeners.get(i));
+            	size--;
+            	i--;
+            }
         }
     }
     
     /** Notifies all {@link IntegerTimeListener} */
     private void integerTimeChanged() {
+    	size = integerTimeListeners.size();
+        for (int i = 0; i < size; i++) {
+            if(integerTimeListeners.get(i).integerTimeChanged((int) Math.ceil(currentTimeInSeconds))) {
+            	removeIntegerTimeListener(integerTimeListeners.get(i));
+            	size--;
+            	i--;
+            }
+        }
+    	
         for (IntegerTimeListener listener : integerTimeListeners) {
-            listener.integerTimeChanged((int) Math.ceil(currentTimeInSeconds));
+            if(listener.integerTimeChanged((int) Math.ceil(currentTimeInSeconds))) {
+            	removeIntegerTimeListener(listener);
+            }
         }
     }
     
@@ -123,5 +141,15 @@ public class TimeController {
     /** Register a new {@link TimeIsUpListener} */
     public void registerTimeIsUpListener(TimeIsUpListener newListener) {
         timeIsUpListeners.add(newListener);
+    }
+    
+    /** Removes the registered {@link IntegerTimeListener} */
+    public void removeIntegerTimeListener(IntegerTimeListener newListener) {
+        integerTimeListeners.remove(newListener);
+    }
+    
+    /** Removes the registered {@link TimeIsUpListener} */
+    public void removeTimeIsUpListener(TimeIsUpListener newListener) {
+        timeIsUpListeners.remove(newListener);
     }
 }

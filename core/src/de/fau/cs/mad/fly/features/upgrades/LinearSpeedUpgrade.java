@@ -29,6 +29,11 @@ public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureUp
 	private float oldSpeed;
 	
 	/**
+	 * A backup for the maximum speed.
+	 */
+	private float maxSpeed;
+	
+	/**
 	 * The speed factor of the speed upgrade increase.
 	 */
 	private float upgradeIncreaseFactor;
@@ -57,7 +62,7 @@ public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureUp
 	 * @param upgradeDecreaseFactor			The speed factor of the speed upgrade decrease.
 	 */
 	public LinearSpeedUpgrade(String modelRef, float upgradeIncreaseFactor, float upgradeIncreaseDuration, float upgradeDecreaseFactor) {
-		super(modelRef);
+		super("linearSpeedUpgrade", modelRef);
 		plane = PlayerManager.getInstance().getCurrentPlayer().getPlane();
 		
 		this.upgradeIncreaseFactor = upgradeIncreaseFactor;
@@ -82,13 +87,14 @@ public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureUp
 		duration += delta;
 		
 		if(duration <= upgradeIncreaseDuration) {
-			plane.setSpeed(plane.getSpeed() * delta * upgradeIncreaseFactor);
+			maxSpeed = oldSpeed + duration * upgradeIncreaseFactor;
+			plane.setSpeed(maxSpeed);
 		} else if(duration > upgradeIncreaseDuration) {
 			if(plane.getSpeed() < oldSpeed) {
 				plane.setSpeed(oldSpeed);
 				isCollected = false;
 			} else {
-				plane.setSpeed(plane.getSpeed() / (delta * upgradeDecreaseFactor));
+				plane.setSpeed(maxSpeed - (duration - upgradeIncreaseDuration) * upgradeDecreaseFactor);
 			}
 		}
 	}

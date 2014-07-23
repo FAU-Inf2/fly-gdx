@@ -31,7 +31,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
     }
     
     @Override
-    public void timeIsUp() {
+    public boolean timeIsUp() {
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         
@@ -71,6 +71,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
         
         stage.addActor(outerTable);
         
+        return false;
     }
     
 }

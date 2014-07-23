@@ -332,7 +332,8 @@ public class GameController implements TimeIsUpListener {
     }
     
     @Override
-    public void timeIsUp() {
+    public boolean timeIsUp() {
         pauseGame();
+        return true;
     }
 }
