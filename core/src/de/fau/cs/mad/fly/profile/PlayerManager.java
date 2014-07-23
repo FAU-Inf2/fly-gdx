@@ -28,7 +28,7 @@ public class PlayerManager {
 		this.currentPlayer = currentPlayer;
 	}
 
-	/*
+	/**
 	 * init the default player, create the default player when there is no
 	 * player exist.
 	 */

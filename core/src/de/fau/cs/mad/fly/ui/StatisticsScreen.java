@@ -27,7 +27,7 @@ import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
 import de.fau.cs.mad.fly.settings.AppSettingsManager;
 
-/*
+/**
  * UI for checking scores of user, also for add and change user
  * 
  * 
