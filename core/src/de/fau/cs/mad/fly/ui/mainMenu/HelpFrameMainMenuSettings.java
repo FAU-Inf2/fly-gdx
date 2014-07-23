@@ -32,7 +32,7 @@ public class HelpFrameMainMenuSettings extends HelpFrame {
         this.arrowDown = skin.getRegion("helpArrowDown");
         
         stage.addActor(helpToPlay);
-        helpToPlay.setPosition(1000, 2050);
+        helpToPlay.setPosition(1000, viewport.getWorldHeight()-350);
         
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
@@ -40,7 +40,7 @@ public class HelpFrameMainMenuSettings extends HelpFrame {
     @Override
     public void render() {
         batch.begin();
-        batch.draw(arrowDown, 3450 / scalingFactor, 2050 / scalingFactor, 0, 0, arrowDown.getRegionWidth() / scalingFactor, arrowDown.getRegionHeight() / scalingFactor, 1f, 1f, 90);
+        batch.draw(arrowDown, 3450 / scalingFactor, (viewport.getWorldHeight()-350) / scalingFactor, 0, 0, arrowDown.getRegionWidth() / scalingFactor, arrowDown.getRegionHeight() / scalingFactor, 1f, 1f, 90);
         batch.end();
         stage.draw();
     }

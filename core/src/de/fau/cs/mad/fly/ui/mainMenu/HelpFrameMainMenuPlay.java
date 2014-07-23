@@ -18,6 +18,7 @@ import de.fau.cs.mad.fly.ui.HelpFrame;
 public class HelpFrameMainMenuPlay extends HelpFrame {
     
     private final TextureRegion arrow;
+    private final Label helpToPlay;
     
     /**
      * Create the content of the frame, a describing text and an arrow.
@@ -27,12 +28,12 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
         super.setupBatchAndStage();
         
         LabelStyle labelStyle = skin.get("black", LabelStyle.class);
-        Label helpToPlay = new Label(I18n.t("helpPlay"), labelStyle);
+        helpToPlay = new Label(I18n.t("helpPlay"), labelStyle);
         
         this.arrow = skin.getRegion("helpArrowDown");
         
         stage.addActor(helpToPlay);
-        helpToPlay.setPosition(650, 1900);
+        helpToPlay.setPosition(650, viewport.getWorldHeight()-500);
         
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
@@ -40,7 +41,7 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
     @Override
     public void render() {
         batch.begin();
-        batch.draw(arrow, 1900 / scalingFactor, 1800 / scalingFactor, 0, 0, arrow.getRegionWidth() / scalingFactor, arrow.getRegionHeight() / scalingFactor, 1f, 1f, 0);
+        batch.draw(arrow, 1900 / scalingFactor, (helpToPlay.getY()-100) / scalingFactor, 0, 0, arrow.getRegionWidth() / scalingFactor, arrow.getRegionHeight() / scalingFactor, 1f, 1f, 0);
         batch.end();
         stage.draw();
     }

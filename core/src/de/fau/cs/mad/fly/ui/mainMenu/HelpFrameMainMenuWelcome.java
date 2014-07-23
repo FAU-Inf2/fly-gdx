@@ -28,7 +28,7 @@ public class HelpFrameMainMenuWelcome extends HelpFrame {
         Label helpToPlay = new Label(I18n.t("welcome"), labelStyle);
         
         stage.addActor(helpToPlay);
-        helpToPlay.setPosition(650, 1900);
+        helpToPlay.setPosition(650, viewport.getWorldHeight()-500);
         
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
