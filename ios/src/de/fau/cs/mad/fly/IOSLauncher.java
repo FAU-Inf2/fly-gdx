@@ -11,6 +11,9 @@ public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
+        config.useAccelerometer = true;
+        config.useCompass = true;
+        config.allowIpod = true;
         return new IOSApplication(new Fly(), config);
     }
 
