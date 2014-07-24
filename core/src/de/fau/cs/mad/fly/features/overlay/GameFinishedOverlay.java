@@ -90,7 +90,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 messageTable.add(new Label(I18n.t(detail.getDetailName()), skin)).pad(6f).uniform();
                 messageTable.add(new Label(detail.getValue(), skin)).pad(6f).uniform();
             }
-            if (ScoreManager.getInstance().getCurrentLevelBestScore() == null || newScore.getTotalScore() > ScoreManager.getInstance().getCurrentLevelBestScore().getTotalScore()) {
+            Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
+            if ( tmpScore == null || newScore.getTotalScore() > tmpScore.getTotalScore()) {
                 ScoreManager.getInstance().saveBestScore(newScore);
                 messageTable.row().expand();
                 messageTable.add(new Label(I18n.t("newRecord"), skin)).pad(6f).uniform();

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.res.Assets;
@@ -57,11 +58,15 @@ public class Fly extends Game {
 		if(skinManager == null) {
 			skinManager = new SkinManager("uiskin.json");
 		}
+		
+		
 	}
     
     @Override
     public void dispose() {
         Gdx.app.log("Fly", "dispose game");
+        
+        FlyDBManager.getInstance().dispose();
         
         disposeScreen(splashScreen);
         disposeScreen(levelChooserScreen);

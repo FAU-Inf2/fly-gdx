@@ -3,10 +3,7 @@ package de.fau.cs.mad.fly.profile;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.sql.DatabaseCursor;
-import com.badlogic.gdx.sql.SQLiteGdxException;
-
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.player.Player;
@@ -19,6 +16,7 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
  */
 public class PlayerManager {
 	private Player currentPlayer;
+	List<Player> players;
 
 	public Player getCurrentPlayer() {
 		return currentPlayer;
@@ -33,10 +31,11 @@ public class PlayerManager {
 	 * player exist.
 	 */
 	private PlayerManager() {
+		setPlayers();
 
 		int userID = AppSettingsManager.Instance.getIntegerSetting(AppSettingsManager.CHOSEN_USER,
 				0);
-		Player player = getPlayerfromDB(userID);
+		Player player = getPlayerfromList(userID);
 		if (player == null) {
 			player = new Player();
 			player.setName(I18n.t("default.username"));
@@ -45,13 +44,23 @@ public class PlayerManager {
 
 		setCurrentPlayer(player);
 		AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.CHOSEN_USER,
-				player.getId());
+				player.getId());		
 	}
 
 	private static PlayerManager Instance = new PlayerManager();
 
 	public static PlayerManager getInstance() {
 		return Instance;
+	}
+	
+	private Player getPlayerfromList(int userID){
+		for(Player player : players){
+			if(player.getId() == userID)
+			{
+				return player;
+			}
+		}
+		return null;
 	}
 
 	public Player getPlayerfromDB(int userID) {
@@ -60,78 +69,63 @@ public class PlayerManager {
 				+ " from " + FlyDBManager.TABLE_PLAYER + " where " + FlyDBManager.PLAYER_COLUMN_ID
 				+ "=" + userID;
 		Player player = null;
-		try {
 
-			FlyDBManager.getInstance().openDatabase();
-
-			DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
-			if (cursor != null && cursor.getCount() > 0) {
-				cursor.next();
-				player = new Player();
-				player.setId(cursor.getInt(0));
-				player.setFlyID(cursor.getInt(1));
-				player.setName(cursor.getString(2));
-			}
-
-		} catch (SQLiteGdxException e) {
-			Gdx.app.error("PlayerManager.getPlayerfromDB", e.toString());
-		} finally {
-			FlyDBManager.getInstance().closeDatabase();
+		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
+		if (cursor != null && cursor.getCount() > 0) {
+			cursor.next();
+			player = new Player();
+			player.setId(cursor.getInt(0));
+			player.setFlyID(cursor.getInt(1));
+			player.setName(cursor.getString(2));
+			cursor.close();
 		}
 
 		return player;
 	}
 
-	//private List<Player> players = null;
+	// private List<Player> players = null;
 
-	public List<Player> getAllPlayer() {
-		List<Player> players = new ArrayList<Player>();
+	public List<Player> getAllPlayer()
+	{
+		return players;
+	}
+	
+	private void setPlayers() {
+		players = new ArrayList<Player>();
 		final String selectSQL = "select " + FlyDBManager.PLAYER_COLUMN_ID + ", "
 				+ FlyDBManager.PLAYER_COLUMN_FLY_ID + ", " + FlyDBManager.PLAYER_COLUMN_NAME
 				+ " from " + FlyDBManager.TABLE_PLAYER;
 
-		try {
-			FlyDBManager.getInstance().openDatabase();
-			DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
+		// FlyDBManager.getInstance().openDatabase();
+		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
 
-			if (cursor != null && cursor.getCount() > 0) {
-				while (cursor.next()) {
-					Player player = new Player();
-					player.setId(cursor.getInt(0));
-					player.setFlyID(cursor.getInt(1));
-					player.setName(cursor.getString(2));
-					players.add(player);
-				}
+		if (cursor != null && cursor.getCount() > 0) {
+			while (cursor.next()) {
+				Player player = new Player();
+				player.setId(cursor.getInt(0));
+				player.setFlyID(cursor.getInt(1));
+				player.setName(cursor.getString(2));
+				players.add(player);
 			}
-		} catch (SQLiteGdxException e) {
-			Gdx.app.error("PlayerManager.getAllPlayer", e.toString());
-		} finally {
-			FlyDBManager.getInstance().closeDatabase();
+			cursor.close();
 		}
-
-		return players;
 	}
 
 	public void savePlayer(Player player) {
 
-		try {
-			FlyDBManager.getInstance().openDatabase();
-			int newID = getMaxPlayerID()+1;
-			player.setId(newID);
-			final String insertSQL = "insert into " + FlyDBManager.TABLE_PLAYER + " ( "
-					+ FlyDBManager.PLAYER_COLUMN_ID + " , " + FlyDBManager.PLAYER_COLUMN_NAME
-					+ " ) values (" + player.getId() + " , '" + player.getName() + "')";
+		int newID = getMaxPlayerID() + 1;
+		player.setId(newID);
+		final String insertSQL = "insert into " + FlyDBManager.TABLE_PLAYER + " ( "
+				+ FlyDBManager.PLAYER_COLUMN_ID + " , " + FlyDBManager.PLAYER_COLUMN_NAME
+				+ " ) values (" + player.getId() + " , '" + player.getName() + "')";
 
-			FlyDBManager.getInstance().execSQL(insertSQL);
+		FlyDBManager.getInstance().execSQL(insertSQL);
+		
+		players.add(player);
 
-		} catch (SQLiteGdxException e) {
-			Gdx.app.error("PlayerManager.savePlayer", e.toString());
-		} finally {
-			FlyDBManager.getInstance().closeDatabase();
-		}
 	}
 
-	private int getMaxPlayerID() throws SQLiteGdxException {
+	private int getMaxPlayerID() {
 		final String selectSQL = "select max(" + FlyDBManager.PLAYER_COLUMN_ID + ") from "
 				+ FlyDBManager.TABLE_PLAYER;
 
@@ -139,7 +133,8 @@ public class PlayerManager {
 		if (cursor != null && cursor.getCount() > 0) {
 			cursor.next();
 			int ret = cursor.getInt(0);
-			return ret;
+			cursor.close();
+			return ret;			
 		}
 		return 0;
 	}
@@ -150,7 +145,7 @@ public class PlayerManager {
 				+ FlyDBManager.PLAYER_COLUMN_FLY_ID + "=" + player.getFlyID() + " where "
 				+ FlyDBManager.PLAYER_COLUMN_ID + "=" + player.getId();
 
-		FlyDBManager.getInstance().execSQLAtomic(sql);
+		FlyDBManager.getInstance().execSQL(sql);
 	}
 
 }

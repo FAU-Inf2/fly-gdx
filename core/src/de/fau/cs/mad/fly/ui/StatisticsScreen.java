@@ -1,13 +1,14 @@
 package de.fau.cs.mad.fly.ui;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -25,7 +26,6 @@ import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
-import de.fau.cs.mad.fly.settings.AppSettingsManager;
 
 /**
  * UI for checking scores of user, also for add and change user
@@ -35,59 +35,21 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
  */
 public class StatisticsScreen extends BasicScreen {
 
-	TextButton changeUserButton;
 	TextButton addUserButton;
 	TextButton uploadScoreButton;
 	TextButtonStyle textButtonStyle;
 	Table infoTable;
+	Table userTable;
+	TextField newUserField;
+	
+	public void initButtons() {
+		textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
+		addUserButton = new TextButton(I18n.t("addUserButtonText"), textButtonStyle);
 
-	public class ChangeUserDialog extends Dialog {
-		public ChangeUserDialog(String title, Skin skin) {
-			super(title, skin);
-			text(I18n.t("text.chooseUser"));
-			for (Player player : PlayerManager.getInstance().getAllPlayer()) {
-				if (player.getId() != PlayerManager.getInstance().getCurrentPlayer().getId()) {
-					button(player.getName(), player);
-				}
-			}
-			button(I18n.t("buttenText.cancel"), "cancel");
-			
-			this.pad(0.1f);
-
-		}
-
-		@Override
-		protected void result(Object o) {
-			if (o instanceof Player) {
-				Player player = (Player) o;
-				PlayerManager.getInstance().setCurrentPlayer(player);
-				AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.CHOSEN_USER,
-						player.getId());
-				generateContentDynamic();
-			}
-		}
-	}
-
-	public class AddUserDialog extends Dialog {
-		TextField usernameTF;
-
-		public AddUserDialog(String title, Skin skin) {
-			super(title, skin);			
-			text(I18n.t("text.inputUsername"));
-			TextField username = new TextField("", skin);			
-			this.addActor(username);
-			
-			this.row().expand();
-			button(I18n.t("buttenText.ok"), "ok");
-			button(I18n.t("buttenText.cancel"), "cancel");
-			usernameTF = username;
-			this.pad(0.2f);
-		}
-
-		@Override
-		protected void result(Object o) {
-			if (o.toString().equals("ok")) {
-				String name = usernameTF.getText().trim();
+		addUserButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				String name = newUserField.getText().trim();
 				if (!name.equals(""))// todo more check
 				{
 					Player player = new Player();
@@ -95,32 +57,9 @@ public class StatisticsScreen extends BasicScreen {
 
 					PlayerManager.getInstance().savePlayer(player);
 					generateContentDynamic();
-				}	
-			}
-		}
-	}
-
-	public void initButtons() {
-		textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
-
-		changeUserButton = new TextButton(I18n.t("changeUserButtonText"), textButtonStyle);
-		addUserButton = new TextButton(I18n.t("addUserButtonText"), textButtonStyle);
-
-		changeUserButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				new ChangeUserDialog(I18n.t("dialogTitle.changeUser"), skin).show(stage);
+				}
 			}
 		});
-
-		addUserButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				new AddUserDialog(I18n.t("dialogTitle.addUser"), skin).show(stage);
-
-			}
-		});
-
 	}
 
 	@Override
@@ -226,6 +165,7 @@ public class StatisticsScreen extends BasicScreen {
 	};
 
 	private void generateContentDynamic() {
+		Gdx.app.log("StaticScreen", "begin generateContentDynamic " + System.currentTimeMillis());
 		player = PlayerManager.getInstance().getCurrentPlayer();
 
 		infoTable.clear();
@@ -233,15 +173,33 @@ public class StatisticsScreen extends BasicScreen {
 		//add user name and user change& add buttons
 		String userName = player.getName();
 		infoTable.row().expand();
+
 		infoTable.add(new Label(I18n.t("usernameLableText"), skin)).pad(6f).uniform();
-		infoTable.add(new Label(userName, skin)).pad(6f).uniform();
+		List userList = new List(skin);
+		int i = 0;
+		int index = 0;
+		ArrayList<String> nameList = new ArrayList<String>();
+		for (Player player : PlayerManager.getInstance().getAllPlayer()) {
+			nameList.add(player.getName());
+			if (userName.equals(player.getName())) {
+				index = i;
+			}
+			i++;
+		}
+
+		userList.setItems(nameList.toArray());
+		userList.setSelectedIndex(index);
+		userList.getSelection().setRequired(false);	
+		userList.getSelection().setToggle(true);
+		infoTable.add(userList).pad(6f).uniform();
 
 		infoTable.row().expand();
-		if (PlayerManager.getInstance().getAllPlayer().size() > 1) {
-			infoTable.add(changeUserButton).pad(6f).uniform();
-		}
+		
+		newUserField = new TextField("", skin);
+		newUserField.setBounds(0, 0, 200, 100);
+		infoTable.add(newUserField).pad(6f).uniform();
 		infoTable.add(addUserButton).pad(6f).uniform();
-
+		
 		//add scores details
 		boolean haveScore = false;
 		Map<String, Score> scores = ScoreManager.getInstance().getcurrentBestScores();
@@ -312,8 +270,9 @@ public class StatisticsScreen extends BasicScreen {
 			}
 		});
 		infoTable.add(globalHighScoreButton);
+		Gdx.app.log("StaticScreen", "end generateContentDynamic " + System.currentTimeMillis());
 	}
-
+	
 	@Override
 	public void show() {
 		super.show();

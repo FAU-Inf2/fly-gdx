@@ -1,14 +1,12 @@
 package de.fau.cs.mad.fly.db;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.sql.Database;
 import com.badlogic.gdx.sql.DatabaseCursor;
 import com.badlogic.gdx.sql.DatabaseFactory;
-import com.badlogic.gdx.sql.SQLiteGdxException;
-
-import de.fau.cs.mad.fly.settings.AppSettingsManager;
 
 /**
  * Manages the database of fly 
@@ -17,7 +15,7 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
  */
 public class FlyDBManager {
 
-	private static final String DATABASE_NAME = "fau.mad.fly.db";
+	private static final String DATABASE_NAME = "faumadfly.db";
 	private static final int DATABASE_VERSION = 1;
 
 	Database dbHandler;
@@ -44,139 +42,92 @@ public class FlyDBManager {
 	public static final String SCORE_DETAIL_COLUMN_DETAIL = "score_detail";
 	public static final String SCORE_DETAIL_COLUMN_VALUE = "_value";
 
-	private String createTablePlayer() {
-		final String creatSQL = "create table if not exists " + TABLE_PLAYER
-				+ "(" + PLAYER_COLUMN_ID
-				+ " integer primary key autoincrement, " + PLAYER_COLUMN_FLY_ID
-				+ " text, " + PLAYER_COLUMN_NAME + " text not null, "
-				+ PLAYER_COLUMN_SOCIAL_TYPE + " text, "
-				+ PLAYER_COLUMN_SOCIAL_NAME + " text, "
-				+ PLAYER_COLUMN_SOCIAL_PASSWORD + " text);";
-		return creatSQL;
-	}
+	private static String createTablePlayer = "create table if not exists " + TABLE_PLAYER + "("
+			+ PLAYER_COLUMN_ID + " integer primary key autoincrement, " + PLAYER_COLUMN_FLY_ID
+			+ " text, " + PLAYER_COLUMN_NAME + " text not null, " + PLAYER_COLUMN_SOCIAL_TYPE
+			+ " text, " + PLAYER_COLUMN_SOCIAL_NAME + " text, " + PLAYER_COLUMN_SOCIAL_PASSWORD
+			+ " text); ";
 
-	private String createTableScore() {
-		final String creatSQL = "create table if not exists " + TABLE_SCORE
-				+ "(" + SCORE_COLUMN_PLAYERID + " integer not null, "
-				+ SCORE_COLUMN_LEVELID + " integer not null, "
-				+ SCORE_COLUMN_SCORE + " integer not null, "
-				+ SCORE_COLUMN_COMPARESCORE + " text, "
-				+ SCORE_COLUMN_REACHEDDATE + " date );";
-		return creatSQL;
-	}
+	private static String createTableScore = "create table if not exists " + TABLE_SCORE + "("
+			+ SCORE_COLUMN_PLAYERID + " integer not null, " + SCORE_COLUMN_LEVELID
+			+ " integer not null, " + SCORE_COLUMN_SCORE + " integer not null, "
+			+ SCORE_COLUMN_COMPARESCORE + " text, " + SCORE_COLUMN_REACHEDDATE + " date ); ";
 
-	private String createTableScoreDetail() {
-		final String creatSQL = "create table if not exists "
-				+ TABLE_SCORE_DETAIL + "(" + SCORE_DETAIL_COLUMN_ID
-				+ " integer primary key autoincrement, "
-				+ SCORE_DETAIL_COLUMN_PLAYERID + " integer not null, "
-				+ SCORE_DETAIL_COLUMN_LEVELID + " integer not null, "
-				+ SCORE_DETAIL_COLUMN_DETAIL + " text not null, "
-				+ SCORE_DETAIL_COLUMN_VALUE + " text);";
-		return creatSQL;
-	}
+	private static String createTableScoreDetail = "create table if not exists "
+			+ TABLE_SCORE_DETAIL + "(" + SCORE_DETAIL_COLUMN_ID
+			+ " integer primary key autoincrement, " + SCORE_DETAIL_COLUMN_PLAYERID
+			+ " integer not null, " + SCORE_DETAIL_COLUMN_LEVELID + " integer not null, "
+			+ SCORE_DETAIL_COLUMN_DETAIL + " text not null, " + SCORE_DETAIL_COLUMN_VALUE
+			+ " text); ";
 
 	private FlyDBManager() {
-		Gdx.app.log("FlyDBManager", "setupDatabase begin" + new Date().toString());
-		dbHandler = DatabaseFactory.getNewDatabase(DATABASE_NAME,
-				DATABASE_VERSION, null, null);
+		Gdx.app.log("FlyDBManager", "setupDatabase begin " + System.currentTimeMillis());
+		List<String> createSQLs = new ArrayList<String>();
+		createSQLs.add(createTablePlayer);
+		createSQLs.add(createTableScore);
+		createSQLs.add(createTableScoreDetail);
+		List<String> upgradeSQLs = null;
+		dbHandler = DatabaseFactory.getNewDatabase(DATABASE_NAME, DATABASE_VERSION, createSQLs,
+				upgradeSQLs);
 		dbHandler.setupDatabase();
-		Gdx.app.log("FlyDBManager", "setupDatabase end" + new Date().toString());
-		int dbVersion = AppSettingsManager.Instance.getIntegerSetting(
-				AppSettingsManager.DATABASE_VERSION, 0);
-		if (dbVersion != DATABASE_VERSION) {
-			try {
-				Gdx.app.log("FlyDBManager", "openOrCreateDatabase begin" + new Date().toString());
-				dbHandler.openOrCreateDatabase();
-				Gdx.app.log("FlyDBManager", "openOrCreateDatabase end" + new Date().toString());
-				dbHandler.execSQL(createTablePlayer());
-				dbHandler.execSQL(createTableScore());
-				dbHandler.execSQL(createTableScoreDetail());
-				dbHandler.closeDatabase();
-				Gdx.app.log("FlyDBManager", "Createtable end" + new Date().toString());
-				AppSettingsManager.Instance.setIntegerSetting(
-						AppSettingsManager.DATABASE_VERSION, DATABASE_VERSION);
-			} catch (SQLiteGdxException e) {
-				Gdx.app.error("FlyDBManager", e.toString());
-			}
-		}
+		Gdx.app.log("FlyDBManager", "setupDatabase end   " +  System.currentTimeMillis());
+		dbHandler.openOrCreateDatabase();
+		Gdx.app.log("FlyDBManager", "database opened " +  System.currentTimeMillis());
+		
 	}
 
 	private static FlyDBManager Instance = new FlyDBManager();
 
 	public static FlyDBManager getInstance() {
+		if( Instance ==null)
+			Instance = new FlyDBManager(); 
 		return Instance;
-	}
-
-	/*
-	 * execute one SQL without return value. It is one atomic database
-	 * operation. Don't need to open and close the database.
-	 */
-	public void execSQLAtomic(String sql) {
-		try {
-			dbHandler.openOrCreateDatabase();
-			Gdx.app.log("execSQL", sql);
-			dbHandler.execSQL(sql);
-			dbHandler.closeDatabase();
-		} catch (SQLiteGdxException e) {
-			Gdx.app.error("FlyDBManager", e.toString());
-		}
 	}
 
 	/*
 	 * execute one SQL without return value. please don't forget to call the
 	 * open and close database methods.
 	 */
-	public void execSQL(String sql) throws SQLiteGdxException {
-		Gdx.app.log("execSQL", sql);
+	public void execSQL(String sql) {
+		Gdx.app.log("FlyDBManager.execSQL", "execSQL begin " + System.currentTimeMillis());
+		Gdx.app.log("FlyDBManager.execSQL", sql);
 		dbHandler.execSQL(sql);
+		Gdx.app.log("FlyDBManager.execSQL", "execSQL end   " + System.currentTimeMillis());
 	}
-
-	/*
-	 * execute one insert SQL without return value. It is one atomic database
-	 * operation. Don't need to open and close the database.
-	 */
-	public void insertDataAtomic(String insertSQL) {
-		execSQLAtomic(insertSQL);
-	}
-
-	/*
-	 * execute one insert SQL without return value. please don't forget to call
-	 * the open and close database methods.
-	 */
-	public void insertData(String insertSQL) throws SQLiteGdxException {
-		execSQL(insertSQL);
-	}
-
-	public void openDatabase() throws SQLiteGdxException {
+	
+	public void openDatabase() {
+		Gdx.app.log("FlyDBManager.openDatabase", "open db begin " + System.currentTimeMillis());
 		dbHandler.openOrCreateDatabase();
+		Gdx.app.log("FlyDBManager.openDatabase", "open db end   " + System.currentTimeMillis());
 	}
 
 	/*
 	 * execute one select SQL. please don't forget to call the open and close
 	 * database methods.
 	 */
-	public DatabaseCursor selectData(String selectSQL)
-			throws SQLiteGdxException {
+	public DatabaseCursor selectData(String selectSQL) {
+		Gdx.app.log("FlyDBManager.selectData", "selectData  begin " + System.currentTimeMillis());
 		DatabaseCursor cursor = null;
-		Gdx.app.log("selectData", selectSQL);
+		Gdx.app.log("FlyDBManager.selectData", selectSQL);
 		cursor = dbHandler.rawQuery(selectSQL);
+		Gdx.app.log("FlyDBManager.selectData", "selectData  end   " + System.currentTimeMillis());
 		return cursor;
 	}
 
-	public void closeDatabase() {
+	protected void closeDatabase() {
 		try {
-			dbHandler.closeDatabase();
-		} catch (SQLiteGdxException e) {
+			if (dbHandler != null)
+				dbHandler.closeDatabase();
+		} catch (Exception e) {
 			Gdx.app.error("FlyDBManager.closeDatabase", e.toString());
 		}
+		Gdx.app.log("FlyDBManager.closeDatabase", "close db at:" + System.currentTimeMillis());
 	}
 
 	public void dispose() {
+		closeDatabase();
+		Instance=null;
 
-		dbHandler = null;
-		Gdx.app.log("FlyDBManager", "dispose");
-
+		Gdx.app.log("FlyDBManager", "db is closed and disposed");
 	}
-
 }

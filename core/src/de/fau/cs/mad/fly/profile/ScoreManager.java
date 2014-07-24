@@ -5,10 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.sql.DatabaseCursor;
-import com.badlogic.gdx.sql.SQLiteGdxException;
-
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Level;
@@ -51,26 +48,20 @@ public class ScoreManager {
 				+ ") values (" + player.getId() + ", " + level.id + ", " + score.getTotalScore()
 				+ ", '" + score.getCompareScore() + "') ";
 
-		try {
-			FlyDBManager.getInstance().openDatabase();
-			FlyDBManager.getInstance().execSQL(deleteDetail);
-			FlyDBManager.getInstance().execSQL(deleteScore);
-			FlyDBManager.getInstance().execSQL(insertScore);
-			for (ScoreDetail detail : score.getScoreDetails()) {
-				String insertDetail = "insert into " + FlyDBManager.TABLE_SCORE_DETAIL + "("
-						+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + ", "
-						+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + ", "
-						+ FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL + ", "
-						+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + ") values (" + player.getId()
-						+ ", " + level.id + ", '" + detail.getDetailName() + "', '"
-						+ detail.getValue() + "')";
-				FlyDBManager.getInstance().execSQL(insertDetail);
-			}
-		} catch (SQLiteGdxException e) {
-			Gdx.app.error("ScoreManager.saveBestScore", e.toString());
-		} finally {
-			FlyDBManager.getInstance().closeDatabase();
+		// FlyDBManager.getInstance().openDatabase();
+		FlyDBManager.getInstance().execSQL(deleteDetail);
+		FlyDBManager.getInstance().execSQL(deleteScore);
+		FlyDBManager.getInstance().execSQL(insertScore);
+		for (ScoreDetail detail : score.getScoreDetails()) {
+			String insertDetail = "insert into " + FlyDBManager.TABLE_SCORE_DETAIL + "("
+					+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + ", "
+					+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + ", "
+					+ FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL + ", "
+					+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + ") values (" + player.getId() + ", "
+					+ level.id + ", '" + detail.getDetailName() + "', '" + detail.getValue() + "')";
+			FlyDBManager.getInstance().execSQL(insertDetail);
 		}
+
 	}
 
 	public void saveBestScore(Player player, Score score) {
@@ -90,44 +81,39 @@ public class ScoreManager {
 				+ player.getId();
 		Map<String, Score> map = new HashMap<String, Score>();
 
-		try {
-			FlyDBManager.getInstance().openDatabase();
-			DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectScore);
-			if (cursor != null && cursor.getCount() > 0) {
+		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectScore);
+		if (cursor != null && cursor.getCount() > 0) {
 
-				while (cursor.next()) {
-					int levelId = cursor.getInt(0);
-					Score score = new Score();
-					score.setTotalScore(cursor.getInt(1));
-					score.setCompareScore(cursor.getString(2));
-					// todo score.setReachedDate(cursor.getString(3));
+			while (cursor.next()) {
+				int levelId = cursor.getInt(0);
+				Score score = new Score();
+				score.setTotalScore(cursor.getInt(1));
+				score.setCompareScore(cursor.getString(2));
+				// todo score.setReachedDate(cursor.getString(3));
 
-					String selectDetail = "select " + FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL
-							+ ", " + FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + " from "
-							+ FlyDBManager.TABLE_SCORE_DETAIL + " where "
-							+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + player.getId()
-							+ " and " + FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + "=" + levelId;
+				String selectDetail = "select " + FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL + ", "
+						+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + " from "
+						+ FlyDBManager.TABLE_SCORE_DETAIL + " where "
+						+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + player.getId()
+						+ " and " + FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + "=" + levelId;
 
-					List<ScoreDetail> details = new ArrayList<ScoreDetail>();
-					cursor = FlyDBManager.getInstance().selectData(selectDetail);
-					if (cursor != null && cursor.getCount() > 0) {
-						while (cursor.next()) {
-							ScoreDetail detail = new ScoreDetail();
-							detail.setDetailName(cursor.getString(0));
-							detail.setValue(cursor.getString(1));
-							details.add(detail);
-						}
+				List<ScoreDetail> details = new ArrayList<ScoreDetail>();
+				DatabaseCursor subCursor = FlyDBManager.getInstance().selectData(selectDetail);
+				if (subCursor != null && subCursor.getCount() > 0) {
+					while (subCursor.next()) {
+						ScoreDetail detail = new ScoreDetail();
+						detail.setDetailName(subCursor.getString(0));
+						detail.setValue(subCursor.getString(1));
+						details.add(detail);
 					}
-					score.setScoreDetails(details);
-					map.put(levelId + "", score);
+					subCursor.close();
 				}
+				score.setScoreDetails(details);
+				map.put(levelId + "", score);
 			}
-
-		} catch (SQLiteGdxException e) {
-			Gdx.app.error("ScoreManager.getPlayerBestScores", e.toString());
-		} finally {
-			FlyDBManager.getInstance().closeDatabase();
+			cursor.close();
 		}
+
 		return map;
 	}
 
@@ -149,35 +135,30 @@ public class ScoreManager {
 				+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + "=" + level.id;
 		Score score = null;
 
-		try {
-			FlyDBManager.getInstance().openDatabase();
-			DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectScore);
-			if (cursor != null && cursor.getCount() > 0) {
-				cursor.next();
-				score = new Score();
-				score.setTotalScore(cursor.getInt(0));
-				score.setCompareScore(cursor.getString(1));
-				// todo score.setReachedDate(cursor.getString(2));
+		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectScore);
+		if (cursor != null && cursor.getCount() > 0) {
+			cursor.next();
+			score = new Score();
+			score.setTotalScore(cursor.getInt(0));
+			score.setCompareScore(cursor.getString(1));
+			// todo score.setReachedDate(cursor.getString(2));
+			cursor.close();
+			List<ScoreDetail> details = new ArrayList<ScoreDetail>();
+			DatabaseCursor subCursor = FlyDBManager.getInstance().selectData(selectDetail);
 
-				List<ScoreDetail> details = new ArrayList<ScoreDetail>();
-				cursor = FlyDBManager.getInstance().selectData(selectDetail);
-
-				if (cursor != null && cursor.getCount() > 0) {
-					while (cursor.next()) {
-						ScoreDetail detail = new ScoreDetail();
-						detail.setDetailName(cursor.getString(0));
-						detail.setValue(cursor.getString(1));
-						details.add(detail);
-					}
+			if (subCursor != null && subCursor.getCount() > 0) {
+				while (subCursor.next()) {
+					ScoreDetail detail = new ScoreDetail();
+					detail.setDetailName(subCursor.getString(0));
+					detail.setValue(subCursor.getString(1));
+					details.add(detail);
 				}
-				score.setScoreDetails(details);
+				subCursor.close();
 			}
-
-		} catch (SQLiteGdxException e) {
-			Gdx.app.error("ScoreManager.getLevelBestScore", e.toString());
-		} finally {
-			FlyDBManager.getInstance().closeDatabase();
+			score.setScoreDetails(details);
+			
 		}
+
 		return score;
 	}
 
