@@ -81,18 +81,14 @@ public class LoadingScreen extends BasicScreen {
 		});
 	}
 	private boolean add = true;
-	public void addButton(Level level) {
+	public void addButton() {
 		if(add) {
 			progressBar.setVisible(false);
 			
-			final Level chosenLevel = level;
 	    	final TextButton button = new TextButton(I18n.t("play"), skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
 			button.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					chosenLevel.reset();
-	                PlayerManager.getInstance().getCurrentPlayer().setLevel(chosenLevel);
-	                ((Fly) Gdx.app.getApplicationListener()).initGameController();
 	                ((Fly) Gdx.app.getApplicationListener()).setGameScreen();
 	                ((Fly) Gdx.app.getApplicationListener()).getGameController().initGame();
 	                ((Fly) Gdx.app.getApplicationListener()).getGameController().getFlightController().resetSteering();
