@@ -1,7 +1,9 @@
 package de.fau.cs.mad.fly.features.upgrades;
 
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
+import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.TimeController;
 
@@ -41,6 +43,7 @@ public class AddTimeUpgrade extends CollectibleObjects implements IFeatureInit {
 	@Override
 	protected void handleCollecting() {
 		timeController.addBonusTime(addedTime);
+		InfoOverlay.getInstance().setOverlay(I18n.t("timeUpgradeCollected") + "\n" + I18n.t("bonus") + " " + ((int) addedTime) + "s.", 3);
 	}
 
 }

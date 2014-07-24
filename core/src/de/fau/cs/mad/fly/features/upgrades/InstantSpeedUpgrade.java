@@ -1,7 +1,9 @@
 package de.fau.cs.mad.fly.features.upgrades;
 
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
+import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 
@@ -73,6 +75,8 @@ public class InstantSpeedUpgrade extends CollectibleObjects implements IFeatureU
 		oldSpeed = plane.getSpeed();
 		plane.setSpeed(oldSpeed * upgradeSpeedFactor);
 		duration = 0.0f;
+		
+		InfoOverlay.getInstance().setOverlay(I18n.t("speedUpgradeCollected") + "\n" + I18n.t("bonus") + " " + ((int) (upgradeSpeedFactor * 100.0f)+ "% " + I18n.t("for") + " " + (int) upgradeDuration) + "s.", 3);
 	}
 
 	@Override

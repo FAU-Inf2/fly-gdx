@@ -26,6 +26,7 @@ import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
 import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
+import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
@@ -190,6 +191,8 @@ public class GameControllerBuilder {
         Preferences preferences = player.getSettingManager().getPreferences();
         addGateIndicator();
         addTimeLeftOverlay();
+        addInfoOverlay();
+        
         if (preferences.getBoolean(SettingManager.SHOW_PAUSE)) {
             addPauseGameOverlay();
         }
@@ -320,6 +323,18 @@ public class GameControllerBuilder {
     private GameControllerBuilder addTimeLeftOverlay() {
         TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game.getSkin(), stage);
         timeController.registerIntegerTimeListener(timeLeftOverlay);
+        return this;
+    }
+    
+    /**
+     * Adds a {@link InfoOverlay} to the GameController, that is initialized
+     * and updated every frame.
+     * 
+     * @return Builder instance with TimeLeftOverlay
+     */
+    private GameControllerBuilder addInfoOverlay() {
+    	InfoOverlay.createInfoOverlay(game.getSkin(), stage);
+    	addFeatureToLists(InfoOverlay.getInstance());
         return this;
     }
     

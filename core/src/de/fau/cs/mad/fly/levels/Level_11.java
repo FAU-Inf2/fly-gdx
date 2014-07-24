@@ -33,8 +33,8 @@ public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener
 		InstantSpeedUpgrade instantSpeedUpgrade = new InstantSpeedUpgrade("speedUpgrade", 4.0f, 10.0f);
 		builder.addFeatureToLists(instantSpeedUpgrade);
 		
-		LinearSpeedUpgrade linearSpeedUpgrade = new LinearSpeedUpgrade("speedUpgrade", 2.0f, 10.0f, 4.0f);
-		builder.addFeatureToLists(linearSpeedUpgrade);
+		/*LinearSpeedUpgrade linearSpeedUpgrade = new LinearSpeedUpgrade("speedUpgrade", 2.0f, 10.0f, 4.0f);
+		builder.addFeatureToLists(linearSpeedUpgrade);*/
 		
 		AddTimeUpgrade addTimeUpgrade = new AddTimeUpgrade("timeUpgrade", 10.0f);
 		builder.addFeatureToLists(addTimeUpgrade);

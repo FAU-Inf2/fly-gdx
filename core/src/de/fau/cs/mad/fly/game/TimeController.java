@@ -103,6 +103,14 @@ public class TimeController {
         }
     }
     
+    /**
+     * Getter for the current integer time in seconds.
+     * @return Current integer time in seconds.
+     */
+    public int getIntegerTime() {
+    	return (int) Math.ceil(currentTimeInSeconds);
+    }
+    
     /** Notifies all {@link TimeIsUpListener}s. */
     private void timeIsUp() {
     	size = timeIsUpListeners.size();
@@ -119,16 +127,10 @@ public class TimeController {
     private void integerTimeChanged() {
     	size = integerTimeListeners.size();
         for (int i = 0; i < size; i++) {
-            if(integerTimeListeners.get(i).integerTimeChanged((int) Math.ceil(currentTimeInSeconds))) {
+            if(integerTimeListeners.get(i).integerTimeChanged(getIntegerTime())) {
             	removeIntegerTimeListener(integerTimeListeners.get(i));
             	size--;
             	i--;
-            }
-        }
-    	
-        for (IntegerTimeListener listener : integerTimeListeners) {
-            if(listener.integerTimeChanged((int) Math.ceil(currentTimeInSeconds))) {
-            	removeIntegerTimeListener(listener);
             }
         }
     }
