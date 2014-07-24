@@ -1,3 +1,14 @@
+// Pull the plugin from Maven Central
+// buildscript {
+//     repositories {
+//         mavenCentral()
+//         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+//     }
+//     dependencies {
+//         classpath 'com.github.jtakakura:gradle-robovm-plugin:0.0.11-SNAPSHOT'
+//     }
+// }
+
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 sourceCompatibility = '1.7'
@@ -62,4 +73,31 @@ createIPA.dependsOn build
 eclipse.project {
     name = appName + "-ios"
     natures 'org.robovm.eclipse.RoboVMNature'
+}
+
+robovm {
+    iosSignIdentity = "UNKNOWN"
+    iosProvisioningProfile = "UNKNOWN"
+    iosSkipSigning = false
+    stdoutFifo = ""
+    stderrFifo = ""
+}
+
+allprojects {
+    afterEvaluate { project ->
+      def propsFile = file('iossigning.properties')
+
+        if (propsFile.exists()) {
+          println "iossigning.properties file found -> reset the identity and provisioning"
+          def props = new Properties()
+          propsFile.withInputStream { 
+            stream -> props.load(stream) 
+          }
+
+          def config = new ConfigSlurper().parse(props)
+
+          robovm.iosSignIdentity = config.identity
+          robovm.iosProvisioningProfile = config.provisioning_profile
+        }
+    }
 }
