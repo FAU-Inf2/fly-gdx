@@ -58,8 +58,6 @@ public class CollisionDetector implements Disposable {
 		return instance;
 	}
 
-
-
 	/**
 	 * The main listener for the collision detection.
 	 * <p>

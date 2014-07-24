@@ -429,6 +429,7 @@ public class GameControllerBuilder {
      * @return new GameController
      */
     public GameController build() {
+    	GameController.instance = gc;
         gc.stage = stage;
         gc.optionalFeaturesToLoad = optionalFeaturesToLoad;
         gc.optionalFeaturesToInit = optionalFeaturesToInit;
@@ -438,6 +439,7 @@ public class GameControllerBuilder {
         gc.optionalFeaturesToFinish = optionalFeaturesToFinish;
         gc.optionalFeaturesToDispose = optionalFeaturesToDispose;
         gc.level = level;
+        //gc.player = new Player();
         gc.flightController = flightController;
         gc.cameraController = cameraController;
         gc.batch = new ModelBatch();

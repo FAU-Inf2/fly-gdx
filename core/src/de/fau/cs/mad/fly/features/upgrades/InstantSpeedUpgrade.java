@@ -60,6 +60,7 @@ public class InstantSpeedUpgrade extends CollectibleObjects implements IFeatureU
 	public InstantSpeedUpgrade(String modelRef, float upgradeSpeedFactor, float upgradeDuration) {
 		super("instantSpeedUpgrade", modelRef);
 		plane = PlayerManager.getInstance().getCurrentPlayer().getPlane();
+		//plane = GameController.getInstance().getPlayer().getPlane();
 		
 		this.upgradeSpeedFactor = upgradeSpeedFactor;
 		this.upgradeDuration = upgradeDuration;

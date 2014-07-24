@@ -16,6 +16,7 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
+import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
 
@@ -54,6 +55,8 @@ public class GameController implements TimeIsUpListener {
         RUNNING, PAUSED, FINISHED
     }
     
+    protected static GameController instance = null;
+    
     protected Stage stage;
     protected List<IFeatureLoad> optionalFeaturesToLoad;
     protected List<IFeatureInit> optionalFeaturesToInit;
@@ -67,12 +70,21 @@ public class GameController implements TimeIsUpListener {
     protected PerspectiveCamera camera;
     protected ModelBatch batch;
     protected Level level;
+    protected Player player;
     private GameState gameState;
     private TimeController timeController;
     private InputMultiplexer inputProcessor;
     
     /** Use Builder to initiate GameController */
     protected GameController() {
+    }
+    
+    /**
+     * Getter for the singleton game controller.
+     * @return {@link #instance}
+     */
+    public static GameController getInstance() {
+    	return instance;
     }
     
     /**
@@ -130,10 +142,12 @@ public class GameController implements TimeIsUpListener {
     }
     
     /**
-     * Setter for the level.
+     * Getter for the player.
+     * 
+     * @return {@link #player}
      */
-    public void setLevel(Level level) {
-        this.level = level;
+    public Player getPlayer() {
+        return player;
     }
     
     /**
