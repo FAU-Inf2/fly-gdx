@@ -38,7 +38,8 @@ import de.fau.cs.mad.fly.levels.ILevel;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
-import de.fau.cs.mad.fly.profile.PlayerManager;
+import de.fau.cs.mad.fly.profile.PlayerProfile;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.EventAdapter;
 import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.Level;
@@ -57,6 +58,7 @@ public class GameControllerBuilder {
     private GameController gc = new GameController();
     private Fly game;
     private Player player;
+    private PlayerProfile playerProfile;
     private Stage stage;
     private Level level;
     private ArrayList<IFeatureLoad> optionalFeaturesToLoad;
@@ -94,10 +96,11 @@ public class GameControllerBuilder {
         optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
         
         this.game = game;
-        player = PlayerManager.getInstance().getCurrentPlayer();
-        level = player.getLevel();
-        flightController = new FlightController(player);
-        cameraController = new CameraController(player);
+        player = new Player();
+        playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+        level = playerProfile.getLevel();
+        flightController = new FlightController(player, playerProfile);
+        cameraController = new CameraController(player, playerProfile);
         
         stage = new Stage();
         timeController = new TimeController();
@@ -129,12 +132,13 @@ public class GameControllerBuilder {
                 if (g.isDummy()) {
                     return;
                 }
-                Player player = PlayerManager.getInstance().getCurrentPlayer();
-                if (player.decreaseLives()) {
-                    Debug.setOverlay(0, "DEAD");
+                Player player = GameController.getInstance().getPlayer();
+            	System.out.println("FINISH");
+                if (!player.decreaseLives()) {
+                    //Debug.setOverlay(0, "DEAD");
                     game.getGameController().finishGame();
                 } else {
-                    Debug.setOverlay(0, player.getLives());
+                    //Debug.setOverlay(0, player.getLives());
                 }
             }
         });
@@ -161,9 +165,9 @@ public class GameControllerBuilder {
         });
         
         if (level.head.name.equals("Endless")) {
-            generator = new EndlessLevelGenerator(PlayerManager.getInstance().getCurrentPlayer().getLevel());
+            generator = new EndlessLevelGenerator(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLevel());
             
-            PlayerManager.getInstance().getCurrentPlayer().getLevel().addEventListener(new EventAdapter() {
+            PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLevel().addEventListener(new EventAdapter() {
                 @Override
                 public void onGatePassed(Gate passed) {
                     generator.addRandomGate(passed);
@@ -188,7 +192,7 @@ public class GameControllerBuilder {
     private void checkAndAddSettingFeatures() {
         // if needed for debugging: Debug.init(game.getSkin(), stage, 1);
         
-        Preferences preferences = player.getSettingManager().getPreferences();
+        Preferences preferences = playerProfile.getSettingManager().getPreferences();
         addGateIndicator();
         addTimeLeftOverlay();
         addInfoOverlay();
@@ -439,7 +443,7 @@ public class GameControllerBuilder {
         gc.optionalFeaturesToFinish = optionalFeaturesToFinish;
         gc.optionalFeaturesToDispose = optionalFeaturesToDispose;
         gc.level = level;
-        //gc.player = new Player();
+        gc.player = player;
         gc.flightController = flightController;
         gc.cameraController = cameraController;
         gc.batch = new ModelBatch();

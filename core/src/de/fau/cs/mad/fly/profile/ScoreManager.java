@@ -7,10 +7,9 @@ import java.util.Map;
 
 import com.badlogic.gdx.sql.DatabaseCursor;
 import de.fau.cs.mad.fly.db.FlyDBManager;
-import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Level;
 
-/*
+/**
  * Manage scores of all player. 
  * todo: save and get scores from Database
  *   
@@ -27,17 +26,17 @@ public class ScoreManager {
 		return Instance;
 	}
 
-	public void saveBestScore(Player player, Level.Head level, Score score) {
-		Score compareScore = getLevelBestScore(player, level);
+	public void saveBestScore(PlayerProfile playerProfile, Level.Head level, Score score) {
+		Score compareScore = getLevelBestScore(playerProfile, level);
 		if (compareScore != null && compareScore.getTotalScore() > score.getTotalScore())
 			return;
 
 		String deleteDetail = "delete from " + FlyDBManager.TABLE_SCORE_DETAIL + " where "
-				+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + player.getId() + " and "
+				+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + playerProfile.getId() + " and "
 				+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + "=" + level.id;
 
 		String deleteScore = "delete from " + FlyDBManager.TABLE_SCORE + " where "
-				+ FlyDBManager.SCORE_COLUMN_PLAYERID + "=" + player.getId() + " and "
+				+ FlyDBManager.SCORE_COLUMN_PLAYERID + "=" + playerProfile.getId() + " and "
 				+ FlyDBManager.SCORE_COLUMN_LEVELID + "=" + level.id;
 
 		String insertScore = "insert into " + FlyDBManager.TABLE_SCORE + "("
@@ -45,7 +44,7 @@ public class ScoreManager {
 				+ ", " + FlyDBManager.SCORE_COLUMN_SCORE + ", "
 				+ FlyDBManager.SCORE_COLUMN_COMPARESCORE
 				// todo+ ", " + FlyDBManager.SCORE_COLUMN_REACHEDDATE
-				+ ") values (" + player.getId() + ", " + level.id + ", " + score.getTotalScore()
+				+ ") values (" + playerProfile.getId() + ", " + level.id + ", " + score.getTotalScore()
 				+ ", '" + score.getCompareScore() + "') ";
 
 		// FlyDBManager.getInstance().openDatabase();
@@ -57,28 +56,28 @@ public class ScoreManager {
 					+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + ", "
 					+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + ", "
 					+ FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL + ", "
-					+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + ") values (" + player.getId() + ", "
+					+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + ") values (" + playerProfile.getId() + ", "
 					+ level.id + ", '" + detail.getDetailName() + "', '" + detail.getValue() + "')";
 			FlyDBManager.getInstance().execSQL(insertDetail);
 		}
 
 	}
 
-	public void saveBestScore(Player player, Score score) {
-		saveBestScore(player, player.getLevel().head, score);
+	public void saveBestScore(PlayerProfile playerProfile, Score score) {
+		saveBestScore(playerProfile, playerProfile.getLevel().head, score);
 	}
 
 	public void saveBestScore(Score score) {
-		saveBestScore(PlayerManager.getInstance().getCurrentPlayer(), PlayerManager.getInstance()
-				.getCurrentPlayer().getLevel().head, score);
+		saveBestScore(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), PlayerProfileManager.getInstance()
+				.getCurrentPlayerProfile().getLevel().head, score);
 	}
 
-	public Map<String, Score> getPlayerBestScores(Player player) {
+	public Map<String, Score> getPlayerBestScores(PlayerProfile playerProfile) {
 		String selectScore = "select " + FlyDBManager.SCORE_COLUMN_LEVELID + ", "
 				+ FlyDBManager.SCORE_COLUMN_SCORE + ", " + FlyDBManager.SCORE_COLUMN_COMPARESCORE
 				+ ", " + FlyDBManager.SCORE_COLUMN_REACHEDDATE + " from "
 				+ FlyDBManager.TABLE_SCORE + " where " + FlyDBManager.SCORE_COLUMN_PLAYERID + " ="
-				+ player.getId();
+				+ playerProfile.getId();
 		Map<String, Score> map = new HashMap<String, Score>();
 
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectScore);
@@ -94,7 +93,7 @@ public class ScoreManager {
 				String selectDetail = "select " + FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL + ", "
 						+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + " from "
 						+ FlyDBManager.TABLE_SCORE_DETAIL + " where "
-						+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + player.getId()
+						+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + playerProfile.getId()
 						+ " and " + FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + "=" + levelId;
 
 				List<ScoreDetail> details = new ArrayList<ScoreDetail>();
@@ -118,20 +117,20 @@ public class ScoreManager {
 	}
 
 	public Map<String, Score> getcurrentBestScores() {
-		return getPlayerBestScores(PlayerManager.getInstance().getCurrentPlayer());
+		return getPlayerBestScores(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
 	}
 
-	public Score getLevelBestScore(Player player, Level.Head level) {
+	public Score getLevelBestScore(PlayerProfile playerProfile, Level.Head level) {
 		String selectScore = "select " + FlyDBManager.SCORE_COLUMN_SCORE + ", "
 				+ FlyDBManager.SCORE_COLUMN_COMPARESCORE + ", "
 				+ FlyDBManager.SCORE_COLUMN_REACHEDDATE + " from " + FlyDBManager.TABLE_SCORE
-				+ " where " + FlyDBManager.SCORE_COLUMN_PLAYERID + " =" + player.getId() + " and "
+				+ " where " + FlyDBManager.SCORE_COLUMN_PLAYERID + " =" + playerProfile.getId() + " and "
 				+ FlyDBManager.SCORE_COLUMN_LEVELID + "=" + level.id;
 
 		String selectDetail = "select " + FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL + ", "
 				+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + " from "
 				+ FlyDBManager.TABLE_SCORE_DETAIL + " where "
-				+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + player.getId() + " and "
+				+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + playerProfile.getId() + " and "
 				+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + "=" + level.id;
 		Score score = null;
 
@@ -162,12 +161,12 @@ public class ScoreManager {
 		return score;
 	}
 
-	public Score getLevelBestScore(Player player) {
-		return getLevelBestScore(player, player.getLevel().head);
+	public Score getLevelBestScore(PlayerProfile playerProfile) {
+		return getLevelBestScore(playerProfile, playerProfile.getLevel().head);
 	}
 
 	public Score getCurrentLevelBestScore() {
-		return getLevelBestScore(PlayerManager.getInstance().getCurrentPlayer(), PlayerManager
-				.getInstance().getCurrentPlayer().getLevel().head);
+		return getLevelBestScore(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), PlayerProfileManager
+				.getInstance().getCurrentPlayerProfile().getLevel().head);
 	}
 }

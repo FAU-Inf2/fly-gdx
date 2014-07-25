@@ -6,7 +6,7 @@ import java.util.Collection;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 
-import de.fau.cs.mad.fly.profile.PlayerManager;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
@@ -79,12 +79,12 @@ public class Loader {
         loader.initiate();
         ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
         //Assets.manager.load(new AssetDescriptor<Level>(head.file.path(), Level.class));
-        PlayerManager.getInstance().getCurrentPlayer().setLastLevel(head);
+        PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(head);
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
             public void progressFinished(Level level) {
 				level.reset();
-				PlayerManager.getInstance().getCurrentPlayer().setLevel(level);
+				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLevel(level);
 				((Fly) Gdx.app.getApplicationListener()).initGameController();
 				
 				loadingScreen.addButton();

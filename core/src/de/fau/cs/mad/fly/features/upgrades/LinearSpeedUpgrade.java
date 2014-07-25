@@ -4,7 +4,6 @@ import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.IPlane;
-import de.fau.cs.mad.fly.profile.PlayerManager;
 
 /**
  * Used to display and handle linear increasing and decreasing speed upgrades.
@@ -64,8 +63,7 @@ public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureUp
 	 */
 	public LinearSpeedUpgrade(String modelRef, float upgradeIncreaseFactor, float upgradeIncreaseDuration, float upgradeDecreaseFactor) {
 		super("linearSpeedUpgrade", modelRef);
-		plane = PlayerManager.getInstance().getCurrentPlayer().getPlane();
-		//plane = GameController.getInstance().getPlayer().getPlane();
+		plane = GameController.getInstance().getPlayer().getPlane();
 		
 		this.upgradeIncreaseFactor = upgradeIncreaseFactor;
 		this.upgradeIncreaseDuration = upgradeIncreaseDuration;

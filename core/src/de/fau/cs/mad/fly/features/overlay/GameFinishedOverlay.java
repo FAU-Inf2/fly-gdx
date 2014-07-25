@@ -18,7 +18,7 @@ import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
-import de.fau.cs.mad.fly.profile.PlayerManager;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
@@ -102,18 +102,18 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     // unload old level
-                    String levelPath = PlayerManager.getInstance().getCurrentPlayer().getLastLevel().file.path();
+                    String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file.path();
                     Assets.unload(levelPath);
                     
                     // set and load new level
-                    PlayerManager.getInstance().getCurrentPlayer().nextLevel();
-                    Level.Head levelHead = PlayerManager.getInstance().getCurrentPlayer().getLastLevel();
+                    PlayerProfileManager.getInstance().getCurrentPlayerProfile().nextLevel();
+                    Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel();
                     Loader.loadLevel(levelHead);
                 }
             });
             messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH);
             messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
-        } else if (PlayerManager.getInstance().getCurrentPlayer().isDead()) {
+        } else if (gameController.getPlayer().isDead()) {
             infoLabel = new Label(I18n.t("ship.destroyed"), skin);
             messageTable.add(infoLabel).colspan(2);
             
@@ -121,7 +121,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             restartButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    Level.Head levelHead = PlayerManager.getInstance().getCurrentPlayer().getLastLevel();
+                    Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel();
                     Loader.loadLevel(levelHead);
                 }
             });

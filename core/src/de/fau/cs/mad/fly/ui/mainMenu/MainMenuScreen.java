@@ -16,7 +16,8 @@ import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.LevelManager;
-import de.fau.cs.mad.fly.profile.PlayerManager;
+import de.fau.cs.mad.fly.profile.PlayerProfile;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.BasicScreen;
 import de.fau.cs.mad.fly.ui.UI;
@@ -86,11 +87,11 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Player player = PlayerManager.getInstance().getCurrentPlayer();
-                Level.Head levelHead = player.getLastLevel();
+                PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                Level.Head levelHead = playerProfile.getLastLevel();
                 if (levelHead == null) {
                     levelHead = LevelManager.getInstance().getLevelList().get(0);
-                    player.setLastLevel(levelHead);
+                    playerProfile.setLastLevel(levelHead);
                 }
                 Loader.loadLevel(levelHead);
             }

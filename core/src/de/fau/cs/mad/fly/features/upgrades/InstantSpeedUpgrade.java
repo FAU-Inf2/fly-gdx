@@ -4,8 +4,8 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
+import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.IPlane;
-import de.fau.cs.mad.fly.profile.PlayerManager;
 
 /**
  * Used to display and handle instant speed upgrades.
@@ -59,8 +59,7 @@ public class InstantSpeedUpgrade extends CollectibleObjects implements IFeatureU
 	 */
 	public InstantSpeedUpgrade(String modelRef, float upgradeSpeedFactor, float upgradeDuration) {
 		super("instantSpeedUpgrade", modelRef);
-		plane = PlayerManager.getInstance().getCurrentPlayer().getPlane();
-		//plane = GameController.getInstance().getPlayer().getPlane();
+		plane = GameController.getInstance().getPlayer().getPlane();
 		
 		this.upgradeSpeedFactor = upgradeSpeedFactor;
 		this.upgradeDuration = upgradeDuration;

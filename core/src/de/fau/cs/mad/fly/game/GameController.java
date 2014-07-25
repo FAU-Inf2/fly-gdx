@@ -17,7 +17,6 @@ import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.player.Player;
-import de.fau.cs.mad.fly.profile.PlayerManager;
 import de.fau.cs.mad.fly.res.Level;
 
 /**
@@ -176,7 +175,7 @@ public class GameController implements TimeIsUpListener {
             optionalFeature.init(this);
         }
         
-        PlayerManager.getInstance().getCurrentPlayer().resetLives();
+        //player.resetLives();
         // Debug.setOverlay(0,
         // PlayerManager.getInstance().getCurrentPlayer().getLives());
         

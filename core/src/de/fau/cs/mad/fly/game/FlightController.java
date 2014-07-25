@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.Player;
+import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
@@ -61,10 +62,10 @@ public class FlightController implements InputProcessor {
     
     private static final Vector3 z = new Vector3(0.f, 0.f, 1.f);
     
-    public FlightController(Player player) {
+    public FlightController(Player player, PlayerProfile playerProfile) {
         this.player = player;
         
-        Preferences preferences = player.getSettingManager().getPreferences();
+        Preferences preferences = playerProfile.getSettingManager().getPreferences();
         this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
         this.useRolling = preferences.getBoolean(SettingManager.USE_ROLL_STEERING);
         

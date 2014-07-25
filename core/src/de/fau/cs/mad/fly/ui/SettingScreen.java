@@ -2,8 +2,8 @@ package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import de.fau.cs.mad.fly.player.Player;
-import de.fau.cs.mad.fly.profile.PlayerManager;
+import de.fau.cs.mad.fly.profile.PlayerProfile;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
@@ -23,18 +23,17 @@ public class SettingScreen extends BasicScreen {
 
 		Table table = new Table();
 		table.setFillParent(true);
-		table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE,
-				UI.Window.BORDER_SPACE);
+		table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
 		table.add(settingTable).center();
 		stage.addActor(table);
 		generateContentDynamic();
 	}
 
 	private void generateContentDynamic() {
-		Player player = PlayerManager.getInstance().getCurrentPlayer();
-		if (displayPlayer == null || (!displayPlayer.equals(player.getName()))) {
+		PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+		if (displayPlayer == null || (!displayPlayer.equals(playerProfile.getName()))) {
 			settingTable.clear();
-			settingManager = player.getSettingManager();
+			settingManager = playerProfile.getSettingManager();
 			for (String s : settingManager.getSettingList()) {
 				settingTable.row().expand();
 				settingTable.add(settingManager.getSettingMap().get(s).getLabel()).right()
@@ -42,7 +41,7 @@ public class SettingScreen extends BasicScreen {
 				settingTable.add(settingManager.getSettingMap().get(s).getActor()).pad(padding,
 						3 * padding, padding, padding);
 			}
-			displayPlayer = player.getName();
+			displayPlayer = playerProfile.getName();
 		}
 	}
 
@@ -52,5 +51,4 @@ public class SettingScreen extends BasicScreen {
 		generateContentDynamic();
 
 	}
-
 }
