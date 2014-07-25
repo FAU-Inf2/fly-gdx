@@ -16,7 +16,7 @@ import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.game.TimeIsUpListener;
-import de.fau.cs.mad.fly.profile.PlayerManager;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.UI;
 
@@ -50,7 +50,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
         restartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Level.Head levelHead = PlayerManager.getInstance().getCurrentPlayer().getLastLevel();
+                Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel();
                 Loader.loadLevel(levelHead);
             }
         });

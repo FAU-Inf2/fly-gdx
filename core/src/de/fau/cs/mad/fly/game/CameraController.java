@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 
 import de.fau.cs.mad.fly.player.Player;
+import de.fau.cs.mad.fly.profile.PlayerProfile;
 
 /**
  * controls the camera following the player
@@ -16,13 +17,15 @@ public class CameraController {
 	private final float cameraOffset;
 	private final float cameraDistance;
 	private Player player;
+	private PlayerProfile playerProfile;
 	
 	private float screenHeight = Gdx.graphics.getHeight();
 	private float screenWidth = Gdx.graphics.getWidth();
 	private float[] values;
 	
-	public CameraController(Player player) {
+	public CameraController(Player player, PlayerProfile playerProfile) {
 		this.player = player;
+		this.playerProfile = playerProfile;
 		
 		this.cameraOffset = 0.5f;
 		this.cameraDistance = 2.0f;
@@ -62,10 +65,10 @@ public class CameraController {
 	private final void setUpCamera() {
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
-		camera.position.set(player.getLevel().start.position);
-		camera.lookAt(player.getLevel().start.viewDirection);
+		camera.position.set(playerProfile.getLevel().start.position);
+		camera.lookAt(playerProfile.getLevel().start.viewDirection);
 		camera.near = 0.1f;
-		camera.far = player.getLevel().radius * 2;
+		camera.far = playerProfile.getLevel().radius * 2;
 		camera.update();
 	}
 }

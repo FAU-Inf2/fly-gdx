@@ -20,9 +20,9 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.PostHighscoreService;
 import de.fau.cs.mad.fly.HttpClient.PostUserService;
-import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.LevelManager;
-import de.fau.cs.mad.fly.profile.PlayerManager;
+import de.fau.cs.mad.fly.profile.PlayerProfile;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
@@ -52,10 +52,10 @@ public class StatisticsScreen extends BasicScreen {
 				String name = newUserField.getText().trim();
 				if (!name.equals(""))// todo more check
 				{
-					Player player = new Player();
-					player.setName(name);
+					PlayerProfile playerProfile = new PlayerProfile();
+					playerProfile.setName(name);
 
-					PlayerManager.getInstance().savePlayer(player);
+					PlayerProfileManager.getInstance().savePlayer(playerProfile);
 					generateContentDynamic();
 				}
 			}
@@ -82,7 +82,7 @@ public class StatisticsScreen extends BasicScreen {
 		table.add(statisticsPane);
 	}
 
-	private Player player;
+	private PlayerProfile playerProfile;
 
 	public class PostUserHttpRespListener implements FlyHttpResponseListener {
 		final PostHighscoreService.RequestData requestData;
@@ -98,8 +98,8 @@ public class StatisticsScreen extends BasicScreen {
 		public void successful(Object obj) {
 
 			int flyID = Integer.valueOf(obj.toString());
-			PlayerManager.getInstance().getCurrentPlayer().setFlyID(flyID);
-			PlayerManager.getInstance().saveFlyID(PlayerManager.getInstance().getCurrentPlayer());
+			PlayerProfileManager.getInstance().getCurrentPlayerProfile().setFlyID(flyID);
+			PlayerProfileManager.getInstance().saveFlyID(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
 			requestData.FlyID = flyID;
 			postHighscoreService.execute();
 		}
@@ -166,12 +166,12 @@ public class StatisticsScreen extends BasicScreen {
 
 	private void generateContentDynamic() {
 		Gdx.app.log("StaticScreen", "begin generateContentDynamic " + System.currentTimeMillis());
-		player = PlayerManager.getInstance().getCurrentPlayer();
+		playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
 
 		infoTable.clear();
 
 		//add user name and user change& add buttons
-		String userName = player.getName();
+		String userName = playerProfile.getName();
 		infoTable.row().expand();
 
 		infoTable.add(new Label(I18n.t("usernameLableText"), skin)).pad(6f).uniform();
@@ -179,9 +179,9 @@ public class StatisticsScreen extends BasicScreen {
 		int i = 0;
 		int index = 0;
 		ArrayList<String> nameList = new ArrayList<String>();
-		for (Player player : PlayerManager.getInstance().getAllPlayer()) {
-			nameList.add(player.getName());
-			if (userName.equals(player.getName())) {
+		for (PlayerProfile playerProfile : PlayerProfileManager.getInstance().getAllPlayerProfiles()) {
+			nameList.add(playerProfile.getName());
+			if (userName.equals(playerProfile.getName())) {
 				index = i;
 			}
 			i++;
@@ -224,7 +224,7 @@ public class StatisticsScreen extends BasicScreen {
 				}
 
 				final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
-				requestData.FlyID = PlayerManager.getInstance().getCurrentPlayer().getFlyID();
+				requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
 				requestData.LevelID = Integer.valueOf(levelID);
 				requestData.Score = score.getTotalScore();
 				final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener();
@@ -235,13 +235,12 @@ public class StatisticsScreen extends BasicScreen {
 				uploadScoreButton.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						if (PlayerManager.getInstance().getCurrentPlayer().getFlyID() <= 0) {
+						if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() <= 0) {
 							FlyHttpResponseListener listener = new PostUserHttpRespListener(
 									requestData, postHighscoreService);
 							PostUserService postUser = new PostUserService(listener);
 
-							postUser.execute(PlayerManager.getInstance().getCurrentPlayer()
-									.getName());
+							postUser.execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName());
 						} else {
 							postHighscoreService.execute();
 						}
