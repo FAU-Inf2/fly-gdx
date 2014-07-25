@@ -79,8 +79,8 @@ robovm {
     iosSignIdentity = "UNKNOWN"
     iosProvisioningProfile = "UNKNOWN"
     iosSkipSigning = false
-    stdoutFifo = ""
-    stderrFifo = ""
+    stdoutFifo = "stdout.log"
+    stderrFifo = "stderr.log"
 }
 
 allprojects {
