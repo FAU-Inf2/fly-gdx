@@ -264,13 +264,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             collisionDetector.addRigidBody(g.goal);
         }
         
-        /*for (Gate g : allGates()) {
-        	g.display.transform.scl(2.0f);
-        	g.display.getRigidBody().getCollisionShape().setLocalScaling(new Vector3(2.0f, 2.0f, 2.0f));
-        	
-        	g.goal.transform.scl(2.0f);
-        	g.goal.getRigidBody().getCollisionShape().setLocalScaling(new Vector3(2.0f, 2.0f, 2.0f));
-        }*/
+
     }
     
     /**

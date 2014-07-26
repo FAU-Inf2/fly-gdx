@@ -8,6 +8,7 @@ import de.fau.cs.mad.fly.features.game.FlyingObjects;
 import de.fau.cs.mad.fly.features.upgrades.AddTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.LinearSpeedUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.ResizeGatesUpgrade;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.game.IntegerTimeListener;
@@ -38,6 +39,9 @@ public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener
 		
 		AddTimeUpgrade addTimeUpgrade = new AddTimeUpgrade("timeUpgrade", 10.0f);
 		builder.addFeatureToLists(addTimeUpgrade);
+		
+		ResizeGatesUpgrade resizeGatesUpgrade = new ResizeGatesUpgrade("resizeGatesUpgrade", 2.0f);
+		builder.addFeatureToLists(resizeGatesUpgrade);
 	}
 
 	@Override

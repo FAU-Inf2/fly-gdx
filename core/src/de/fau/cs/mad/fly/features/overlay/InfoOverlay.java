@@ -64,8 +64,6 @@ public class InfoOverlay implements IFeatureUpdate {
 			return;
 		}
 		
-		System.out.println(duration);
-		
 		duration -= delta;
 		
 		if(duration < 0.0f) {
@@ -90,7 +88,6 @@ public class InfoOverlay implements IFeatureUpdate {
 	 * @param duration	The duration in seconds the overlay should stay.
 	 */
 	public void setOverlay(String text, int duration) {
-		System.out.println("GO " + duration);
 		this.duration = (float) duration;
 		
 		if(text.contains("\n")) {
