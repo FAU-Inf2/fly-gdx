@@ -136,7 +136,7 @@ public class GameControllerBuilder {
 
                 if (!player.decreaseLives()) {
                     //Debug.setOverlay(0, "DEAD");
-                    //game.getGameController().finishGame();
+                    game.getGameController().finishGame();
                 } else {
                     //Debug.setOverlay(0, player.getLives());
                 }
