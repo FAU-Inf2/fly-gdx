@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.features.upgrades;
 
+import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.game.GameController;
@@ -11,7 +12,7 @@ import de.fau.cs.mad.fly.player.IPlane;
  * @author Tobi
  *
  */
-public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureUpdate {
+public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureInit, IFeatureUpdate {
 	
 	/**
 	 * The plane which speed should be changed after a speed upgrade was collected.
@@ -63,11 +64,15 @@ public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureUp
 	 */
 	public LinearSpeedUpgrade(String modelRef, float upgradeIncreaseFactor, float upgradeIncreaseDuration, float upgradeDecreaseFactor) {
 		super("linearSpeedUpgrade", modelRef);
-		plane = GameController.getInstance().getPlayer().getPlane();
 		
 		this.upgradeIncreaseFactor = upgradeIncreaseFactor;
 		this.upgradeIncreaseDuration = upgradeIncreaseDuration;
 		this.upgradeDecreaseFactor = upgradeDecreaseFactor;
+	}
+	
+	@Override
+	public void init(GameController game) {
+		plane = game.getPlayer().getPlane();
 	}
 
 	@Override

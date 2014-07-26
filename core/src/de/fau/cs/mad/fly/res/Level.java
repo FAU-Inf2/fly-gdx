@@ -257,13 +257,20 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             
             if (g.goal.getRigidBody() == null) {
                 btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-                // g.goal.hide();
                 g.goal.userData = g;
                 g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
                 g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
             }
             collisionDetector.addRigidBody(g.goal);
         }
+        
+        /*for (Gate g : allGates()) {
+        	g.display.transform.scl(2.0f);
+        	g.display.getRigidBody().getCollisionShape().setLocalScaling(new Vector3(2.0f, 2.0f, 2.0f));
+        	
+        	g.goal.transform.scl(2.0f);
+        	g.goal.getRigidBody().getCollisionShape().setLocalScaling(new Vector3(2.0f, 2.0f, 2.0f));
+        }*/
     }
     
     /**

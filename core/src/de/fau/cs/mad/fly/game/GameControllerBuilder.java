@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.fau.cs.mad.fly.Debug;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
@@ -35,6 +34,7 @@ import de.fau.cs.mad.fly.features.overlay.TimeUpOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.levels.DefaultLevel;
 import de.fau.cs.mad.fly.levels.ILevel;
+import de.fau.cs.mad.fly.levels.Level_11;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
@@ -133,10 +133,10 @@ public class GameControllerBuilder {
                     return;
                 }
                 Player player = GameController.getInstance().getPlayer();
-            	System.out.println("FINISH");
+
                 if (!player.decreaseLives()) {
                     //Debug.setOverlay(0, "DEAD");
-                    game.getGameController().finishGame();
+                    //game.getGameController().finishGame();
                 } else {
                     //Debug.setOverlay(0, player.getLives());
                 }
@@ -233,7 +233,7 @@ public class GameControllerBuilder {
     private void addLevelFeatures(Level level) {
     	if(level.levelClass == null || level.levelClass.equals("") || level.levelClass.equals("DefaultClass")) {
     		addDefaultLevel();
-    	} else {
+    	} else {    		
     		try {
 				Class<?> c = Class.forName("de.fau.cs.mad.fly.levels." + level.levelClass);
 				Object obj = c.newInstance();
