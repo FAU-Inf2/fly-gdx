@@ -43,7 +43,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         LevelManager.getInstance().getLevelList();
         // Create an instance of the PlayerManager, which needs an access to the
         // database
-        FlyDBManager.getInstance();
+		
         
         Table table = new Table();
         table.defaults().width(viewport.getWorldWidth() / 3);

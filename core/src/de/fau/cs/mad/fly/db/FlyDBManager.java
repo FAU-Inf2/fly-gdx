@@ -69,10 +69,14 @@ public class FlyDBManager {
 		List<String> upgradeSQLs = null;
 		dbHandler = DatabaseFactory.getNewDatabase(DATABASE_NAME, DATABASE_VERSION, createSQLs,
 				upgradeSQLs);
-		dbHandler.setupDatabase();
-		Gdx.app.log("FlyDBManager", "setupDatabase end   " +  System.currentTimeMillis());
-		dbHandler.openOrCreateDatabase();
-		Gdx.app.log("FlyDBManager", "database opened " +  System.currentTimeMillis());
+		
+		synchronized (dbHandler) {
+			dbHandler.setupDatabase();
+			Gdx.app.log("FlyDBManager", "setupDatabase end   " + System.currentTimeMillis());
+		
+			dbHandler.openOrCreateDatabase();
+			Gdx.app.log("FlyDBManager", "database opened " + System.currentTimeMillis());
+		}
 		
 	}
 
@@ -91,13 +95,17 @@ public class FlyDBManager {
 	public void execSQL(String sql) {
 		Gdx.app.log("FlyDBManager.execSQL", "execSQL begin " + System.currentTimeMillis());
 		Gdx.app.log("FlyDBManager.execSQL", sql);
-		dbHandler.execSQL(sql);
+		synchronized (dbHandler) {
+			dbHandler.execSQL(sql);
+		}
 		Gdx.app.log("FlyDBManager.execSQL", "execSQL end   " + System.currentTimeMillis());
 	}
 	
 	public void openDatabase() {
 		Gdx.app.log("FlyDBManager.openDatabase", "open db begin " + System.currentTimeMillis());
-		dbHandler.openOrCreateDatabase();
+		synchronized (dbHandler) {
+			dbHandler.openOrCreateDatabase();
+		}
 		Gdx.app.log("FlyDBManager.openDatabase", "open db end   " + System.currentTimeMillis());
 	}
 
@@ -109,15 +117,20 @@ public class FlyDBManager {
 		Gdx.app.log("FlyDBManager.selectData", "selectData  begin " + System.currentTimeMillis());
 		DatabaseCursor cursor = null;
 		Gdx.app.log("FlyDBManager.selectData", selectSQL);
-		cursor = dbHandler.rawQuery(selectSQL);
+		synchronized (dbHandler) {
+			cursor = dbHandler.rawQuery(selectSQL);
+		}
 		Gdx.app.log("FlyDBManager.selectData", "selectData  end   " + System.currentTimeMillis());
 		return cursor;
 	}
 
 	protected void closeDatabase() {
 		try {
-			if (dbHandler != null)
-				dbHandler.closeDatabase();
+			if (dbHandler != null) {
+				synchronized (dbHandler) {
+					dbHandler.closeDatabase();
+				}
+			}
 		} catch (Exception e) {
 			Gdx.app.error("FlyDBManager.closeDatabase", e.toString());
 		}

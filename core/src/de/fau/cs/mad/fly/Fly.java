@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
@@ -46,6 +47,12 @@ public class Fly extends Game {
         // FlyEngine.get();
         Assets.init();
         skinManager = new SkinManager("uiskin.json");
+        new Thread(new Runnable() {
+			@Override
+			public void run() {
+				PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+			}
+		}).start();
         setMainMenuScreen();
         // disabled for debugging reasons
         // setSplashScreen();
