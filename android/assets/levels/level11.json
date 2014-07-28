@@ -88,7 +88,31 @@
                 20.0,
                 5.0
             ],
-            "ref": "speedUpgrade"
+            "ref": "resizeGatesUpgrade"
+        },
+		{
+            "angular_velocity": [
+                1.0,
+                0.0,
+                2.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "addPointsUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                20.0,
+                5.0
+            ],
+            "ref": "pointUpgrade"
         },
         {
             "angular_velocity": [
@@ -121,6 +145,8 @@
         "space": "spacesphere",
         "speedUpgrade": "speedUpgrade",
         "timeUpgrade": "timeUpgrade",
+		"pointUpgrade": "pointUpgrade",
+		"resizeGatesUpgrade": "resizeGatesUpgrade",
         "torus": "torusLowPoly"
     },
     "gates": [

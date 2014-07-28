@@ -153,8 +153,12 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             score = totalScore;
             
             totalScore += leftCollisionTime * 30;
-            newScore.setTotalScore(totalScore);
             newScore.getScoreDetails().add(new ScoreDetail(("leftCollisionTime"), (totalScore - score) + ""));
+            
+            int bonusPoints = GameController.getInstance().getPlayer().getBonusPoints();
+            totalScore += bonusPoints;
+            newScore.setTotalScore(totalScore);
+            newScore.getScoreDetails().add(new ScoreDetail(("bonusPoints"), bonusPoints + ""));
             return newScore;
         } else {
             return new Score();// todo

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.game.FlyingObjects;
+import de.fau.cs.mad.fly.features.upgrades.AddPointsUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.AddTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.LinearSpeedUpgrade;
@@ -39,6 +40,9 @@ public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener
 		
 		AddTimeUpgrade addTimeUpgrade = new AddTimeUpgrade("timeUpgrade", 10.0f);
 		builder.addFeatureToLists(addTimeUpgrade);
+		
+		AddPointsUpgrade addPointsUpgrade = new AddPointsUpgrade("pointUpgrade", 150);
+		builder.addFeatureToLists(addPointsUpgrade);
 		
 		ResizeGatesUpgrade resizeGatesUpgrade = new ResizeGatesUpgrade("resizeGatesUpgrade", 2.0f);
 		builder.addFeatureToLists(resizeGatesUpgrade);

@@ -43,7 +43,7 @@ public class AddTimeUpgrade extends CollectibleObjects implements IFeatureInit {
 	@Override
 	protected void handleCollecting() {
 		timeController.addBonusTime(addedTime);
-		InfoOverlay.getInstance().setOverlay(I18n.t("timeUpgradeCollected") + "\n" + I18n.t("bonus") + " " + ((int) addedTime) + "s.", 3);
+		InfoOverlay.getInstance().setOverlay(I18n.t("timeUpgradeCollected") + "\n" + I18n.t("bonus") + " " + ((int) addedTime) + "s", 3);
 	}
 
 }
