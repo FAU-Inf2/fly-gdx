@@ -160,6 +160,9 @@ public class EndlessLevelGenerator {
 
 			Vector3 newDirection;
 			
+			boolean use = true;
+			int count = 50;
+			
 			// places the gate at a random position until it is far enough to any other gate
 			do {
 				newDirection = lastDirection.cpy();
@@ -180,7 +183,17 @@ public class EndlessLevelGenerator {
 				display.transform.rotate(lastDirection, newDirection);
 				display.transform.translate(new Vector3(0,1,0).scl(distance));
 				
+				if(count-- <= 0) {
+					use = false;
+					break;
+				}
+				
 			} while(checkForSpawnCollision(display.getPosition(), newGates, 5.0f));
+			
+			if(!use) {
+				rand = MathUtils.random();
+				continue;
+			}
 
 			goal.transform = display.transform.cpy();
 			
