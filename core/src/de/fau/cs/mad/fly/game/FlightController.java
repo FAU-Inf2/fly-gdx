@@ -7,8 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.math.Matrix3;
-import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.Player;
@@ -28,7 +26,7 @@ public class FlightController implements InputProcessor {
     
     private Player player;
     
-    private float startRoll, startAzimuth;
+    private float startRoll, startPitch;
     
     private float rollFactor = 0.0f;
     private float azimuthFactor = 0.0f;
@@ -42,25 +40,15 @@ public class FlightController implements InputProcessor {
     private int bufferSize;
     private List<Float> rollInput;
     private List<Float> pitchInput;
-    private List<Float> azimuthInput;
     
     private float roll;
     private float pitch;
-    private float azimuth;
     
     float maxRotate = 45.f;
     
     private float centerX = TouchScreenOverlay.X_POS_OF_STEERING_CIRCLE + screenWidth / 2;
     private float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;
     private float radius = TouchScreenOverlay.RADIUS_OF_STEERING_CIRCLE;
-    
-    private Matrix3 mX;
-    private Matrix3 mY;
-    private Matrix3 mZ;
-    
-    private Vector3 newFront;
-    
-    private static final Vector3 z = new Vector3(0.f, 0.f, 1.f);
     
     public FlightController(Player player, PlayerProfile playerProfile) {
         this.player = player;
@@ -72,12 +60,6 @@ public class FlightController implements InputProcessor {
         this.bufferSize = 8;
         
         player.getPlane().setRolling(useRolling);
-        
-        mX = new Matrix3();
-        mY = new Matrix3();
-        mZ = new Matrix3();
-        
-        newFront = new Vector3();
         
         resetSteering();
         resetBuffers();
@@ -133,7 +115,8 @@ public class FlightController implements InputProcessor {
         float azimuth = Gdx.input.getAzimuth();
         
         Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
-        startAzimuth = computeAzimuth(roll, pitch, azimuth);
+        //startAzimuth = computeAzimuth(roll, pitch, azimuth);
+        startPitch = pitch;
         Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
         startRoll = Gdx.input.getRoll();
     }
@@ -153,7 +136,6 @@ public class FlightController implements InputProcessor {
     private void resetBuffers() {
         rollInput = new ArrayList<Float>();
         pitchInput = new ArrayList<Float>();
-        azimuthInput = new ArrayList<Float>();
     }
     
     /**
@@ -162,7 +144,6 @@ public class FlightController implements InputProcessor {
     private void interpretSensorInput() {
         roll = Gdx.input.getRoll();
         pitch = Gdx.input.getPitch();
-        azimuth = Gdx.input.getAzimuth();
         
         // Gdx.app.log("myApp", "roll: " + roll + "; pitch: " + pitch +
         // "; azimuth: " + azimuth);
@@ -171,28 +152,25 @@ public class FlightController implements InputProcessor {
         if (rollInput.size() >= bufferSize) {
             rollInput.remove(0);
             pitchInput.remove(0);
-            azimuthInput.remove(0);
         }
         
         // adding newest sensor-data to buffers
         rollInput.add(roll);
         pitchInput.add(pitch);
-        azimuthInput.add(azimuth);
         
         roll = average(rollInput);
         pitch = average(pitchInput);
-        azimuth = average(azimuthInput);
         
-        azimuth = computeAzimuth(roll, pitch, azimuth);
+        //azimuth = computeAzimuth(roll, pitch, azimuth);
         
         float difRoll = roll - startRoll;
         if (Math.abs(difRoll) > 180) {
             difRoll -= Math.signum(difRoll) * 360;
         }
         
-        float difAzimuth = azimuth - startAzimuth;
-        if (Math.abs(difAzimuth) > 180) {
-            difAzimuth -= Math.signum(difAzimuth) * 360;
+        float difPitch = pitch - startPitch;
+        if (Math.abs(difPitch) > 180) {
+        	difPitch -= Math.signum(difPitch) * 360;
         }
         
         // capping the rotation to a maximum of 90 degrees
@@ -200,15 +178,15 @@ public class FlightController implements InputProcessor {
             difRoll = maxRotate * Math.signum(difRoll);
         }
         
-        if (Math.abs(difAzimuth) > maxRotate) {
-            difAzimuth = maxRotate * Math.signum(difAzimuth);
+        if (Math.abs(difPitch) > maxRotate) {
+        	difPitch = maxRotate * Math.signum(difPitch);
         }
         
         rollFactor = 0.0f;
         azimuthFactor = 0.0f;
         
         // camera rotation according to smartphone rotation
-        setAzimuthFactor(difAzimuth / -maxRotate);
+        setAzimuthFactor(difPitch / maxRotate);
         setRollFactor(difRoll / -maxRotate);
     }
     
@@ -230,44 +208,6 @@ public class FlightController implements InputProcessor {
      */
     private void setRollFactor(float rollFactor) {
         this.rollFactor = limitSpeed(rollFactor, player.getPlane().getRollingSpeed());
-    }
-    
-    /**
-     * computes the rotation around z-Axis relative to the smartphone
-     * 
-     * @param roll
-     * @param pitch
-     * @param azimuth
-     * @return
-     */
-    private float computeAzimuth(float roll, float pitch, float azimuth) {
-        mX.idt();
-        mY.idt();
-        mZ.idt();
-        
-        roll = roll * (float) Math.PI / 180.f;
-        pitch = pitch * (float) Math.PI / 180.f;
-        azimuth = azimuth * (float) Math.PI / 180.f;
-        
-        float cos = (float) Math.cos(pitch);
-        float sin = (float) Math.sin(pitch);
-        
-        float[] values = { 1.f, 0.f, 0.f, 0.f, cos, sin, 0.f, -sin, cos };
-        mY.set(values);
-        
-        cos = (float) Math.cos(roll);
-        sin = (float) Math.sin(roll);
-        float[] values2 = { cos, 0.f, -sin, 0.f, 1.f, 0.f, sin, 0.f, cos };
-        mX.set(values2);
-        
-        cos = (float) Math.cos(azimuth);
-        sin = (float) Math.sin(azimuth);
-        float[] values3 = { cos, sin, 0.f, -sin, cos, 0.f, 0.f, 0.f, 1.f };
-        mZ.set(values3);
-        
-        newFront.set(0.f, 1.f, 0.f).mul(mZ.mul(mY.mul(mX)));
-        
-        return (float) Math.acos(z.dot(newFront.x, newFront.y, newFront.z) / (float) Math.sqrt(newFront.x * newFront.x + newFront.y * newFront.y + newFront.z * newFront.z)) * 180.f / (float) Math.PI;
     }
     
     private float average(List<Float> input) {
