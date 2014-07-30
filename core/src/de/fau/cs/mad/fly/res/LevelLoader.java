@@ -27,6 +27,8 @@ import de.fau.cs.mad.fly.game.GameObject;
  * Created by danyel on 26/05/14.
  */
 public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.LevelParameters> {
+	private static final String MODEL_FOLDER = "models/";
+	
     Level level;
     private final JsonReader reader;
     private final Json auto;
@@ -103,6 +105,23 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         return level;
     }
     
+    private void parseUpgrades() {
+    	/*JsonValue upgrades = json.get("upgrades");
+        Map<Integer, Upgrade> upgradeMap = new HashMap<Integer, Upgrade>();
+
+        int len = upgrades.size;
+        JsonValue jsonUpgrade;
+        for (int i = 0; i < len; i++) {
+            jsonGate = gates.get(i);
+            JsonValue gid = jsonGate.get("id");
+            if (gid != null) {
+                p = new Gate(gid.asInt());
+                p.display = components.get(jsonGate.getString("display"));
+                gateMap.put(p.id, p);
+            }
+        }*/
+    }
+    
     private void parseJson() {
         if (json == null)
             json = reader.parse(file);
@@ -117,7 +136,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             int len = jsonDependencies.size;
             for (int i = 0; i < len; i++) {
                 e = jsonDependencies.get(i);
-                String fileName = e.asString();
+                String fileName = MODEL_FOLDER + e.asString() + "/" + e.asString();
                 dependencies.put(e.name(), fileName);
             }
         }

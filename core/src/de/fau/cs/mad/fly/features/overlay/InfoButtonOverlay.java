@@ -88,7 +88,6 @@ public class InfoButtonOverlay {
 	 * @param text		The new text of the info overlay.
 	 */
 	public void setOverlay(String text) {
-
 		if(text.contains("\n")) {
 			innerTable.setBounds(800, 1600, 2400, 750);
 		} else {		
