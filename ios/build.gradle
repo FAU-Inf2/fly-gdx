@@ -76,8 +76,8 @@ eclipse.project {
 }
 
 robovm {
-    iosSignIdentity = "UNKNOWN"
-    iosProvisioningProfile = "UNKNOWN"
+    iosSignIdentity = "iPhone Developer: Danyel Bayraktar"
+    iosProvisioningProfile = "MAD Fly2"
     iosSkipSigning = false
     stdoutFifo = "stdout.log"
     stderrFifo = "stderr.log"
