@@ -6,10 +6,11 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
+import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
+import de.fau.cs.mad.fly.features.upgrades.types.ResizeGatesUpgrade;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.GateCircuit;
-import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Used to display and handle gate resize upgrades.
@@ -17,31 +18,14 @@ import de.fau.cs.mad.fly.res.Level;
  * @author Tobi
  *
  */
-public class ResizeGatesUpgrade extends CollectibleObjects implements IFeatureInit {
+public class ResizeGatesUpgradeHandler extends CollectibleObjects implements IFeatureInit {
 	private GateCircuit gateCircuit;
 	
-	private Vector3 scale;
-	
 	/**
-	 * Creates an resize gates upgrade with a scaling vector.
-	 * 
-	 * @param modelRef		The model reference.
-	 * @param scale			The scale vector to use.
+	 * Creates an resize gates upgrade handler.
 	 */
-	public ResizeGatesUpgrade(String modelRef, Vector3 scale) {
-		super("resizeGatesUpgrade", modelRef);
-		this.scale = scale;
-	}
-	
-	/**
-	 * Creates an resize gates upgrade with a uniform scaling factor.
-	 * 
-	 * @param modelRef		The model reference.
-	 * @param scale			The uniform scale value to use.
-	 */
-	public ResizeGatesUpgrade(String modelRef, float scale) {
-		super("resizeGatesUpgrade", modelRef);
-		this.scale = new Vector3(scale, scale, scale);
+	public ResizeGatesUpgradeHandler() {
+		super("ResizeGatesUpgrade");
 	}
 
 	@Override
@@ -50,19 +34,20 @@ public class ResizeGatesUpgrade extends CollectibleObjects implements IFeatureIn
 	}
 
 	@Override
-	protected void handleCollecting() {
-		resizeGates();
+	protected void handleCollecting(Collectible c) {
+		ResizeGatesUpgrade upgrade = (ResizeGatesUpgrade) c;
+		resizeGates(upgrade.getScale());
 		InfoOverlay.getInstance().setOverlay(I18n.t("resizeGatesUpgradeCollected"), 3);
 	}
 	
 	/**
 	 * Resizes the gates and the gate holes with the scaling vector.
+	 * @param scale		The scaling vector of the resizing of the gates.
 	 */
-	private void resizeGates() {
+	private void resizeGates(Vector3 scale) {
         for (Gate g : gateCircuit.allGates()) {
 	    	g.display.transform.scl(scale);
 	    	g.display.getRigidBody().getCollisionShape().setLocalScaling(scale);
-	    	
 	    	g.goal.transform.scl(scale);
 	    	g.goal.getRigidBody().getCollisionShape().setLocalScaling(scale);
 	    }

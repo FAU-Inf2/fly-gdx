@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
+import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
@@ -48,6 +49,7 @@ public class Level implements Disposable {
     public String levelClass = "DefaultLevel";
     
     public List<GameObject> components;
+    private List<Collectible> upgrades;
     public final Perspective start;
     private final Environment environment;
     private final Map<String, GameModel> dependencies;
@@ -153,6 +155,14 @@ public class Level implements Disposable {
         return dependencies;
     }
     
+    public void setUpgrades(List<Collectible> upgrades) {
+    	this.upgrades = upgrades;
+    }
+    
+    public List<Collectible> getUpgrades() {
+    	return upgrades;
+    }
+
     public void finishLevel() {
         gameOver = true;
     }

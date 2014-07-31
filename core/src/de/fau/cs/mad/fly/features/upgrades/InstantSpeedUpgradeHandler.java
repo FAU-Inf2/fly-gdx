@@ -5,6 +5,9 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
+import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
+import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.IPlane;
 
@@ -14,7 +17,7 @@ import de.fau.cs.mad.fly.player.IPlane;
  * @author Tobi
  *
  */
-public class InstantSpeedUpgrade extends CollectibleObjects implements IFeatureInit, IFeatureUpdate {
+public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IFeatureInit, IFeatureUpdate {
 	
 	/**
 	 * The plane which speed should be changed after a speed upgrade was collected.
@@ -52,20 +55,10 @@ public class InstantSpeedUpgrade extends CollectibleObjects implements IFeatureI
 	private float duration;
 	
 	/**
-	 * Creates a new instant speed upgrade.
-	 * 
-	 * @param modelRef					The model reference for the speed upgrade model.
-	 * @param upgradeSpeedFactor		The speed factor of the speed upgrade.
-	 * @param upgradeDuration			The duration of the speed upgrade. A value <= 0.0f means infinite duration.
+	 * Creates a new instant speed upgrade handler.
 	 */
-	public InstantSpeedUpgrade(String modelRef, float upgradeSpeedFactor, float upgradeDuration) {
-		super("instantSpeedUpgrade", modelRef);
-		
-		this.upgradeSpeedFactor = upgradeSpeedFactor;
-		this.upgradeDuration = upgradeDuration;
-		if(upgradeDuration <= 0.0f) {
-			isInfinite = true;
-		}
+	public InstantSpeedUpgradeHandler() {
+		super("InstantSpeedUpgrade");
 	}
 	
 	@Override
@@ -74,8 +67,16 @@ public class InstantSpeedUpgrade extends CollectibleObjects implements IFeatureI
 	}
 
 	@Override
-	protected void handleCollecting() {
+	protected void handleCollecting(Collectible c) {
+		InstantSpeedUpgrade upgrade = (InstantSpeedUpgrade) c;
+		
 		isCollected = true;
+		
+		this.upgradeSpeedFactor = upgrade.getSpeedFactor();
+		this.upgradeDuration = upgrade.getDuration();
+		if(upgradeDuration <= 0.0f) {
+			isInfinite = true;
+		}
 		
 		oldSpeed = plane.getSpeed();
 		plane.setSpeed(oldSpeed * upgradeSpeedFactor);

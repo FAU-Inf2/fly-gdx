@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.res;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -20,6 +21,12 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+import de.fau.cs.mad.fly.features.upgrades.types.ChangePointsUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
+import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.ResizeGatesUpgrade;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 
@@ -90,7 +97,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         
         if (dummy == null)
             throw new RuntimeException("No dummy gate found.");
-        
+
         ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
         componentsList.addAll(components.values());
         Level level = new Level(json.getString("name"), start, componentsList, models);
@@ -105,24 +112,52 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         gateCircuit.setGates(gateMap);
         level.addGateCircuit(gateCircuit);
         
+        level.setUpgrades(parseUpgrades());
+        
         return level;
     }
     
-    private void parseUpgrades() {
-    	/*JsonValue upgrades = json.get("upgrades");
-        Map<Integer, Upgrade> upgradeMap = new HashMap<Integer, Upgrade>();
+    private List<Collectible> parseUpgrades() {
+    	List<Collectible> upgradeList = new ArrayList<Collectible>();
+    	JsonValue upgrades = json.get("upgrades");
+    	if(upgrades == null) {
+    		return upgradeList;
+    	}
 
-        int len = upgrades.size;
-        JsonValue jsonUpgrade;
-        for (int i = 0; i < len; i++) {
-            jsonGate = gates.get(i);
-            JsonValue gid = jsonGate.get("id");
-            if (gid != null) {
-                p = new Gate(gid.asInt());
-                p.display = components.get(jsonGate.getString("display"));
-                gateMap.put(p.id, p);
+    	int len = upgrades.size;
+    	JsonValue jsonUpgrade;
+    	
+    	for (int i = 0; i < len; i++) {
+            jsonUpgrade = upgrades.get(i);
+            JsonValue upgradeType = jsonUpgrade.get("type");
+            if (upgradeType != null) {
+            	Collectible c = null;
+            	if(upgradeType.asString().equals("ChangeTimeUpgrade")) {
+            		c = new ChangeTimeUpgrade(jsonUpgrade.get("time").asInt());
+            	} else if(upgradeType.asString().equals("ChangePointsUpgrade")) {
+            		c = new ChangePointsUpgrade(jsonUpgrade.get("points").asInt());
+            	} else if(upgradeType.asString().equals("InstantSpeedUpgrade")) {
+            		c = new InstantSpeedUpgrade(jsonUpgrade.get("speedFactor").asFloat(), jsonUpgrade.get("duration").asFloat());
+            	} else if(upgradeType.asString().equals("LinearSpeedUpgrade")) {
+            		c = new LinearSpeedUpgrade(jsonUpgrade.get("increaseFactor").asFloat(), jsonUpgrade.get("increaseDuration").asFloat(), jsonUpgrade.get("decreaseFactor").asFloat());
+            	} else if(upgradeType.asString().equals("ResizeGatesUpgrade")) {
+            		JsonValue jsonScale = jsonUpgrade.get("scale");
+            		Vector3 scale = new Vector3(jsonScale.getFloat(0), jsonScale.getFloat(1), jsonScale.getFloat(2));
+            		c = new ResizeGatesUpgrade(scale);
+            	} else if(upgradeType.asString().equals("ChangeSteeringUpgrade")) {
+            		//c = new ChangeSteeringUgrade(jsonUpgrade.get("speedFactor").asFloat(), jsonUpgrade.get("duration").asFloat());
+            	}
+                
+            	if(c != null) {
+            		c.setGameObject(components.get(jsonUpgrade.getString("display")));
+            		upgradeList.add(c);
+            	} else {
+            		Gdx.app.log("LevelLoader.parseUpgrades", "Upgrade type not found.");
+            	}
             }
-        }*/
+        }
+    	
+    	return upgradeList;
     }
     
     private void parseJson() {

@@ -3,6 +3,8 @@ package de.fau.cs.mad.fly.features.upgrades;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
+import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
+import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.IPlane;
 
@@ -12,7 +14,7 @@ import de.fau.cs.mad.fly.player.IPlane;
  * @author Tobi
  *
  */
-public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureInit, IFeatureUpdate {
+public class LinearSpeedUpgradeHandler extends CollectibleObjects implements IFeatureInit, IFeatureUpdate {
 	
 	/**
 	 * The plane which speed should be changed after a speed upgrade was collected.
@@ -55,19 +57,10 @@ public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureIn
 	private float duration;
 	
 	/**
-	 * Creates a new instant speed upgrade.
-	 * 
-	 * @param modelRef						The model reference for the speed upgrade model.
-	 * @param upgradeIncreaseFactor			The speed factor of the speed upgrade increase.
-	 * @param upgradeIncreaseDuration		The duration of the speed upgrade increase.
-	 * @param upgradeDecreaseFactor			The speed factor of the speed upgrade decrease.
+	 * Creates a new linear speed upgrade handler.
 	 */
-	public LinearSpeedUpgrade(String modelRef, float upgradeIncreaseFactor, float upgradeIncreaseDuration, float upgradeDecreaseFactor) {
-		super("linearSpeedUpgrade", modelRef);
-		
-		this.upgradeIncreaseFactor = upgradeIncreaseFactor;
-		this.upgradeIncreaseDuration = upgradeIncreaseDuration;
-		this.upgradeDecreaseFactor = upgradeDecreaseFactor;
+	public LinearSpeedUpgradeHandler() {
+		super("LinearSpeedUpgrade");
 	}
 	
 	@Override
@@ -76,11 +69,17 @@ public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureIn
 	}
 
 	@Override
-	protected void handleCollecting() {
+	protected void handleCollecting(Collectible c) {
+		LinearSpeedUpgrade upgrade = (LinearSpeedUpgrade) c;
+		
 		isCollected = true;
 		
 		oldSpeed = plane.getSpeed();
 		duration = 0.0f;
+		
+		upgradeIncreaseFactor = upgrade.getIncreaseFactor();
+		upgradeIncreaseDuration = upgrade.getIncreaseDuration();
+		upgradeDecreaseFactor = upgrade.getDecreaseFactor();
 	}
 
 	@Override
@@ -103,5 +102,4 @@ public class LinearSpeedUpgrade extends CollectibleObjects implements IFeatureIn
 			}
 		}
 	}
-
 }

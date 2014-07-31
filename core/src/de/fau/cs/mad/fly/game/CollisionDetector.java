@@ -106,7 +106,18 @@ public class CollisionDetector implements Disposable {
 				for ( Method m : listener.getClass().getMethods() ) {
 					if ( !m.getName().equals("onCollision") )
 						continue;
-					Object first = map.get(m.getParameterTypes()[0]);
+					
+					//System.out.println(m.getParameterTypes()[0] + " - " + m.getParameterTypes()[1]);
+					Class<?> c0 = m.getParameterTypes()[0];
+					Class<?> c1 = m.getParameterTypes()[1];
+
+					if(c0.isAssignableFrom(g1.userData.getClass()) && c1.isAssignableFrom(g2.userData.getClass())) {
+						listener.onCollision(g1.userData, g2.userData);
+					} else if(c1.isAssignableFrom(g1.userData.getClass()) && c0.isAssignableFrom(g2.userData.getClass())) {
+						listener.onCollision(g2.userData, g1.userData);
+					}
+					
+					/*Object first = map.get(m.getParameterTypes()[0]);
 					Object second = map.get(m.getParameterTypes()[1]);
 					// in case if same class, maintain Bullet's order
 					if ( first == second ) {
@@ -114,7 +125,7 @@ public class CollisionDetector implements Disposable {
 					}
 					if ( first != null && second != null ) { // the listener wants to know about this collision
 						listener.onCollision(first, second);
-					}
+					}*/
 					continue outer; // go to the next listener.
 				}
 				listener.onCollision(g1, g2);

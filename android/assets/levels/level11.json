@@ -101,7 +101,7 @@
                 0.0,
                 0.0
             ],
-            "id": "addPointsUpgrade",
+            "id": "changePointsUpgrade",
             "linear_velocity": [
                 0.0,
                 0.0,
@@ -125,7 +125,7 @@
                 0.0,
                 0.0
             ],
-            "id": "addTimeUpgrade",
+            "id": "changeTimeUpgrade",
             "linear_velocity": [
                 0.0,
                 0.0,
@@ -149,6 +149,29 @@
 		"resizeGatesUpgrade": "resizeGatesUpgrade",
         "torus": "torusLowPoly"
     },
+	"upgrades": [
+		{
+			"type": "ChangePointsUpgrade",
+			"points": 150,
+            "display": "changePointsUpgrade"
+        },
+		{
+			"type": "ResizeGatesUpgrade",
+			"scale": [ 2.0, 2.0, 2.0 ],
+            "display": "resizeGatesUpgrade"
+        },
+		{
+			"type": "InstantSpeedUpgrade",
+			"speedFactor": 4.0,
+			"duration": 10.0,
+            "display": "instantSpeedUpgrade"
+        },
+		{
+			"type": "ChangeTimeUpgrade",
+			"time": 10.0,
+            "display": "changeTimeUpgrade"
+        }
+	],
     "gates": [
         {
             "successors": [
