@@ -6,12 +6,9 @@ import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangeSteeringUpgrade;
-import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
-import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
 import de.fau.cs.mad.fly.game.FlightController;
 import de.fau.cs.mad.fly.game.GameController;
-import de.fau.cs.mad.fly.player.IPlane;
 
 /**
  * Used to display and handle change steering upgrades.

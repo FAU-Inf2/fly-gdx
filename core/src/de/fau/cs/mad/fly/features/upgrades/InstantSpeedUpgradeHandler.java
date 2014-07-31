@@ -5,7 +5,6 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
-import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
 import de.fau.cs.mad.fly.game.GameController;
