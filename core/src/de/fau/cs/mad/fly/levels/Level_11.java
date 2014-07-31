@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.game.FlyingObjects;
 import de.fau.cs.mad.fly.features.upgrades.ChangePointsUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.ChangeSteeringUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.ResizeGatesUpgradeHandler;
@@ -34,6 +35,7 @@ public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener
 		builder.addFeatureToLists(new ChangeTimeUpgradeHandler());
 		builder.addFeatureToLists(new ChangePointsUpgradeHandler());
 		builder.addFeatureToLists(new ResizeGatesUpgradeHandler());
+		builder.addFeatureToLists(new ChangeSteeringUpgradeHandler());
 	}
 
 	@Override

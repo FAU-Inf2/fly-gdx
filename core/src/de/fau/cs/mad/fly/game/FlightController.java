@@ -31,6 +31,9 @@ public class FlightController implements InputProcessor {
     private float rollFactor = 0.0f;
     private float azimuthFactor = 0.0f;
     
+    private float rollFactorChange = 1.0f;
+    private float azimuthFactorChange = 1.0f;
+    
     private int currentEvent = -1;
     
     private float screenHeight = Gdx.graphics.getHeight();
@@ -191,13 +194,37 @@ public class FlightController implements InputProcessor {
     }
     
     /**
+     * Setter for the roll factor change.
+     * @param rollFactorChange
+     */
+    public void setRollFactorChange(float rollFactorChange) {
+    	this.rollFactorChange = rollFactorChange;
+    }
+    
+    /**
+     * Setter for the azimuth factor change.
+     * @param azimuthFactorChange
+     */
+    public void setAzimuthFactorChange(float azimuthFactorChange) {
+    	this.azimuthFactorChange = azimuthFactorChange;
+    }
+    
+    /**
+     * Resets the roll and azimuth factor changes to 1.0f.
+     */
+    public void resetFactorChange() {
+    	rollFactorChange = 1.0f;
+    	azimuthFactorChange = 1.0f;
+    }
+    
+    /**
      * Setter for the {@link #azimuthDir}. Values greater than the azimuthSpeed
      * of the plane are reduced to the azimuth speed of the plane.
      * 
      * @param azimuthFactor
      */
     private void setAzimuthFactor(float azimuthFactor) {
-        this.azimuthFactor = limitSpeed(azimuthFactor, player.getPlane().getAzimuthSpeed());
+        this.azimuthFactor = this.azimuthFactorChange * limitSpeed(azimuthFactor, player.getPlane().getAzimuthSpeed());
     }
     
     /**
@@ -207,7 +234,7 @@ public class FlightController implements InputProcessor {
      * @param rollFactor
      */
     private void setRollFactor(float rollFactor) {
-        this.rollFactor = limitSpeed(rollFactor, player.getPlane().getRollingSpeed());
+        this.rollFactor = this.azimuthFactorChange * limitSpeed(rollFactor, player.getPlane().getRollingSpeed());
     }
     
     private float average(List<Float> input) {

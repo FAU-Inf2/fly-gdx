@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import de.fau.cs.mad.fly.features.upgrades.types.ChangePointsUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.ChangeSteeringUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
@@ -145,7 +146,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             		Vector3 scale = new Vector3(jsonScale.getFloat(0), jsonScale.getFloat(1), jsonScale.getFloat(2));
             		c = new ResizeGatesUpgrade(scale);
             	} else if(upgradeType.asString().equals("ChangeSteeringUpgrade")) {
-            		//c = new ChangeSteeringUgrade(jsonUpgrade.get("speedFactor").asFloat(), jsonUpgrade.get("duration").asFloat());
+            		c = new ChangeSteeringUpgrade(jsonUpgrade.get("roll").asFloat(), jsonUpgrade.get("azimuth").asFloat(), jsonUpgrade.get("duration").asFloat());
             	}
                 
             	if(c != null) {

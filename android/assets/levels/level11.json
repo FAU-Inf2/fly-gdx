@@ -137,6 +137,30 @@
                 0.0
             ],
             "ref": "timeUpgrade"
+        },
+		{
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeSteeringUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                20.0,
+                -5.0
+            ],
+            "ref": "steeringUpgrade"
         }
     ],
     "dependencies": {
@@ -147,6 +171,7 @@
         "timeUpgrade": "timeUpgrade",
 		"pointUpgrade": "pointUpgrade",
 		"resizeGatesUpgrade": "resizeGatesUpgrade",
+		"steeringUpgrade": "resizeGatesUpgrade",
         "torus": "torusLowPoly"
     },
 	"upgrades": [
@@ -170,6 +195,13 @@
 			"type": "ChangeTimeUpgrade",
 			"time": 10.0,
             "display": "changeTimeUpgrade"
+        },
+		{
+			"type": "ChangeSteeringUpgrade",
+			"roll": -1.0,
+			"azimuth": -1.0,
+			"duration": 10,
+            "display": "changeSteeringUpgrade"
         }
 	],
     "gates": [

@@ -67,8 +67,6 @@ public class CollisionDetector implements Disposable {
 	 */
 	class CollisionContactListener extends ContactListener {
 		private ArrayList<ICollisionListener> listeners;
-		
-		private final Map<Type, Object> map = new HashMap<Type, Object>(4);
 
 		public CollisionContactListener() {
 			listeners = new ArrayList<ICollisionListener>();
@@ -97,11 +95,6 @@ public class CollisionDetector implements Disposable {
 			GameObject g1 = (GameObject) o1.userData;
 			GameObject g2 = (GameObject) o2.userData;
 			Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.id + " (userData = " + g1.userData.getClass() + "), g2 = " + g2.id + " (userData = " + g2.userData.getClass() + ")" );
-			map.clear();
-			// Store in hash to pass values in correct order later.
-			map.put(g1.userData.getClass(), g1.userData);
-			// if same class, g1 will get overwritten, so save a reference
-			Object ret = map.put(g2.userData.getClass(), g2.userData);
 			outer: for( ICollisionListener listener : listeners ) {
 				for ( Method m : listener.getClass().getMethods() ) {
 					if ( !m.getName().equals("onCollision") )
@@ -116,16 +109,6 @@ public class CollisionDetector implements Disposable {
 					} else if(c1.isAssignableFrom(g1.userData.getClass()) && c0.isAssignableFrom(g2.userData.getClass())) {
 						listener.onCollision(g2.userData, g1.userData);
 					}
-					
-					/*Object first = map.get(m.getParameterTypes()[0]);
-					Object second = map.get(m.getParameterTypes()[1]);
-					// in case if same class, maintain Bullet's order
-					if ( first == second ) {
-						first = ret;
-					}
-					if ( first != null && second != null ) { // the listener wants to know about this collision
-						listener.onCollision(first, second);
-					}*/
 					continue outer; // go to the next listener.
 				}
 				listener.onCollision(g1, g2);
