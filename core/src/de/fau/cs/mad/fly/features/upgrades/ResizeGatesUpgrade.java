@@ -8,6 +8,7 @@ import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.res.Gate;
+import de.fau.cs.mad.fly.res.GateCircuit;
 import de.fau.cs.mad.fly.res.Level;
 
 /**
@@ -17,7 +18,7 @@ import de.fau.cs.mad.fly.res.Level;
  *
  */
 public class ResizeGatesUpgrade extends CollectibleObjects implements IFeatureInit {
-	private Level level;
+	private GateCircuit gateCircuit;
 	
 	private Vector3 scale;
 	
@@ -45,7 +46,7 @@ public class ResizeGatesUpgrade extends CollectibleObjects implements IFeatureIn
 
 	@Override
 	public void init(GameController game) {
-		level = game.getLevel();
+		gateCircuit = game.getLevel().getGateCircuit();
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class ResizeGatesUpgrade extends CollectibleObjects implements IFeatureIn
 	 * Resizes the gates and the gate holes with the scaling vector.
 	 */
 	private void resizeGates() {
-        for (Gate g : level.allGates()) {
+        for (Gate g : gateCircuit.allGates()) {
 	    	g.display.transform.scl(scale);
 	    	g.display.getRigidBody().getCollisionShape().setLocalScaling(scale);
 	    	

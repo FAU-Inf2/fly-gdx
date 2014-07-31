@@ -12,6 +12,7 @@ import de.fau.cs.mad.fly.features.IFeatureDraw;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.res.GateCircuit;
 import de.fau.cs.mad.fly.res.Level;
 
 /**
@@ -138,8 +139,10 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
     public void draw(float delta) {
         // vector orthogonal to up and cameraDirection
         cross.set(camera.up).crs(camera.direction);
-        for (int i = 0; i < level.currentGates().length; i++) {
-            gate = level.getGateById(level.currentGates()[i]).goal;
+        GateCircuit gateCircuit = level.getGateCircuit();
+        
+        for (int i = 0; i < gateCircuit.currentGates().length; i++) {
+            gate = gateCircuit.getGateById(gateCircuit.currentGates()[i]).goal;
             // only draw a gate indicator when the next gate is not visible. If
             // it is visible, the gate itself is highlighted
             if (!gate.isVisible(camera)) {

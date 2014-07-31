@@ -59,7 +59,7 @@ public class EndlessLevelGenerator {
 		lastRemoved = new Gate(-3);
 		lastRemoved.successors = new int[0];
 		
-		this.gates = level.allGates();
+		this.gates = level.getGateCircuit().allGates();
 		int size = gates.size();
 		
 		lastGate = gates.get(size - 1);
@@ -94,7 +94,7 @@ public class EndlessLevelGenerator {
 				level.components.add(newGate.display);
 				//level.components.add(newGate.goal);
 				
-				level.addGate(newGate);
+				level.getGateCircuit().addGate(newGate);
 				gates.add(newGate);
 				predecessors.add(newGate);
 			}
@@ -115,7 +115,7 @@ public class EndlessLevelGenerator {
 			size = lastRemoved.successors.length;
 			for(int i = 0; i < size; i++) {
 				int id = lastRemoved.successors[i];
-				Gate successor = level.getGateById(id);
+				Gate successor = level.getGateCircuit().getGateById(id);
 				
 				level.components.remove(successor.display);
 				level.components.remove(successor.goal);

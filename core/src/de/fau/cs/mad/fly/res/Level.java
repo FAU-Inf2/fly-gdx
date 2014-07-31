@@ -29,17 +29,12 @@ import java.util.*;
  * @author Lukas Hahmann
  * 
  */
-public class Level implements Disposable, IFeatureLoad, ICollisionListener<Spaceship, Gate> {
+public class Level implements Disposable {
     
     public static class Head {
         public String name;
         public int id;
         public FileHandle file;
-    }
-    
-    @Override
-    public void load(GameController game) {
-        activeGatePassed(virtualGate);
     }
     
     /**
@@ -54,21 +49,16 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     
     public List<GameObject> components;
     public final Perspective start;
-    /** gate that has been passed recently, at the beginning the dummy gate */
-    private Gate virtualGate;
-    private Gate startingGate;
     private final Environment environment;
-    private List<EventListener> eventListeners = new ArrayList<EventListener>();
     private final Map<String, GameModel> dependencies;
-    
-    /** Maps the id to the corresponding gate */
-    private Map<Integer, Gate> gates = new HashMap<Integer, Gate>();
-    private List<Gate> allGates = new ArrayList<Gate>();
+
     // public final Collection<String> scripts;
     
     private GameObject borderObject = null;
     private int CollisionTime = 0;
     private int leftCollisionTime = 0;
+    
+    private GateCircuit gateCircuit = null;
     
     // private float initTime = 0;
     private float leftTime = 0;
@@ -81,32 +71,8 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         this.leftTime = leftTime;
     }
     
-    public int getGatesNumber() {
-        return allGates().size();
-    }
-    
     public int getLeftCollisionTime() {
         return leftCollisionTime;
-    }
-    
-    public Gate getGateById(int id) {
-        return gates.get(id);
-    }
-    
-    public void addGate(Gate gate) {
-        gates.put(gate.id, gate);
-        allGates.add(gate);
-    }
-    
-    /**
-     * Fills the Map that maps id to the corresponding gate and the list of all
-     * gates.
-     * 
-     * @param gates
-     */
-    public void setGates(Map<Integer, Gate> gates) {
-        this.gates = gates;
-        this.allGates.addAll(gates.values());
     }
     
     public void setLeftCollisionTime(int leftCollisionTime) {
@@ -116,16 +82,6 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     protected void InitCollisionTime() {
         CollisionTime = 3;
         leftCollisionTime = CollisionTime;
-    }
-    
-    private boolean reachedLastGate = false;
-    
-    public boolean isReachedLastGate() {
-        return reachedLastGate;
-    }
-    
-    protected void setReachedLastGate(boolean reachedLastGate) {
-        this.reachedLastGate = reachedLastGate;
     }
     
     private boolean gameOver = false;
@@ -141,7 +97,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             
             int score = 0;
             int totalScore = 0;
-            for (Gate gate : allGates()) {
+            for (Gate gate : gateCircuit.allGates()) {
                 totalScore += gate.score * gate.passedTimes;
             }
             score = totalScore;
@@ -165,11 +121,9 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         }
     }
     
-    public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies, Gate startingGate) {
+    public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies) {
         this.head = new Head();
         this.head.name = name;
-        this.virtualGate = startingGate;
-        this.startingGate = startingGate;
         this.components = components;
         this.start = start;
         this.environment = new Environment();
@@ -191,17 +145,6 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         }
     }
     
-    public void gatePassed(Gate gate) {
-        int numberOfSuccessorGates = virtualGate.successors.length;
-        for (int i = 0; i < numberOfSuccessorGates; i++) {
-            if (gate.id == virtualGate.successors[i]) {
-                gate.passedTimes++;
-                activeGatePassed(gate);
-                i = numberOfSuccessorGates;
-            }
-        }
-    }
-    
     public GameModel getDependency(String id) {
         return dependencies.get(id);
     }
@@ -210,65 +153,25 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         return dependencies;
     }
     
-    public void activeGatePassed(Gate gate) {
-        for (EventListener s : eventListeners)
-            s.onGatePassed(gate);
-        virtualGate = gate;
-        if (gate.successors.length == 0) {
-            reachedLastGate = true;
-            levelFinished();
-        }
-    }
-    
-    private void levelFinished() {
+    public void finishLevel() {
         gameOver = true;
-        for (EventListener s : eventListeners) {
-            s.onFinished();
-        }
-    }
-    
-    public void addEventListener(EventListener listener) {
-        eventListeners.add(listener);
-    }
-    
-    public void setStartGate(Gate startingGate) {
-        this.startingGate = startingGate;
-    }
-    
-    public int[] currentGates() {
-        return virtualGate.successors;
-    }
-    
-    public List<Gate> allGates() {
-        return allGates;
     }
     
     /**
-     * Creates the rigid bodies with convenient parameters for the gate models
-     * and the gate goals in the level.
+     * Getter for the gate circuit.
+     * @return gateCircuit
      */
-    public void createGateRigidBodies() {
-        CollisionDetector collisionDetector = CollisionDetector.getInstance();
-        
-        Gdx.app.log("Level.createGateRigidBodies", "Setting up collision for level gates.");
-        
-        for (Gate g : allGates()) {
-            if (g.display.getRigidBody() == null) {
-                btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
-                g.display.createRigidBody(g.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-            }
-            collisionDetector.addRigidBody(g.display);
-            
-            if (g.goal.getRigidBody() == null) {
-                btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-                g.goal.userData = g;
-                g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-                g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-            }
-            collisionDetector.addRigidBody(g.goal);
-        }
-        
-
+    public GateCircuit getGateCircuit() {
+    	return gateCircuit;
+    }
+    
+    /**
+     * Adds the gate circuit to the level.
+     * @param gateCircuit
+     */
+    public void addGateCircuit(GateCircuit gateCircuit) {
+    	this.gateCircuit = gateCircuit;
+    	this.gateCircuit.level = this;
     }
     
     /**
@@ -293,7 +196,7 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
     public void update(float delta, PerspectiveCamera camera) {
         borderObject.transform.setToTranslation(camera.position);
         if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
-            levelFinished();
+            gateCircuit.circuitFinished();
         }
     }
     
@@ -324,14 +227,9 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
     }
     
-    public void reset() {
-        eventListeners.clear();
-        virtualGate = startingGate;
-    }
-    
     @Override
     public String toString() {
-        return "#<Level name=" + head.name + " virtualGate=" + virtualGate + ">";
+        return "#<Level name=" + head.name + ">";
     }
     
     @Override
@@ -341,11 +239,5 @@ public class Level implements Disposable, IFeatureLoad, ICollisionListener<Space
             o.dispose();
         // for ( GameModel m : dependencies )
         // m.dispose();
-    }
-    
-    @Override
-    public void onCollision(Spaceship spaceship, Gate gate) {
-        gatePassed(gate);
-    }
-    
+    }    
 }

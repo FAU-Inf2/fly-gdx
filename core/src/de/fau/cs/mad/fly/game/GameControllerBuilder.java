@@ -43,6 +43,7 @@ import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.EventAdapter;
 import de.fau.cs.mad.fly.res.Gate;
+import de.fau.cs.mad.fly.res.GateCircuit;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.BackProcessor;
@@ -113,20 +114,16 @@ public class GameControllerBuilder {
         float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
         Viewport viewport = new FillViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
         stage.setViewport(viewport);
-        optionalFeaturesToLoad.add(level);
         
-        // FlyEngine engine = FlyEngine.get();
-        // engine.setLevel(level);
-        // level.addEventListener(engine);
-        // for ( String s : level.scripts )
-        // engine.load(Gdx.files.internal( "scripts/app/" + s ));
+        GateCircuit gateCircuit = level.getGateCircuit();
+        optionalFeaturesToLoad.add(gateCircuit);
         
         addPlayerPlane();
         Bullet.init();
         CollisionDetector.createCollisionDetector();
         CollisionDetector collisionDetector = CollisionDetector.getInstance();
         
-        collisionDetector.getCollisionContactListener().addListener(level);
+        collisionDetector.getCollisionContactListener().addListener(gateCircuit);
         collisionDetector.getCollisionContactListener().addListener(new ICollisionListener<Spaceship, GameObject>() {
             @Override
             public void onCollision(Spaceship ship, GameObject g) {
@@ -144,23 +141,25 @@ public class GameControllerBuilder {
             }
         });
         
-        level.createGateRigidBodies();
+        gateCircuit.createGateRigidBodies();
         
         Gdx.app.log("Builder.init", "Registering EventListeners for level.");
         
-        level.addEventListener(new EventAdapter() {
+        gateCircuit.addEventListener(new EventAdapter() {
             @Override
             public void onGatePassed(Gate passed) {
+            	GateCircuit gateCircuit = level.getGateCircuit();
+            	
                 if (level.head.name.equals("Endless")) {
                     for (Gate g : generator.getGates())
                         g.unmark();
                 } else {
-                    for (Gate g : level.allGates())
+                    for (Gate g : gateCircuit.allGates())
                         g.unmark();
                 }
                 int len = passed.successors.length;
                 for (int i = 0; i < len; i++) {
-                    level.getGateById(passed.successors[i]).mark();
+                	gateCircuit.getGateById(passed.successors[i]).mark();
                 }
             }
         });
@@ -168,13 +167,12 @@ public class GameControllerBuilder {
         if (level.head.name.equals("Endless")) {
             generator = new EndlessLevelGenerator(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLevel());
             
-            PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLevel().addEventListener(new EventAdapter() {
+            gateCircuit.addEventListener(new EventAdapter() {
                 @Override
                 public void onGatePassed(Gate passed) {
                     generator.addRandomGate(passed);
                 }
             });
-            
         }
         
         Gdx.app.log("Builder.init", "Final work for level done.");
@@ -451,7 +449,7 @@ public class GameControllerBuilder {
         gc.setTimeController(timeController);
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
         
-        level.addEventListener(new EventAdapter() {
+        level.getGateCircuit().addEventListener(new EventAdapter() {
             @Override
             public void onFinished() {
                 gc.finishGame();

@@ -93,14 +93,17 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         
         ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
         componentsList.addAll(components.values());
-        Level level = new Level(json.getString("name"), start, componentsList, models, dummy);
+        Level level = new Level(json.getString("name"), start, componentsList, models);
         JsonValue levelClass = json.get("class");
         if (levelClass != null) {
         	level.levelClass = levelClass.asString();
         }
-        level.setGates(gateMap);
         level.head.id = json.getInt("id");
         level.setLeftTime(json.getInt("time"));
+        
+        GateCircuit gateCircuit = new GateCircuit(dummy);
+        gateCircuit.setGates(gateMap);
+        level.addGateCircuit(gateCircuit);
         
         return level;
     }

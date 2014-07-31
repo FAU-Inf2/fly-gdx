@@ -83,7 +83,7 @@ public class Loader {
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
             public void progressFinished(Level level) {
-				level.reset();
+				level.getGateCircuit().reset();
 				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLevel(level);
 				((Fly) Gdx.app.getApplicationListener()).initGameController();
 				

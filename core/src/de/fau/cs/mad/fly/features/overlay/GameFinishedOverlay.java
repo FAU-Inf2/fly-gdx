@@ -77,7 +77,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
         messageTable.setBackground(background);
         
-        if (gameController.getLevel().isReachedLastGate()) {
+        if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
             infoLabel = new Label(I18n.t("level.congratulations"), skin);
             messageTable.add(infoLabel);
             Score newScore = gameController.getLevel().getScore();
