@@ -28,6 +28,8 @@
     <pattern>org.apache.harmony.security.provider.cert.X509CertFactoryImpl</pattern>
     <pattern>com.android.org.bouncycastle.jce.provider.PKIXCertPathValidatorSpi</pattern>
     <pattern>org.apache.harmony.xnet.provider.jsse.OpenSSLMessageDigestJDK$MD5</pattern>
+    <pattern>de.fau.cs.mad.fly.sqlite.ios.IOSDatabaseManager</pattern>
+    <pattern>de.fau.cs.mad.fly.profile.PlayerProfileManager</pattern>
   </forceLinkClasses>
   <libs>
     <lib>build/libs/ios/libgdx-bullet.a</lib>
