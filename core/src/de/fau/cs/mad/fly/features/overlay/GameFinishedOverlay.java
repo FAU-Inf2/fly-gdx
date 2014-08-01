@@ -58,7 +58,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      */
     @Override
     public void finish() {
-        
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         
@@ -80,7 +79,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
             infoLabel = new Label(I18n.t("level.congratulations"), skin);
             messageTable.add(infoLabel);
-            Score newScore = gameController.getLevel().getScore();
+            //Score newScore = gameController.getLevel().getScore();
+            Score newScore = gameController.getScoreController().getEndScore(gameController);
             String scoreString = I18n.t("newScore") + newScore.getTotalScore();
             final Label scoreLabel = new Label(scoreString, skin);
             messageTable.add(scoreLabel).pad(15f);

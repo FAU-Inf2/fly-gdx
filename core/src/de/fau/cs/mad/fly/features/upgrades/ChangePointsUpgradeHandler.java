@@ -24,8 +24,7 @@ public class ChangePointsUpgradeHandler extends CollectibleObjects {
 	@Override
 	protected void handleCollecting(Collectible c) {
 		ChangePointsUpgrade upgrade = (ChangePointsUpgrade) c;
-		GameController.getInstance().getPlayer().addBonusPoints(upgrade.getPointsChange());
+		GameController.getInstance().getScoreController().addBonusPoints(upgrade.getPointsChange());
 		InfoOverlay.getInstance().setOverlay(I18n.t("pointUpgradeCollected") + "\n" + I18n.t("bonus") + " " + upgrade.getPointsChange() + "", 3);
 	}
-
 }

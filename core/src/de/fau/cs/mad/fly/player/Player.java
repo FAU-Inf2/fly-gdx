@@ -15,9 +15,6 @@ public class Player {
 
 	/** The lives the player has at the moment. If lives is lower or equal zero the player is dead. */
     private int lives;
-	
-    /** The bonus points the player collected in the level. */
-    private int bonusPoints = 0;
     
     /**
      * Creates the player for the game.
@@ -45,22 +42,6 @@ public class Player {
 	 */
 	public int getLives() {
 		return lives;
-	}
-	
-	/**
-	 * Adds bonus points to the players bonus points.
-	 * @param addBonusPoints		The bonus points to add.
-	 */
-	public void addBonusPoints(int addBonusPoints) {
-		bonusPoints += addBonusPoints;
-	}
-	
-	/**
-	 * Getter for the bonus points of the player.
-	 * @return bonusPoints
-	 */
-	public int getBonusPoints() {
-		return bonusPoints;
 	}
 	
 	/**

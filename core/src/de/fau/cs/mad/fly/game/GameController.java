@@ -70,6 +70,7 @@ public class GameController implements TimeIsUpListener {
     protected ModelBatch batch;
     protected Level level;
     protected Player player;
+    protected ScoreController scoreController;
     private GameState gameState;
     private TimeController timeController;
     private InputMultiplexer inputProcessor;
@@ -342,6 +343,15 @@ public class GameController implements TimeIsUpListener {
      */
     public TimeController getTimeController() {
         return timeController;
+    }
+    
+    /**
+     * Getter for the score controller.
+     * 
+     * @return {@link #scoreController}
+     */
+    public ScoreController getScoreController() {
+        return scoreController;
     }
     
     @Override

@@ -234,7 +234,7 @@ public class FlightController implements InputProcessor {
      * @param rollFactor
      */
     private void setRollFactor(float rollFactor) {
-        this.rollFactor = this.azimuthFactorChange * limitSpeed(rollFactor, player.getPlane().getRollingSpeed());
+        this.rollFactor = this.rollFactorChange * limitSpeed(rollFactor, player.getPlane().getRollingSpeed());
     }
     
     private float average(List<Float> input) {

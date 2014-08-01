@@ -7,21 +7,11 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.utils.Disposable;
 
-import de.fau.cs.mad.fly.features.ICollisionListener;
-import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
-import de.fau.cs.mad.fly.game.CollisionDetector;
-import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.player.Spaceship;
-import de.fau.cs.mad.fly.profile.Score;
-import de.fau.cs.mad.fly.profile.ScoreDetail;
 
 import java.util.*;
 
@@ -53,16 +43,13 @@ public class Level implements Disposable {
     public final Perspective start;
     private final Environment environment;
     private final Map<String, GameModel> dependencies;
-
-    // public final Collection<String> scripts;
     
     private GameObject borderObject = null;
     private int CollisionTime = 0;
     private int leftCollisionTime = 0;
     
     private GateCircuit gateCircuit = null;
-    
-    // private float initTime = 0;
+
     private float leftTime = 0;
     
     public float getLeftTime() {
@@ -71,14 +58,6 @@ public class Level implements Disposable {
     
     public void setLeftTime(float leftTime) {
         this.leftTime = leftTime;
-    }
-    
-    public int getLeftCollisionTime() {
-        return leftCollisionTime;
-    }
-    
-    public void setLeftCollisionTime(int leftCollisionTime) {
-        this.leftCollisionTime = leftCollisionTime;
     }
     
     protected void InitCollisionTime() {
@@ -92,37 +71,6 @@ public class Level implements Disposable {
         return gameOver;
     }
     
-    public Score getScore() {
-        if (gameOver) {
-            Score newScore = new Score();
-            newScore.setReachedDate(new Date());
-            
-            int score = 0;
-            int totalScore = 0;
-            for (Gate gate : gateCircuit.allGates()) {
-                totalScore += gate.score * gate.passedTimes;
-            }
-            score = totalScore;
-            newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + ""));
-            
-            totalScore += ((int) leftTime) * 20;
-            
-            newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), (totalScore - score) + ""));
-            score = totalScore;
-            
-            totalScore += leftCollisionTime * 30;
-            newScore.getScoreDetails().add(new ScoreDetail(("leftCollisionTime"), (totalScore - score) + ""));
-            
-            int bonusPoints = GameController.getInstance().getPlayer().getBonusPoints();
-            totalScore += bonusPoints;
-            newScore.setTotalScore(totalScore);
-            newScore.getScoreDetails().add(new ScoreDetail(("bonusPoints"), bonusPoints + ""));
-            return newScore;
-        } else {
-            return new Score();// todo
-        }
-    }
-    
     public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies) {
         this.head = new Head();
         this.head.name = name;
@@ -130,7 +78,6 @@ public class Level implements Disposable {
         this.start = start;
         this.environment = new Environment();
         this.dependencies = Collections.unmodifiableMap(dependencies);
-        // this.scripts = Collections.unmodifiableCollection(scripts);
         setUpEnvironment();
         
         InitCollisionTime();

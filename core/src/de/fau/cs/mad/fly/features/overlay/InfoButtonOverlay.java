@@ -1,10 +1,8 @@
 package de.fau.cs.mad.fly.features.overlay;
 
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -13,10 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.features.IFeatureUpdate;
-import de.fau.cs.mad.fly.game.CollisionDetector;
-import de.fau.cs.mad.fly.game.IntegerTimeListener;
-import de.fau.cs.mad.fly.game.TimeController;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**

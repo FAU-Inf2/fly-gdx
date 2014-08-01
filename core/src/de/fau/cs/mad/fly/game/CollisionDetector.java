@@ -103,7 +103,7 @@ public class CollisionDetector implements Disposable {
 					//System.out.println(m.getParameterTypes()[0] + " - " + m.getParameterTypes()[1]);
 					Class<?> c0 = m.getParameterTypes()[0];
 					Class<?> c1 = m.getParameterTypes()[1];
-
+					
 					if(c0.isAssignableFrom(g1.userData.getClass()) && c1.isAssignableFrom(g2.userData.getClass())) {
 						listener.onCollision(g1.userData, g2.userData);
 					} else if(c1.isAssignableFrom(g1.userData.getClass()) && c0.isAssignableFrom(g2.userData.getClass())) {

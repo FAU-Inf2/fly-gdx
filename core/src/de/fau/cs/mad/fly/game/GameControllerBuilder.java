@@ -73,6 +73,7 @@ public class GameControllerBuilder {
     private FlightController flightController;
     private CameraController cameraController;
     private TimeController timeController;
+    private ScoreController scoreController;
     private EndlessLevelGenerator generator;
     
     /**
@@ -109,6 +110,8 @@ public class GameControllerBuilder {
         TimeUpOverlay timeUpOverlay = new TimeUpOverlay(game.getSkin(), stage);
         timeController.registerTimeIsUpListener(timeUpOverlay);
         
+        scoreController = new ScoreController();
+        
         float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
         float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
         float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
@@ -144,7 +147,7 @@ public class GameControllerBuilder {
         gateCircuit.createGateRigidBodies();
         
         Gdx.app.log("Builder.init", "Registering EventListeners for level.");
-        
+
         gateCircuit.addEventListener(new EventAdapter() {
             @Override
             public void onGatePassed(Gate passed) {
@@ -163,6 +166,8 @@ public class GameControllerBuilder {
                 }
             }
         });
+        
+        gateCircuit.addEventListener(scoreController);
         
         if (level.head.name.equals("Endless")) {
             generator = new EndlessLevelGenerator(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLevel());
@@ -447,6 +452,7 @@ public class GameControllerBuilder {
         gc.cameraController = cameraController;
         gc.batch = new ModelBatch();
         gc.setTimeController(timeController);
+        gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
         
         level.getGateCircuit().addEventListener(new EventAdapter() {
