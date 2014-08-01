@@ -14,6 +14,7 @@ public class DatabaseFactory {
 	public static final String ERROR_TAG = "DATABASE";
 	private static final String androidClassname = "com.badlogic.gdx.sqlite.android.AndroidDatabaseManager";
 	private static final String desktopClassname = "com.badlogic.gdx.sqlite.desktop.DesktopDatabaseManager";
+	private static final String iosClassname = "de.fau.cs.mad.fly.sqlite.ios.IOSDatabaseManager";
 
 	private static DatabaseManager databaseManager = null;
 
@@ -52,7 +53,12 @@ public class DatabaseFactory {
 			case WebGL:
 				throw new GdxRuntimeException("SQLite is currently not supported in WebGL by this libgdx extension.");
 			case iOS:
-				throw new GdxRuntimeException("SQLite is currently not supported in iOS by this libgdx extension.");
+				try {
+					databaseManager = (DatabaseManager)Class.forName(iosClassname).newInstance();
+				} catch (Throwable ex) {
+					throw new GdxRuntimeException("Error getting database: " + iosClassname, ex);
+				}
+				break;
 			default:
 				break;
 			}
