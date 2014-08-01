@@ -14,6 +14,8 @@ public class IOSLauncher extends IOSApplication.Delegate {
         config.useAccelerometer = true;
         config.useCompass = true;
         config.allowIpod = true;
+        config.orientationLandscape = true;
+        config.orientationPortrait = false;
         return new IOSApplication(new Fly(), config);
     }
 
