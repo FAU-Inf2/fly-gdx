@@ -1,6 +1,8 @@
 package de.fau.cs.mad.fly.game;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
@@ -13,7 +15,7 @@ import de.fau.cs.mad.fly.res.Gate;
  * @author Tobi
  *
  */
-public class ScoreController extends EventAdapter {
+public class ScoreController extends EventAdapter {    
 	/**
 	 * The total score.
 	 */
@@ -28,11 +30,17 @@ public class ScoreController extends EventAdapter {
 	 * The score from collected bonus points.
 	 */
 	private int bonusPoints = 0;
+	
+	/**
+	 * List of score change listeners which get notified if the score has changed.
+	 */
+    private List<ScoreChangeListener> scoreChangeListeners;
 
 	/**
 	 * Creates a new score controller.
 	 */
-	public ScoreController() {	
+	public ScoreController() {
+		scoreChangeListeners = new ArrayList<ScoreChangeListener>();
 	}
 	
 	/**
@@ -77,6 +85,7 @@ public class ScoreController extends EventAdapter {
     public void addBonusPoints(int bonusPoints) {
     	this.bonusPoints += bonusPoints;
     	this.totalScore += bonusPoints;
+    	scoreChanged();
     }
     
     /**
@@ -87,9 +96,27 @@ public class ScoreController extends EventAdapter {
     	return totalScore;
     }
     
+    /**
+     * Notifies all {@link ScoreChangeListener}
+     */
+    private void scoreChanged() {
+    	int size = scoreChangeListeners.size();
+        for (int i = 0; i < size; i++) {
+        	scoreChangeListeners.get(i).scoreChanged(totalScore);
+        }
+    }
+    
+    /**
+     * Register a new {@link ScoreChangeListener}
+     */
+    public void registerScoreChangeListener(ScoreChangeListener listener) {
+    	scoreChangeListeners.add(listener);
+    }
+    
     @Override
     public void onGatePassed(Gate gate) {
     	this.gatePassedScore += gate.score;
     	this.totalScore += gate.score;
+    	scoreChanged();
     }
 }

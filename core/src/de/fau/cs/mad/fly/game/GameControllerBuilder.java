@@ -28,6 +28,7 @@ import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
 import de.fau.cs.mad.fly.features.overlay.InfoButtonOverlay;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
+import de.fau.cs.mad.fly.features.overlay.ScoreOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
 import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
@@ -199,6 +200,7 @@ public class GameControllerBuilder {
         Preferences preferences = playerProfile.getSettingManager().getPreferences();
         addGateIndicator();
         addTimeLeftOverlay();
+        addScoreOverlay();
         addInfoOverlays();
         
         if (preferences.getBoolean(SettingManager.SHOW_PAUSE)) {
@@ -323,14 +325,24 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Adds a {@link TimeLeftOverlay} to the GameController, that is initialized
-     * and updated every frame.
+     * Adds a {@link TimeLeftOverlay} to the GameController.
      * 
      * @return Builder instance with TimeLeftOverlay
      */
     private GameControllerBuilder addTimeLeftOverlay() {
         TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game.getSkin(), stage);
         timeController.registerIntegerTimeListener(timeLeftOverlay);
+        return this;
+    }
+    
+    /**
+     * Adds a {@link ScoreOverlay} to the GameController.
+     * 
+     * @return Builder instance with ScoreOverlay
+     */
+    private GameControllerBuilder addScoreOverlay() {
+        ScoreOverlay scoreOverlay = new ScoreOverlay(game.getSkin(), stage);
+        scoreController.registerScoreChangeListener(scoreOverlay);
         return this;
     }
     
