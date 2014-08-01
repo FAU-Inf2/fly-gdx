@@ -1,6 +1,6 @@
-# Blender v2.70 (sub 0) OBJ File: 'pointUpgrade.blend'
+# Blender v2.70 (sub 0) OBJ File: 'pointsUpgrade.blend'
 # www.blender.org
-mtllib pointUpgrade.mtl
+mtllib pointsUpgrade.mtl
 o Cube
 v 0.300000 -0.300000 -0.300000
 v 0.300000 -0.300000 0.300000

@@ -40,6 +40,7 @@ class LevelExporter:
 		self.data['start'] = self.setupStartPos()
 		self.data['dependencies'] = self.setupDependencies()
 		self.data['gates'] = self.setupGates()
+		self.data['upgrades'] = self.setupUpgrades()
 		self.data['components'] = self.setupComponents(export)
 		
 	def setupInfo(self, export):
@@ -48,6 +49,7 @@ class LevelExporter:
 		self.data['name'] = export.level_name
 		self.data['time'] = int(export.level_time)
 		self.data['scripts'] = [ ]
+		self.data['class'] = export.level_class
 		
 	def setupStartPos(self):
 		"""Creates the starting position information"""
@@ -85,7 +87,7 @@ class LevelExporter:
 		gates.append(dummy_gate)
 		
 		for item in bpy.data.objects:
-			if "Gate" in item.name:
+			if "Gate." in item.name:
 				gate = { }
 				gate['id'] = ConvertHelper.convert_id(item.name)
 				gate['display'] = item.name
@@ -99,6 +101,50 @@ class LevelExporter:
 				gates.append(gate)
 		
 		return gates
+	
+	def setupUpgrades(self):
+		"""Creates the upgrade information"""
+		upgrades = [ ]
+		
+		for item in bpy.data.objects:
+			up = { }
+			if "changePointsUpgrade" in item.name:
+				up['type'] = "ChangePointsUpgrade"
+				up['display'] = item.name
+				up['points'] = item['points']
+				upgrades.append(up)
+			elif "changeSteeringUpgrade" in item.name:
+				up['type'] = "ChangeSteeringUpgrade"
+				up['display'] = item.name
+				up['duration'] = item['duration']
+				up['azimuth'] = item['azimuth']
+				up['roll'] = item['roll']
+				upgrades.append(up)
+			elif "changeTimeUpgrade" in item.name:
+				up['type'] = "ChangeTimeUpgrade"
+				up['display'] = item.name
+				up['time'] = item['time']
+				upgrades.append(up)
+			elif "instantSpeedUpgrade" in item.name:
+				up['type'] = "InstantSpeedUpgrade"
+				up['display'] = item.name
+				up['duration'] = item['duration']
+				up['speedFactor'] = item['speedFactor']
+				upgrades.append(up)
+			elif "linearSpeedUpgrade" in item.name:
+				up['type'] = "LinearSpeedUpgrade"
+				up['display'] = item.name
+				up['increaseFactor'] = item['increaseFactor']
+				up['increaseDuration'] = item['increaseDuration']
+				up['decreaseFactor'] = item['decreaseFactor']
+				upgrades.append(up)
+			elif "resizeGatesUpgrade" in item.name:
+				up['type'] = "ResizeGatesUpgrade"
+				up['display'] = item.name
+				up['scale'] = [ ConvertHelper.convert_pos(item['scaleX']), ConvertHelper.convert_pos(item['scaleY']), ConvertHelper.convert_pos(item['scaleZ']) ]
+				upgrades.append(up)
+
+		return upgrades
 		
 	def setupComponents(self, export):
 		"""Creates the component information"""
@@ -131,7 +177,7 @@ class LevelExporter:
 						
 				components.append(component)
 				
-				if "Gate" in item.name:
+				if "Gate." in item.name:
 					component = { }
 					component['id'] = item.name + "hole"
 					component['ref'] = item['HoleModel']
@@ -177,6 +223,7 @@ class ExportLevelOperator(Operator, ExportHelper):
 	level_id = StringProperty(name="Level ID", description="ID of the Level", default="1");
 	level_name = StringProperty(name="Level Name", description="Name of the Level", default="Level");
 	level_time = StringProperty(name="Level Time", description="Time of the Level", default="30");
+	level_class = StringProperty(name="Level Class", description="Class file for the level", default="");
 	
 	border_model = StringProperty(name="Border Model", description="Border model if no border model property is added", default="space");
 

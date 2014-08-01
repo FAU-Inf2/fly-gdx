@@ -132,20 +132,21 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             jsonUpgrade = upgrades.get(i);
             JsonValue upgradeType = jsonUpgrade.get("type");
             if (upgradeType != null) {
+            	String type = upgradeType.asString();
             	Collectible c = null;
-            	if(upgradeType.asString().equals("ChangeTimeUpgrade")) {
+            	if(type.equals("ChangeTimeUpgrade")) {
             		c = new ChangeTimeUpgrade(jsonUpgrade.get("time").asInt());
-            	} else if(upgradeType.asString().equals("ChangePointsUpgrade")) {
+            	} else if(type.equals("ChangePointsUpgrade")) {
             		c = new ChangePointsUpgrade(jsonUpgrade.get("points").asInt());
-            	} else if(upgradeType.asString().equals("InstantSpeedUpgrade")) {
+            	} else if(type.equals("InstantSpeedUpgrade")) {
             		c = new InstantSpeedUpgrade(jsonUpgrade.get("speedFactor").asFloat(), jsonUpgrade.get("duration").asFloat());
-            	} else if(upgradeType.asString().equals("LinearSpeedUpgrade")) {
+            	} else if(type.equals("LinearSpeedUpgrade")) {
             		c = new LinearSpeedUpgrade(jsonUpgrade.get("increaseFactor").asFloat(), jsonUpgrade.get("increaseDuration").asFloat(), jsonUpgrade.get("decreaseFactor").asFloat());
-            	} else if(upgradeType.asString().equals("ResizeGatesUpgrade")) {
+            	} else if(type.equals("ResizeGatesUpgrade")) {
             		JsonValue jsonScale = jsonUpgrade.get("scale");
             		Vector3 scale = new Vector3(jsonScale.getFloat(0), jsonScale.getFloat(1), jsonScale.getFloat(2));
             		c = new ResizeGatesUpgrade(scale);
-            	} else if(upgradeType.asString().equals("ChangeSteeringUpgrade")) {
+            	} else if(type.equals("ChangeSteeringUpgrade")) {
             		c = new ChangeSteeringUpgrade(jsonUpgrade.get("roll").asFloat(), jsonUpgrade.get("azimuth").asFloat(), jsonUpgrade.get("duration").asFloat());
             	}
                 
