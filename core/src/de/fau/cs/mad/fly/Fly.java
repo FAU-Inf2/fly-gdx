@@ -43,17 +43,19 @@ public class Fly extends Game {
     private SkinManager skinManager;
     
     @Override
-    public void create() {    	
-        // FlyEngine.get();
+    public void create() {
         Assets.init();
         skinManager = new SkinManager("uiskin.json");
+        
         new Thread(new Runnable() {
 			@Override
 			public void run() {
 				PlayerProfileManager.getInstance().getCurrentPlayerProfile();
 			}
 		}).start();
+        
         setMainMenuScreen();
+        
         // disabled for debugging reasons
         // setSplashScreen();
     }

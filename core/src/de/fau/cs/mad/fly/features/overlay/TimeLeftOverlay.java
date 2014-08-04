@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.features.overlay;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -40,8 +41,8 @@ public class TimeLeftOverlay implements IntegerTimeListener {
 	}
 
 	@Override
-	public boolean integerTimeChanged(int newTime) {
-		timeCounter.setText(String.valueOf(newTime));
+	public boolean integerTimeChanged(int timeLeft, int timeSinceStart) {
+		timeCounter.setText(String.valueOf(timeLeft));
 		return false;
 	}
 }

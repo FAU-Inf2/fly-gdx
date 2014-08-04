@@ -3,10 +3,17 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages the time in the game and calls listener if time in seconds has changed or the game time is over.
+ * 
+ * @author Lukas Hahmann 
+ *
+ */
 public class TimeController {
     
     private float initTimeInSeconds;
     private float currentTimeInSeconds;
+    private float timeSinceStartInSeconds;
     private long initTimeStampInMilliSeconds;
     
     private boolean paused;
@@ -39,6 +46,7 @@ public class TimeController {
         initTimeInSeconds = seconds;
         initTimeStampInMilliSeconds = System.currentTimeMillis();
         currentTimeInSeconds = initTimeInSeconds;
+        timeSinceStartInSeconds = 0f;
         pauseTimeStampInMilliSeconds = 0;
         pauseTimeInSeconds = 0;
         bonusTime = 0;
@@ -58,6 +66,7 @@ public class TimeController {
     public void checkTime() {
         if (!paused) {
             int timeBefore = (int) Math.ceil(currentTimeInSeconds);
+            timeSinceStartInSeconds = (System.currentTimeMillis() - initTimeStampInMilliSeconds) / 1000 - pauseTimeInSeconds;
             currentTimeInSeconds = initTimeInSeconds - (System.currentTimeMillis() - initTimeStampInMilliSeconds) / 1000 + pauseTimeInSeconds + bonusTime;
             if (currentTimeInSeconds < 1) {
                 currentTimeInSeconds = 0;
@@ -111,6 +120,14 @@ public class TimeController {
     	return (int) Math.ceil(currentTimeInSeconds);
     }
     
+    /**
+     * Getter for the integer time since the start in seconds.
+     * @return Integer time since the start in seconds.
+     */
+    public int getIntegerTimeSinceStart() {
+    	return (int) Math.ceil(timeSinceStartInSeconds);
+    }
+    
     /** Notifies all {@link TimeIsUpListener}s. */
     private void timeIsUp() {
     	size = timeIsUpListeners.size();
@@ -126,8 +143,11 @@ public class TimeController {
     /** Notifies all {@link IntegerTimeListener} */
     private void integerTimeChanged() {
     	size = integerTimeListeners.size();
+    	int integerTime = getIntegerTime();
+    	int integerTimeSinceStart = getIntegerTimeSinceStart();
+    	
         for (int i = 0; i < size; i++) {
-            if(integerTimeListeners.get(i).integerTimeChanged(getIntegerTime())) {
+            if(integerTimeListeners.get(i).integerTimeChanged(integerTime, integerTimeSinceStart)) {
             	removeIntegerTimeListener(integerTimeListeners.get(i));
             	size--;
             	i--;
