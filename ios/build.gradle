@@ -76,28 +76,25 @@ eclipse.project {
 }
 
 robovm {
-    iosSignIdentity = "iPhone Developer: Danyel Bayraktar"
-    iosProvisioningProfile = "MAD Fly2"
+    def propsFile = file('iossigning-fly.properties')
+
+    if (propsFile.exists()) {
+      println "iossigning-fly.properties file found -> reset the identity and provisioning"
+      def props = new Properties()
+      propsFile.withInputStream { 
+        stream -> props.load(stream) 
+      }
+
+      def config = new ConfigSlurper().parse(props)
+
+      iosSignIdentity = config.identity
+      iosProvisioningProfile = config.provisioning_name
+    } else {
+      iosSignIdentity = "iPhone Developer: Danyel Bayraktar"
+      iosProvisioningProfile = "MAD Fly2"  
+    }
+
     iosSkipSigning = false
     stdoutFifo = "stdout.log"
     stderrFifo = "stderr.log"
-}
-
-allprojects {
-    afterEvaluate { project ->
-      def propsFile = file('iossigning.properties')
-
-        if (propsFile.exists()) {
-          println "iossigning.properties file found -> reset the identity and provisioning"
-          def props = new Properties()
-          propsFile.withInputStream { 
-            stream -> props.load(stream) 
-          }
-
-          def config = new ConfigSlurper().parse(props)
-
-          robovm.iosSignIdentity = config.identity
-          robovm.iosProvisioningProfile = config.provisioning_profile
-        }
-    }
 }
