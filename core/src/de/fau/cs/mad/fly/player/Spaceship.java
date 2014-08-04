@@ -76,6 +76,7 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		
 		instance.addMotionState();		
 		instance.getRigidBody().setDamping(0.0f, 0.5f);
+		instance.getRigidBody().getCollisionShape().setLocalScaling(new Vector3(0.7f, 0.7f, 0.7f));
 
 		instance.userData = this;
 		CollisionDetector.getInstance().addRigidBody(instance);
