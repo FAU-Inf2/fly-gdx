@@ -78,8 +78,7 @@ public class Loader {
         loadingScreen.initiate(loader);
         loader.initiate();
         ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
-        //Assets.manager.load(new AssetDescriptor<Level>(head.file.path(), Level.class));
-        PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(head);
+        PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(head);
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
             public void progressFinished(Level level) {

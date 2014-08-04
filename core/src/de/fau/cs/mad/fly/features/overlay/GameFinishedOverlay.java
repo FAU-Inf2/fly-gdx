@@ -58,6 +58,9 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      */
     @Override
     public void finish() {
+    	Level.Head lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
+    	
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         
@@ -101,13 +104,14 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             nextLevelButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    // unload old level
-                    String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file.path();
-                    Assets.unload(levelPath);
-                    
+                    // unload old level if it is not the same as the last level
+                    if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().nextLevel()) {
+                    	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file.path();
+                        Assets.unload(levelPath);
+                    }
+
                     // set and load new level
-                    PlayerProfileManager.getInstance().getCurrentPlayerProfile().nextLevel();
-                    Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel();
+                    Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
                     Loader.loadLevel(levelHead);
                 }
             });
@@ -121,7 +125,12 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             restartButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel();
+                	// unload old level
+                	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file.path();
+                	Assets.unload(levelPath);
+                	
+                	// reload the level
+                    Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
                     Loader.loadLevel(levelHead);
                 }
             });

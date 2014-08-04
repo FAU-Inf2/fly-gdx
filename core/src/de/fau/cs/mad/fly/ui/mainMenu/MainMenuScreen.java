@@ -91,7 +91,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
                 Level.Head levelHead = playerProfile.getLastLevel();
                 if (levelHead == null) {
                     levelHead = LevelManager.getInstance().getLevelList().get(0);
-                    playerProfile.setLastLevel(levelHead);
+                    playerProfile.setCurrentLevel(levelHead);
                 }
                 Loader.loadLevel(levelHead);
             }

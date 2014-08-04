@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Provides a screen for the game itself.
@@ -41,6 +43,14 @@ public class GameScreen implements Screen {
     @Override
     public void hide() {
         gameController.disposeGame();
+        
+        // unload the last level if it is not the same as the current
+        Level.Head lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel();
+        if(!(lastLevel.equals(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel()))) {
+	        String levelPath = lastLevel.file.path();
+	        Gdx.app.log("Gamescreen.hide", "dispose level: " + levelPath);
+	        Assets.unload(levelPath);
+        }
     }
     
     @Override

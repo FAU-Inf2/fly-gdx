@@ -16,6 +16,11 @@ public class PlayerProfile {
 	 * The last level the player has played.
 	 */
 	private Level.Head lastLevel;
+
+	/**
+	 * The last level the player has played.
+	 */
+	private Level.Head currentLevel;
 	
 	/**
 	 * The level the player is currently playing.
@@ -123,11 +128,27 @@ public class PlayerProfile {
 	public void setLastLevel(Level.Head lastLevel) {
 		this.lastLevel = lastLevel;
 	}
+
+	/**
+	 * Getter for the level the player is playing.
+	 * @return currentLevel
+	 */
+	public Level.Head getCurrentLevel() {
+		return currentLevel;
+	}
+
+	/**
+	 * Setter for the level the player is playing.
+	 * @param currentLevel
+	 */
+	public void setCurrentLevel(Level.Head currentLevel) {
+		this.currentLevel = currentLevel;
+	}
 	
 	/**
 	 * If possible lastLevel is set to the next level.
 	 */
-	public void nextLevel() {
+	public boolean nextLevel() {
 	    int nextLevelIndex = 0;
 	    List<Level.Head> allLevels = LevelManager.getInstance().getLevelList();
 	    for(int level = 0; level < allLevels.size(); level++) {
@@ -137,8 +158,10 @@ public class PlayerProfile {
 	        }
 	    }
 	    if(nextLevelIndex < allLevels.size()) {
-	        lastLevel = allLevels.get(nextLevelIndex);
+	        currentLevel = allLevels.get(nextLevelIndex);
+	        return true;
 	    }
+	    return false;
 	}
 
 	/**

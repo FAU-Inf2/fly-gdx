@@ -5,6 +5,9 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.GameScreen;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.mainMenu.MainMenuScreen;
 
 /**
@@ -19,6 +22,11 @@ public class BackProcessor extends InputAdapter {
 		if ( keycode == Keys.ESCAPE || keycode == Keys.BACK ) {
 			Fly game = (Fly) Gdx.app.getApplicationListener();
 			Gdx.app.log("BackProcessor.keyDown", "Back, screen.class=" + game.getScreen().getClass().getName());
+			if (game.getScreen() instanceof GameScreen) {
+				Level.Head lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(null);
+		    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
+			}
 			if (!(game.getScreen() instanceof MainMenuScreen)) {
 				game.setMainMenuScreen();
 			}

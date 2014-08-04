@@ -17,6 +17,7 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.game.TimeIsUpListener;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.UI;
 
@@ -32,6 +33,9 @@ public class TimeUpOverlay implements TimeIsUpListener {
     
     @Override
     public boolean timeIsUp() {
+    	Level.Head lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
+    	
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         
@@ -50,7 +54,10 @@ public class TimeUpOverlay implements TimeIsUpListener {
         restartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel();
+            	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file.path();
+            	Assets.unload(levelPath);
+            	
+                Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
                 Loader.loadLevel(levelHead);
             }
         });
