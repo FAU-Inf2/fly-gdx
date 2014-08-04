@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
-import de.fau.cs.mad.fly.game.IntegerTimeListener;
 import de.fau.cs.mad.fly.game.ScoreChangeListener;
 
 /**

@@ -82,5 +82,5 @@ public final class UI {
         
         /** Style used for settings button in main menu */
         public static final String SETTING_BUTTON_STYLE = "settings";
-    }    
+    }
 }
