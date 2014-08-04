@@ -177,6 +177,8 @@ public class GameControllerBuilder {
                 @Override
                 public void onGatePassed(Gate passed) {
                     generator.addRandomGate(passed);
+                    int extraTime = generator.getExtraTime();
+                    timeController.addBonusTime(extraTime);
                 }
             });
         }

@@ -75,6 +75,10 @@ public class EndlessLevelGenerator {
 		return gates;
 	}
 	
+	public int getExtraTime() {
+		return (100 / currGate) + 5 ;
+	}
+	
 	/**
 	 * adds a randomly generated gate to the level
 	 * 
