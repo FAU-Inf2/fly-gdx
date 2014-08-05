@@ -5,6 +5,78 @@
             "ref": "space"
         },
         {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changePointsUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                20.0,
+                5.0
+            ],
+            "ref": "pointsUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeSteeringUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                20.0,
+                -5.0
+            ],
+            "ref": "steeringUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                20.0,
+                0.0
+            ],
+            "ref": "timeUpgrade"
+        },
+        {
             "euler": [
                 0.0,
                 -0.0,
@@ -66,11 +138,11 @@
             ],
             "ref": "speedUpgrade"
         },
-		{
+        {
             "angular_velocity": [
-                1.0,
+                2.0,
                 0.0,
-                2.0
+                1.0
             ],
             "euler": [
                 -90.0,
@@ -89,121 +161,19 @@
                 5.0
             ],
             "ref": "resizeGatesUpgrade"
-        },
-		{
-            "angular_velocity": [
-                1.0,
-                0.0,
-                2.0
-            ],
-            "euler": [
-                -90.0,
-                0.0,
-                0.0
-            ],
-            "id": "changePointsUpgrade",
-            "linear_velocity": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "position": [
-                -3.0,
-                20.0,
-                5.0
-            ],
-            "ref": "pointUpgrade"
-        },
-        {
-            "angular_velocity": [
-                1.0,
-                2.0,
-                0.0
-            ],
-            "euler": [
-                -90.0,
-                0.0,
-                0.0
-            ],
-            "id": "changeTimeUpgrade",
-            "linear_velocity": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "position": [
-                -3.0,
-                20.0,
-                0.0
-            ],
-            "ref": "timeUpgrade"
-        },
-		{
-            "angular_velocity": [
-                1.0,
-                2.0,
-                0.0
-            ],
-            "euler": [
-                -90.0,
-                0.0,
-                0.0
-            ],
-            "id": "changeSteeringUpgrade",
-            "linear_velocity": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "position": [
-                -3.0,
-                20.0,
-                -5.0
-            ],
-            "ref": "steeringUpgrade"
         }
     ],
     "dependencies": {
         "asteroid": "asteroidBox",
         "hole": "torusHoleBox",
+        "pointsUpgrade": "pointsUpgrade",
+        "resizeGatesUpgrade": "resizeGatesUpgrade",
         "space": "spacesphere",
         "speedUpgrade": "speedUpgrade",
+        "steeringUpgrade": "steeringUpgrade",
         "timeUpgrade": "timeUpgrade",
-		"pointUpgrade": "pointUpgrade",
-		"resizeGatesUpgrade": "resizeGatesUpgrade",
-		"steeringUpgrade": "steeringUpgrade",
         "torus": "torusLowPoly"
     },
-	"upgrades": [
-		{
-			"type": "ChangePointsUpgrade",
-			"points": 150,
-            "display": "changePointsUpgrade"
-        },
-		{
-			"type": "ResizeGatesUpgrade",
-			"scale": [ 2.0, 2.0, 2.0 ],
-            "display": "resizeGatesUpgrade"
-        },
-		{
-			"type": "InstantSpeedUpgrade",
-			"speedFactor": 4.0,
-			"duration": 10.0,
-            "display": "instantSpeedUpgrade"
-        },
-		{
-			"type": "ChangeTimeUpgrade",
-			"time": 10.0,
-            "display": "changeTimeUpgrade"
-        },
-		{
-			"type": "ChangeSteeringUpgrade",
-			"roll": -1.0,
-			"azimuth": -1.0,
-			"duration": 10,
-            "display": "changeSteeringUpgrade"
-        }
-	],
     "gates": [
         {
             "successors": [
@@ -246,5 +216,39 @@
             "z": 0.0
         }
     },
-    "time": 30
+    "time": 30,
+    "upgrades": [
+        {
+            "display": "changePointsUpgrade",
+            "points": 150,
+            "type": "ChangePointsUpgrade"
+        },
+        {
+            "azimuth": -1.0,
+            "display": "changeSteeringUpgrade",
+            "duration": 10,
+            "roll": -1.0,
+            "type": "ChangeSteeringUpgrade"
+        },
+        {
+            "display": "changeTimeUpgrade",
+            "time": 10,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "display": "instantSpeedUpgrade",
+            "duration": 10,
+            "speedFactor": 4.0,
+            "type": "InstantSpeedUpgrade"
+        },
+        {
+            "display": "resizeGatesUpgrade",
+            "scale": [
+                2.0,
+                2.0,
+                2.0
+            ],
+            "type": "ResizeGatesUpgrade"
+        }
+    ]
 }
