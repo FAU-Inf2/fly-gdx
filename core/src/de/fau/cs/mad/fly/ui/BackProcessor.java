@@ -27,10 +27,11 @@ public class BackProcessor extends InputAdapter {
 				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(null);
 		    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
 			}
-			if (!(game.getScreen() instanceof MainMenuScreen)) {
+			if (game.getScreen() instanceof LevelChooserScreen) {
+				game.setLevelGroupScreen();
+			} else if (!(game.getScreen() instanceof MainMenuScreen)) {
 				game.setMainMenuScreen();
-			}
-			else {
+			} else {
 				Gdx.app.exit();
 			}
 			return true;

@@ -8,10 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
+import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
+import de.fau.cs.mad.fly.ui.LevelGroupScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.SplashScreen;
@@ -31,6 +33,7 @@ import de.fau.cs.mad.fly.ui.mainMenu.MainMenuScreen;
  */
 public class Fly extends Game {
     private SplashScreen splashScreen;
+    private LevelGroupScreen levelGroupScreen;
     private LevelChooserScreen levelChooserScreen;
     private MainMenuScreen mainMenuScreen;
     private SettingScreen settingScreen;
@@ -54,8 +57,10 @@ public class Fly extends Game {
 			}
 		}).start();
         
-        setMainMenuScreen();
+        LevelManager.createLevelManager();
         
+        setMainMenuScreen();
+
         // disabled for debugging reasons
         // setSplashScreen();
     }
@@ -78,6 +83,7 @@ public class Fly extends Game {
         FlyDBManager.getInstance().dispose();
         
         disposeScreen(splashScreen);
+        disposeScreen(levelGroupScreen);
         disposeScreen(levelChooserScreen);
         disposeScreen(mainMenuScreen);
         disposeScreen(settingScreen);
@@ -109,12 +115,23 @@ public class Fly extends Game {
     }
     
     /**
+     * Lazy loading of screen to choose level group.
+     */
+    public void setLevelGroupScreen() {
+        if (levelGroupScreen == null) {
+            levelGroupScreen = new LevelGroupScreen();
+        }
+        setScreen(levelGroupScreen);
+    }
+    
+    /**
      * Lazy loading of screen to choose level.
      */
-    public void setLevelChoosingScreen() {
+    public void setLevelChooserScreen(LevelManager.LevelGroup group) {
         if (levelChooserScreen == null) {
             levelChooserScreen = new LevelChooserScreen();
         }
+        levelChooserScreen.setGroup(group);
         setScreen(levelChooserScreen);
     }
     

@@ -12,74 +12,134 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import de.fau.cs.mad.fly.res.Level;
 
-/*
+/**
  * Manage all levels and current level.
- * not used yet
  * 
  * 
  * @author Qufang Fan
  */
 public class LevelManager {
+	
+	/**
+	 * Level group with a specific name and a list of levels which belong to the level group.
+	 * 
+	 * @author Tobi
+	 *
+	 */
+	public class LevelGroup {
+		public String name;
+		public List<Level.Head> levels;
+	}
 
 	private LevelManager() {
+		loadLevelGroups("levels/");
 	}
+	
+	/**
+	 * Comparator for the level heads.
+	 */
+	private Comparator<Level.Head> levelComparator = new Comparator<Level.Head>() {
+		@Override
+		public int compare(Level.Head first, Level.Head second){
+		    if(first.id < second.id) {
+		    	return -1;
+		    } else if(first.id > second.id) {
+		    	return 1;
+		    }
+		    return 0;
+		}
+    };
 
 	private Level.Head chosenLevel;
 
-	private static LevelManager Instance = new LevelManager();
+	private static LevelManager instance;
 
 	public static LevelManager getInstance() {
-		return Instance;
+		return instance;
+	}
+	
+	/**
+	 * Creates the level manager singleton instance.
+	 */
+	public static void createLevelManager() {
+		instance = new LevelManager();
 	}
 
 	private JsonReader reader = new JsonReader();
 
-	private List<Level.Head> levels = null;
-
 	/**
-	 * Creates the level list by parsing the level directory if its not already created.
-	 * 
-	 * @return sorted list of levels by id.
+	 * List of level groups.
 	 */
-	public List<Level.Head> getLevelList() {
-		if (levels == null) {
-			levels = new ArrayList<Level.Head>();
-			FileHandle dirHandle = Gdx.files.internal("levels/");
-			readLevelDirectories(levels, dirHandle);
-			Collections.sort(levels, new Comparator<Level.Head>() {
-				@Override
-				public int compare(Level.Head first, Level.Head second){
-				    if(first.id < second.id) {
-				    	return -1;
-				    } else if(first.id > second.id) {
-				    	return 1;
-				    }
-				    return 0;
-				}
-		    });
+	private List<LevelGroup> levelGroups = null;
+	
+	/**
+	 * List of all the levels of all level groups.
+	 */
+	// TODO: use levelGroups instead for everything.
+	private List<Level.Head> levels = null;
+	
+	/**
+	 * Reads the main folder for the level and opens the sub directories to create level groups.
+	 * 
+	 * @param folder		The main folder for the levels.
+	 */
+	private void loadLevelGroups(String folder) {
+		levelGroups = new ArrayList<LevelGroup>();
+		levels = new ArrayList<Level.Head>();
+		
+		FileHandle dirHandle = Gdx.files.internal(folder);
+		for (FileHandle handle : dirHandle.list()) {
+			if(handle.isDirectory()) {
+				readLevels(handle);
+			}
 		}
-		return levels;
+		
+		Collections.sort(levels, levelComparator);
 	}
 	
 	/**
-	 * Recursively parses the level directory and stores the levels in the list.
+	 * Reads all levels of the current directory and puts them in one level group.
 	 * 
-	 * @param levels		The list to store the levels.
-	 * @param dirHandle		The handle to the current directory.
+	 * @param dirHandle		The current directory.
 	 */
-	private void readLevelDirectories(List<Level.Head> levels, FileHandle dirHandle) {
+	private void readLevels(FileHandle dirHandle) {
+		LevelGroup group = new LevelGroup();
+		group.name = dirHandle.name();
+		group.levels = new ArrayList<Level.Head>();
+		
 		for (FileHandle handle : dirHandle.list()) {
-			if(handle.isDirectory()) {
-				readLevelDirectories(levels, handle);
-			} else {
+			if(!handle.isDirectory()) {
 				JsonValue json = reader.parse(handle);
 				Level.Head levelHead = new Level.Head();
 				levelHead.name = json.getString("name");
 				levelHead.id = json.getInt("id");
 				levelHead.file = handle;
+				group.levels.add(levelHead);
 				levels.add(levelHead);
 			}
 		}
+		
+		Collections.sort(group.levels, levelComparator);
+		System.out.println(group.name + ": " + group.levels);
+		levelGroups.add(group);
+	}
+	
+	/**
+	 * Getter) for the level group list.
+	 * 
+	 * @return list of level groups.
+	 */
+	public List<LevelGroup> getLevelGroups() {
+		return levelGroups;
+	}
+	
+	/**
+	 * Getter for the level list of a specific level group.
+	 * 
+	 * @return list of levels.
+	 */
+	public List<Level.Head> getLevelList() {
+		return levels;
 	}
 
 	public String getLevelName(int levelID) {
@@ -91,14 +151,14 @@ public class LevelManager {
 		return Integer.toString(levelID);
 	}
 
-	public Level.Head getChosedLevel() {
+	public Level.Head getChosenLevel() {
 		if (chosenLevel == null) {
 			chosenLevel = getLevelList().get(0);
 		}
 		return chosenLevel;
 	}
 
-	public void setChosedLevel(Level.Head levelHead) {
+	public void setChosenLevel(Level.Head levelHead) {
 		chosenLevel = levelHead;
 	}
 

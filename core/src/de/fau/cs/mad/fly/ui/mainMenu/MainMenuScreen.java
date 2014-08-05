@@ -13,8 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
-import de.fau.cs.mad.fly.db.FlyDBManager;
-import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.LevelManager;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -39,8 +37,6 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
      * Includes buttons for Start, Options, Help, Exit.
      */
     protected void generateContent() {
-        // Search for all levels and put them in a list
-        LevelManager.getInstance().getLevelList();
         // Create an instance of the PlayerManager, which needs an access to the
         // database
 		
@@ -80,7 +76,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         chooseLevelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setLevelChoosingScreen();
+                ((Fly) Gdx.app.getApplicationListener()).setLevelGroupScreen();
             }
         });
         
