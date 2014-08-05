@@ -69,35 +69,24 @@ public class PlaneManager {
 		return chosenPlane;
 	}
 	
-	public IPlane.Head getNextPlane(boolean left) {
-		//Gdx.app.log("getNextPlane", "Anfang: " + TimeUtils.nanoTime());
-		Gdx.app.log("getNextPlane", Long.toString(TimeUtils.nanoTime()));
+	public IPlane.Head getNextPlane(int left) {
 		if(chosenPlane == null) {
 			chosenPlane = getSpaceshipList().get(0);
 		}
-		//Gdx.app.log("getNextPlane", "after if: " + TimeUtils.nanoTime());
-		Gdx.app.log("getNextPlane", Long.toString(TimeUtils.nanoTime()));
 		
 		int chosenPlaneId = chosenPlane.id - 1;
-		if(left) {
-			chosenPlaneId--;
-			if(chosenPlaneId < 0) {
-				chosenPlaneId += planes.size();
-			}
-		} else {
-			chosenPlaneId++;
-			if(chosenPlaneId >= planes.size()) {
-				chosenPlaneId -= planes.size();
-			}
+		
+		chosenPlaneId -= left;
+		if(chosenPlaneId < 0) {
+			chosenPlaneId += planes.size();
+		} else if(chosenPlaneId >= planes.size()) {
+			chosenPlaneId -= planes.size();
 		}
+		
 		chosenPlane = getSpaceshipList().get(chosenPlaneId);
-		//Gdx.app.log("getNextPlane", "after get: " + TimeUtils.nanoTime());
-		Gdx.app.log("getNextPlane", Long.toString(TimeUtils.nanoTime()));
 		
 		//((Fly) Gdx.app.getApplicationListener()).getGameController().getPlayer().setPlane(new Spaceship(chosenPlane));
 		PlayerProfileManager.getInstance().getCurrentPlayerProfile().setPlane(chosenPlane);
-		//Gdx.app.log("getNextPlane", "after setPlane: " + TimeUtils.nanoTime());
-		Gdx.app.log("getNextPlane", Long.toString(TimeUtils.nanoTime()));
 		
 		return chosenPlane;
 	}
