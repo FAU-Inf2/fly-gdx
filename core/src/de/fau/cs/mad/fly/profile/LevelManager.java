@@ -27,6 +27,7 @@ public class LevelManager {
 	 *
 	 */
 	public class LevelGroup {
+		public int id;
 		public String name;
 		public List<Level.Head> levels;
 	}
@@ -41,6 +42,21 @@ public class LevelManager {
 	private Comparator<Level.Head> levelComparator = new Comparator<Level.Head>() {
 		@Override
 		public int compare(Level.Head first, Level.Head second){
+		    if(first.id < second.id) {
+		    	return -1;
+		    } else if(first.id > second.id) {
+		    	return 1;
+		    }
+		    return 0;
+		}
+    };
+    
+	/**
+	 * Comparator for the level groups.
+	 */
+	private Comparator<LevelGroup> levelGroupComparator = new Comparator<LevelGroup>() {
+		@Override
+		public int compare(LevelGroup first, LevelGroup second){
 		    if(first.id < second.id) {
 		    	return -1;
 		    } else if(first.id > second.id) {
@@ -95,6 +111,7 @@ public class LevelManager {
 		}
 		
 		Collections.sort(levels, levelComparator);
+		Collections.sort(levelGroups, levelGroupComparator);
 	}
 	
 	/**
@@ -103,24 +120,29 @@ public class LevelManager {
 	 * @param dirHandle		The current directory.
 	 */
 	private void readLevels(FileHandle dirHandle) {
-		LevelGroup group = new LevelGroup();
+		LevelGroup group = new LevelGroup();		
 		group.name = dirHandle.name();
+		group.id = 0;
 		group.levels = new ArrayList<Level.Head>();
 		
 		for (FileHandle handle : dirHandle.list()) {
 			if(!handle.isDirectory()) {
 				JsonValue json = reader.parse(handle);
-				Level.Head levelHead = new Level.Head();
-				levelHead.name = json.getString("name");
-				levelHead.id = json.getInt("id");
-				levelHead.file = handle;
-				group.levels.add(levelHead);
-				levels.add(levelHead);
+				if(handle.name().equals("group.json")) {
+					group.name = json.getString("name");
+					group.id = json.getInt("id");
+				} else {
+					Level.Head levelHead = new Level.Head();
+					levelHead.name = json.getString("name");
+					levelHead.id = json.getInt("id");
+					levelHead.file = handle;
+					group.levels.add(levelHead);
+					levels.add(levelHead);
+				}
 			}
 		}
 		
 		Collections.sort(group.levels, levelComparator);
-		System.out.println(group.name + ": " + group.levels);
 		levelGroups.add(group);
 	}
 	

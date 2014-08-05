@@ -44,7 +44,7 @@ public class LevelGroupScreen extends BasicScreen {
 			// fill a row with buttons
 			for (int column = 0; column < maxColumns; column++) {
 				final LevelManager.LevelGroup group = levelGroups.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
-				final TextButton button = new TextButton(group.name + "/", skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
+				final TextButton button = new TextButton(group.name, skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
 				button.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
