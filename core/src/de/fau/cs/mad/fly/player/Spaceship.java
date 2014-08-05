@@ -1,6 +1,7 @@
 package de.fau.cs.mad.fly.player;
 
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -46,6 +47,12 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	private float speed;
 	private float azimuthSpeed;
 	private float rollingSpeed;
+	private IPlane.Head head;
+	
+	public Spaceship(IPlane.Head head) {
+		this.head = head;
+		this.modelRef = head.modelRef;
+	}
 	
 	public Spaceship(String modelRef) {
 		this.modelRef = modelRef;
@@ -61,9 +68,11 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 		
 		resetSpeed();
 		
-		Assets.load(Assets.spaceship);
+		//Assets.load(Assets.spaceship);
+		String ref = "models/planes/" + modelRef + "/" + modelRef;
+		Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
 		
-		GameModel model = Assets.manager.get(modelRef, GameModel.class);
+		GameModel model = Assets.manager.get(ref, GameModel.class);
 		
 		instance = new GameObject(model, "spaceship");
 
@@ -108,6 +117,11 @@ public class Spaceship implements IPlane, IFeatureLoad, IFeatureInit, IFeatureUp
 	@Override
 	public GameObject getInstance() {
 		return instance;
+	}
+
+	@Override
+	public Head getHead() {
+		return head;
 	}
 
 	@Override

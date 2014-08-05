@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.player;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Vector3;
 
@@ -17,6 +18,17 @@ import de.fau.cs.mad.fly.game.GameObject;
  * 
  */
 public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFeatureRender, IFeatureDispose {
+	public static class Head {
+        public int id;
+        public String name;
+        public String modelRef;
+        public float speed;
+        public float rollingSpeed;
+        public float azimuthSpeed;
+        public int lives;
+        public FileHandle file;
+    }
+	
 	/**
 	 * Setter for the parameter which indicates whether the plane should fly curves or roll
 	 * @param rolling
@@ -28,6 +40,12 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	 * @return GameObject
 	 */
 	public GameObject getInstance();
+	
+	/**
+	 * Getter for the head
+	 * @return the head of the plane
+	 */
+	public IPlane.Head getHead();
 	
 	/**
 	 * Getter for the model.

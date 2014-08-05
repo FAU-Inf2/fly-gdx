@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.profile;
 
 import java.util.List;
 
+import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
@@ -26,6 +27,11 @@ public class PlayerProfile {
 	 * The level the player is currently playing.
 	 */
 	private Level level;
+
+	/**
+	 * The plane the player is currently flying.
+	 */
+	private IPlane.Head plane;
 	
 	/**
 	 * The name of the player profile.
@@ -178,6 +184,22 @@ public class PlayerProfile {
 	 */
 	public Level getLevel() {
 		return level;
+	}
+
+	/**
+	 * Setter for the current plane the player is flying.
+	 * @param p
+	 */
+	public void setPlane(IPlane.Head p) {
+		this.plane = p;
+	}
+
+	/**
+	 * Getter for the current plane the player is flying.
+	 * @return plane
+	 */
+	public IPlane.Head getPlane() {
+		return plane;
 	}
 	
 	/**

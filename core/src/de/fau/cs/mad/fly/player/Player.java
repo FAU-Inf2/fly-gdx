@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.player;
 
+import de.fau.cs.mad.fly.profile.PlaneManager;
+
 /**
  * The player in the level.
  * <p>
@@ -24,8 +26,9 @@ public class Player {
     public Player() {
     	// this.plane = ...PlayerProfile.getCurrentPlane()
     	
-        this.plane = new Spaceship("spaceship");
-        setLives(1);
+    	this.plane = new Spaceship(PlaneManager.getInstance().getChosenPlane());
+        //this.plane = new Spaceship("spaceship");
+        setLives(plane.getHead().lives);
         //resetLives();
     }
 	

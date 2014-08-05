@@ -14,6 +14,7 @@ import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LevelGroupScreen;
+import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.SplashScreen;
@@ -35,6 +36,7 @@ public class Fly extends Game {
     private SplashScreen splashScreen;
     private LevelGroupScreen levelGroupScreen;
     private LevelChooserScreen levelChooserScreen;
+    private PlaneChooserScreen planeChooserScreen;
     private MainMenuScreen mainMenuScreen;
     private SettingScreen settingScreen;
     private StatisticsScreen statisticsScreen;
@@ -85,6 +87,7 @@ public class Fly extends Game {
         disposeScreen(splashScreen);
         disposeScreen(levelGroupScreen);
         disposeScreen(levelChooserScreen);
+        disposeScreen(planeChooserScreen);
         disposeScreen(mainMenuScreen);
         disposeScreen(settingScreen);
         disposeScreen(statisticsScreen);
@@ -133,6 +136,16 @@ public class Fly extends Game {
         }
         levelChooserScreen.setGroup(group);
         setScreen(levelChooserScreen);
+    }
+    
+    /**
+     * Lazy loading of screen to choose plane.
+     */
+    public void setPlaneChoosingScreen() {
+        if (planeChooserScreen == null) {
+        	planeChooserScreen = new PlaneChooserScreen();
+        }
+        setScreen(planeChooserScreen);
     }
     
     /**

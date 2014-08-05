@@ -50,6 +50,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
         final Button continueButton = new TextButton(I18n.t("play"), textButtonStyle);
         final Button chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
+        final Button choosePlaneButton = new TextButton("choose Plane", textButtonStyle);
         final Button statsButton = new TextButton(I18n.t("highscores"), textButtonStyle);
         final ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
         
@@ -70,6 +71,10 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         table.add();
         table.row().expand();
         table.add();
+        table.add(choosePlaneButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        table.add();
+        table.row().expand();
+        table.add();
         table.add(statsButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         table.row().expand();
         
@@ -77,6 +82,14 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ((Fly) Gdx.app.getApplicationListener()).setLevelGroupScreen();
+            }
+        });
+        
+        choosePlaneButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((Fly) Gdx.app.getApplicationListener()).setPlaneChoosingScreen();
+            	
             }
         });
         
