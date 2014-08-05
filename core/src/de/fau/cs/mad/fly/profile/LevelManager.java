@@ -1,6 +1,7 @@
 package de.fau.cs.mad.fly.profile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class LevelManager {
 			levels = new ArrayList<Level.Head>();
 			FileHandle dirHandle = Gdx.files.internal("levels/");
 			readLevelDirectories(levels, dirHandle);
-			levels.sort(new Comparator<Level.Head>() {
+			Collections.sort(levels, new Comparator<Level.Head>() {
 				@Override
 				public int compare(Level.Head first, Level.Head second){
 				    if(first.id < second.id) {
