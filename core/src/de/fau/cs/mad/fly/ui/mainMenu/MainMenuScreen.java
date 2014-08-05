@@ -50,7 +50,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
         final Button continueButton = new TextButton(I18n.t("play"), textButtonStyle);
         final Button chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
-        final Button choosePlaneButton = new TextButton("choose Plane", textButtonStyle);
+        final Button choosePlaneButton = new TextButton(I18n.t("choose.plane"), textButtonStyle);
         final Button statsButton = new TextButton(I18n.t("highscores"), textButtonStyle);
         final ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
         
