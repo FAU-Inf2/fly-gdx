@@ -1,0 +1,131 @@
+{
+    "class": "",
+    "components": [
+        {
+            "id": "space",
+            "ref": "space"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -5.0,
+                20.0,
+                0.0
+            ],
+            "ref": "timeUpgrade"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.000hole",
+            "ref": "hole",
+            "visible": false
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                70.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.001hole",
+            "ref": "hole",
+            "visible": false
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "hole": "torusHoleBox",
+        "pointsUpgrade": "pointsUpgrade",
+        "resizeGatesUpgrade": "resizeGatesUpgrade",
+        "space": "spacesphere",
+        "speedUpgrade": "speedUpgrade",
+        "steeringUpgrade": "steeringUpgrade",
+        "timeUpgrade": "timeUpgrade",
+        "torus": "torus"
+    },
+    "gates": [
+        {
+            "successors": [
+                0
+            ]
+        },
+        {
+            "display": "Gate.000",
+            "goal": "Gate.000hole",
+            "id": 0,
+            "successors": [
+                1
+            ]
+        },
+        {
+            "display": "Gate.001",
+            "goal": "Gate.001hole",
+            "id": 1,
+            "successors": []
+        }
+    ],
+    "id": 22,
+    "name": "Time Tutorial",
+    "scripts": [],
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": -0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 20,
+    "upgrades": [
+        {
+            "display": "changeTimeUpgrade",
+            "time": 20,
+            "type": "ChangeTimeUpgrade"
+        }
+    ]
+}
