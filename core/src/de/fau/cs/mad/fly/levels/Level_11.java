@@ -30,12 +30,6 @@ public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener
 		
 		FlyingObjects asteroidBelt = new FlyingObjects("asteroid", 10, "asteroid", new Vector3(20.0f, 20.0f, 20.0f));
 		builder.addFeatureToLists(asteroidBelt);
-
-		builder.addFeatureToLists(new InstantSpeedUpgradeHandler());
-		builder.addFeatureToLists(new ChangeTimeUpgradeHandler());
-		builder.addFeatureToLists(new ChangePointsUpgradeHandler());
-		builder.addFeatureToLists(new ResizeGatesUpgradeHandler());
-		builder.addFeatureToLists(new ChangeSteeringUpgradeHandler());
 	}
 
 	@Override

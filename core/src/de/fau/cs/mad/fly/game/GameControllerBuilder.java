@@ -34,6 +34,12 @@ import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeUpOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
+import de.fau.cs.mad.fly.features.upgrades.ChangePointsUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.ChangeSteeringUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.LinearSpeedUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.ResizeGatesUpgradeHandler;
 import de.fau.cs.mad.fly.levels.DefaultLevel;
 import de.fau.cs.mad.fly.levels.ILevel;
 import de.fau.cs.mad.fly.levels.Level_11;
@@ -187,6 +193,8 @@ public class GameControllerBuilder {
         
         checkAndAddSettingFeatures();
         
+        checkAndAddUpgradeHandler();
+        
         addLevelFeatures(level);
         
         return this;
@@ -231,6 +239,46 @@ public class GameControllerBuilder {
             });
         }
         addGameFinishedOverlay();
+    }
+    
+    /**
+     * Checks the level upgrades and adds the corresponding handler to the game controller.
+     */
+    private void checkAndAddUpgradeHandler() {
+    	if(checkUpgrade("InstantSpeedUpgrade")) {
+    		addFeatureToLists(new InstantSpeedUpgradeHandler());
+    	}
+    	if(checkUpgrade("ChangeTimeUpgrade")) {
+    		addFeatureToLists(new ChangeTimeUpgradeHandler());
+    	}
+    	if(checkUpgrade("ChangePointsUpgrade")) {
+    		addFeatureToLists(new ChangePointsUpgradeHandler());
+    	}
+    	if(checkUpgrade("ResizeGatesUpgrade")) {
+    		addFeatureToLists(new ResizeGatesUpgradeHandler());
+    	}
+    	if(checkUpgrade("ChangeSteeringUpgrade")) {
+    		addFeatureToLists(new ChangeSteeringUpgradeHandler());
+    	}
+    	if(checkUpgrade("LinearSpeedUpgrade")) {
+    		addFeatureToLists(new LinearSpeedUpgradeHandler());
+    	}
+    }
+    
+    /**
+     * Checks in the upgrade list if it contains an upgrade with the specified type.
+     * 
+     * @param type			The type to check for.
+     * @return true, if it contains an upgrade, false otherwise.
+     */
+    private boolean checkUpgrade(String type) {
+    	int size = level.getUpgrades().size();
+    	for(int i = 0; i < size; i++) {
+    		if(level.getUpgrades().get(i).getType().equals(type)) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
     
     /**
