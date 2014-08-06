@@ -7,6 +7,25 @@
         },
         {
             "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "Cube",
+            "position": [
+                5.0,
+                20.0,
+                2.0
+            ],
+            "ref": "arrow",
+            "scale": [
+                0.5,
+                0.5,
+                0.5
+            ]
+        },
+        {
+            "euler": [
                 0.0,
                 -0.0,
                 0.0
@@ -69,6 +88,7 @@
         }
     ],
     "dependencies": {
+        "arrow": "arrow",
         "asteroid": "asteroid",
         "hole": "torusHoleBox",
         "pointsUpgrade": "pointsUpgrade",
