@@ -1,5 +1,5 @@
 {
-    "class": "",
+    "class": "tutorials.SpeedTutorialLevel",
     "components": [
         {
             "id": "space",
