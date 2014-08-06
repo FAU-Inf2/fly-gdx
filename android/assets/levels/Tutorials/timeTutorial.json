@@ -5,6 +5,25 @@
             "id": "space",
             "ref": "space"
         },
+		{
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "IndicatorArrow",
+            "position": [
+                -5.0,
+                20.0,
+                2.0
+            ],
+            "ref": "arrow",
+            "scale": [
+                0.6,
+                0.6,
+                0.6
+            ]
+        },
         {
             "angular_velocity": [
                 1.0,
@@ -69,6 +88,7 @@
         }
     ],
     "dependencies": {
+	    "arrow": "arrow",
         "asteroid": "asteroid",
         "hole": "torusHoleBox",
         "pointsUpgrade": "pointsUpgrade",
