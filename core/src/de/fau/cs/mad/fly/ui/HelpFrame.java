@@ -49,4 +49,13 @@ public abstract class HelpFrame {
      * current visible content.
      */
     public abstract void render();
+    
+    /**
+     * Method that is called before the first render call is done. Makes sure
+     * that everything that is necessary for creating the content is already
+     * properly positioned.
+     */
+    public void generateContent() {
+        
+    }
 }

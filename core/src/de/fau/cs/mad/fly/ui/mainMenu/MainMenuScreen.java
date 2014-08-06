@@ -30,6 +30,10 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
     
     private HelpOverlayMainMenu helpOverlay;
     private boolean showHelpScreen = false;
+    Button continueButton;
+    Button chooseLevelButton;
+    Button choosePlaneButton;
+    Button statsButton;
     
     /**
      * Adds the main menu to the main menu screen.
@@ -48,10 +52,10 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         stage.addActor(table);
         
         TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
-        final Button continueButton = new TextButton(I18n.t("play"), textButtonStyle);
-        final Button chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
-        final Button choosePlaneButton = new TextButton(I18n.t("choose.plane"), textButtonStyle);
-        final Button statsButton = new TextButton(I18n.t("highscores"), textButtonStyle);
+        continueButton = new TextButton(I18n.t("play"), textButtonStyle);
+        chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
+        choosePlaneButton = new TextButton(I18n.t("choose.plane"), textButtonStyle);
+        statsButton = new TextButton(I18n.t("highscores"), textButtonStyle);
         final ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
         
         textButtonStyle = skin.get(UI.Buttons.BIG_FONT_SIZE_STYLE, TextButtonStyle.class);
@@ -114,6 +118,11 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         });
         
         this.helpOverlay = new HelpOverlayMainMenu(skin, this);
+        helpOverlay.addFrame("helpPlay", continueButton);
+        helpOverlay.addFrame("helpSelectLevel", chooseLevelButton);
+        helpOverlay.addFrame("helpSelectShip", choosePlaneButton);
+        helpOverlay.addFrame("helpHighscore", statsButton);
+        
         helpButton.addListener(helpOverlay);
         showHelpScreen = false;
         
