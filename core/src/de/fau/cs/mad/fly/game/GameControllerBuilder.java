@@ -40,6 +40,7 @@ import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.LinearSpeedUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.ResizeGatesUpgradeHandler;
+import de.fau.cs.mad.fly.graphics.FlyShaderProvider;
 import de.fau.cs.mad.fly.levels.DefaultLevel;
 import de.fau.cs.mad.fly.levels.ILevel;
 import de.fau.cs.mad.fly.levels.Level_11;
@@ -513,7 +514,7 @@ public class GameControllerBuilder {
         gc.flightController = flightController;
         gc.cameraController = cameraController;
         gc.batch = new ModelBatch();
-        //gc.batch = new ModelBatch(null, new FlyShaderProvider(), null);
+//        gc.batch = new ModelBatch(null, new FlyShaderProvider(), null);
         gc.setTimeController(timeController);
         gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));

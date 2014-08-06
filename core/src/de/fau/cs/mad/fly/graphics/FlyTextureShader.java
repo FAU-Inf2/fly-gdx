@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -18,7 +19,7 @@ public class FlyTextureShader implements Shader {
 	private ShaderProgram program;
 	private Camera camera;
 	private RenderContext context;
-	private int u_ProjViewTrans, u_worldTrans, texture1;
+	private int u_ProjViewTrans, u_worldTrans, u_specularColor, texture1;
 
 	@Override
 	public void init() {
@@ -31,6 +32,7 @@ public class FlyTextureShader implements Shader {
 
 		u_ProjViewTrans = program.getUniformLocation("u_projViewTrans");
 		u_worldTrans = program.getUniformLocation("u_worldTrans");
+        u_specularColor = program.getUniformLocation("u_specularColor");
 		texture1 = program.getUniformLocation("texture1");
 	}
 
@@ -57,7 +59,10 @@ public class FlyTextureShader implements Shader {
 
 	@Override
 	public void render(Renderable renderable) {
-		program.setUniformMatrix(u_worldTrans, renderable.worldTransform);
+		//Set uniforms
+        program.setUniformMatrix(u_worldTrans, renderable.worldTransform);
+        program.setUniformf(u_specularColor, ((ColorAttribute) renderable.material.get(ColorAttribute.Specular)).color);
+        //Bind texture
 		((TextureAttribute) renderable.material.get(TextureAttribute.Diffuse)).textureDescription.texture.bind(0);
 		program.setUniformi(texture1, 0);
 		renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize);
