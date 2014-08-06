@@ -4,11 +4,6 @@ import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.game.FlyingObjects;
-import de.fau.cs.mad.fly.features.upgrades.ChangePointsUpgradeHandler;
-import de.fau.cs.mad.fly.features.upgrades.ChangeSteeringUpgradeHandler;
-import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
-import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgradeHandler;
-import de.fau.cs.mad.fly.features.upgrades.ResizeGatesUpgradeHandler;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.game.IntegerTimeListener;
