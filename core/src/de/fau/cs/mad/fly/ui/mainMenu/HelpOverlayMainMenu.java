@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -17,11 +18,14 @@ public class HelpOverlayMainMenu extends ClickListener implements InputProcessor
     private final ArrayList<HelpFrame> helpFrames;
     private int currentHelpFrame;
     
-    public HelpOverlayMainMenu(Skin skin, WithHelpScreen backListener) {
-        this.backListener = backListener;
+    public HelpOverlayMainMenu(Skin skin, MainMenuScreen mainMenuScreen) {
+        this.backListener = mainMenuScreen;
         helpFrames = new ArrayList<HelpFrame>();
         helpFrames.add(new HelpFrameMainMenuWelcome(skin));
-        helpFrames.add(new HelpFrameMainMenuPlay(skin));
+        
+        Button playButton = mainMenuScreen.continueButton;
+        helpFrames.add(new HelpFrameMainMenuPlay(skin, playButton));
+        
         helpFrames.add(new HelpFrameMainMenuSelectLevel(skin));
         helpFrames.add(new HelpFrameMainMenuSettings(skin));
         helpFrames.add(new HelpFrameMainMenuEnd(skin));
@@ -31,6 +35,7 @@ public class HelpOverlayMainMenu extends ClickListener implements InputProcessor
     public void switchFrameOrQuit() {
         if(currentHelpFrame < helpFrames.size()-1) {
             currentHelpFrame++;
+            helpFrames.get(currentHelpFrame).generateContent();
         }
         else {
             currentHelpFrame = 0;

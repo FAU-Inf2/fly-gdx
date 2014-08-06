@@ -30,6 +30,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
     
     private HelpOverlayMainMenu helpOverlay;
     private boolean showHelpScreen = false;
+    Button continueButton;
     
     /**
      * Adds the main menu to the main menu screen.
@@ -48,7 +49,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         stage.addActor(table);
         
         TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
-        final Button continueButton = new TextButton(I18n.t("play"), textButtonStyle);
+        continueButton = new TextButton(I18n.t("play"), textButtonStyle);
         final Button chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
         final Button choosePlaneButton = new TextButton(I18n.t("choose.plane"), textButtonStyle);
         final Button statsButton = new TextButton(I18n.t("highscores"), textButtonStyle);
