@@ -513,6 +513,7 @@ public class GameControllerBuilder {
         gc.flightController = flightController;
         gc.cameraController = cameraController;
         gc.batch = new ModelBatch();
+        //gc.batch = new ModelBatch(null, new FlyShaderProvider(), null);
         gc.setTimeController(timeController);
         gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
