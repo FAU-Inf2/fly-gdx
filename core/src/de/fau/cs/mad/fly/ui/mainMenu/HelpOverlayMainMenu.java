@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -17,19 +17,21 @@ public class HelpOverlayMainMenu extends ClickListener implements InputProcessor
     private final WithHelpScreen backListener;
     private final ArrayList<HelpFrame> helpFrames;
     private int currentHelpFrame;
+    private Skin skin;
     
-    public HelpOverlayMainMenu(Skin skin, MainMenuScreen mainMenuScreen) {
-        this.backListener = mainMenuScreen;
+    public HelpOverlayMainMenu(Skin skin, WithHelpScreen screen) {
+        this.backListener = screen;
+        this.skin = skin;
         helpFrames = new ArrayList<HelpFrame>();
         helpFrames.add(new HelpFrameMainMenuWelcome(skin));
         
-        Button playButton = mainMenuScreen.continueButton;
-        helpFrames.add(new HelpFrameMainMenuPlay(skin, playButton));
-        
-        helpFrames.add(new HelpFrameMainMenuSelectLevel(skin));
         helpFrames.add(new HelpFrameMainMenuSettings(skin));
         helpFrames.add(new HelpFrameMainMenuEnd(skin));
         currentHelpFrame = 0;
+    }
+    
+    public void addFrame(String text, Actor actorToBeDescribed) {
+        helpFrames.add(new HelpFrameMainMenuPlay(skin, text, actorToBeDescribed));
     }
     
     public void switchFrameOrQuit() {

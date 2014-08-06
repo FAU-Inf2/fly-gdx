@@ -23,13 +23,16 @@ import de.fau.cs.mad.fly.ui.UI;
 public class HelpFrameMainMenuPlay extends HelpFrame {
     
     private final TextureRegion arrow;
-    private final Label helpToPlay;
+    private final Label helpingText;
+    /**X-Position of the arrow, has to be scaled, because used in render method*/
     private float arrowXPos;
+    /**Y-Position of the arrow, has to be scaled, because used in render method*/
     private float arrowYPos;
+    /**Rotation of the arrow in degree. With 0 arrow directs down*/
     private float arrowRotation;
+    /**Actor that is described by the helping text*/
     private final Actor actorToBeDescribed;
-    private final int DISTANCE_BETWEEN_ARROW_AND_LABEL = 20;
-    private final Table table;
+    private final Table helpingTextTable;
     private final int PADDING_OF_LABEL = 70;
     
     /**
@@ -37,21 +40,21 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
      * 
      * @param skin
      */
-    public HelpFrameMainMenuPlay(Skin skin, Actor actorToBeDescribed) {
+    public HelpFrameMainMenuPlay(Skin skin, String labelText, Actor actorToBeDescribed) {
         super.setupBatchAndStage();
         this.actorToBeDescribed = actorToBeDescribed;
         
         LabelStyle labelStyle = skin.get("black", LabelStyle.class);
-        helpToPlay = new Label(I18n.t("helpPlay"), labelStyle);
-        table = new Table();
+        helpingText = new Label(I18n.t(labelText), labelStyle);
+        helpingTextTable = new Table();
         final NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
-        table.setBackground(background);
-        table.row().expand();
-        table.add(helpToPlay);
-        table.row().expand();
+        helpingTextTable.setBackground(background);
+        helpingTextTable.row().expand();
+        helpingTextTable.add(helpingText);
+        helpingTextTable.row().expand();
         this.arrow = skin.getRegion("helpArrowDown");
         
-        stage.addActor(table);
+        stage.addActor(helpingTextTable);
     }
     
     @Override
@@ -60,23 +63,23 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
         float labelYPos;
         
         // check if above is possible
-        float minSpaceAbove = helpToPlay.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight();
+        float minSpaceAbove = helpingText.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight();
         // constant for above and below
         arrowXPos = 1900 / scalingFactor;
-        labelXPos = actorToBeDescribed.getX() + 0.5f * actorToBeDescribed.getWidth() - 0.5f * helpToPlay.getWidth();
+        labelXPos = actorToBeDescribed.getX() + 0.5f * actorToBeDescribed.getWidth() - 0.5f * helpingText.getWidth();
         
-        if (viewport.getWorldHeight() - (actorToBeDescribed.getY() + actorToBeDescribed.getHeight()) > minSpaceAbove) {
-            labelYPos = viewport.getWorldHeight() - actorToBeDescribed.getY();
-            arrowYPos = (helpToPlay.getCenterY() - helpToPlay.getHeight()) / scalingFactor;
+        if (viewport.getWorldHeight() - (actorToBeDescribed.getY() + actorToBeDescribed.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight()) > minSpaceAbove) {
+            arrowYPos = (actorToBeDescribed.getY() + actorToBeDescribed.getHeight()) / scalingFactor;
+            labelYPos = actorToBeDescribed.getY() + actorToBeDescribed.getHeight() + arrow.getRegionHeight() - PADDING_OF_LABEL;
             arrowRotation = 0;
         }
         // put help text below
         else {
-            arrowYPos = viewport.getWorldHeight() - actorToBeDescribed.getY() - arrow.getRegionHeight();
-            labelYPos = arrowYPos;
+            arrowYPos = (actorToBeDescribed.getY()) / scalingFactor;
+            labelYPos = actorToBeDescribed.getY() - arrow.getRegionHeight() - helpingText.getHeight() - 2*PADDING_OF_LABEL;
             arrowRotation = 180;
         }
-        table.setBounds(labelXPos - PADDING_OF_LABEL, labelYPos + PADDING_OF_LABEL, helpToPlay.getWidth() + PADDING_OF_LABEL, helpToPlay.getHeight() + PADDING_OF_LABEL);
+        helpingTextTable.setBounds(labelXPos - PADDING_OF_LABEL, labelYPos + PADDING_OF_LABEL, helpingText.getWidth() + PADDING_OF_LABEL, helpingText.getHeight() + PADDING_OF_LABEL);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
     
