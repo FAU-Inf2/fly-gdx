@@ -33,20 +33,13 @@ public class SkinManager implements Disposable {
 	 * Creates the skin for the UI.
 	 */
 	public void createSkin(String skinFile) {
-		Assets.load(Assets.font);
-
-		FreeTypeFontGenerator fontGenerator = Assets.manager.get(Assets.font);
-		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
 		Assets.load(Assets.textureAtlas);
         skin = new Skin(Assets.manager.get(Assets.textureAtlas));
 		
-		fontParameter.size = UI.Buttons.DEFAULT_FONT_SIZE;
-		BitmapFont buttonFont = fontGenerator.generateFont(fontParameter);
-		skin.add("default-font", buttonFont);
-		
-		fontParameter.size = UI.Buttons.HELP_BUTTON_FONT_SIZE;
-		buttonFont = fontGenerator.generateFont(fontParameter);
-		skin.add("help-button-font", buttonFont);
+		BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/OpenSans.fnt"), Gdx.files.internal("fonts/OpenSans_0.png"), false);
+		skin.add("default-font", font);
+		font = new BitmapFont(Gdx.files.internal("fonts/OpenSansBig.fnt"), Gdx.files.internal("fonts/OpenSansBig_0.png"), false);
+		skin.add("help-button-font", font);
 		
 		skin.load(Gdx.files.internal(skinFile));
 	}
