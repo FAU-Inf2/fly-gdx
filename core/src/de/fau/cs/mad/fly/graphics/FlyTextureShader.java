@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
@@ -19,7 +20,7 @@ public class FlyTextureShader implements Shader {
 	private ShaderProgram program;
 	private Camera camera;
 	private RenderContext context;
-	private int u_ProjViewTrans, u_worldTrans, u_specularColor, texture1;
+	private int u_ProjViewTrans, u_worldTrans, u_specularColor, u_ambientLight, texture1;
 
 	@Override
 	public void init() {
@@ -33,6 +34,7 @@ public class FlyTextureShader implements Shader {
 		u_ProjViewTrans = program.getUniformLocation("u_projViewTrans");
 		u_worldTrans = program.getUniformLocation("u_worldTrans");
         u_specularColor = program.getUniformLocation("u_specularColor");
+        u_ambientLight = program.getUniformLocation("u_ambientLight");
 		texture1 = program.getUniformLocation("texture1");
 	}
 
@@ -43,7 +45,7 @@ public class FlyTextureShader implements Shader {
 
 	@Override
 	public boolean canRender(Renderable instance) {
-		if(instance.material.get(TextureAttribute.Diffuse) != null) return true;
+		if(instance.environment != null && instance.material.has(TextureAttribute.Diffuse)) return true;
 		return false;
 	}
 
@@ -62,6 +64,11 @@ public class FlyTextureShader implements Shader {
 		//Set uniforms
         program.setUniformMatrix(u_worldTrans, renderable.worldTransform);
         program.setUniformf(u_specularColor, ((ColorAttribute) renderable.material.get(ColorAttribute.Specular)).color);
+        if(renderable.environment.has(ColorAttribute.AmbientLight)) {
+            program.setUniformf(u_ambientLight, ((ColorAttribute)renderable.environment.get(ColorAttribute.AmbientLight)).color);
+        } else {
+            program.setUniformf(u_ambientLight, Color.BLACK);
+        }
         //Bind texture
 		((TextureAttribute) renderable.material.get(TextureAttribute.Diffuse)).textureDescription.texture.bind(0);
 		program.setUniformi(texture1, 0);

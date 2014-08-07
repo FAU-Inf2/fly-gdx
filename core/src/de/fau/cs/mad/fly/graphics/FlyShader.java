@@ -28,7 +28,6 @@ public class FlyShader implements Shader {
     private int u_ProjViewTrans, u_worldTrans, u_diffuseColor, u_dirLightDirection, u_dirLightColor,
                 u_normalMatrix, u_shininess, u_cameraPosition, u_specularColor, u_ambientColor;
     private Matrix3 normalMatrix;
-    private Environment ev;
 
     @Override
     public void init() {
@@ -40,8 +39,6 @@ public class FlyShader implements Shader {
         }
 
         normalMatrix = new Matrix3();
-
-        ev = GameController.getInstance().getLevel().getEnvironment();
 
         //Store the uniform locations
         u_ProjViewTrans = program.getUniformLocation("u_projViewTrans");
@@ -63,7 +60,7 @@ public class FlyShader implements Shader {
 
     @Override
     public boolean canRender(Renderable instance) {
-        if (instance.material.get(TextureAttribute.Diffuse) == null) return true;
+        if (instance.environment != null && !instance.material.has(TextureAttribute.Diffuse)) return true;
         return false;
     }
 
@@ -81,16 +78,15 @@ public class FlyShader implements Shader {
     public void render(Renderable renderable) {
         //Set all the uniforms for this renderable
         program.setUniformMatrix(u_worldTrans, renderable.worldTransform);
-        if(renderable.material.has(ColorAttribute.Ambient)) {
-            Gdx.app.log("FlyShader.render" , "HAZ AMBIENT" + ((ColorAttribute) renderable.material.get(ColorAttribute.Ambient)).color.toString());
-            program.setUniformf(u_ambientColor, ((ColorAttribute) renderable.material.get(ColorAttribute.Ambient)).color);
+        if(renderable.environment.has(ColorAttribute.AmbientLight)) {
+            program.setUniformf(u_ambientColor, ((ColorAttribute) renderable.environment.get(ColorAttribute.AmbientLight)).color);
         } else {
             program.setUniformf(u_ambientColor, Color.BLACK);
         }
         program.setUniformf(u_diffuseColor, ((ColorAttribute) renderable.material.get(ColorAttribute.Diffuse)).color);
         program.setUniformMatrix(u_normalMatrix, normalMatrix.set(renderable.worldTransform).inv().transpose());
-        program.setUniformf(u_dirLightDirection, ev.directionalLights.get(0).direction);
-        program.setUniformf(u_dirLightColor, ev.directionalLights.get(0).color);
+        program.setUniformf(u_dirLightDirection, renderable.environment.directionalLights.get(0).direction);
+        program.setUniformf(u_dirLightColor, renderable.environment.directionalLights.get(0).color);
         if (renderable.material.has(FloatAttribute.Shininess)) {
             program.setUniformf(u_shininess, ((FloatAttribute) renderable.material.get(FloatAttribute.Shininess)).value);
             program.setUniformf(u_specularColor, ((ColorAttribute) renderable.material.get(ColorAttribute.Specular)).color);
@@ -98,7 +94,7 @@ public class FlyShader implements Shader {
             program.setUniformf(u_shininess, 0.0f);
             program.setUniformf(u_specularColor, Color.BLACK);
         }
-        program.setUniformf(u_cameraPosition, GameController.getInstance().getCamera().position);
+        program.setUniformf(u_cameraPosition, this.camera.position);
 
         //Render the renderable
         renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize);
