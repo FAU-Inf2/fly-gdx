@@ -1,4 +1,7 @@
 .gradle/
+.classpath
+.project
+.settings/
 android/.classpath
 android/.project
 android/.settings/
