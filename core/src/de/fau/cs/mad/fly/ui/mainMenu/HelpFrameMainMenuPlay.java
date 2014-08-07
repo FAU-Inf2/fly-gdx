@@ -24,10 +24,14 @@ import de.fau.cs.mad.fly.ui.UI;
  * The position of the frame is used to find an appropriate position for the
  * message and the arrow. It is searched by the following strategy:
  * <p>
- * - if there is enough space centered and above the actor, place message and arrow centered and above the actor
- * - if actor is visible but message or arrow can not be centered because it would leave the visible screen, it is placed above and moved either to the right or left
- * - if there is enough place centered and below the actor, place message and arrow centered below the actor  
- * - if actor is visible but message or arrow can not be centered because it would leave the visible screen, it is placed below moved either to the right or left
+ * - if there is enough space centered and above the actor, place message and
+ * arrow centered and above the actor - if actor is visible but message or arrow
+ * can not be centered because it would leave the visible screen, it is placed
+ * above and moved either to the right or left - if there is enough place
+ * centered and below the actor, place message and arrow centered below the
+ * actor - if actor is visible but message or arrow can not be centered because
+ * it would leave the visible screen, it is placed below moved either to the
+ * right or left
  * 
  * @author Lukas Hahmann
  * 
@@ -70,6 +74,10 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
     }
     
     @Override
+    /**
+     * Finds the appropriate place for the Label and the arrow. <p>
+     * The coordinate system starts on bottom left corner of the display with 0x0. The label position can be defined unscaled because the stage scales it afterwards. In contrast to that the position of the arrow has to be scaled because the coordinates calculated here are used in the render method.
+     */
     public void generateContent() {
         float labelXPos;
         float labelYPos;
