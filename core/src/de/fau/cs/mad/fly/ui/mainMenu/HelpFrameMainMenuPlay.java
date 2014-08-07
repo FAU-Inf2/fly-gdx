@@ -87,6 +87,7 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
         // constant for above and below
         arrowXPos = 1900 / scalingFactor;
         labelXPos = actorToBeDescribed.getX() + 0.5f * actorToBeDescribed.getWidth() - 0.5f * helpingText.getWidth();
+        // TODO: check for horizontal space
         
         if (viewport.getWorldHeight() - (actorToBeDescribed.getY() + actorToBeDescribed.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight()) > minSpaceAbove) {
             arrowYPos = (actorToBeDescribed.getY() + actorToBeDescribed.getHeight()) / scalingFactor;
