@@ -45,6 +45,8 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
     /** Y-Position of the arrow, has to be scaled, because used in render method */
     private float arrowYPos;
     /** Rotation of the arrow in degree. With 0 arrow directs down */
+    private float arrowWidth;
+    private float arrowHeight;
     private float arrowRotation;
     /** Actor that is described by the helping text */
     private final Actor actorToBeDescribed;
@@ -82,25 +84,42 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
         float labelXPos;
         float labelYPos;
         
-        // check if above is possible
-        float minSpaceAbove = helpingText.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight();
-        // constant for above and below
-        arrowXPos = 1900 / scalingFactor;
-        labelXPos = actorToBeDescribed.getX() + 0.5f * actorToBeDescribed.getWidth() - 0.5f * helpingText.getWidth();
-        // TODO: check for horizontal space
+        arrowWidth = arrow.getRegionWidth() / scalingFactor;
+        arrowHeight = arrow.getRegionHeight() / scalingFactor;
         
-        if (viewport.getWorldHeight() - (actorToBeDescribed.getY() + actorToBeDescribed.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight()) > minSpaceAbove) {
-            arrowYPos = (actorToBeDescribed.getY() + actorToBeDescribed.getHeight()) / scalingFactor;
-            labelYPos = actorToBeDescribed.getY() + actorToBeDescribed.getHeight() + arrow.getRegionHeight() - PADDING_OF_LABEL;
-            arrowRotation = 0;
+        // check if actor is horizontally between the visible commands.
+        // Otherwise place message and arrow horizontally on the same line as
+        // the actor
+        if (actorToBeDescribed.getX() > 0 && actorToBeDescribed.getX() + actorToBeDescribed.getWidth() < viewport.getWorldWidth()) {
+            
+            // constant for above and below
+            arrowXPos = actorToBeDescribed.getX() + 0.5f * actorToBeDescribed.getWidth() - 0.5f * arrow.getRegionWidth();
+            if (arrowXPos < UI.Window.BORDER_SPACE) {
+                arrowXPos = UI.Window.BORDER_SPACE;
+            } else if (arrowXPos > viewport.getWorldWidth() - UI.Window.BORDER_SPACE) {
+                arrowXPos = viewport.getWorldWidth() - UI.Window.BORDER_SPACE;
+            }
+            arrowXPos /= scalingFactor;
+            
+            labelXPos = actorToBeDescribed.getX() + 0.5f * actorToBeDescribed.getWidth() - 0.5f * helpingText.getWidth();
+            // TODO: check for horizontal space
+            
+            // check if above is possible
+            float minSpaceAbove = helpingText.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight();
+            if (viewport.getWorldHeight() - (actorToBeDescribed.getY() + actorToBeDescribed.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight()) > minSpaceAbove) {
+                arrowYPos = (actorToBeDescribed.getY() + actorToBeDescribed.getHeight()) / scalingFactor;
+                labelYPos = actorToBeDescribed.getY() + actorToBeDescribed.getHeight() + arrow.getRegionHeight() - PADDING_OF_LABEL;
+                arrowRotation = 0;
+            }
+            // put help text below
+            else {
+                arrowYPos = (actorToBeDescribed.getY() - arrow.getRegionHeight()) / scalingFactor;
+                labelYPos = actorToBeDescribed.getY() - arrow.getRegionHeight() - helpingText.getHeight() - 2 * PADDING_OF_LABEL;
+                arrowRotation = 180;
+            }
+            helpingTextTable.setBounds(labelXPos - PADDING_OF_LABEL, labelYPos + PADDING_OF_LABEL, helpingText.getWidth() + PADDING_OF_LABEL, helpingText.getHeight() + PADDING_OF_LABEL);
         }
-        // put help text below
-        else {
-            arrowYPos = (actorToBeDescribed.getY()) / scalingFactor;
-            labelYPos = actorToBeDescribed.getY() - arrow.getRegionHeight() - helpingText.getHeight() - 2 * PADDING_OF_LABEL;
-            arrowRotation = 180;
-        }
-        helpingTextTable.setBounds(labelXPos - PADDING_OF_LABEL, labelYPos + PADDING_OF_LABEL, helpingText.getWidth() + PADDING_OF_LABEL, helpingText.getHeight() + PADDING_OF_LABEL);
+        // TODO: else
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
     
@@ -108,7 +127,7 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
     public void render() {
         stage.draw();
         batch.begin();
-        batch.draw(arrow, arrowXPos, arrowYPos, 0, 0, arrow.getRegionWidth() / scalingFactor, arrow.getRegionHeight() / scalingFactor, 1f, 1f, arrowRotation);
+        batch.draw(arrow, arrowXPos, arrowYPos, arrowWidth / 2, arrowHeight / 2, arrowWidth, arrowHeight, 1f, 1f, arrowRotation);
         batch.end();
     }
     
