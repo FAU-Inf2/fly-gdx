@@ -15,7 +15,19 @@ import de.fau.cs.mad.fly.ui.HelpFrame;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
- * Frame to describe what to do with the play button.
+ * Frame to describe a help text with an arrow pointing to the Actor.
+ * <p>
+ * 
+ * To create this Frame, you have to pass a skin, which is used for the
+ * background of the message. The message itself is fetched from the I18N by the
+ * passed string. Furthermore you have to define an actor which is described.
+ * The position of the frame is used to find an appropriate position for the
+ * message and the arrow. It is searched by the following strategy:
+ * <p>
+ * - if there is enough space centered and above the actor, place message and arrow centered and above the actor
+ * - if actor is visible but message or arrow can not be centered because it would leave the visible screen, it is placed above and moved either to the right or left
+ * - if there is enough place centered and below the actor, place message and arrow centered below the actor  
+ * - if actor is visible but message or arrow can not be centered because it would leave the visible screen, it is placed below moved either to the right or left
  * 
  * @author Lukas Hahmann
  * 
@@ -24,13 +36,13 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
     
     private final TextureRegion arrow;
     private final Label helpingText;
-    /**X-Position of the arrow, has to be scaled, because used in render method*/
+    /** X-Position of the arrow, has to be scaled, because used in render method */
     private float arrowXPos;
-    /**Y-Position of the arrow, has to be scaled, because used in render method*/
+    /** Y-Position of the arrow, has to be scaled, because used in render method */
     private float arrowYPos;
-    /**Rotation of the arrow in degree. With 0 arrow directs down*/
+    /** Rotation of the arrow in degree. With 0 arrow directs down */
     private float arrowRotation;
-    /**Actor that is described by the helping text*/
+    /** Actor that is described by the helping text */
     private final Actor actorToBeDescribed;
     private final Table helpingTextTable;
     private final int PADDING_OF_LABEL = 70;
@@ -76,7 +88,7 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
         // put help text below
         else {
             arrowYPos = (actorToBeDescribed.getY()) / scalingFactor;
-            labelYPos = actorToBeDescribed.getY() - arrow.getRegionHeight() - helpingText.getHeight() - 2*PADDING_OF_LABEL;
+            labelYPos = actorToBeDescribed.getY() - arrow.getRegionHeight() - helpingText.getHeight() - 2 * PADDING_OF_LABEL;
             arrowRotation = 180;
         }
         helpingTextTable.setBounds(labelXPos - PADDING_OF_LABEL, labelYPos + PADDING_OF_LABEL, helpingText.getWidth() + PADDING_OF_LABEL, helpingText.getHeight() + PADDING_OF_LABEL);
