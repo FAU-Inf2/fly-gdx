@@ -27,8 +27,13 @@ To see a list of all available tasks you can simply
 ```sh
 gradlew tasks
 ```
-##IDEs
-There are plugins available for Eclipse, IDEA and netbeans. These should allow you to import the project via the root build.gradle file. See [this](http://www.gradle.org/tooling) for further information.
+###IDEs
+There are plugins available for Eclipse, IDEA and netbeans. These should allow you to import the project via the root build.gradle file. See  for further information.
+The following links have some good information on using gradle with your IDE:
+* [Gradle Tooling](http://www.gradle.org/tooling)
+* [Setting up your development environment](https://github.com/libgdx/libgdx/wiki/Setting-up-your-Development-Environment-%28Eclipse%2C-Intellij-IDEA%2C-NetBeans%29)
+* [Project Setup Gradle](https://github.com/libgdx/libgdx/wiki/Project-Setup-Gradle)
+
 
 Contributing
 ---
