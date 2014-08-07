@@ -94,15 +94,20 @@ public class CollisionDetector implements Disposable {
 		public void onContactStarted(btCollisionObject o1, btCollisionObject o2) {
 			GameObject g1 = (GameObject) o1.userData;
 			GameObject g2 = (GameObject) o2.userData;
-			Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.id + " (userData = " + g1.userData.getClass() + "), g2 = " + g2.id + " (userData = " + g2.userData.getClass() + ")" );
-			outer: for( ICollisionListener listener : listeners ) {
-				for ( Method m : listener.getClass().getMethods() ) {
-					if ( !m.getName().equals("onCollision") )
+			Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.id + " (userData = " + g1.userData.getClass() + "), g2 = " + g2.id + " (userData = " + g2.userData.getClass() + ")");
+			outer: for(ICollisionListener listener : listeners) {
+				for(Method m : listener.getClass().getMethods()) {
+					if(!m.getName().equals("onCollision"))
 						continue;
 					
-					//System.out.println(m.getParameterTypes()[0] + " - " + m.getParameterTypes()[1]);
+					Gdx.app.log("CD", m.getParameterTypes()[0] + " - " + m.getParameterTypes()[1]);
 					Class<?> c0 = m.getParameterTypes()[0];
 					Class<?> c1 = m.getParameterTypes()[1];
+					
+					if(c0.getName().equals("java.lang.Object") || c1.getName().equals("java.lang.Object")) {
+						Gdx.app.log("CD", "Object bug with method " + m.getName());
+						continue;
+					}
 					
 					if(c0.isAssignableFrom(g1.userData.getClass()) && c1.isAssignableFrom(g2.userData.getClass())) {
 						listener.onCollision(g1.userData, g2.userData);
@@ -111,6 +116,7 @@ public class CollisionDetector implements Disposable {
 					}
 					continue outer; // go to the next listener.
 				}
+				Gdx.app.log("CD", "No collision listener found.");
 				listener.onCollision(g1, g2);
 			}
 		}
