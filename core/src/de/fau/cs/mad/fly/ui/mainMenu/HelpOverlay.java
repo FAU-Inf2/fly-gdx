@@ -12,34 +12,42 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.ui.HelpFrame;
 import de.fau.cs.mad.fly.ui.WithHelpScreen;
 
-public class HelpOverlayMainMenu extends ClickListener implements InputProcessor {
+/**
+ * Overlay that manages several frames for different Actors that should be
+ * discribed in the current screen.
+ * 
+ * @author Lukas Hahmann
+ * 
+ */
+public class HelpOverlay extends ClickListener implements InputProcessor {
     
     private final WithHelpScreen backListener;
     private final ArrayList<HelpFrame> helpFrames;
     private int currentHelpFrame;
     private Skin skin;
     
-    public HelpOverlayMainMenu(Skin skin, WithHelpScreen screen) {
+    public HelpOverlay(Skin skin, WithHelpScreen screen) {
         this.backListener = screen;
         this.skin = skin;
         helpFrames = new ArrayList<HelpFrame>();
-        helpFrames.add(new HelpFrameMainMenuWelcome(skin));
-        
-        helpFrames.add(new HelpFrameMainMenuSettings(skin));
+        helpFrames.add(new HelpFrameMainMenuWelcome(skin, "welcome"));
         helpFrames.add(new HelpFrameMainMenuEnd(skin));
         currentHelpFrame = 0;
     }
     
-    public void addFrame(String text, Actor actorToBeDescribed) {
-        helpFrames.add(new HelpFrameMainMenuPlay(skin, text, actorToBeDescribed));
+    public void addHelpFrame(String text, Actor actorToBeDescribed) {
+        helpFrames.add(new HelpFrameTextWithArrow(skin, text, actorToBeDescribed));
+    }
+    
+    public void addHelpFrame(HelpFrame newHelpFrame) {
+        helpFrames.add(newHelpFrame);
     }
     
     public void switchFrameOrQuit() {
-        if(currentHelpFrame < helpFrames.size()-1) {
+        if (currentHelpFrame < helpFrames.size() - 1) {
             currentHelpFrame++;
             helpFrames.get(currentHelpFrame).generateContent();
-        }
-        else {
+        } else {
             currentHelpFrame = 0;
             backListener.endHelp();
         }

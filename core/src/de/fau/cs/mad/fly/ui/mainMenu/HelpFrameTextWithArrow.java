@@ -36,7 +36,7 @@ import de.fau.cs.mad.fly.ui.UI;
  * @author Lukas Hahmann
  * 
  */
-public class HelpFrameMainMenuPlay extends HelpFrame {
+public class HelpFrameTextWithArrow extends HelpFrame {
     
     private final TextureRegion arrow;
     private final Label helpingText;
@@ -58,7 +58,7 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
      * 
      * @param skin
      */
-    public HelpFrameMainMenuPlay(Skin skin, String labelText, Actor actorToBeDescribed) {
+    public HelpFrameTextWithArrow(Skin skin, String labelText, Actor actorToBeDescribed) {
         super.setupBatchAndStage();
         this.actorToBeDescribed = actorToBeDescribed;
         
@@ -96,12 +96,17 @@ public class HelpFrameMainMenuPlay extends HelpFrame {
             arrowXPos = actorToBeDescribed.getX() + 0.5f * actorToBeDescribed.getWidth() - 0.5f * arrow.getRegionWidth();
             if (arrowXPos < UI.Window.BORDER_SPACE) {
                 arrowXPos = UI.Window.BORDER_SPACE;
-            } else if (arrowXPos > viewport.getWorldWidth() - UI.Window.BORDER_SPACE) {
-                arrowXPos = viewport.getWorldWidth() - UI.Window.BORDER_SPACE;
+            } else if (arrowXPos + arrow.getRegionWidth() > viewport.getWorldWidth() - UI.Window.BORDER_SPACE) {
+                arrowXPos = viewport.getWorldWidth() - UI.Window.BORDER_SPACE - arrow.getRegionWidth();
             }
             arrowXPos /= scalingFactor;
             
             labelXPos = actorToBeDescribed.getX() + 0.5f * actorToBeDescribed.getWidth() - 0.5f * helpingText.getWidth();
+            if (labelXPos < UI.Window.BORDER_SPACE) {
+                labelXPos = UI.Window.BORDER_SPACE;
+            } else if (labelXPos + helpingText.getWidth() > viewport.getWorldWidth() - UI.Window.BORDER_SPACE) {
+                labelXPos = viewport.getWorldWidth() - UI.Window.BORDER_SPACE - helpingText.getWidth();
+            }
             // TODO: check for horizontal space
             
             // check if above is possible

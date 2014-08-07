@@ -28,12 +28,13 @@ import de.fau.cs.mad.fly.ui.WithHelpScreen;
  */
 public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
     
-    private HelpOverlayMainMenu helpOverlay;
+    private HelpOverlay helpOverlay;
     private boolean showHelpScreen = false;
     Button continueButton;
     Button chooseLevelButton;
     Button choosePlaneButton;
     Button statsButton;
+    ImageButton settingsButton;
     
     /**
      * Adds the main menu to the main menu screen.
@@ -56,7 +57,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
         chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
         choosePlaneButton = new TextButton(I18n.t("choose.plane"), textButtonStyle);
         statsButton = new TextButton(I18n.t("highscores"), textButtonStyle);
-        final ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+        settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
         
         textButtonStyle = skin.get(UI.Buttons.BIG_FONT_SIZE_STYLE, TextButtonStyle.class);
         final Button helpButton = new TextButton("?", textButtonStyle);
@@ -117,11 +118,12 @@ public class MainMenuScreen extends BasicScreen implements WithHelpScreen {
             }
         });
         
-        this.helpOverlay = new HelpOverlayMainMenu(skin, this);
-        helpOverlay.addFrame("helpPlay", continueButton);
-        helpOverlay.addFrame("helpSelectLevel", chooseLevelButton);
-        helpOverlay.addFrame("helpSelectShip", choosePlaneButton);
-        helpOverlay.addFrame("helpHighscore", statsButton);
+        this.helpOverlay = new HelpOverlay(skin, this);
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlay", continueButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectLevel", chooseLevelButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectShip", choosePlaneButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpHighscore", statsButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSettings", settingsButton));
         
         helpButton.addListener(helpOverlay);
         showHelpScreen = false;
