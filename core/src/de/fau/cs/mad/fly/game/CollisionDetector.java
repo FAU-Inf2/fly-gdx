@@ -100,12 +100,12 @@ public class CollisionDetector implements Disposable {
 					if(!m.getName().equals("onCollision"))
 						continue;
 					
-					Gdx.app.log("CD", m.getParameterTypes()[0] + " - " + m.getParameterTypes()[1]);
+					//Gdx.app.log("CD", m.getParameterTypes()[0] + " - " + m.getParameterTypes()[1]);
 					Class<?> c0 = m.getParameterTypes()[0];
 					Class<?> c1 = m.getParameterTypes()[1];
-					
+
 					if(c0.getName().equals("java.lang.Object") || c1.getName().equals("java.lang.Object")) {
-						Gdx.app.log("CD", "Object bug with method " + m.getName());
+						Gdx.app.log("CD", "Object bug with method " + m + " of " + listener.getClass());
 						continue;
 					}
 					
