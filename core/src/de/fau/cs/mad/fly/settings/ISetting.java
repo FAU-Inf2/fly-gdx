@@ -15,4 +15,9 @@ public interface ISetting {
 	public Label getLabel();
 
 	public Actor getActor();
+	
+	/**
+     * Returns the string that identifies the helping text for this Setting in the I18N
+     */
+    public String getHelpingText();
 }

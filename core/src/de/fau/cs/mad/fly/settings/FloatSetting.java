@@ -23,6 +23,7 @@ public class FloatSetting extends ChangeListener implements ISetting {
 	private SettingManager settingManager;
 	private Slider slider;
 	private Label label;
+	private String helpingText;
 	
 	/**
 	 * Initializes the class with the {@link #id}. Also a {@link Slider} object and a {@link Label} is created. 
@@ -31,9 +32,10 @@ public class FloatSetting extends ChangeListener implements ISetting {
 	 * @param description
 	 * @param value
 	 */
-	public FloatSetting(SettingManager settingManager, String id, String description, float value, float minValue, float maxValue, float stepSize) {
+	public FloatSetting(SettingManager settingManager, String id, String description, float value, float minValue, float maxValue, float stepSize, String helpingText) {
 		this.settingManager = settingManager;
 		this.id = id;
+		this.helpingText = helpingText;
 		
 		Skin skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
 		this.label = new Label(description, skin);
@@ -70,5 +72,10 @@ public class FloatSetting extends ChangeListener implements ISetting {
 	public Actor getActor() {
 		return slider;
 	}
+
+    @Override
+    public String getHelpingText() {
+        return helpingText;
+    }
 
 }
