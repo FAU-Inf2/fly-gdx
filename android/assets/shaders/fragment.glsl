@@ -12,5 +12,5 @@ uniform vec4 u_specularColor;
 
 void main() {
     //Calculate the final color value from ambient, diffuse and specular lighting
-    gl_FragColor = u_ambientColor + u_diffuseColor * vec4(v_lightDiffuse, 0) + u_specularColor * vec4(v_lightSpecular, 0);
+    gl_FragColor = u_ambientColor * u_diffuseColor + u_diffuseColor * vec4(v_lightDiffuse, 1) + u_specularColor * vec4(v_lightSpecular, 1);
 }

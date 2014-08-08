@@ -8,7 +8,6 @@ import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.GameScreen;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.ui.mainMenu.MainMenuScreen;
 
 /**
  * Handles the Back-Button of the Smartphone and the Escape-Button of the Desktop

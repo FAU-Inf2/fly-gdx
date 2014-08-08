@@ -21,3 +21,6 @@ ios/.project
 ios/.settings/
 ios/build/
 ios/robovm.xml
+*.iml
+local.properties
+.idea/
