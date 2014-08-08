@@ -53,6 +53,7 @@ import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.EventAdapter;
+import de.fau.cs.mad.fly.res.EventListener;
 import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.GateCircuit;
 import de.fau.cs.mad.fly.res.Level;
@@ -383,6 +384,10 @@ public class GameControllerBuilder {
     	
     	if (feature instanceof IntegerTimeListener) {
     		timeController.registerIntegerTimeListener((IntegerTimeListener) feature);
+    	}
+    	
+    	if (feature instanceof EventListener) {
+    		level.getGateCircuit().addEventListener((EventListener) feature);
     	}
     }
     
