@@ -50,6 +50,11 @@ public class GameObject extends ModelInstance implements Disposable {
 	protected btRigidBody rigidBody;
 	
 	/**
+	 * Scaling stored in the level file.
+	 */
+	public Vector3 scaling = new Vector3(1.0f, 1.0f, 1.0f);
+	
+	/**
 	 * Motion state for the rigid body.
 	 */
 	public GameObjectMotionState motionState;

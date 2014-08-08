@@ -124,17 +124,26 @@ public class LevelManager {
 		group.name = dirHandle.name();
 		group.id = 0;
 		group.levels = new ArrayList<Level.Head>();
-		
+
+		// check for group.json in the directory
 		for (FileHandle handle : dirHandle.list()) {
 			if(!handle.isDirectory()) {
 				JsonValue json = reader.parse(handle);
 				if(handle.name().equals("group.json")) {
 					group.name = json.getString("name");
-					group.id = json.getInt("id");
-				} else {
+					group.id = json.getInt("id") * 100;
+				}
+			}
+		}
+		
+		// check for all the levels
+		for (FileHandle handle : dirHandle.list()) {
+			if(!handle.isDirectory()) {
+				if(!handle.name().equals("group.json")) {
+					JsonValue json = reader.parse(handle);
 					Level.Head levelHead = new Level.Head();
 					levelHead.name = json.getString("name");
-					levelHead.id = json.getInt("id");
+					levelHead.id = json.getInt("id") + group.id;
 					levelHead.file = handle;
 					group.levels.add(levelHead);
 					levels.add(levelHead);
@@ -184,4 +193,19 @@ public class LevelManager {
 		chosenLevel = levelHead;
 	}
 
+	/**
+	 * Prints the level manager content.
+	 */
+	public void print() {
+		for(Level.Head h : levels) {
+			Gdx.app.log("LevelManager", h.id + ": " + h.name);
+		}
+		Gdx.app.log("LevelManager", "================");
+		for(LevelGroup g : levelGroups) {
+			Gdx.app.log("LevelManager", g.id + ": " + g.name);
+			for(Level.Head h : g.levels) {
+				Gdx.app.log("LevelManager", h.id + ": " + h.name);
+			}
+		}
+	}
 }

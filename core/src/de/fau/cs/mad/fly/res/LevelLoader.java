@@ -44,6 +44,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private Map<String, GameModel> models;
     private Map<String, String> dependencies;
     private Map<String, GameObject> components;
+    private List<GameObject> decoList;
     private AssetManager manager;
     private FileHandle file;
     private LevelParameters parameter;
@@ -60,6 +61,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         auto = new Json();
         models = new HashMap<String, GameModel>();
         components = new HashMap<String, GameObject>();
+        decoList = new ArrayList<GameObject>();
     }
     
     public Level fromJson() {
@@ -102,6 +104,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
         componentsList.addAll(components.values());
         Level level = new Level(json.getString("name"), start, componentsList, models);
+        level.decoList = decoList;
         JsonValue levelClass = json.get("class");
         if (levelClass != null) {
         	level.levelClass = levelClass.asString();
@@ -183,9 +186,9 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     }
     
     private void parseComponents() {
-        
         parseJson();
         components.clear();
+        decoList.clear();
         GameObject o;
         for (JsonValue e : json.get("components")) {
             String ref = e.getString("ref");
@@ -208,13 +211,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             } else if (position != null) {
                 Vector3 pos = new Vector3(position.asFloatArray());
                 // Gdx.app.log("LevelLoader.getComponents", "Position: " + pos.toString());
-                
-                Vector3 scl = new Vector3(1.0f, 1.0f, 1.0f);
+
                 JsonValue scale = e.get("scale");
                 if (scale != null) {
-                    scl.set(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
-                    // Gdx.app.log("LevelLoader.getComponents", "Scaling: "
-                    // + scl.toString());
+                    o.scaling.set(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
                 }
                 
                 JsonValue euler = e.get("euler");
@@ -226,7 +226,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                     
                     Quaternion quat = new Quaternion();
                     quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
-                    o.transform.set(pos, quat, scl);
+                    o.transform.set(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
                 } else if (quaternion != null) {
                     // Gdx.app.log("LevelLoader.getComponents",
                     // "Quaternion: " + quaternion.getFloat(0) + ", " +
@@ -235,11 +235,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                     // quaternion.getFloat(3));
                     
                     Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
-                    o.transform.set(pos, quat, scl);
+                    o.transform.set(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
                 } else {
                     o.transform.idt();
                     o.transform.trn(pos);
-                    o.transform.scl(scl);
                 }
             } else {
                 o.transform.idt();
@@ -257,6 +256,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             }
             
             components.put(o.id, o);
+            JsonValue deco = e.get("deco");
+            if (deco != null && deco.asBoolean()) {
+            	decoList.add(o);
+            }
         }
     }
     

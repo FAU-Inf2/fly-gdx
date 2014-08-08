@@ -7,7 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -154,6 +157,8 @@ public class GameControllerBuilder {
         
         gateCircuit.createGateRigidBodies();
         
+        createDecoRigidBodies(collisionDetector, level);
+        
         Gdx.app.log("Builder.init", "Registering EventListeners for level.");
 
         gateCircuit.addEventListener(new EventAdapter() {
@@ -199,6 +204,24 @@ public class GameControllerBuilder {
         addLevelFeatures(level);
         
         return this;
+    }
+    
+    /**
+     * Creates the rigid bodies for the static decoration in the level.
+     * 
+     * @param collisionDetector			The collision detector.
+     * @param level						The level with the list of decorations.
+     */
+    private void createDecoRigidBodies(CollisionDetector collisionDetector, Level level) {        
+        Gdx.app.log("GameControllerBuilder.createDecoRigidBodies", "Setting up collision for decoration.");
+        
+        for (GameObject o : level.decoList) {
+            if (o.getRigidBody() == null) {
+                btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(o.modelId, o);
+                o.createRigidBody(o.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+            }
+            collisionDetector.addRigidBody(o);
+        }
     }
     
     /**

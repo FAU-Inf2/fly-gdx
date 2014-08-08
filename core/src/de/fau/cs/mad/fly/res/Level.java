@@ -39,6 +39,7 @@ public class Level implements Disposable {
     public String levelClass = "DefaultLevel";
     
     public List<GameObject> components;
+    public List<GameObject> decoList;
     private List<Collectible> upgrades;
     public final Perspective start;
     private final Environment environment;

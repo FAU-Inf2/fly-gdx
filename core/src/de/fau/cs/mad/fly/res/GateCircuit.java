@@ -198,20 +198,28 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
     public void createGateRigidBodies() {
         CollisionDetector collisionDetector = CollisionDetector.getInstance();
         
-        Gdx.app.log("Level.createGateRigidBodies", "Setting up collision for level gates.");
+        Gdx.app.log("GateCircuit.createGateRigidBodies", "Setting up collision for level gates.");
         
         for (Gate g : allGates()) {
             if (g.display.getRigidBody() == null) {
-                btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
-                g.display.createRigidBody(g.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+				btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
+				g.display.createRigidBody(g.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+				
+				// different scaling for the gates is buggy
+				/*g.display.transform.scl(g.display.scaling);
+				g.display.getRigidBody().getCollisionShape().setLocalScaling(g.display.scaling);*/
             }
             collisionDetector.addRigidBody(g.display);
             
             if (g.goal.getRigidBody() == null) {
-                btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-                g.goal.userData = g;
-                g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-                g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+				btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(0.8f, 0.1f, 0.8f));
+				g.goal.userData = g;
+				g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+				g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+				
+				// different scaling for the gates is buggy
+				/*g.goal.transform.scl(g.display.scaling);
+				g.goal.getRigidBody().getCollisionShape().setLocalScaling(g.display.scaling);*/
             }
             collisionDetector.addRigidBody(g.goal);
         }

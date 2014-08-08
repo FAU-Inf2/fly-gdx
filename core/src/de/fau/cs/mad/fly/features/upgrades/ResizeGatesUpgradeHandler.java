@@ -45,11 +45,14 @@ public class ResizeGatesUpgradeHandler extends CollectibleObjects implements IFe
 	 * @param scale		The scaling vector of the resizing of the gates.
 	 */
 	private void resizeGates(Vector3 scale) {
+		Vector3 scaling = new Vector3();
         for (Gate g : gateCircuit.allGates()) {
 	    	g.display.transform.scl(scale);
-	    	g.display.getRigidBody().getCollisionShape().setLocalScaling(scale);
+	    	g.display.transform.getScale(scaling);
+	    	g.display.getRigidBody().getCollisionShape().setLocalScaling(scaling);
 	    	g.goal.transform.scl(scale);
-	    	g.goal.getRigidBody().getCollisionShape().setLocalScaling(scale);
+	    	g.goal.transform.getScale(scaling);
+	    	g.goal.getRigidBody().getCollisionShape().setLocalScaling(scaling);
 	    }
 	}
 }

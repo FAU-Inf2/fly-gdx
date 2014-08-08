@@ -124,9 +124,11 @@ public class CollisionDetector implements Disposable {
 				
 				if(c0.isAssignableFrom(g1.userData.getClass()) && c1.isAssignableFrom(g2.userData.getClass())) {
 					listener.onCollision(g1.userData, g2.userData);
+					// remove return; statement if any class has more than one onCollision method
 					return;
 				} else if(c1.isAssignableFrom(g1.userData.getClass()) && c0.isAssignableFrom(g2.userData.getClass())) {
 					listener.onCollision(g2.userData, g1.userData);
+					// remove return; statement if any class has more than one onCollision method
 					return;
 				}
 			}

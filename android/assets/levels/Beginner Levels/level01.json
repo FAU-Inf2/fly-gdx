@@ -1,0 +1,77 @@
+{
+	"id": 1,
+	"name": "Level 1",
+	"time": 25,
+	"start": {
+		"position": { "x": 0, "y": 0, "z": 0 },
+		"viewDirection": { "x": 0, "y": 1, "z": 0 }
+	},
+	"dependencies": {
+		"torus": "torus",
+		"hole": "torusHoleBox",
+		"space": "spacesphere"
+	},
+	"scripts": ["rotate_gates.coffee"],
+	"gates": [
+		{
+			"successors": [0]
+		},
+		{
+			"id": 0,
+			"display": "gate1",
+			"goal": "gate1hole",
+			"successors": [1]
+		},
+		{
+			"id": 1,
+			"display": "gate2",
+			"goal": "gate2hole",
+			"successors": [2]
+		},
+		{
+			"id": 2,
+			"display": "gate3",
+			"goal": "gate3hole",
+			"successors": []
+		}
+	],
+	"components": [
+		{
+			"id": "space",
+			"ref": "space"
+		},
+		{
+			"id": "gate1",
+			"ref": "torus",
+			"position": [ 0.0, 10.0, 0.0 ],
+			"euler": [ 0.0, 0.0, 0.0 ]
+		},
+		{
+			"id": "gate1hole",
+			"ref": "hole",
+			"visible": false
+		},
+		{
+			"id": "gate2",
+			"ref": "torus",
+			"position": [ 0.0, 18.0, 0.0 ],
+			"euler": [ 0.0, 0.0, 0.0 ]
+		},
+		{
+			"id": "gate2hole",
+			"ref": "hole",
+			"visible": false
+		},
+		{
+			"id": "gate3",
+			"ref": "torus",
+			"position": [ 0.0, 25.0, 3.0 ],
+			"euler": [ 0.0, 0.0, 0.0 ]
+		},
+		{
+			"id": "gate3hole",
+			"ref": "hole",
+			"visible": false
+		}
+	]
+}

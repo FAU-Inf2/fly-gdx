@@ -1,0 +1,254 @@
+{
+    "components": [
+        {
+            "id": "space",
+            "ref": "space"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changePointsUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                20.0,
+                5.0
+            ],
+            "ref": "pointsUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeSteeringUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                20.0,
+                -5.0
+            ],
+            "ref": "steeringUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                20.0,
+                0.0
+            ],
+            "ref": "timeUpgrade"
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.000hole",
+            "ref": "hole",
+            "visible": false
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                32.0,
+                0.0
+            ],
+            "ref": "torus"
+        },
+        {
+            "id": "Gate.001hole",
+            "ref": "hole",
+            "visible": false
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "instantSpeedUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                3.0,
+                20.0,
+                0.0
+            ],
+            "ref": "speedUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "resizeGatesUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                3.0,
+                20.0,
+                5.0
+            ],
+            "ref": "resizeGatesUpgrade"
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroidBox",
+        "hole": "torusHoleBox",
+        "pointsUpgrade": "pointsUpgrade",
+        "resizeGatesUpgrade": "resizeGatesUpgrade",
+        "space": "spacesphere",
+        "speedUpgrade": "speedUpgrade",
+        "steeringUpgrade": "steeringUpgrade",
+        "timeUpgrade": "timeUpgrade",
+        "torus": "torusLowPoly"
+    },
+    "gates": [
+        {
+            "successors": [
+                0
+            ]
+        },
+        {
+            "display": "Gate.000",
+            "goal": "Gate.000hole",
+            "id": 0,
+            "successors": [
+                1
+            ]
+        },
+        {
+            "display": "Gate.001",
+            "goal": "Gate.001hole",
+            "id": 1,
+            "successors": []
+        }
+    ],
+    "id": 11,
+    "name": "Level 11",
+    "scripts": [],
+	"class": "Level_11",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": -0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 30,
+    "upgrades": [
+        {
+            "display": "changePointsUpgrade",
+            "points": 150,
+            "type": "ChangePointsUpgrade"
+        },
+        {
+            "azimuth": -1.0,
+            "display": "changeSteeringUpgrade",
+            "duration": 10,
+            "roll": -1.0,
+            "type": "ChangeSteeringUpgrade"
+        },
+        {
+            "display": "changeTimeUpgrade",
+            "time": 10,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "display": "instantSpeedUpgrade",
+            "duration": 10,
+            "speedFactor": 4.0,
+            "type": "InstantSpeedUpgrade"
+        },
+        {
+            "display": "resizeGatesUpgrade",
+            "scale": [
+                2.0,
+                2.0,
+                2.0
+            ],
+            "type": "ResizeGatesUpgrade"
+        }
+    ]
+}
