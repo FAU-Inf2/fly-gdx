@@ -22,6 +22,7 @@ public class BooleanSetting extends ChangeListener implements ISetting {
 	private SettingManager settingManager;
 	private CheckBox checkBox;
 	private Label label;
+	private String helpingText;
 	
 	/**
 	 * Initializes the class with the {@link #id}. Also a {@link CheckBox} object and a {@link Label} is created. 
@@ -30,7 +31,7 @@ public class BooleanSetting extends ChangeListener implements ISetting {
 	 * @param description
 	 * @param value
 	 */
-	public BooleanSetting(SettingManager settingManager, String id, String description, boolean value) {
+	public BooleanSetting(SettingManager settingManager, String id, String description, boolean value, String helpingText) {
 		this.settingManager = settingManager;
 		this.id = id;
 		
@@ -41,6 +42,7 @@ public class BooleanSetting extends ChangeListener implements ISetting {
 		this.checkBox = new CheckBox("", skin);
 		this.checkBox.setChecked(value);
 		this.checkBox.addListener(this);
+		this.helpingText = helpingText;
 	}
 	
 	/**
@@ -50,6 +52,14 @@ public class BooleanSetting extends ChangeListener implements ISetting {
 	private void save() {
 		settingManager.getPreferences().putBoolean(id, value);
 		settingManager.getPreferences().flush();
+	}
+	
+	
+	/**
+	 * Returns the string that identifies the helping text for this Setting in the I18N
+	 */
+	public String getHelpingText() {
+	    return helpingText;
 	}
 
 
