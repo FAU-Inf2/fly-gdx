@@ -1,6 +1,10 @@
 package de.fau.cs.mad.fly.player;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
+
+import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.profile.PlaneManager;
+import de.fau.cs.mad.fly.res.Assets;
 
 /**
  * The player in the level.
@@ -24,10 +28,14 @@ public class Player {
      * Should be only created once for every level start.
      */
     public Player() {
-    	// this.plane = ...PlayerProfile.getCurrentPlane()
+    	IPlane.Head head = PlaneManager.getInstance().getChosenPlane();
+
+		String ref = "models/planes/" + head.modelRef + "/" + head.modelRef;
+		Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
+		GameModel model = Assets.manager.get(ref, GameModel.class);
     	
-    	this.plane = new Spaceship(PlaneManager.getInstance().getChosenPlane());
-        //this.plane = new Spaceship("spaceship");
+    	this.plane = new Spaceship(model, head);
+ 
         setLives(plane.getHead().lives);
         //resetLives();
     }

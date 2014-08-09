@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.player;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.features.IFeatureDispose;
@@ -9,7 +10,6 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
-import de.fau.cs.mad.fly.game.GameObject;
 
 /**
  * Interface that has to implemented by everything that a user can steer in Fly.
@@ -34,12 +34,6 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	 * @param rolling
 	 */
 	public void setRolling(boolean rolling);
-	
-	/**
-	 * Getter for the game object instance.
-	 * @return GameObject
-	 */
-	public GameObject getInstance();
 	
 	/**
 	 * Getter for the head
@@ -83,15 +77,21 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	public float getRollingSpeed();
 	
 	/**
-	 * Getter for the current position of the plane.
-	 * @return position
-	 */
-	public Vector3 getPosition();
-	
-	/**
 	 * Resets the speed to the normal plane value without upgrades.
 	 */
 	public void resetSpeed();
+	
+	/**
+	 * Returns the transformation matrix.
+	 * @return transform
+	 */
+	public Matrix4 getTransform();
+	
+	/**
+	 * Returns the position.
+	 * @return position
+	 */
+	public Vector3 getPosition();
 	
 	/**
 	 * Rotates the plane with given roll and azimuth dir.

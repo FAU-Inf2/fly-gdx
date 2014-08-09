@@ -9,8 +9,8 @@ import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.features.upgrades.types.ResizeGatesUpgrade;
 import de.fau.cs.mad.fly.game.GameController;
-import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.GateCircuit;
+import de.fau.cs.mad.fly.res.GateGoal;
 
 /**
  * Used to display and handle gate resize upgrades.
@@ -46,13 +46,15 @@ public class ResizeGatesUpgradeHandler extends CollectibleObjects implements IFe
 	 */
 	private void resizeGates(Vector3 scale) {
 		Vector3 scaling = new Vector3();
-        for (Gate g : gateCircuit.allGates()) {
-	    	g.display.transform.scl(scale);
-	    	g.display.transform.getScale(scaling);
-	    	g.display.getRigidBody().getCollisionShape().setLocalScaling(scaling);
-	    	g.goal.transform.scl(scale);
-	    	g.goal.transform.getScale(scaling);
-	    	g.goal.getRigidBody().getCollisionShape().setLocalScaling(scaling);
+        for (GateGoal g : gateCircuit.allGateGoals()) {
+        	if(g.getDisplay() != null) {
+		    	g.getDisplay().transform.scl(scale);
+		    	g.getDisplay().transform.getScale(scaling);
+		    	g.getDisplay().getRigidBody().getCollisionShape().setLocalScaling(scaling);
+        	}
+	    	g.transform.scl(scale);
+	    	g.transform.getScale(scaling);
+	    	g.getRigidBody().getCollisionShape().setLocalScaling(scaling);
 	    }
 	}
 }

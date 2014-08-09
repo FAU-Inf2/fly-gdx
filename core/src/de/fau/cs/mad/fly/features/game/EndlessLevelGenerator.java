@@ -13,6 +13,8 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.res.GateDisplay;
+import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.res.Gate;
 /**
@@ -26,12 +28,12 @@ public class EndlessLevelGenerator {
 	private Vector3 lastDirection;
 	private int currGate = 4;
 	
-	private List<Gate> gates;
-	private List<Gate> predecessors;
+	private List<GateGoal> gateGoals;
+	private List<GateGoal> predecessors;
 	
-	private Gate lastGate;
-	private Gate lastGatePassed;
-	private Gate lastRemoved;
+	private GateGoal lastGate;
+	private GateGoal lastGatePassed;
+	private GateGoal lastRemoved;
 	
 	private float maxAngle = 45;
 	private float minAngle = 0.1f;
@@ -51,28 +53,28 @@ public class EndlessLevelGenerator {
 		this.maxAngle = 45.f + 4.5f * difficulty;
 		this.increasingDifficulty = true;
 		
-		this.gates = new ArrayList<Gate>();
-		this.predecessors = new ArrayList<Gate>();
+		this.gateGoals = new ArrayList<GateGoal>();
+		this.predecessors = new ArrayList<GateGoal>();
 		
-		lastGatePassed = new Gate(-2);
+		lastGatePassed = new GateGoal(-2, level.getDependency("hole"), new GateDisplay(level.getDependency("torus")));
 		lastGatePassed.successors = new int[0];
-		lastRemoved = new Gate(-3);
+		lastRemoved = new GateGoal(-3, level.getDependency("hole"), new GateDisplay(level.getDependency("torus")));
 		lastRemoved.successors = new int[0];
 		
-		this.gates = level.getGateCircuit().allGates();
-		int size = gates.size();
+		this.gateGoals = level.getGateCircuit().allGateGoals();
+		int size = gateGoals.size();
 		
-		lastGate = gates.get(size - 1);
+		lastGate = gateGoals.get(size - 1);
 		if(size > 1) {
-			lastDirection = lastGate.display.getPosition().cpy().sub(gates.get(size - 2).display.getPosition());
+			lastDirection = lastGate.getPosition().cpy().sub(gateGoals.get(size - 2).getPosition());
 		} else {
 			lastDirection = level.start.viewDirection;
 		}
 		predecessors.add(lastGate);
 	}
 	
-	public List<Gate> getGates() {
-		return gates;
+	public List<GateGoal> getGates() {
+		return gateGoals;
 	}
 	
 	public int getExtraTime() {
@@ -84,22 +86,22 @@ public class EndlessLevelGenerator {
 	 * 
 	 * @param passed - the gate that was passed and now should be removed from the level
 	 */
-	public void addRandomGate(Gate passed) {
+	public void addRandomGate(GateGoal passed) {
 		Gdx.app.log("myApp", "addRandomGate");
-		if(passed.id != lastGateId) {
-			List<Gate> newGates = generateRandomGates(predecessors);
+		if(passed.getId() != lastGateId) {
+			List<GateGoal> newGates = null; //generateRandomGates(predecessors);
 			
 			predecessors.clear();
 			int size = newGates.size();
 			for(int i = 0; i < size; i++) {
-				Gate newGate = newGates.get(i);
+				GateGoal newGate = newGates.get(i);
 				
 				Gdx.app.log("myApp", "newGate");
-				level.components.add(newGate.display);
+				level.components.add(newGate);
 				//level.components.add(newGate.goal);
 				
 				level.getGateCircuit().addGate(newGate);
-				gates.add(newGate);
+				gateGoals.add(newGate);
 				predecessors.add(newGate);
 			}
 			
@@ -112,19 +114,18 @@ public class EndlessLevelGenerator {
 			}
 			level.start.position = passed.display.getPosition().cpy().sub(lastDirection.cpy().scl(5));*/
 			
-			lastGateId = passed.id;
+			lastGateId = passed.getId();
 			
 			
 			// removing passed gate and all possible parallel gates
 			size = lastRemoved.successors.length;
 			for(int i = 0; i < size; i++) {
 				int id = lastRemoved.successors[i];
-				Gate successor = level.getGateCircuit().getGateById(id);
+				GateGoal successor = level.getGateCircuit().getGateGoalById(id);
 				
-				level.components.remove(successor.display);
-				level.components.remove(successor.goal);
+				level.getGateCircuit().removeGate(successor);
 				
-				gates.remove(successor);
+				gateGoals.remove(successor);
 				successor.dispose();
 			}
 			lastRemoved = lastGatePassed;

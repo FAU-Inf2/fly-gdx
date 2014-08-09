@@ -1,7 +1,6 @@
 package de.fau.cs.mad.fly.res;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -44,11 +42,9 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private Map<String, GameModel> models;
     private Map<String, String> dependencies;
     private Map<String, GameObject> components;
-    private List<GameObject> decoList;
     private AssetManager manager;
     private FileHandle file;
     private LevelParameters parameter;
-    private final Matrix4 identityMatrix = new Matrix4();
     
     /**
      * Constructor, sets the
@@ -61,7 +57,6 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         auto = new Json();
         models = new HashMap<String, GameModel>();
         components = new HashMap<String, GameObject>();
-        decoList = new ArrayList<GameObject>();
     }
     
     public Level fromJson() {
@@ -71,54 +66,132 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         }
         parseComponents();
         Perspective start = auto.fromJson(Perspective.class, json.get("start").toString());
-        JsonValue gates = json.get("gates");
-        Map<Integer, Gate> gateMap = new HashMap<Integer, Gate>();
-        
-        Gate p;
-        Gate dummy = null;
-        int len = gates.size;
-        JsonValue jsonGate;
-        for (int i = 0; i < len; i++) {
-            jsonGate = gates.get(i);
-            JsonValue gid = jsonGate.get("id");
-            if (gid != null) {
-                p = new Gate(gid.asInt());
-                p.display = components.get(jsonGate.getString("display"));
-                p.goal = components.get(jsonGate.getString("goal"));
-                // TODO: make this explicit (don't just blacklist identity
-                // matrix...). Currently this makes sure that the right gate is marked as next gate
-                if (Arrays.equals(p.goal.transform.getValues(), identityMatrix.getValues()))
-                    p.goal.transform = p.display.transform.cpy();
-                gateMap.put(p.id, p);
-            }
-            else {
-                p = new Gate(-1);
-                dummy = p;
-            }
-            p.successors = jsonGate.get("successors").asIntArray();
-        }
-        
-        if (dummy == null)
-            throw new RuntimeException("No dummy gate found.");
 
         ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
         componentsList.addAll(components.values());
         Level level = new Level(json.getString("name"), start, componentsList, models);
-        level.decoList = decoList;
         JsonValue levelClass = json.get("class");
         if (levelClass != null) {
         	level.levelClass = levelClass.asString();
         }
         level.head.id = json.getInt("id");
         level.setLeftTime(json.getInt("time"));
-        
-        GateCircuit gateCircuit = new GateCircuit(dummy);
-        gateCircuit.setGates(gateMap);
+
+        GateCircuit gateCircuit = parseGates();
         level.addGateCircuit(gateCircuit);
         
         level.setUpgrades(parseUpgrades());
         
         return level;
+    }
+    
+    private GateCircuit parseGates() {    	
+        Map<Integer, GateGoal> gateMap = new HashMap<Integer, GateGoal>();
+        
+    	JsonValue gates = json.get("gates");
+    	if(gates == null) {
+    		return null;
+    	}
+    	
+    	// dummy gate goal at the start
+    	GateGoal dummyGate = null;
+
+    	int len = gates.size;
+    	JsonValue jsonGate;
+    	GateDisplay display;
+    	GateGoal goal;
+    	
+    	for (int i = 0; i < len; i++) {
+            jsonGate = gates.get(i);
+            JsonValue gateId = jsonGate.get("gateId");
+            
+            if (gateId != null) {
+	            String ref = jsonGate.getString("ref");
+	            String refHole = jsonGate.getString("refHole");
+	
+	            display = new GateDisplay(models.get(ref));
+	            goal = new GateGoal(gateId.asInt(), models.get(refHole), display);
+	            goal.hide();
+	            display.setGoal(goal);
+	            
+	            parseTransform(display, jsonGate);
+	            goal.transform = display.transform.cpy();
+	            gateMap.put(gateId.asInt(), goal);
+            } else {
+            	goal = new GateGoal(-1, models.get("hole"), null);
+            	goal.hide();
+	            dummyGate = goal;
+            }
+
+            goal.successors = jsonGate.get("successors").asIntArray();
+            gateMap.put(goal.getId(), goal);
+        }
+    	
+	    if (dummyGate == null) {
+	        throw new RuntimeException("No dummy gate found.");
+	    }
+	    
+        GateCircuit gateCircuit = new GateCircuit(dummyGate);
+        gateCircuit.setGates(gateMap);
+    	
+    	return gateCircuit;
+    }
+    
+    private void parseInformation(GameObject o, JsonValue e) {
+    	o.id = e.getString("id");
+    	
+        JsonValue visible = e.get("visible");
+        if (visible != null && !visible.asBoolean()) {
+        	o.hide();
+        }
+    }
+    
+    private void parseVelocity(GameObject o, JsonValue e) {
+        JsonValue linearVelocity = e.get("linear_velocity");
+        if (linearVelocity != null) {
+            o.setStartLinearVelocity(new Vector3(linearVelocity.getFloat(0), linearVelocity.getFloat(1), linearVelocity.getFloat(2)));
+        }
+        JsonValue angularVelocity = e.get("angular_velocity");
+        if (angularVelocity != null) {
+            o.setStartAngularVelocity(new Vector3(angularVelocity.getFloat(0), angularVelocity.getFloat(1), angularVelocity.getFloat(2)));
+        }
+    }
+    
+    
+    private void parseTransform(GameObject o, JsonValue e) {
+        JsonValue transform = e.get("transformMatrix");
+        JsonValue position = e.get("position");
+        if (transform != null) {
+            o.transform.set(transform.asFloatArray());
+            // Gdx.app.log("LevelLoader.getComponents", "TransformMatrix: " + o.transform.toString());
+        } else if (position != null) {
+            Vector3 pos = new Vector3(position.asFloatArray());
+            // Gdx.app.log("LevelLoader.getComponents", "Position: " + pos.toString());
+            JsonValue scale = e.get("scale");
+            if (scale != null) {
+                o.scaling.set(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
+            }
+            
+            JsonValue euler = e.get("euler");
+            JsonValue quaternion = e.get("quaternion");
+            if (euler != null) {
+                // Gdx.app.log("LevelLoader.getComponents", "Euler: " + euler.getFloat(0) + ", " + euler.getFloat(1) + ", " + euler.getFloat(2));
+                Quaternion quat = new Quaternion();
+                quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
+                o.transform.set(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
+            } else if (quaternion != null) {
+                // Gdx.app.log("LevelLoader.getComponents", "Quaternion: " + quaternion.getFloat(0) + ", " + quaternion.getFloat(1) + ", " +
+                // quaternion.getFloat(2) + ", " + quaternion.getFloat(3));
+                Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
+                o.transform.set(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
+            } else {
+                o.transform.idt();
+                o.transform.trn(pos);
+            }
+        } else {
+            o.transform.idt();
+            // Gdx.app.log("LevelLoader.getComponents", "No 3D info found: " + o.transform.toString());
+        }
     }
     
     private List<Collectible> parseUpgrades() {
@@ -137,24 +210,28 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             if (upgradeType != null) {
             	String type = upgradeType.asString();
             	Collectible c = null;
+            	String ref = jsonUpgrade.getString("ref");
             	if(type.equals("ChangeTimeUpgrade")) {
-            		c = new ChangeTimeUpgrade(jsonUpgrade.get("time").asInt());
+            		c = new ChangeTimeUpgrade(models.get(ref), jsonUpgrade.get("time").asInt());
             	} else if(type.equals("ChangePointsUpgrade")) {
-            		c = new ChangePointsUpgrade(jsonUpgrade.get("points").asInt());
+            		c = new ChangePointsUpgrade(models.get(ref), jsonUpgrade.get("points").asInt());
             	} else if(type.equals("InstantSpeedUpgrade")) {
-            		c = new InstantSpeedUpgrade(jsonUpgrade.get("speedFactor").asFloat(), jsonUpgrade.get("duration").asFloat());
+            		c = new InstantSpeedUpgrade(models.get(ref), jsonUpgrade.get("speedFactor").asFloat(), jsonUpgrade.get("duration").asFloat());
             	} else if(type.equals("LinearSpeedUpgrade")) {
-            		c = new LinearSpeedUpgrade(jsonUpgrade.get("increaseFactor").asFloat(), jsonUpgrade.get("increaseDuration").asFloat(), jsonUpgrade.get("decreaseFactor").asFloat());
+            		c = new LinearSpeedUpgrade(models.get(ref), jsonUpgrade.get("increaseFactor").asFloat(), jsonUpgrade.get("increaseDuration").asFloat(), jsonUpgrade.get("decreaseFactor").asFloat());
             	} else if(type.equals("ResizeGatesUpgrade")) {
             		JsonValue jsonScale = jsonUpgrade.get("scale");
             		Vector3 scale = new Vector3(jsonScale.getFloat(0), jsonScale.getFloat(1), jsonScale.getFloat(2));
-            		c = new ResizeGatesUpgrade(scale);
+            		c = new ResizeGatesUpgrade(models.get(ref), scale);
             	} else if(type.equals("ChangeSteeringUpgrade")) {
-            		c = new ChangeSteeringUpgrade(jsonUpgrade.get("roll").asFloat(), jsonUpgrade.get("azimuth").asFloat(), jsonUpgrade.get("duration").asFloat());
+            		c = new ChangeSteeringUpgrade(models.get(ref), jsonUpgrade.get("roll").asFloat(), jsonUpgrade.get("azimuth").asFloat(), jsonUpgrade.get("duration").asFloat());
             	}
                 
-            	if(c != null) {
-            		c.setGameObject(components.get(jsonUpgrade.getString("display")));
+            	if(c != null) {            		
+            		parseInformation(c, jsonUpgrade);
+            		parseVelocity(c, jsonUpgrade);
+            		parseTransform(c, jsonUpgrade);
+            		
             		upgradeList.add(c);
             	} else {
             		Gdx.app.log("LevelLoader.parseUpgrades", "Upgrade type not found.");
@@ -188,78 +265,18 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private void parseComponents() {
         parseJson();
         components.clear();
-        decoList.clear();
         GameObject o;
-        for (JsonValue e : json.get("components")) {
+        for (JsonValue e : json.get("components")) {            
             String ref = e.getString("ref");
-            long millis = System.currentTimeMillis();
             o = new GameObject(models.get(ref));
-            Gdx.app.log("LevelLoader.parseComponents", "GameObject: " + String.valueOf(System.currentTimeMillis()-millis));
             o.modelId = ref;
-            o.id = e.getString("id");
-            JsonValue visible = e.get("visible");
-            if (visible != null && !visible.asBoolean()) {
-            	o.hide();
-            }
-            
-            JsonValue transform = e.get("transformMatrix");
-            JsonValue position = e.get("position");
-            if (transform != null) {
-                o.transform.set(transform.asFloatArray());
-                // Gdx.app.log("LevelLoader.getComponents",
-                // "TransformMatrix: " + o.transform.toString());
-            } else if (position != null) {
-                Vector3 pos = new Vector3(position.asFloatArray());
-                // Gdx.app.log("LevelLoader.getComponents", "Position: " + pos.toString());
 
-                JsonValue scale = e.get("scale");
-                if (scale != null) {
-                    o.scaling.set(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
-                }
-                
-                JsonValue euler = e.get("euler");
-                JsonValue quaternion = e.get("quaternion");
-                if (euler != null) {
-                    // Gdx.app.log("LevelLoader.getComponents", "Euler: " +
-                    // euler.getFloat(0) + ", " + euler.getFloat(1) + ", " +
-                    // euler.getFloat(2));
-                    
-                    Quaternion quat = new Quaternion();
-                    quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
-                    o.transform.set(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
-                } else if (quaternion != null) {
-                    // Gdx.app.log("LevelLoader.getComponents",
-                    // "Quaternion: " + quaternion.getFloat(0) + ", " +
-                    // quaternion.getFloat(1) + ", " +
-                    // quaternion.getFloat(2) + ", " +
-                    // quaternion.getFloat(3));
-                    
-                    Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
-                    o.transform.set(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
-                } else {
-                    o.transform.idt();
-                    o.transform.trn(pos);
-                }
-            } else {
-                o.transform.idt();
-                // Gdx.app.log("LevelLoader.getComponents",
-                // "No 3D info found: " + o.transform.toString());
-            }
-            
-            JsonValue linearVelocity = e.get("linear_velocity");
-            if (linearVelocity != null) {
-                o.setStartLinearVelocity(new Vector3(linearVelocity.getFloat(0), linearVelocity.getFloat(1), linearVelocity.getFloat(2)));
-            }
-            JsonValue angularVelocity = e.get("angular_velocity");
-            if (angularVelocity != null) {
-                o.setStartAngularVelocity(new Vector3(angularVelocity.getFloat(0), angularVelocity.getFloat(1), angularVelocity.getFloat(2)));
-            }
+            parseInformation(o, e);	            
+            parseTransform(o, e);
+            parseVelocity(o, e);
             
             components.put(o.id, o);
-            JsonValue deco = e.get("deco");
-            if (deco != null && deco.asBoolean()) {
-            	decoList.add(o);
-            }
+            System.out.println(o.id);
         }
     }
     

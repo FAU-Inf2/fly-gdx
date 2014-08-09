@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSol
 import com.badlogic.gdx.utils.Disposable;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
+import de.fau.cs.mad.fly.player.Spaceship;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -94,46 +95,17 @@ public class CollisionDetector implements Disposable {
 		public void onContactStarted(btCollisionObject o1, btCollisionObject o2) {
 			GameObject g1 = (GameObject) o1.userData;
 			GameObject g2 = (GameObject) o2.userData;
+			
+			if(g2 instanceof Spaceship) {
+				GameObject spaceship = g2;
+				g2 = g1;
+				g1 = spaceship;
+			}
+			
 			Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.id + " (userData = " + g1.userData.getClass() + "), g2 = " + g2.id + " (userData = " + g2.userData.getClass() + ")");
 			for(ICollisionListener listener : listeners) {
-				checkOnCollisionMethods(listener, g1, g2);
+				listener.onCollision(g1, g2);
 			}
-		}
-		
-		/**
-		 * Checks the onCollision methods in one listener.
-		 * 
-		 * @param listener			The listener to check the methods.
-		 * @param g1				The first game object.
-		 * @param g2				The second game object.
-		 */
-		private void checkOnCollisionMethods(ICollisionListener listener, GameObject g1, GameObject g2) {
-			for(Method m : listener.getClass().getMethods()) {
-				if(!m.getName().equals("onCollision")) {
-					continue;
-				}
-				
-				//Gdx.app.log("CD", m.getParameterTypes()[0] + " - " + m.getParameterTypes()[1]);
-				Class<?> c0 = m.getParameterTypes()[0];
-				Class<?> c1 = m.getParameterTypes()[1];
-
-				if(c0.getName().equals("java.lang.Object") || c1.getName().equals("java.lang.Object")) {
-					//Gdx.app.log("CD", "Object bug with method " + m + " of " + listener.getClass());
-					continue;
-				}
-				
-				if(c0.isAssignableFrom(g1.userData.getClass()) && c1.isAssignableFrom(g2.userData.getClass())) {
-					listener.onCollision(g1.userData, g2.userData);
-					// remove return; statement if any class has more than one onCollision method
-					return;
-				} else if(c1.isAssignableFrom(g1.userData.getClass()) && c0.isAssignableFrom(g2.userData.getClass())) {
-					listener.onCollision(g2.userData, g1.userData);
-					// remove return; statement if any class has more than one onCollision method
-					return;
-				}
-			}
-			//Gdx.app.log("CD", "No collision listener found -> onCollision(GameObject, GameObject) listener used.");
-			//listener.onCollision(g1, g2);
 		}
 	}
 	

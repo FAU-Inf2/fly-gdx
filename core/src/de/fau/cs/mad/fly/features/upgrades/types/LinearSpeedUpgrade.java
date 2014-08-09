@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.features.upgrades.types;
 
+import de.fau.cs.mad.fly.game.GameModel;
+
 /**
  * An upgrade to change the current speed of the plane.
  * 
@@ -24,11 +26,13 @@ public class LinearSpeedUpgrade extends Collectible {
 	
 	/**
 	 * Creates a new linear speed upgrade handler.
+	 * @param model							The model of the upgrade.
 	 * @param upgradeIncreaseFactor			The speed factor of the speed upgrade increase.
 	 * @param upgradeIncreaseDuration		The duration of the speed upgrade increase.
 	 * @param upgradeDecreaseFactor			The speed factor of the speed upgrade decrease.
 	 */
-	public LinearSpeedUpgrade(float increaseFactor, float increaseDuration, float decreaseFactor) {
+	public LinearSpeedUpgrade(GameModel model, float increaseFactor, float increaseDuration, float decreaseFactor) {
+		super(model);
 		this.increaseFactor = increaseFactor;
 		this.increaseDuration = increaseDuration;
 		this.decreaseFactor = decreaseFactor;

@@ -7,7 +7,7 @@ import java.util.List;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.res.EventAdapter;
-import de.fau.cs.mad.fly.res.Gate;
+import de.fau.cs.mad.fly.res.GateGoal;
 
 /**
  * Manages the score in the level while the level is playing.
@@ -114,9 +114,9 @@ public class ScoreController extends EventAdapter {
     }
     
     @Override
-    public void onGatePassed(Gate gate) {
-    	this.gatePassedScore += gate.score;
-    	this.totalScore += gate.score;
+    public void onGatePassed(GateGoal gate) {
+    	this.gatePassedScore += gate.getScore();
+    	this.totalScore += gate.getScore();
     	scoreChanged();
     }
 }

@@ -1,19 +1,13 @@
 package de.fau.cs.mad.fly.levels.tutorials;
 
-import java.util.List;
-
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
-import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
-import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.levels.ILevel;
-import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.res.EventListener;
-import de.fau.cs.mad.fly.res.Gate;
+import de.fau.cs.mad.fly.res.GateGoal;
 
 /**
  * Level script file for the gate tutorial level.
@@ -46,7 +40,7 @@ public class GateTutorialLevel implements ILevel, IFeatureInit, EventListener {
 	}
 
 	@Override
-	public void onGatePassed(Gate gate) {
+	public void onGatePassed(GateGoal gate) {
 		gateCounter++;
 		
 		if(gateCounter < 3) {

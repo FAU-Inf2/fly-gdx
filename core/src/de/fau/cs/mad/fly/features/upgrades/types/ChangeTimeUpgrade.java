@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.features.upgrades.types;
 
+import de.fau.cs.mad.fly.game.GameModel;
+
 /**
  * An upgrade to change the current time.
  * 
@@ -14,9 +16,11 @@ public class ChangeTimeUpgrade extends Collectible {
 	
 	/**
 	 * Creates a new change time upgrade.
+	 * @param model				The model of the upgrade.
 	 * @param timeChange		The amount of time to change.
 	 */
-	public ChangeTimeUpgrade(int timeChange) {
+	public ChangeTimeUpgrade(GameModel model, int timeChange) {
+		super(model);
 		this.timeChange = timeChange;
 	}
 	

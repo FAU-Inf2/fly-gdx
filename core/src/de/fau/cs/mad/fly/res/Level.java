@@ -39,7 +39,6 @@ public class Level implements Disposable {
     public String levelClass = "DefaultLevel";
     
     public List<GameObject> components;
-    public List<GameObject> decoList;
     private List<Collectible> upgrades;
     public final Perspective start;
     private final Environment environment;
@@ -174,6 +173,16 @@ public class Level implements Disposable {
         // Gdx.app.log("components:", String.valueOf(numberOfComponents));
         for (i = 0; i < numberOfComponents; i++) {
             components.get(i).render(batch, environment, camera);
+        }
+        
+        final int numberOfGates = gateCircuit.allGateDisplays().size();
+        for (i = 0; i < numberOfGates; i++) {
+        	gateCircuit.allGateDisplays().get(i).render(batch, environment, camera);
+        }
+        
+        final int numberOfUpgrades = upgrades.size();
+        for (i = 0; i < numberOfUpgrades; i++) {
+        	upgrades.get(i).render(batch, environment, camera);
         }
     }
     

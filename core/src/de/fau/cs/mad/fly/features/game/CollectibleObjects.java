@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
@@ -14,14 +12,13 @@ import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.player.Spaceship;
 
 /**
  * Used do display and handle any sort of collectible objects in the game.
  * 
  * @author Tobi
  */
-public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispose, ICollisionListener<Spaceship, Collectible> {
+public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispose, ICollisionListener {
 
 	/**
 	 * The type of the collectible objects.
@@ -45,21 +42,11 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispos
 	@Override
 	public void load(GameController game) {
 		collectibleObjects = new ArrayList<Collectible>();
+		CollisionDetector collisionDetector = CollisionDetector.getInstance();
 		
 		for(Collectible c : game.getLevel().getUpgrades()) {
 			if(c.getType().equals(type)) {
-				GameObject gameObject = c.getGameObject();
-				btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(type, gameObject);
-				gameObject.createRigidBody(type, shape, 1.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-				gameObject.getRigidBody().setCollisionFlags(gameObject.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-				CollisionDetector.getInstance().addRigidBody(gameObject);
-
-				gameObject.addMotionState();
-				gameObject.setDummy(true);
-				gameObject.getRigidBody().setSleepingThresholds(0.01f, 0.01f);
-				
-				gameObject.userData = c;
-
+				c.createRigidBody(collisionDetector, type);
 				collectibleObjects.add(c);
 			}
 		}
@@ -80,14 +67,21 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispos
 	protected abstract void handleCollecting(Collectible c);
 
 	@Override
-	public void onCollision(Spaceship ship, Collectible c) {		
+	public void onCollision(GameObject g1, GameObject g2) {
+		if(!(g2 instanceof Collectible)) {
+			return;
+		}
+		
+		Collectible c = (Collectible) g2;
+			
+		
 		if(!collectibleObjects.contains(c)) {
 			return;
 		}
 		
-		c.getGameObject().hide();
+		c.hide();
 		collectibleObjects.remove(c);
-		c.getGameObject().removeRigidBody();
+		c.removeRigidBody();
 		
 		handleCollecting(c);
 	}

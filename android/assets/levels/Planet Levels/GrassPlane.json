@@ -6,69 +6,6 @@
             "ref": "space"
         },
         {
-            "angular_velocity": [
-                1.0,
-                2.0,
-                0.0
-            ],
-            "euler": [
-                -90.0,
-                0.0,
-                0.0
-            ],
-            "id": "changeTimeUpgrade",
-            "linear_velocity": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "position": [
-                -3.0,
-                20.0,
-                0.0
-            ],
-            "ref": "timeUpgrade"
-        },
-        {
-            "euler": [
-                0.0,
-                -0.0,
-                0.0
-            ],
-            "id": "Gate.000",
-            "position": [
-                0.0,
-                10.0,
-                0.0
-            ],
-            "ref": "torus"
-        },
-        {
-            "id": "Gate.000hole",
-            "ref": "hole",
-            "visible": false
-        },
-        {
-            "euler": [
-                0.0,
-                -0.0,
-                0.0
-            ],
-            "id": "Gate.001",
-            "position": [
-                0.0,
-                32.0,
-                0.0
-            ],
-            "ref": "torus"
-        },
-        {
-            "id": "Gate.001hole",
-            "ref": "hole",
-            "visible": false
-        },
-        {
-            "deco": true,
             "euler": [
                 -90.0,
                 0.0,
@@ -97,22 +34,44 @@
             ]
         },
         {
-            "display": "Gate.000",
-            "goal": "Gate.000hole",
-            "id": 0,
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
             "successors": [
                 1
             ]
         },
         {
-            "display": "Gate.001",
-            "goal": "Gate.001hole",
-            "id": 1,
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                32.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
             "successors": []
         }
     ],
     "id": 1,
-    "name": "Level",
+    "name": "Grass Level",
     "scripts": [],
     "start": {
         "position": {
@@ -134,7 +93,28 @@
     "time": 30,
     "upgrades": [
         {
-            "display": "changeTimeUpgrade",
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade",
+            "linear_velocity": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                20.0,
+                0.0
+            ],
+            "ref": "timeUpgrade",
             "time": 100,
             "type": "ChangeTimeUpgrade"
         }

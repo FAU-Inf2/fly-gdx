@@ -1,0 +1,175 @@
+{
+    "class": "",
+    "components": [
+        {
+            "id": "space",
+            "ref": "space"
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "hole": "torusHoleBox",
+        "space": "spacesphere",
+        "torus": "torus"
+    },
+    "gates": [
+        {
+            "successors": [
+                0
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                1
+            ]
+        },
+        {
+            "euler": [
+                10.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                25.0,
+                2.5
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                20.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 2,
+            "id": "Gate.002",
+            "position": [
+                0.0,
+                40.0,
+                7.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                3
+            ]
+        },
+        {
+            "euler": [
+                30.000100000000003,
+                -0.0,
+                0.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                0.0,
+                52.0,
+                15.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                4
+            ]
+        },
+        {
+            "euler": [
+                40.0001,
+                -0.0,
+                0.0
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                0.0,
+                64.0,
+                24.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                50.0001,
+                -0.0,
+                0.0
+            ],
+            "gateId": 5,
+            "id": "Gate.005",
+            "position": [
+                0.0,
+                72.0,
+                36.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                6
+            ]
+        },
+        {
+            "euler": [
+                60.0001,
+                -0.0,
+                0.0
+            ],
+            "gateId": 6,
+            "id": "Gate.006",
+            "position": [
+                0.0,
+                80.0,
+                50.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": []
+        }
+    ],
+    "id": 2,
+    "name": "Level 2",
+    "scripts": [],
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": -0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 60,
+    "upgrades": []
+}

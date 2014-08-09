@@ -1,0 +1,213 @@
+{
+    "class": "",
+    "components": [
+        {
+            "id": "space",
+            "ref": "space"
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "hole": "torusHoleBox",
+        "space": "spacesphere",
+        "torus": "torus"
+    },
+    "gates": [
+        {
+            "successors": [
+                0
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                1
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                90.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                -10.0,
+                20.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                -135.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 2,
+            "id": "Gate.002",
+            "position": [
+                -20.0,
+                10.0,
+                -1.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                3
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                -20.0,
+                5.0,
+                -3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                4
+            ]
+        },
+        {
+            "euler": [
+                -45.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                -55.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 5,
+            "id": "Gate.005",
+            "position": [
+                -20.0,
+                -4.0,
+                5.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                6
+            ]
+        },
+        {
+            "euler": [
+                -70.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 6,
+            "id": "Gate.006",
+            "position": [
+                -20.0,
+                -6.0,
+                10.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                7
+            ]
+        },
+        {
+            "euler": [
+                -90.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 7,
+            "id": "Gate.007",
+            "position": [
+                -20.0,
+                -7.0,
+                15.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                8
+            ]
+        },
+        {
+            "euler": [
+                -90.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 8,
+            "id": "Gate.008",
+            "position": [
+                -20.0,
+                -7.0,
+                26.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": []
+        }
+    ],
+    "id": 8,
+    "name": "Level 8",
+    "scripts": [],
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": -0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 48,
+    "upgrades": []
+}

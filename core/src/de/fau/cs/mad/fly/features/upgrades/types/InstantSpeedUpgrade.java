@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.features.upgrades.types;
 
+import de.fau.cs.mad.fly.game.GameModel;
+
 /**
  * An upgrade to change the current speed of the plane.
  * 
@@ -19,10 +21,12 @@ public class InstantSpeedUpgrade extends Collectible {
 	
 	/**
 	 * Creates a new instant speed upgrade.
+	 * @param model				The model of the upgrade.
 	 * @param speedFactor		The speed factor of the upgrade.
 	 * @param duration			The duration of the upgrade. A value <= 0.0f means infinite duration.
 	 */
-	public InstantSpeedUpgrade(float speedFactor, float duration) {
+	public InstantSpeedUpgrade(GameModel model, float speedFactor, float duration) {
+		super(model);
 		this.speedFactor = speedFactor;
 		this.duration = duration;
 	}

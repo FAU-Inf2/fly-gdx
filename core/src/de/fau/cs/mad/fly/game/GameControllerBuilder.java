@@ -54,8 +54,8 @@ import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.EventAdapter;
 import de.fau.cs.mad.fly.res.EventListener;
-import de.fau.cs.mad.fly.res.Gate;
 import de.fau.cs.mad.fly.res.GateCircuit;
+import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.BackProcessor;
@@ -139,9 +139,18 @@ public class GameControllerBuilder {
         CollisionDetector collisionDetector = CollisionDetector.getInstance();
         
         collisionDetector.getCollisionContactListener().addListener(gateCircuit);
-        collisionDetector.getCollisionContactListener().addListener(new ICollisionListener<Spaceship, GameObject>() {
+        collisionDetector.getCollisionContactListener().addListener(new ICollisionListener() {
             @Override
-            public void onCollision(Spaceship ship, GameObject g) {
+            public void onCollision(GameObject g1, GameObject g2) {
+            	GameObject g;
+            	if(g1 instanceof Spaceship) {
+            		g = g2;
+            	} else if(g2 instanceof Spaceship) {
+            		g = g1;
+            	} else {
+            		return;
+            	}
+            	
                 if (g.isDummy()) {
                     return;
                 }
@@ -164,19 +173,19 @@ public class GameControllerBuilder {
 
         gateCircuit.addEventListener(new EventAdapter() {
             @Override
-            public void onGatePassed(Gate passed) {
+            public void onGatePassed(GateGoal passed) {
             	GateCircuit gateCircuit = level.getGateCircuit();
             	
                 if (level.head.name.equals("Endless")) {
-                    for (Gate g : generator.getGates())
+                    for (GateGoal g : generator.getGates())
                         g.unmark();
                 } else {
-                    for (Gate g : gateCircuit.allGates())
+                    for (GateGoal g : gateCircuit.allGateGoals())
                         g.unmark();
                 }
                 int len = passed.successors.length;
                 for (int i = 0; i < len; i++) {
-                	gateCircuit.getGateById(passed.successors[i]).mark();
+                	gateCircuit.getGateGoalById(passed.successors[i]).mark();
                 }
             }
         });
@@ -188,7 +197,7 @@ public class GameControllerBuilder {
             
             gateCircuit.addEventListener(new EventAdapter() {
                 @Override
-                public void onGatePassed(Gate passed) {
+                public void onGatePassed(GateGoal passed) {
                     generator.addRandomGate(passed);
                     int extraTime = generator.getExtraTime();
                     timeController.addBonusTime(extraTime);
@@ -216,7 +225,7 @@ public class GameControllerBuilder {
     private void createDecoRigidBodies(CollisionDetector collisionDetector, Level level) {        
         Gdx.app.log("GameControllerBuilder.createDecoRigidBodies", "Setting up collision for decoration.");
         
-        for (GameObject o : level.decoList) {
+        for (GameObject o : level.components) {
             if (o.getRigidBody() == null) {
                 btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(o.modelId, o);
                 o.createRigidBody(o.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
@@ -253,9 +262,18 @@ public class GameControllerBuilder {
             addSteeringResetOverlay();
         }
         if (preferences.getBoolean(SettingManager.VIBRATE_WHEN_COLLIDE)) {
-            CollisionDetector.getInstance().getCollisionContactListener().addListener(new ICollisionListener<Spaceship, GameObject>() {
+            CollisionDetector.getInstance().getCollisionContactListener().addListener(new ICollisionListener() {
                 @Override
-                public void onCollision(Spaceship ship, GameObject g) {
+                public void onCollision(GameObject g1, GameObject g2) {
+                	GameObject g;
+                	if(g1 instanceof Spaceship) {
+                		g = g2;
+                	} else if(g2 instanceof Spaceship) {
+                		g = g1;
+                	} else {
+                		return;
+                	}
+                	
                     if (g.isDummy()) {
                         return;
                     }

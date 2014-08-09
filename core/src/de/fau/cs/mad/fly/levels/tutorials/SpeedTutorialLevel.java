@@ -19,7 +19,7 @@ import de.fau.cs.mad.fly.player.Spaceship;
  * @author Tobi
  *
  */
-public class SpeedTutorialLevel implements ILevel, IFeatureInit, ICollisionListener<Spaceship, Collectible> {
+public class SpeedTutorialLevel implements ILevel, IFeatureInit, ICollisionListener {
 	
 	@Override
 	public void create(GameControllerBuilder builder) {
@@ -32,7 +32,10 @@ public class SpeedTutorialLevel implements ILevel, IFeatureInit, ICollisionListe
 	}
 
 	@Override
-	public void onCollision(Spaceship o1, Collectible o2) {
+	public void onCollision(GameObject g1, GameObject g2) {
+		if(!(g2 instanceof Collectible)) {
+			return;
+		}
 		List<GameObject> objects = GameController.getInstance().getLevel().components;
 		for(GameObject object : objects) {
 			if(object.id.equals("IndicatorArrow")) {

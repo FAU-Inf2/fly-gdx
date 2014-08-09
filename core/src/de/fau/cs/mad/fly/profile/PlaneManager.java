@@ -27,8 +27,7 @@ public class PlaneManager {
 	public static PlaneManager getInstance() {
 		return Instance;
 	}
-	
-	
+
 	public List<IPlane.Head> getSpaceshipList() {
 		if (planes == null) {
 			

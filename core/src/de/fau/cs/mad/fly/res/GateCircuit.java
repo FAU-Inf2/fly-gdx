@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.player.Spaceship;
 
 /**
@@ -22,27 +20,32 @@ import de.fau.cs.mad.fly.player.Spaceship;
  * @author Tobi
  *
  */
-public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, Gate> {
+public class GateCircuit implements IFeatureLoad, ICollisionListener {
 
     /**
      * The gate that has been passed recently, at the beginning the dummy gate.
      */
-    private Gate virtualGate;
+    private GateGoal virtualGate;
     
     /**
      * The starting gate of the gate circuit.
      */
-    private Gate startingGate;
+    private GateGoal startingGate;
     
     /**
      * Maps the id to the corresponding gate.
      */
-    private Map<Integer, Gate> gates = new HashMap<Integer, Gate>();
+    private Map<Integer, GateGoal> gates = new HashMap<Integer, GateGoal>();
     
     /**
      * The list of all the gates of the gate circuit.
      */
-    private List<Gate> allGates = new ArrayList<Gate>();
+    private List<GateGoal> allGateGoals = new ArrayList<GateGoal>();
+    
+    /**
+     * The list of all the gates of the gate circuit.
+     */
+    private List<GateDisplay> allGateDisplays = new ArrayList<GateDisplay>();
     
     /**
      * The list of the event listeners that want to be notified if a gate is passed or the gate circuit is finished.
@@ -63,7 +66,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
      * Creates a new gate circuit.
      * @param startingGate		The starting gate of the gate circuit.
      */
-    public GateCircuit(Gate startingGate) {
+    public GateCircuit(GateGoal startingGate) {
         this.virtualGate = startingGate;
         this.startingGate = startingGate;
     }
@@ -81,25 +84,36 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
      * @return size of the gate circuit.
      */
     public int getGatesNumber() {
-        return allGates().size();
+        return allGateGoals().size();
     }
     
     /**
-     * Returns a gate by a given id.
+     * Returns a gate goal by a given id.
      * @param id		The id of the gate.
      * @return the gate with the given id.
      */
-    public Gate getGateById(int id) {
+    public GateGoal getGateGoalById(int id) {
         return gates.get(id);
     }
     
     /**
      * Adds a gate to the gate circuit.
-     * @param gate		The gate to add.
+     * @param gate		The gate goal to add.
      */
-    public void addGate(Gate gate) {
-        gates.put(gate.id, gate);
-        allGates.add(gate);
+    public void addGate(GateGoal gate) {
+        gates.put(gate.getId(), gate);
+        allGateGoals.add(gate);
+        allGateDisplays.add(gate.getDisplay());
+    }
+    
+    /**
+     * Removes a gate from the gate circuit.
+     * @param gate		The gate goal to remove.
+     */
+    public void removeGate(GateGoal gate) {
+        gates.remove(gate);
+        allGateGoals.remove(gate);
+        allGateDisplays.remove(gate.getDisplay());
     }
     
     /**
@@ -107,9 +121,14 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
      * gates.
      * @param gates		The map with all the gates.
      */
-    public void setGates(Map<Integer, Gate> gates) {
+    public void setGates(Map<Integer, GateGoal> gates) {
         this.gates = gates;
-        this.allGates.addAll(gates.values());
+        allGateGoals.addAll(gates.values());
+        for(GateGoal g : allGateGoals) {
+        	if(g.getDisplay() != null) {
+        		allGateDisplays.add(g.getDisplay());
+        	}
+        }
     }
     
     /**
@@ -132,10 +151,10 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
      * Checks if the currently passed gate is one of the current active gates.
      * @param gate		The gate to check.
      */
-    public void gatePassed(Gate gate) {
+    public void gatePassed(GateGoal gate) {
         int numberOfSuccessorGates = virtualGate.successors.length;
         for (int i = 0; i < numberOfSuccessorGates; i++) {
-            if (gate.id == virtualGate.successors[i]) {
+            if (gate.getId() == virtualGate.successors[i]) {
                 gate.passedTimes++;
                 activeGatePassed(gate);
                 i = numberOfSuccessorGates;
@@ -147,7 +166,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
      * Calls the event listeners for a passed gate and finishes the circuit if it was the last gate and it has no successors.
      * @param gate		The gate that was passed.
      */
-    public void activeGatePassed(Gate gate) {
+    public void activeGatePassed(GateGoal gate) {
         for (EventListener s : eventListeners)
             s.onGatePassed(gate);
         virtualGate = gate;
@@ -171,7 +190,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
      * Setter for the starting gate.
      * @param startingGate		The starting gate.
      */
-    public void setStartGate(Gate startingGate) {
+    public void setStartGate(GateGoal startingGate) {
         this.startingGate = startingGate;
     }
     
@@ -184,11 +203,19 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
     }
     
     /**
-     * Getter for all the gates of the gate circuit.
-     * @return list of all the gates.
+     * Getter for all the gate goals of the gate circuit.
+     * @return list of all the gates goals.
      */
-    public List<Gate> allGates() {
-        return allGates;
+    public List<GateGoal> allGateGoals() {
+        return allGateGoals;
+    }
+    
+    /**
+     * Getter for all the gate displays of the gate circuit.
+     * @return list of all the gates displays.
+     */
+    public List<GateDisplay> allGateDisplays() {
+        return allGateDisplays;
     }
     
     /**
@@ -200,28 +227,12 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
         
         Gdx.app.log("GateCircuit.createGateRigidBodies", "Setting up collision for level gates.");
         
-        for (Gate g : allGates()) {
-            if (g.display.getRigidBody() == null) {
-				btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(g.display.modelId, g.display);
-				g.display.createRigidBody(g.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-				
-				// different scaling for the gates is buggy
-				/*g.display.transform.scl(g.display.scaling);
-				g.display.getRigidBody().getCollisionShape().setLocalScaling(g.display.scaling);*/
-            }
-            collisionDetector.addRigidBody(g.display);
-            
-            if (g.goal.getRigidBody() == null) {
-				btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(g.goal.modelId + ".goal", new Vector3(0.8f, 0.1f, 0.8f));
-				g.goal.userData = g;
-				g.goal.createRigidBody(g.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-				g.goal.getRigidBody().setCollisionFlags(g.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-				
-				// different scaling for the gates is buggy
-				/*g.goal.transform.scl(g.display.scaling);
-				g.goal.getRigidBody().getCollisionShape().setLocalScaling(g.display.scaling);*/
-            }
-            collisionDetector.addRigidBody(g.goal);
+        for (GateGoal g : allGateGoals()) {
+        	g.createRigidBody(collisionDetector);
+        }
+        
+        for (GateDisplay d : allGateDisplays()) {
+        	d.createRigidBody(collisionDetector);
         }
     }
     
@@ -241,7 +252,13 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener<Spaceship, 
 	}
 	
 	@Override
-	public void onCollision(Spaceship spaceship, Gate gate) {
+	public void onCollision(GameObject g1, GameObject g2) {
+    	if(!(g2 instanceof GateGoal)) {
+    		return;
+    	}
+		
+    	GateGoal gate = (GateGoal) g2;
+		
 		gatePassed(gate);
 	}
 }

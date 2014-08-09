@@ -13,7 +13,7 @@ public class Gate implements Disposable {
     public int passedTimes = 0;
     public int[] successors;
     
-    public Gate(Integer id) {
+    public Gate(int id) {
         this.id = id;
         this.score = 50;
     }

@@ -47,7 +47,7 @@ public class CameraController {
 	 */
 	public PerspectiveCamera updateCamera() {
 		
-		values = player.getPlane().getInstance().transform.getValues();
+		values = player.getPlane().getTransform().getValues();
 		camera.direction.set(values[8], values[9], values[10]).nor();
 		camera.up.set(values[4], values[5], values[6]).nor();
 		

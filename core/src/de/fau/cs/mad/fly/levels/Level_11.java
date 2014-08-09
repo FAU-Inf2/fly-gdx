@@ -17,7 +17,7 @@ import de.fau.cs.mad.fly.player.Spaceship;
  * @author Tobi
  *
  */
-public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener<Spaceship, GameObject> {
+public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener {
 
 	@Override
 	public void create(GameControllerBuilder builder) {
@@ -34,7 +34,7 @@ public class Level_11 implements ILevel, IntegerTimeListener, ICollisionListener
 	}
 
 	@Override
-	public void onCollision(Spaceship o1, GameObject o2) {
+	public void onCollision(GameObject g1, GameObject g2) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.features.upgrades.types;
 
+import de.fau.cs.mad.fly.game.GameModel;
+
 /**
  * An upgrade to change the steering of the plane.
  * 
@@ -24,11 +26,13 @@ public class ChangeSteeringUpgrade extends Collectible {
 	
 	/**
 	 * Creates a new change steering upgrade.
+	 * @param model			The model of the upgrade.
 	 * @param roll			The roll change of the upgrade.
 	 * @param azimuth		The azimuth change of the upgrade.
 	 * @param duration		The duration of the upgrade.
 	 */
-	public ChangeSteeringUpgrade(float roll, float azimuth, float duration) {
+	public ChangeSteeringUpgrade(GameModel model, float roll, float azimuth, float duration) {
+		super(model);
 		this.roll = roll;
 		this.azimuth = azimuth;
 		this.duration = duration;

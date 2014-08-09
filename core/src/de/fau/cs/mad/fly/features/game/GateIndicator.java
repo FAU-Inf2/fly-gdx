@@ -142,7 +142,7 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
         GateCircuit gateCircuit = level.getGateCircuit();
         
         for (int i = 0; i < gateCircuit.currentGates().length; i++) {
-            gate = gateCircuit.getGateById(gateCircuit.currentGates()[i]).goal;
+            gate = gateCircuit.getGateGoalById(gateCircuit.currentGates()[i]);
             // only draw a gate indicator when the next gate is not visible. If
             // it is visible, the gate itself is highlighted
             if (!gate.isVisible(camera)) {

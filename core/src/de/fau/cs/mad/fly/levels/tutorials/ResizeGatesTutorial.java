@@ -14,7 +14,7 @@ import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.levels.ILevel;
 import de.fau.cs.mad.fly.player.Spaceship;
-import de.fau.cs.mad.fly.res.Gate;
+import de.fau.cs.mad.fly.res.GateGoal;
 
 /**
  * Level script file for the resize gates tutorial.
@@ -22,7 +22,7 @@ import de.fau.cs.mad.fly.res.Gate;
  * @author Tobi
  *
  */
-public class ResizeGatesTutorial implements ILevel, IFeatureInit, ICollisionListener<Spaceship, Collectible> {
+public class ResizeGatesTutorial implements ILevel, IFeatureInit, ICollisionListener {
 	
 	@Override
 	public void create(GameControllerBuilder builder) {
@@ -35,13 +35,15 @@ public class ResizeGatesTutorial implements ILevel, IFeatureInit, ICollisionList
 		
 		Vector3 scale = new Vector3(0.4f, 0.4f, 0.4f);
 		Vector3 scaling = new Vector3();
-        for (Gate g : game.getLevel().getGateCircuit().allGates()) {
-	    	g.display.transform.scl(scale);
-	    	g.display.transform.getScale(scaling);
-	    	g.display.getRigidBody().getCollisionShape().setLocalScaling(scaling);
-	    	g.goal.transform.scl(scale);
-	    	g.goal.transform.getScale(scaling);
-	    	g.goal.getRigidBody().getCollisionShape().setLocalScaling(scaling);
+        for (GateGoal g : game.getLevel().getGateCircuit().allGateGoals()) {
+        	if(g.getDisplay() != null) {
+        		g.getDisplay().transform.scl(scale);
+		    	g.getDisplay().transform.getScale(scaling);
+		    	g.getDisplay().getRigidBody().getCollisionShape().setLocalScaling(scaling);
+        	}
+	    	g.transform.scl(scale);
+	    	g.transform.getScale(scaling);
+	    	g.getRigidBody().getCollisionShape().setLocalScaling(scaling);
 	    }
 		
 		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.resize"), 5);
@@ -49,7 +51,10 @@ public class ResizeGatesTutorial implements ILevel, IFeatureInit, ICollisionList
 	
 
 	@Override
-	public void onCollision(Spaceship o1, Collectible o2) {
+	public void onCollision(GameObject g1, GameObject g2) {
+		if(!(g2 instanceof Collectible)) {
+			return;
+		}
 		List<GameObject> objects = GameController.getInstance().getLevel().components;
 		for(GameObject object : objects) {
 			if(object.id.equals("IndicatorArrow")) {
