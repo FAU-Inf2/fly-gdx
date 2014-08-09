@@ -1,12 +1,10 @@
 package de.fau.cs.mad.fly.game;
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
@@ -210,20 +208,6 @@ public class GameObject extends ModelInstance implements Disposable {
 	public boolean isDummy() {
 		return dummy;
 	}
-
-	/**
-	 * Marks the game object with a special color.
-	 */
-	public void mark() {
-		materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
-	}
-
-	/**
-	 * Unmarks the object.
-	 */
-	public void unmark() {
-		materials.get(0).set(ColorAttribute.createDiffuse(Color.GRAY));
-	}
 	
 	/**
 	 * Setter for the rigidBody.userData of the GameObject.
@@ -277,7 +261,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	}
 
 	/**
-	 * Renders the game object and updates the position of the collision object if one is defined.
+	 * Renders the game object.
 	 * 
 	 * @param batch		The model batch of the screen.
 	 * @param cam		The camera used to display the world.
@@ -287,7 +271,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	}
 	
 	/**
-	 * Renders the game object with environment and updates the position of the collision object if one is defined.
+	 * Renders the game object with environment.
 	 * 
 	 * @param batch				The model batch of the screen.
 	 * @param environment		The environment used to display the world.
@@ -365,7 +349,6 @@ public class GameObject extends ModelInstance implements Disposable {
 
 	@Override
 	public void dispose() {
-		//Gdx.app.log("GameObject.dispose", "dispose " + id);
 		removeRigidBody();
 	}
 }

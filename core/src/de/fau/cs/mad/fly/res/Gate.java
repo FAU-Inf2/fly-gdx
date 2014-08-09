@@ -18,18 +18,6 @@ public class Gate implements Disposable {
         this.score = 50;
     }
     
-    public void mark() {
-        if (display != null) {
-            display.mark();
-        }
-    }
-    
-    public void unmark() {
-        if (display != null) {
-            display.unmark();
-        }
-    }
-    
     @Override
     public boolean equals(Object o) {
         if (this == o) {
