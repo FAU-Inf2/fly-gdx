@@ -85,6 +85,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         return level;
     }
     
+    /**
+     * Parses the gates in the level file and creates a gate circuit.
+     * @return GateCircuit
+     */
     private GateCircuit parseGates() {    	
         Map<Integer, GateGoal> gateMap = new HashMap<Integer, GateGoal>();
         
@@ -137,6 +141,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     	return gateCircuit;
     }
     
+    /**
+     * Parses the additional information of the current game object like the id.
+     * @param o		The game object.
+     * @param e		The json value of the game object.
+     */
     private void parseInformation(GameObject o, JsonValue e) {
     	o.id = e.getString("id");
     	
@@ -146,6 +155,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         }
     }
     
+    /**
+     * Parses the velocity information of the current game object.
+     * @param o		The game object.
+     * @param e		The json value of the game object.
+     */
     private void parseVelocity(GameObject o, JsonValue e) {
         JsonValue linearVelocity = e.get("linear_velocity");
         if (linearVelocity != null) {
@@ -157,7 +171,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         }
     }
     
-    
+    /**
+     * Parses the transform matrix of the current game object.
+     * @param o		The game object.
+     * @param e		The json value of the game object.
+     */
     private void parseTransform(GameObject o, JsonValue e) {
         JsonValue transform = e.get("transformMatrix");
         JsonValue position = e.get("position");
@@ -194,6 +212,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         }
     }
     
+    /**
+     * Parses the upgrades in the level file.
+     * @return list of collectibles.
+     */
     private List<Collectible> parseUpgrades() {
     	List<Collectible> upgradeList = new ArrayList<Collectible>();
     	JsonValue upgrades = json.get("upgrades");
@@ -242,11 +264,17 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     	return upgradeList;
     }
     
+    /**
+     * Parses the json file.
+     */
     private void parseJson() {
         if (json == null)
             json = reader.parse(file);
     }
     
+    /**
+     * Parses the dependencies.
+     */
     private void parseDependencies() {
         if (dependencies == null) {
             parseJson();
@@ -262,6 +290,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         }
     }
     
+    /**
+     * Parses the components.
+     * <p>
+     * Components are all the decoration stuff in the level.
+     */
     private void parseComponents() {
         parseJson();
         components.clear();

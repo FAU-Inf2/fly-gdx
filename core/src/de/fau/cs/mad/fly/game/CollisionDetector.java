@@ -14,11 +14,7 @@ import com.badlogic.gdx.utils.Disposable;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.player.Spaceship;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The manager for the whole collision detection and handling stuff.

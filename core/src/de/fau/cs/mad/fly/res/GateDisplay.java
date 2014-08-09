@@ -9,13 +9,27 @@ import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 
+/**
+ * Displays the visible part of the gate.
+ * 
+ * @author Tobi
+ *
+ */
 public class GateDisplay extends GameObject implements Disposable {
     private GateGoal goal = null;
     
+    /**
+     * Creates a new gate display.
+     * @param model		The model of the gate display.
+     */
     public GateDisplay(GameModel model) {
     	super(model, "GateDisplay");
     }
     
+    /**
+     * Creates the rigid body of the gate display if its not already created.
+     * @param collisionDetector
+     */
     public void createRigidBody(CollisionDetector collisionDetector) {        
         if (rigidBody == null) {
 			btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(modelId, this);
@@ -28,10 +42,18 @@ public class GateDisplay extends GameObject implements Disposable {
         collisionDetector.addRigidBody(this);
     }
     
+    /**
+     * Setter for the gate goal for this display.
+     * @param goal		The gate goal.
+     */
     public void setGoal(GateGoal goal) {
     	this.goal = goal;
     }
     
+    /**
+     * Getter for the gate goal for this display.
+     * @return goal
+     */
     public GateGoal getGoal() {
     	return goal;
     }
