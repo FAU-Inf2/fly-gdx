@@ -89,15 +89,16 @@ class LevelExporter:
 		for item in bpy.data.objects:
 			if "Gate." in item.name:
 				gate = { }
-				gate['id'] = ConvertHelper.convert_id(item.name)
-				gate['display'] = item.name
-				gate['goal'] = item.name + "hole"
+				gate['gateId'] = ConvertHelper.convert_id(item.name)
+				gate['refHole'] = item['HoleModel']
 
 				successors = [ ]
 				for constraint in item.constraints:
 					successors.append(ConvertHelper.convert_id(constraint.target.name))
 
 				gate['successors'] = successors
+				
+				self.addInfo(gate, item)
 				gates.append(gate)
 		
 		return gates
@@ -110,41 +111,64 @@ class LevelExporter:
 			up = { }
 			if "changePointsUpgrade" in item.name:
 				up['type'] = "ChangePointsUpgrade"
-				up['display'] = item.name
 				up['points'] = item['points']
+				self.addInfo(up, item)
 				upgrades.append(up)
 			elif "changeSteeringUpgrade" in item.name:
 				up['type'] = "ChangeSteeringUpgrade"
-				up['display'] = item.name
 				up['duration'] = item['duration']
 				up['azimuth'] = item['azimuth']
 				up['roll'] = item['roll']
+				self.addInfo(up, item)
 				upgrades.append(up)
 			elif "changeTimeUpgrade" in item.name:
 				up['type'] = "ChangeTimeUpgrade"
-				up['display'] = item.name
 				up['time'] = item['time']
+				self.addInfo(up, item)
 				upgrades.append(up)
 			elif "instantSpeedUpgrade" in item.name:
 				up['type'] = "InstantSpeedUpgrade"
-				up['display'] = item.name
 				up['duration'] = item['duration']
 				up['speedFactor'] = item['speedFactor']
+				self.addInfo(up, item)
 				upgrades.append(up)
 			elif "linearSpeedUpgrade" in item.name:
 				up['type'] = "LinearSpeedUpgrade"
-				up['display'] = item.name
 				up['increaseFactor'] = item['increaseFactor']
 				up['increaseDuration'] = item['increaseDuration']
 				up['decreaseFactor'] = item['decreaseFactor']
+				self.addInfo(up, item)
 				upgrades.append(up)
 			elif "resizeGatesUpgrade" in item.name:
 				up['type'] = "ResizeGatesUpgrade"
-				up['display'] = item.name
 				up['scale'] = [ ConvertHelper.convert_pos(item['scaleX']), ConvertHelper.convert_pos(item['scaleY']), ConvertHelper.convert_pos(item['scaleZ']) ]
+				self.addInfo(up, item)
 				upgrades.append(up)
 
 		return upgrades
+	
+	def addInfo(self, component, item):
+		"""Adds the 3D component info"""
+		
+		component['id'] = item.name
+		component['ref'] = item['Model']
+		component['position'] = [ ConvertHelper.convert_pos(item.location.x), ConvertHelper.convert_pos(item.location.y), ConvertHelper.convert_pos(item.location.z) ]
+		component['euler'] = [ ConvertHelper.convert_angle(item.rotation_euler.x) - 90.0, ConvertHelper.convert_angle(item.rotation_euler.y), ConvertHelper.convert_angle(item.rotation_euler.z) ]
+		if item.scale.x != 1.0 or item.scale.y != 1.0 or item.scale.z != 1.0:
+			component['scale'] = [ ConvertHelper.convert_pos(item.scale.x), ConvertHelper.convert_pos(item.scale.y), ConvertHelper.convert_pos(item.scale.z) ]
+
+		if "Visible" in item:
+			if "false" in item['Visible']:
+				component['visible'] = False
+
+		if len(item.game.actuators) > 0:
+			if "Motion" in item.game.actuators[0].name:
+				act = item.game.actuators[0]
+				component['linear_velocity'] = [ act.linear_velocity.x, act.linear_velocity.y, act.linear_velocity.z ]
+				component['angular_velocity'] = [ act.angular_velocity.x, act.angular_velocity.y, act.angular_velocity.z ]
+		
+		return component
+		
 		
 	def setupComponents(self, export):
 		"""Creates the component information"""
@@ -156,33 +180,10 @@ class LevelExporter:
 		components.append(component)
 
 		for item in bpy.data.objects:
-			if "Player" not in item.name:
+			if "Type" in item and "deco" in item['Type']:
 				component = { }
-				component['id'] = item.name
-				component['ref'] = item['Model']
-				component['position'] = [ ConvertHelper.convert_pos(item.location.x), ConvertHelper.convert_pos(item.location.y), ConvertHelper.convert_pos(item.location.z) ]
-				component['euler'] = [ ConvertHelper.convert_angle(item.rotation_euler.x) - 90.0, ConvertHelper.convert_angle(item.rotation_euler.y), ConvertHelper.convert_angle(item.rotation_euler.z) ]
-				if item.scale.x != 1.0 or item.scale.y != 1.0 or item.scale.z != 1.0:
-					component['scale'] = [ ConvertHelper.convert_pos(item.scale.x), ConvertHelper.convert_pos(item.scale.y), ConvertHelper.convert_pos(item.scale.z) ]
-
-				if "Visible" in item:
-					if "false" in item['Visible']:
-						component['visible'] = False
-
-				if len(item.game.actuators) > 0:
-					if "Motion" in item.game.actuators[0].name:
-						act = item.game.actuators[0]
-						component['linear_velocity'] = [ act.linear_velocity.x, act.linear_velocity.y, act.linear_velocity.z ]
-						component['angular_velocity'] = [ act.angular_velocity.x, act.angular_velocity.y, act.angular_velocity.z ]
-						
+				self.addInfo(component, item)						
 				components.append(component)
-				
-				if "Gate." in item.name:
-					component = { }
-					component['id'] = item.name + "hole"
-					component['ref'] = item['HoleModel']
-					component['visible'] = False
-					components.append(component)
 			
 		return components
 
