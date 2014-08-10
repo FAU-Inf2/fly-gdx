@@ -10,7 +10,7 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.levels.ILevel;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
-import de.fau.cs.mad.fly.res.EventListener;
+import de.fau.cs.mad.fly.res.GateCircuitListener;
 import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
@@ -20,7 +20,7 @@ import de.fau.cs.mad.fly.settings.SettingManager;
  * @author Tobi
  *
  */
-public class RollTutorialLevel implements ILevel, IFeatureInit, EventListener {
+public class RollTutorialLevel implements ILevel, IFeatureInit, GateCircuitListener {
 	
 	@Override
 	public void create(GameControllerBuilder builder) {

@@ -7,10 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -46,15 +44,14 @@ import de.fau.cs.mad.fly.features.upgrades.ResizeGatesUpgradeHandler;
 import de.fau.cs.mad.fly.graphics.FlyShaderProvider;
 import de.fau.cs.mad.fly.levels.DefaultLevel;
 import de.fau.cs.mad.fly.levels.ILevel;
-import de.fau.cs.mad.fly.levels.Level_11;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.player.Spaceship;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
-import de.fau.cs.mad.fly.res.EventAdapter;
-import de.fau.cs.mad.fly.res.EventListener;
 import de.fau.cs.mad.fly.res.GateCircuit;
+import de.fau.cs.mad.fly.res.GateCircuitAdapter;
+import de.fau.cs.mad.fly.res.GateCircuitListener;
 import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
@@ -171,7 +168,7 @@ public class GameControllerBuilder {
         
         Gdx.app.log("Builder.init", "Registering EventListeners for level.");
 
-        gateCircuit.addEventListener(new EventAdapter() {
+        gateCircuit.addListener(new GateCircuitAdapter() {
             @Override
             public void onGatePassed(GateGoal passed) {
             	GateCircuit gateCircuit = level.getGateCircuit();
@@ -190,12 +187,12 @@ public class GameControllerBuilder {
             }
         });
         
-        gateCircuit.addEventListener(scoreController);
+        gateCircuit.addListener(scoreController);
         
         if (level.head.name.equals("Endless")) {
             generator = new EndlessLevelGenerator(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLevel());
             
-            gateCircuit.addEventListener(new EventAdapter() {
+            gateCircuit.addListener(new GateCircuitAdapter() {
                 @Override
                 public void onGatePassed(GateGoal passed) {
                     generator.addRandomGate(passed);
@@ -404,8 +401,8 @@ public class GameControllerBuilder {
     		timeController.registerIntegerTimeListener((IntegerTimeListener) feature);
     	}
     	
-    	if (feature instanceof EventListener) {
-    		level.getGateCircuit().addEventListener((EventListener) feature);
+    	if (feature instanceof GateCircuitListener) {
+    		level.getGateCircuit().addListener((GateCircuitListener) feature);
     	}
     }
     
@@ -565,7 +562,7 @@ public class GameControllerBuilder {
         gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
         
-        level.getGateCircuit().addEventListener(new EventAdapter() {
+        level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override
             public void onFinished() {
                 gc.finishGame();

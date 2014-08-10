@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.features.upgrades.types;
 
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 

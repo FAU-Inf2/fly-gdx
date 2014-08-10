@@ -12,7 +12,6 @@ import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.player.Spaceship;
 
 /**
  * Manages the logic of the gates like storing the gate list and handling the gate passing.
@@ -48,9 +47,9 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     private List<GateDisplay> allGateDisplays = new ArrayList<GateDisplay>();
     
     /**
-     * The list of the event listeners that want to be notified if a gate is passed or the gate circuit is finished.
+     * The list of the gate circuit listeners that want to be notified if a gate is passed or the gate circuit is finished.
      */
-    private List<EventListener> eventListeners = new ArrayList<EventListener>();
+    private List<GateCircuitListener> gateCircuitListeners = new ArrayList<GateCircuitListener>();
     
     /**
      * True if the last gate was reached, false otherwise.
@@ -72,11 +71,11 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     }
   
     /**
-     * Adds an event listener to the gate circuit.
+     * Adds an gate circuit listener to the gate circuit.
      * @param listener
      */
-    public void addEventListener(EventListener listener) {
-        eventListeners.add(listener);
+    public void addListener(GateCircuitListener listener) {
+    	gateCircuitListeners.add(listener);
     }
     
     /**
@@ -163,11 +162,11 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     }
     
     /**
-     * Calls the event listeners for a passed gate and finishes the circuit if it was the last gate and it has no successors.
+     * Calls the gate circuit listeners for a passed gate and finishes the circuit if it was the last gate and it has no successors.
      * @param gate		The gate that was passed.
      */
     public void activeGatePassed(GateGoal gate) {
-        for (EventListener s : eventListeners)
+        for (GateCircuitListener s : gateCircuitListeners)
             s.onGatePassed(gate);
         virtualGate = gate;
         if (gate.successors.length == 0) {
@@ -177,11 +176,11 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     }
     
     /**
-     * Calls the event listeners for the finished gate circuit.
+     * Calls the gate circuit listeners for the finished gate circuit.
      */
     protected void circuitFinished() {
     	level.finishLevel();
-        for (EventListener s : eventListeners) {
+        for (GateCircuitListener s : gateCircuitListeners) {
             s.onFinished();
         }
     }
@@ -239,10 +238,10 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     /**
      * Resets the gate circuit.
      * <p>
-     * Clears the event listeners and sets the virtual gate to the starting gate.
+     * Clears the gate circuit listeners and sets the virtual gate to the starting gate.
      */
     public void reset() {
-        eventListeners.clear();
+    	gateCircuitListeners.clear();
         virtualGate = startingGate;
     }
 	

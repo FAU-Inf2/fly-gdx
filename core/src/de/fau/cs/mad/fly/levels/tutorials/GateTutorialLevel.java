@@ -6,7 +6,7 @@ import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.levels.ILevel;
-import de.fau.cs.mad.fly.res.EventListener;
+import de.fau.cs.mad.fly.res.GateCircuitListener;
 import de.fau.cs.mad.fly.res.GateGoal;
 
 /**
@@ -15,7 +15,7 @@ import de.fau.cs.mad.fly.res.GateGoal;
  * @author Tobi
  *
  */
-public class GateTutorialLevel implements ILevel, IFeatureInit, EventListener {
+public class GateTutorialLevel implements ILevel, IFeatureInit, GateCircuitListener {
 	
 	/**
 	 * Counts the amount of gates that are already reached.

@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
-import de.fau.cs.mad.fly.res.EventAdapter;
+import de.fau.cs.mad.fly.res.GateCircuitAdapter;
 import de.fau.cs.mad.fly.res.GateGoal;
 
 /**
@@ -15,7 +15,7 @@ import de.fau.cs.mad.fly.res.GateGoal;
  * @author Tobi
  *
  */
-public class ScoreController extends EventAdapter {    
+public class ScoreController extends GateCircuitAdapter {    
 	/**
 	 * The total score.
 	 */
