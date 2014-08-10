@@ -1,22 +1,17 @@
 package de.fau.cs.mad.fly.features.game;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 
 import de.fau.cs.mad.fly.game.CollisionDetector;
-import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.GateDisplay;
 import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.res.Gate;
 /**
  * generates an endless random level
  * @author Sebastian
@@ -89,17 +84,12 @@ public class EndlessLevelGenerator {
 	public void addRandomGate(GateGoal passed) {
 		Gdx.app.log("myApp", "addRandomGate");
 		if(passed.getId() != lastGateId) {
-			List<GateGoal> newGates = null; //generateRandomGates(predecessors);
+			List<GateGoal> newGates = generateRandomGates(predecessors);
 			
 			predecessors.clear();
 			int size = newGates.size();
 			for(int i = 0; i < size; i++) {
-				GateGoal newGate = newGates.get(i);
-				
-				Gdx.app.log("myApp", "newGate");
-				level.components.add(newGate);
-				//level.components.add(newGate.goal);
-				
+				GateGoal newGate = newGates.get(i);				
 				level.getGateCircuit().addGate(newGate);
 				gateGoals.add(newGate);
 				predecessors.add(newGate);
@@ -140,9 +130,10 @@ public class EndlessLevelGenerator {
 	 * @param predecessor - the previous Gate
 	 * @return - the randomly generated Gate
 	 */
-	private List<Gate> generateRandomGates(List<Gate> predecessors) {
+	private List<GateGoal> generateRandomGates(List<GateGoal> predecessors) {
+		CollisionDetector collisionDetector = CollisionDetector.getInstance();
 
-		List<Gate> newGates = new ArrayList<Gate>();
+		List<GateGoal> newGates = new ArrayList<GateGoal>();
 		float rand = 1.f;
 		float min = 0.8f;
 		Vector3 newLastDirection = new Vector3(0,0,0);
@@ -152,16 +143,8 @@ public class EndlessLevelGenerator {
 			distance -= difficulty / 2.f;
 			
 			//Gdx.app.log("myApp", "generateRandomGate");
-			Gate newGate = new Gate(currGate);
-
-			// Creating display and goal for the new Gate
-			GameObject display = new GameObject(level.getDependency("torus"));
-			display.modelId = "torus";
-			display.id = "gate" + Integer.toString(currGate); 
-			
-			GameObject goal = new GameObject(level.getDependency("hole"));
-			goal.modelId = "hole";
-			goal.id = "gate" + Integer.toString(currGate) + "hole"; 
+			GateDisplay newDisplay = new GateDisplay(level.getDependency("torus"));
+			GateGoal newGoal = new GateGoal(currGate, level.getDependency("hole"), newDisplay);
 
 			Vector3 newDirection;
 			
@@ -179,40 +162,37 @@ public class EndlessLevelGenerator {
 				
 				Matrix4[] t = new Matrix4[predecessors.size()];
 				for(int i = 0; i < predecessors.size(); i++) {
-					t[i] = predecessors.get(i).display.transform.cpy();
+					t[i] = predecessors.get(i).transform.cpy();
 				}
 				
 				//display.transform = predecessors.get(0).display.transform.cpy();
-				display.transform.avg(t);
+				newDisplay.transform.avg(t);
 				
-				display.transform.rotate(lastDirection, newDirection);
-				display.transform.translate(new Vector3(0,1,0).scl(distance));
+				newDisplay.transform.rotate(lastDirection, newDirection);
+				newDisplay.transform.translate(new Vector3(0,1,0).scl(distance));
 				
 				if(count-- <= 0) {
 					use = false;
 					break;
 				}
 				
-			} while(checkForSpawnCollision(display.getPosition(), newGates, 5.0f));
+			} while(checkForSpawnCollision(newDisplay.getPosition(), newGates, 5.0f));
 			
 			if(!use) {
 				rand = MathUtils.random();
 				continue;
 			}
 
-			goal.transform = display.transform.cpy();
+			newGoal.transform = newDisplay.transform.cpy();
+			newGoal.successors = new int[0];
 			
-			// add display and goal to the new Gate
-			newGate.display = display;
-			newGate.goal = goal;
-			newGate.successors = new int[0];
-			
-			addRigidBody(newGate);
+			newGoal.createRigidBody(collisionDetector);
+			newDisplay.createRigidBody(collisionDetector);
 			
 			//lastDirection = newDirection.cpy();
 			newLastDirection.add(newDirection.cpy());
 			
-			newGates.add(newGate);
+			newGates.add(newGoal);
 			rand = MathUtils.random();
 			currGate++;
 			min += 0.05f;
@@ -224,12 +204,12 @@ public class EndlessLevelGenerator {
 		int size = newGates.size();
 		int[] newGateIds = new int[size];
 		for(int i = 0; i < size; i++) {
-			newGateIds[i] = newGates.get(i).id;
+			newGateIds[i] = newGates.get(i).getId();
 		}
 		
 		size = predecessors.size();
 		for(int i = 0; i < size; i++) {
-			Gate predecessor = predecessors.get(i);
+			GateGoal predecessor = predecessors.get(i);
 			predecessor.successors = newGateIds;
 		}
 		
@@ -243,31 +223,10 @@ public class EndlessLevelGenerator {
 		return newGates;
 	}
 	
-	private void addRigidBody(Gate newGate) {
-		// add display and goal to the collisionDetector
-		CollisionDetector collisionDetector = CollisionDetector.getInstance();
-		/////////////////////////////////////////////////////////////////////////////////////
-		if (newGate.display.getRigidBody() == null) {
-			//Gdx.app.log("Builder.init", "Display RigidBody == null");
-			btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(newGate.display.modelId, newGate.display);
-			newGate.display.createRigidBody(newGate.display.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-		}
-		
-		collisionDetector.addRigidBody(newGate.display);
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		if (newGate.goal.getRigidBody() == null) {
-			//Gdx.app.log("Builder.init", "Goal RigidBody == null");
-			btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(newGate.goal.modelId + ".goal", new Vector3(1.0f, 0.05f, 1.0f));
-			newGate.goal.hide();
-			newGate.goal.userData = newGate;
-			newGate.goal.createRigidBody(newGate.goal.modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-			newGate.goal.getRigidBody().setCollisionFlags(newGate.goal.getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-		}
-		collisionDetector.addRigidBody(newGate.goal);
-		
-		//////////////////////////////////////////////////////////
-	}
-	
+	/**
+	 * Calculates a random angle.
+	 * @return angle
+	 */
 	private float randomAngle() {
 		float angle = MathUtils.random(maxAngle * 2) - maxAngle;
 		
@@ -278,11 +237,18 @@ public class EndlessLevelGenerator {
 		return angle;
 	}
 	
-	private boolean checkForSpawnCollision(Vector3 position, List<Gate> gates, float distance) {
+	/**
+	 * Checks for spawn collisions.
+	 * @param position			The position of the new gate goals.
+	 * @param gates				List of all the currently existing gates goals.
+	 * @param distance			The minimum distance between the new goal and the existing goals.
+	 * @return true if too close, false otherwise.
+	 */
+	private boolean checkForSpawnCollision(Vector3 position, List<GateGoal> gates, float distance) {
 		int size = gates.size();
 		for(int i = 0; i < size; i++) {
-			Gate gate = gates.get(i);
-			if(position.dst(gate.display.getPosition()) < distance) {
+			GateGoal gate = gates.get(i);
+			if(position.dst(gate.getPosition()) < distance) {
 				return true;
 			}
 		}
