@@ -1,5 +1,5 @@
 {
-    "class": "tutorials.GateTutorialLevel",
+    "class": "tutorials.AzimuthTutorialLevel",
     "components": [
         {
             "id": "space",
@@ -7,15 +7,8 @@
         }
     ],
     "dependencies": {
-        "arrow": "arrow",
-        "asteroid": "asteroid",
         "hole": "torusHoleBox",
-        "pointsUpgrade": "pointsUpgrade",
-        "resizeGatesUpgrade": "resizeGatesUpgrade",
         "space": "spacesphere",
-        "speedUpgrade": "speedUpgrade",
-        "steeringUpgrade": "steeringUpgrade",
-        "timeUpgrade": "timeUpgrade",
         "torus": "torus"
     },
     "gates": [
@@ -52,7 +45,7 @@
             "gateId": 1,
             "id": "Gate.001",
             "position": [
-                0.0,
+                3.0,
                 30.0,
                 0.0
             ],
@@ -65,72 +58,52 @@
         {
             "euler": [
                 0.0,
-                0.0,
-                90.0
+                -0.0,
+                0.0
             ],
             "gateId": 2,
             "id": "Gate.002",
             "position": [
-                -15.0,
+                0.0,
                 45.0,
                 0.0
             ],
             "ref": "torus",
             "refHole": "hole",
             "successors": [
-                3,
+                3
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                -3.0,
+                60.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
                 4
             ]
         },
         {
             "euler": [
                 0.0,
-                0.0,
-                90.0
-            ],
-            "gateId": 3,
-            "id": "Gate.003",
-            "position": [
-                -30.0,
-                50.0,
+                -0.0,
                 0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                5
-            ]
-        },
-        {
-            "euler": [
-                0.0,
-                0.0,
-                90.0
             ],
             "gateId": 4,
             "id": "Gate.004",
             "position": [
-                -30.0,
-                40.0,
-                0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                5
-            ]
-        },
-        {
-            "euler": [
                 0.0,
-                0.0,
-                90.0
-            ],
-            "gateId": 5,
-            "id": "Gate.005",
-            "position": [
-                -60.0,
-                45.0,
+                75.0,
                 0.0
             ],
             "ref": "torus",
@@ -138,8 +111,8 @@
             "successors": []
         }
     ],
-    "id": 3,
-    "name": "Gate Tutorial",
+    "id": 2,
+    "name": "Azimuth Tutorial",
     "scripts": [],
     "start": {
         "position": {
