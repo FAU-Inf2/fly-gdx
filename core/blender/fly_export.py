@@ -44,14 +44,13 @@ class LevelExporter:
 		self.data['components'] = self.setupComponents(export)
 		
 	def setupInfo(self, export):
-		"""Creates the level information"""
-		world = bpy.data.worlds['World']
+		"""Creates the level information"""		
+		level = bpy.data.objects['Level']
 		
-		self.data['id'] = int(world['ID'])
-		self.data['name'] = world['Name']
-		self.data['time'] = int(world['Time'])
-		self.data['scripts'] = [ ]
-		self.data['class'] = world['Class']
+		self.data['id'] = int(level['ID'])
+		self.data['name'] = level['Name']
+		self.data['time'] = int(level['Time'])
+		self.data['class'] = level['Class']
 		
 	def setupStartPos(self):
 		"""Creates the starting position information"""
@@ -178,7 +177,7 @@ class LevelExporter:
 		
 		component = { }
 		component['id'] = "space"
-		component['ref'] = bpy.data.worlds['World']['Border']
+		component['ref'] = bpy.data.objects['Level']['Border']
 		components.append(component)
 
 		for item in bpy.data.objects:
@@ -224,7 +223,7 @@ class ExportLevelOperator(Operator, ExportHelper):
 	def execute(self, context):
 		return write_level(context, self)
 
-def menu_func_export(self, context):
+def menu_func_export(self, context):	
 	self.layout.operator(ExportLevelOperator.bl_idname, text="FLY Exporter (.json)")
 
 
