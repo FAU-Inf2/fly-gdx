@@ -35,6 +35,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private GameController gameController;
     private final Skin skin;
     private final Stage stage;
+    private Score newScore;
     
     public GameFinishedOverlay(final Skin skin, final Stage stage) {
         this.stage = stage;
@@ -83,7 +84,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             infoLabel = new Label(I18n.t("level.congratulations"), skin);
             messageTable.add(infoLabel);
             //Score newScore = gameController.getLevel().getScore();
-            Score newScore = gameController.getScoreController().getEndScore(gameController);
+            newScore = gameController.getScoreController().getEndScore(gameController);
             String scoreString = I18n.t("newScore") + newScore.getTotalScore();
             final Label scoreLabel = new Label(scoreString, skin);
             messageTable.add(scoreLabel).pad(15f);
@@ -95,7 +96,13 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             }
             Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
             if ( tmpScore == null || newScore.getTotalScore() > tmpScore.getTotalScore()) {
-                ScoreManager.getInstance().saveBestScore(newScore);
+            	new Thread(new Runnable() {
+        			@Override
+        			public void run() {
+        				ScoreManager.getInstance().saveBestScore(newScore);        				
+        			}
+        		}).start();
+
                 messageTable.row().expand();
                 messageTable.add(new Label(I18n.t("newRecord"), skin)).pad(6f).uniform();
             }

@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.ui;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -9,13 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
@@ -49,7 +49,7 @@ public class StatisticsScreen extends BasicScreen {
 	
 	private PlayerProfile playerProfile;
 	private int selectedUserindex = 0;
-	private List userList;
+	private SelectBox<String> userList;
 		
 	private void initButtons() {
 		textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
@@ -64,8 +64,9 @@ public class StatisticsScreen extends BasicScreen {
 					for(PlayerProfile playerProfile : PlayerProfileManager.getInstance().getAllPlayerProfiles())
 					{
 						if(playerProfile.getName().equals(name)){
-							new Dialog("User " + name +" already exists!", skin) {
+							new Dialog("", skin) {
 								{
+									text("The user already exists!");
 									button("OK");
 								}
 							}.show(stage);
@@ -76,11 +77,18 @@ public class StatisticsScreen extends BasicScreen {
 					playerProfile.setName(name);
 
 					PlayerProfileManager.getInstance().savePlayer(playerProfile);
-					genarateUserTable();
+					updateUserTable();
+					new Dialog("", skin) {
+						{
+							text("User Added.");
+							button("OK");
+						}
+					}.show(stage);
 				}
 				else {
-					new Dialog("User name should not be null!", skin) {
+					new Dialog("", skin) {
 						{
+							text("User name should not be null!");
 							button("OK");
 						}
 					}.show(stage);
@@ -88,7 +96,7 @@ public class StatisticsScreen extends BasicScreen {
 			}
 		});
 		
-		globalHighScoreButton = new TextButton("Global high scores",
+		globalHighScoreButton = new TextButton("Global highscores",
 				textButtonStyle);
 		globalHighScoreButton.addListener(new ClickListener() {
 			@Override
@@ -104,8 +112,8 @@ public class StatisticsScreen extends BasicScreen {
 		String userName = playerProfile.getName();
 		userTable.add(new Label(I18n.t("usernameLableText"), skin)).pad(6f);
 		
-		userList = new List(skin);		
-		ArrayList<String> nameList = new ArrayList<String>();
+		userList = new SelectBox<String>(skin);		
+		Array<String> nameList = new Array<String>();
 		java.util.List<PlayerProfile> playerList = PlayerProfileManager.getInstance().getAllPlayerProfiles();
 		for (int i = 0; i < playerList.size(); i++) {
 			PlayerProfile playerProfile = playerList.get(i);
@@ -114,7 +122,7 @@ public class StatisticsScreen extends BasicScreen {
 				selectedUserindex = i;
 			}
 		}
-		userList.setItems(nameList.toArray());
+		userList.setItems(nameList);
 		userList.setSelectedIndex(selectedUserindex);
 		userList.getSelection().setRequired(false);
 		userList.getSelection().setToggle(true);
@@ -134,7 +142,7 @@ public class StatisticsScreen extends BasicScreen {
 				return false;
 			}
 		});
-		userTable.add(userList).pad(6f).uniform();
+		userTable.add(userList).width(800).pad(6f).uniform();
 		userTable.row().expand();
 
 		newUserField = new TextField("", skin);
@@ -145,8 +153,26 @@ public class StatisticsScreen extends BasicScreen {
 		userTable.layout();
 	}
 	
+	private void updateUserTable() {
+		String userName = playerProfile.getName();
+		userList.clear();		
+		Array<String> nameList = new Array<String>();
+		java.util.List<PlayerProfile> playerList = PlayerProfileManager.getInstance().getAllPlayerProfiles();
+		for (int i = 0; i < playerList.size(); i++) {
+			PlayerProfile playerProfile = playerList.get(i);
+			nameList.add(playerProfile.getName());
+			if (userName.equals(playerProfile.getName())) {
+				selectedUserindex = i;
+			}
+		}
+		userList.setItems(nameList);
+		userList.setSelectedIndex(selectedUserindex);
+		userList.getSelection().setRequired(false);
+		userList.getSelection().setToggle(true);		
+		userList.layout();
+	}
 	private void genarateScoreTable(){	
-		new Thread(new showScore()).start();//.run(); 
+		new Thread(new showScore()).start();
 	}
 	
 	@Override
@@ -192,10 +218,10 @@ public class StatisticsScreen extends BasicScreen {
 		public void run() {
 			scores = ScoreManager.getInstance().getcurrentBestScores();			
 
-			Gdx.app.postRunnable(new Runnable() {
-				
-				@Override
-				public void run() {		
+			//it is faster if we remove this, but it may also bring in UI render exception
+//			Gdx.app.postRunnable(new Runnable() {				
+//				@Override
+//				public void run() {		
 					scoreTable.clear();
 					// add scores details
 					boolean haveScore = false;
@@ -245,7 +271,7 @@ public class StatisticsScreen extends BasicScreen {
 								}
 							});
 							scoreTable.row().expand();
-							scoreTable.add(uploadScoreButton).pad(6f).right();
+							scoreTable.add(uploadScoreButton).pad(6f).colspan(2);
 						}
 					}
 
@@ -260,7 +286,7 @@ public class StatisticsScreen extends BasicScreen {
 					scoreTable.add(new Label("", skin)).pad(6f).uniform();
 					scoreTable.row().expand();
 				
-					scoreTable.add(globalHighScoreButton).pad(12f);
+					scoreTable.add(globalHighScoreButton).colspan(2);
 
 					//scoreTable.setColor(0, 0, 0, 0f);
 					//scoreTable.addAction(Actions.fadeIn(2f));
@@ -268,8 +294,8 @@ public class StatisticsScreen extends BasicScreen {
 					Gdx.app.log("StaticScreen",
 							"end generateContentDynamic " + System.currentTimeMillis());
 					scoreTable.layout();
-				}
-			});
+//				}
+//			});
 
 		}
 	}
@@ -300,12 +326,13 @@ public class StatisticsScreen extends BasicScreen {
 			Gdx.app.postRunnable(new Runnable() {
 				@Override
 				public void run() {
-					new Dialog("Failed", skin) {
+					new Dialog("", skin) {
 						{
 							text(msgg.substring(0, 20) + "...");
 							button("OK");
 						}
-					}.show(stage);
+					}.show(stage);				
+					
 				}
 			});
 		}
@@ -321,7 +348,7 @@ public class StatisticsScreen extends BasicScreen {
 //			Gdx.app.postRunnable(new Runnable() {
 //				@Override
 //				public void run() {
-					new Dialog("Info", skin) {
+					new Dialog("", skin) {
 						{
 							text("Uploaded!");
 							button("OK");
@@ -339,7 +366,7 @@ public class StatisticsScreen extends BasicScreen {
 //			Gdx.app.postRunnable(new Runnable() {
 //				@Override
 //				public void run() {
-					new Dialog("Failed", skin) {
+					new Dialog("", skin) {
 						{
 							text(msgg.substring(0, 20) + "...");
 							button("OK");
@@ -352,8 +379,6 @@ public class StatisticsScreen extends BasicScreen {
 		@Override
 		public void cancelled() {
 		}
-	};
-
-	
+	};	
 		 
 }
