@@ -45,11 +45,13 @@ class LevelExporter:
 		
 	def setupInfo(self, export):
 		"""Creates the level information"""
-		self.data['id'] = int(export.level_id)
-		self.data['name'] = export.level_name
-		self.data['time'] = int(export.level_time)
+		world = bpy.data.worlds['World']
+		
+		self.data['id'] = int(world['ID'])
+		self.data['name'] = world['Name']
+		self.data['time'] = int(world['Time'])
 		self.data['scripts'] = [ ]
-		self.data['class'] = export.level_class
+		self.data['class'] = world['Class']
 		
 	def setupStartPos(self):
 		"""Creates the starting position information"""
@@ -176,7 +178,7 @@ class LevelExporter:
 		
 		component = { }
 		component['id'] = "space"
-		component['ref'] = export.border_model
+		component['ref'] = bpy.data.worlds['World']['Border']
 		components.append(component)
 
 		for item in bpy.data.objects:
@@ -194,8 +196,6 @@ class LevelExporter:
 		f = open(filepath, 'w', encoding='utf-8')
 		f.write(json.dumps(self.data, sort_keys=True, indent=4, separators=(',', ': ')))
 		f.close()
-
-
 
 
 
@@ -221,16 +221,8 @@ class ExportLevelOperator(Operator, ExportHelper):
 	filename_ext = ".json"
 	filter_glob = StringProperty(default="*.json", options={'HIDDEN'})
 
-	level_id = StringProperty(name="Level ID", description="ID of the Level", default="1");
-	level_name = StringProperty(name="Level Name", description="Name of the Level", default="Level");
-	level_time = StringProperty(name="Level Time", description="Time of the Level", default="30");
-	level_class = StringProperty(name="Level Class", description="Class file for the level", default="");
-	
-	border_model = StringProperty(name="Border Model", description="Border model if no border model property is added", default="space");
-
 	def execute(self, context):
 		return write_level(context, self)
-
 
 def menu_func_export(self, context):
 	self.layout.operator(ExportLevelOperator.bl_idname, text="FLY Exporter (.json)")
