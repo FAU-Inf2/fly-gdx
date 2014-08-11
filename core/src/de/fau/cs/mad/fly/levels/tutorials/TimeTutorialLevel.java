@@ -11,7 +11,6 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.levels.ILevel;
-import de.fau.cs.mad.fly.player.Spaceship;
 
 /**
  * Level script file for the time tutorial level.

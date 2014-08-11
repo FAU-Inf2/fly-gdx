@@ -1,5 +1,5 @@
 {
-    "class": "tutorials.ResizeGatesTutorial",
+    "class": "tutorials.SteeringTutorialLevel",
     "components": [
         {
             "id": "space",
@@ -13,8 +13,8 @@
             ],
             "id": "IndicatorArrow",
             "position": [
-                3.0,
-                10.0,
+                -5.0,
+                20.0,
                 2.0
             ],
             "ref": "arrow",
@@ -28,8 +28,8 @@
     "dependencies": {
         "arrow": "arrow",
         "hole": "torusHoleBox",
-        "resizeGatesUpgrade": "resizeGatesUpgrade",
         "space": "spacesphere",
+        "steeringUpgrade": "steeringUpgrade",
         "torus": "torus"
     },
     "gates": [
@@ -48,7 +48,7 @@
             "id": "Gate.000",
             "position": [
                 0.0,
-                20.0,
+                10.0,
                 0.0
             ],
             "ref": "torus",
@@ -66,17 +66,17 @@
             "gateId": 1,
             "id": "Gate.001",
             "position": [
-                0.0,
-                32.0,
-                0.0
+                -10.0,
+                10.0,
+                5.0
             ],
             "ref": "torus",
             "refHole": "hole",
             "successors": []
         }
     ],
-    "id": 6,
-    "name": "Resize Gate Tutorial",
+    "id": 8,
+    "name": "Steering Level",
     "scripts": [],
     "start": {
         "position": {
@@ -95,37 +95,35 @@
             "z": 0.0
         }
     },
-    "time": 30,
+    "time": 50,
     "upgrades": [
         {
             "angular_velocity": [
+                1.0,
                 2.0,
-                0.0,
-                1.0
+                0.0
             ],
+            "azimuth": 1,
+            "duration": 30,
             "euler": [
                 -90.0,
                 0.0,
                 0.0
             ],
-            "id": "resizeGatesUpgrade",
+            "id": "changeSteeringUpgrade",
             "linear_velocity": [
                 0.0,
                 0.0,
                 0.0
             ],
             "position": [
-                3.0,
-                10.0,
+                -5.0,
+                20.0,
                 0.0
             ],
-            "ref": "resizeGatesUpgrade",
-            "scale": [
-                3.0,
-                3.0,
-                3.0
-            ],
-            "type": "ResizeGatesUpgrade"
+            "ref": "steeringUpgrade",
+            "roll": 1,
+            "type": "ChangeSteeringUpgrade"
         }
     ]
 }

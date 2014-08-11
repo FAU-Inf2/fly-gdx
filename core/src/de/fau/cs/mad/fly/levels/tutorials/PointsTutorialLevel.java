@@ -2,8 +2,6 @@ package de.fau.cs.mad.fly.levels.tutorials;
 
 import java.util.List;
 
-import com.badlogic.gdx.math.Vector3;
-
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureInit;
@@ -13,15 +11,14 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.levels.ILevel;
-import de.fau.cs.mad.fly.res.GateGoal;
 
 /**
- * Level script file for the resize gates tutorial.
+ * Level script file for the points tutorial level.
  * 
  * @author Tobi
  *
  */
-public class ResizeGatesTutorial implements ILevel, IFeatureInit, ICollisionListener {
+public class PointsTutorialLevel implements ILevel, IFeatureInit, ICollisionListener {
 	
 	@Override
 	public void create(GameControllerBuilder builder) {
@@ -30,22 +27,7 @@ public class ResizeGatesTutorial implements ILevel, IFeatureInit, ICollisionList
 
 	@Override
 	public void init(GameController game) {
-		game.getLevel();
-		
-		Vector3 scale = new Vector3(0.4f, 0.4f, 0.4f);
-		Vector3 scaling = new Vector3();
-        for (GateGoal g : game.getLevel().getGateCircuit().allGateGoals()) {
-        	if(g.getDisplay() != null) {
-        		g.getDisplay().transform.scl(scale);
-		    	g.getDisplay().transform.getScale(scaling);
-		    	g.getDisplay().getRigidBody().getCollisionShape().setLocalScaling(scaling);
-        	}
-	    	g.transform.scl(scale);
-	    	g.transform.getScale(scaling);
-	    	g.getRigidBody().getCollisionShape().setLocalScaling(scaling);
-	    }
-		
-		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.resize"), 5);
+		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.points"), 5);
 	}
 	
 

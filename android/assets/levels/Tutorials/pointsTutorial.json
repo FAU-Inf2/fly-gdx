@@ -1,5 +1,5 @@
 {
-    "class": "tutorials.ResizeGatesTutorial",
+    "class": "tutorials.PointsTutorialLevel",
     "components": [
         {
             "id": "space",
@@ -13,8 +13,8 @@
             ],
             "id": "IndicatorArrow",
             "position": [
-                3.0,
-                10.0,
+                -10.0,
+                20.0,
                 2.0
             ],
             "ref": "arrow",
@@ -28,7 +28,7 @@
     "dependencies": {
         "arrow": "arrow",
         "hole": "torusHoleBox",
-        "resizeGatesUpgrade": "resizeGatesUpgrade",
+        "pointsUpgrade": "pointsUpgrade",
         "space": "spacesphere",
         "torus": "torus"
     },
@@ -48,7 +48,7 @@
             "id": "Gate.000",
             "position": [
                 0.0,
-                20.0,
+                10.0,
                 0.0
             ],
             "ref": "torus",
@@ -67,7 +67,7 @@
             "id": "Gate.001",
             "position": [
                 0.0,
-                32.0,
+                20.0,
                 0.0
             ],
             "ref": "torus",
@@ -75,8 +75,8 @@
             "successors": []
         }
     ],
-    "id": 6,
-    "name": "Resize Gate Tutorial",
+    "id": 7,
+    "name": "Points Tutorial",
     "scripts": [],
     "start": {
         "position": {
@@ -108,24 +108,20 @@
                 0.0,
                 0.0
             ],
-            "id": "resizeGatesUpgrade",
+            "id": "changePointsUpgrade",
             "linear_velocity": [
                 0.0,
                 0.0,
                 0.0
             ],
+            "points": 150,
             "position": [
-                3.0,
-                10.0,
+                -10.0,
+                20.0,
                 0.0
             ],
-            "ref": "resizeGatesUpgrade",
-            "scale": [
-                3.0,
-                3.0,
-                3.0
-            ],
-            "type": "ResizeGatesUpgrade"
+            "ref": "pointsUpgrade",
+            "type": "ChangePointsUpgrade"
         }
     ]
 }
