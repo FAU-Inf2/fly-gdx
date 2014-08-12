@@ -190,7 +190,6 @@
     ],
     "id": 8,
     "name": "Level 8",
-    "scripts": [],
     "start": {
         "position": {
             "x": 0.0,
@@ -208,6 +207,6 @@
             "z": 0.0
         }
     },
-    "time": 48,
+    "time": 50,
     "upgrades": []
 }
