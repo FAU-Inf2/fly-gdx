@@ -32,7 +32,7 @@ public class PlaneManager {
 		if (planes == null) {
 			
 			planes = new ArrayList<IPlane.Head>();
-			FileHandle dirHandle = Gdx.files.internal("spaceships/");
+			FileHandle dirHandle = Gdx.files.internal("spaceships/json/");
 			for (FileHandle file : dirHandle.list()) {
 				JsonValue json = reader.parse(file);
 				IPlane.Head spaceshipHead = new IPlane.Head();

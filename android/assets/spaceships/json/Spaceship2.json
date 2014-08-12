@@ -1,0 +1,9 @@
+{
+	"id": 2,
+	"name": "Astero",
+	"modelRef": "asteroid",
+	"speed": 10,
+	"rollingSpeed": 5,
+	"azimuthSpeed": 5,
+	"lives": 3,
+}

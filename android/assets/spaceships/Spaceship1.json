@@ -1,9 +1,0 @@
-{
-	"id": 1,
-	"name": "Spaceship",
-	"modelRef": "spaceship",
-	"speed": 10,
-	"rollingSpeed": 9,
-	"azimuthSpeed": 9,
-	"lives": 1,
-}

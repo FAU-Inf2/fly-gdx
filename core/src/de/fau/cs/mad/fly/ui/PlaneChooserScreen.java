@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -29,12 +30,17 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -82,10 +88,13 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 	
 	private int xDif, yDif;
 	private boolean touched;
-	float xFactor = 0.f, yFactor = 0.f;
+	private float xFactor = 0.f, yFactor = 0.f;
 	private int lastX = 0, lastY = 0;
 
 	public PlaneChooserScreen(/*PlayerProfile profile*/) {
+		float time = TimeUtils.nanoTime();
+		Gdx.app.log("setScreen", time + ": begin Constructor");
+		
 		environment = new Environment();
 		
 		setUpEnvironment();
@@ -95,6 +104,9 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		
 		skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
 		backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
+		
+		time = TimeUtils.nanoTime();
+		Gdx.app.log("setScreen", time + ": before stage");
 		
 		// initialize the stage
 		stage = new Stage();
@@ -108,38 +120,53 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		backgroundBatch = new SpriteBatch();
 		Assets.load(new AssetDescriptor<Texture>("models/spacesphere/spacesphere.jpg", Texture.class));
 		
-		table = new Table(skin);
-		table.bottom();
-		table.setFillParent(true);
-		leftButton = new TextButton(I18n.t("lastPlane"), skin, UI.Buttons.DEFAULT_STYLE);
-		rightButton = new TextButton(I18n.t("nextPlane"), skin, UI.Buttons.DEFAULT_STYLE);
+		time = TimeUtils.nanoTime();
+		Gdx.app.log("setScreen", time + ": after stage+batch");
 		
-		leftButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				currentPlane = PlaneManager.getInstance().getNextPlane(1);
-				loadCurrentPlane();
-				updateOverlay();
-				resetVectors();
-			}
-		});
+		// adding the table containing the buttons with preview of every plane
+		Table scrollableTable = new Table(skin);
+		scrollableTable.bottom();
+		ScrollPane scrollPane = new ScrollPane(scrollableTable, skin);
+		scrollPane.setScrollingDisabled(false, true);
+		scrollPane.setPosition(0, 0);
+		scrollPane.setBounds(0, 0, UI.Window.REFERENCE_WIDTH, UI.Window.REFERENCE_HEIGHT/3);
+		scrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
+		//scrollPane.setFillParent(true);
 		
-		table.add(leftButton).bottom().left().pad(UI.Window.BORDER_SPACE);
+		time = TimeUtils.nanoTime();
+		Gdx.app.log("setScreen", time + ": after scrollPane");
 		
-		rightButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				currentPlane = PlaneManager.getInstance().getNextPlane(-1);
-				loadCurrentPlane();
-				updateOverlay();
-				resetVectors();
-			}
-		});
+		int size = allPlanes.size();
+		for(int i = 0; i < size; i++) {
+			
+			Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(i).modelRef + ".png"));
+			TextureRegion image = new TextureRegion(texture1);
+			ImageButtonStyle style = new ImageButtonStyle(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+			style.imageUp = new TextureRegionDrawable(image);
+			style.imageDown = new TextureRegionDrawable(image);
+			
+			ImageButton button = new ImageButton(style);
+			final int index = i;
+			
+			button.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					//currentPlane = PlaneManager.getInstance().getNextPlane(-1);
+					currentPlane = allPlanes.get(index);
+					PlaneManager.getInstance().setChosenPlane(currentPlane);
+					loadCurrentPlane();
+					updateOverlay();
+					resetVectors();
+				}
+			});
+			
+			scrollableTable.add(button);
+		}
 		
-		table.add(rightButton).bottom().right().pad(UI.Window.BORDER_SPACE);
+		stage.addActor(scrollPane);
 		
-		// adding the buttons overlay
-		stage.addActor(table);
+		time = TimeUtils.nanoTime();
+		Gdx.app.log("setScreen", time + ": after Buttons");
 		
 		// initializing the overlay which contains the details of the current spaceship
 		initOverlay();
@@ -163,6 +190,9 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		
 		// initialize the InputProcessor
 		inputProcessor = new InputMultiplexer(this, stage, new BackProcessor());
+		
+		time = TimeUtils.nanoTime();
+		Gdx.app.log("setScreen", time + ": end Constructor");
 	}
 	
 	private void resetVectors() {

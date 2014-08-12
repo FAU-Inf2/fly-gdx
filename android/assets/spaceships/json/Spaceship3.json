@@ -1,0 +1,9 @@
+{
+	"id": 3,
+	"name": "Toru",
+	"modelRef": "torus",
+	"speed": 7,
+	"rollingSpeed": 5,
+	"azimuthSpeed": 5,
+	"lives": 5,
+}
