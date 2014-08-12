@@ -250,15 +250,21 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         livesLabel.setPosition(100, viewport.getWorldHeight()-1000);
 	}
 	
+	String name = I18n.t("name");
+	String speed = I18n.t("speed");
+	String pitch = I18n.t("pitch");
+	String turnSpeed = I18n.t("turnSpeed");
+	String lives = I18n.t("lives");
+	
 	/**
 	 * updates the overlay with the details of the current plane
 	 */
 	private void updateOverlay() {
-		nameLabel.setText(I18n.t("name") + ": " + currentPlane.name);
-		speedLabel.setText(I18n.t("speed") + ": " + Float.toString(currentPlane.speed));
-		rollingSpeedLabel.setText(I18n.t("pitch") + ": " + Float.toString(currentPlane.rollingSpeed));
-		azimuthSpeedLabel.setText(I18n.t("turnSpeed") + ": " + Float.toString(currentPlane.azimuthSpeed));
-		livesLabel.setText(I18n.t("lives") + ": " + Integer.toString(currentPlane.lives));
+		nameLabel.setText(name + ": " + currentPlane.name);
+		speedLabel.setText(speed + ": " + Float.toString(currentPlane.speed));
+		rollingSpeedLabel.setText(pitch + ": " + Float.toString(currentPlane.rollingSpeed));
+		azimuthSpeedLabel.setText(turnSpeed + ": " + Float.toString(currentPlane.azimuthSpeed));
+		livesLabel.setText(lives + ": " + Integer.toString(currentPlane.lives));
 	}
 
 	@Override
