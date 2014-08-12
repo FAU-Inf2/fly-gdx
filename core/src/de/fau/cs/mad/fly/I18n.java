@@ -20,7 +20,8 @@ public final class I18n {
 	}
 
 	public static String format(String key, Object... args) {
-		updateLocale();
+		// TODO: updateLocal is very time consuming, check if updateLocal is actually needed (seems to work without it)
+		//updateLocale();
 		return bundle.format(key, args);
 	}
 
@@ -29,7 +30,7 @@ public final class I18n {
 	}
 
 	public static String translate(String key) {
-		updateLocale();
+		//updateLocale();
 		return bundle.get(key);
 	}
 

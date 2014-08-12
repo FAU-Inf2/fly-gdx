@@ -90,12 +90,20 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 	private boolean touched;
 	private float xFactor = 0.f, yFactor = 0.f;
 	private int lastX = 0, lastY = 0;
+	
+	private String name, speed, pitch, turnSpeed ,lives;
 
 	public PlaneChooserScreen(/*PlayerProfile profile*/) {
 		float time = TimeUtils.nanoTime();
 		Gdx.app.log("setScreen", time + ": begin Constructor");
 		
 		environment = new Environment();
+		
+		name = I18n.t("name");
+		speed = I18n.t("speed");
+		pitch = I18n.t("pitch");
+		turnSpeed = I18n.t("turnSpeed");
+		lives = I18n.t("lives");
 		
 		setUpEnvironment();
 		setUpCamera();
@@ -279,12 +287,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         stage.addActor(livesLabel);
         livesLabel.setPosition(100, viewport.getWorldHeight()-1000);
 	}
-	
-	String name = I18n.t("name");
-	String speed = I18n.t("speed");
-	String pitch = I18n.t("pitch");
-	String turnSpeed = I18n.t("turnSpeed");
-	String lives = I18n.t("lives");
 	
 	/**
 	 * updates the overlay with the details of the current plane
