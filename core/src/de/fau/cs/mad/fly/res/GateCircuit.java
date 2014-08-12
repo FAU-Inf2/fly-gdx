@@ -1,6 +1,8 @@
 package de.fau.cs.mad.fly.res;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,21 @@ import de.fau.cs.mad.fly.game.GameObject;
  *
  */
 public class GateCircuit implements IFeatureLoad, ICollisionListener {
+	
+	/**
+	 * Comparator for the gate goals.
+	 */
+	private Comparator<GateGoal> goalComparator = new Comparator<GateGoal>() {
+		@Override
+		public int compare(GateGoal first, GateGoal second){
+		    if(first.getId() < second.getId()) {
+		    	return -1;
+		    } else if(first.getId() > second.getId()) {
+		    	return 1;
+		    }
+		    return 0;
+		}
+    };
 
     /**
      * The gate that has been passed recently, at the beginning the dummy gate.
@@ -117,12 +134,15 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Fills the Map that maps id to the corresponding gate and the list of all
-     * gates.
+     * gates. Sorts the list by id.
      * @param gates		The map with all the gates.
      */
     public void setGates(Map<Integer, GateGoal> gates) {
         this.gates = gates;
         allGateGoals.addAll(gates.values());
+        
+        Collections.sort(allGateGoals, goalComparator);
+        
         for(GateGoal g : allGateGoals) {
         	if(g.getDisplay() != null) {
         		allGateDisplays.add(g.getDisplay());
