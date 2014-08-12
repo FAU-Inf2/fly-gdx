@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.levels.tutorials;
 
+import com.badlogic.gdx.math.MathUtils;
+
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
@@ -44,17 +46,13 @@ public class GateTutorialLevel implements ILevel, IFeatureInit, GateCircuitListe
 		gateCounter++;
 		
 		if(gateCounter < 3) {
-			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate"), 5);
-			// fly to next gate
+			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
 		} else if(gateCounter == 3) {
-			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate"), 5);
-			// look for indicator
+			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate.indicator"), 5);
 		} else if(gateCounter == 4) {
-			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate"), 5);
-			// fly through one of the 2 gates
+			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate.choose"), 5);
 		} else {
-			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate"), 5);
-			// fly to last gate
+			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate.finish"), 5);
 		}
 	}
 }
