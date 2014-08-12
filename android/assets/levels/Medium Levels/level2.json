@@ -15,7 +15,8 @@
     "gates": [
         {
             "successors": [
-                0
+                0,
+                1
             ]
         },
         {
@@ -27,27 +28,8 @@
             "gateId": 0,
             "id": "Gate.000",
             "position": [
-                0.0,
+                -2.0,
                 10.0,
-                0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                1
-            ]
-        },
-        {
-            "euler": [
-                0.0,
-                -0.0,
-                -10.0
-            ],
-            "gateId": 1,
-            "id": "Gate.001",
-            "position": [
-                2.5,
-                25.0,
                 0.0
             ],
             "ref": "torus",
@@ -60,13 +42,32 @@
             "euler": [
                 0.0,
                 -0.0,
-                -20.0
+                0.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                2.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
             ],
             "gateId": 2,
             "id": "Gate.002",
             "position": [
-                7.0,
-                40.0,
+                0.0,
+                18.0,
                 0.0
             ],
             "ref": "torus",
@@ -78,14 +79,14 @@
         {
             "euler": [
                 0.0,
-                -0.0,
-                -30.0
+                0.0,
+                -45.0
             ],
             "gateId": 3,
             "id": "Gate.003",
             "position": [
-                15.0,
-                52.0,
+                6.0,
+                26.0,
                 0.0
             ],
             "ref": "torus",
@@ -97,14 +98,14 @@
         {
             "euler": [
                 0.0,
-                -0.0,
-                -40.0
+                0.0,
+                90.0
             ],
             "gateId": 4,
             "id": "Gate.004",
             "position": [
-                24.0,
-                64.0,
+                14.0,
+                26.0,
                 0.0
             ],
             "ref": "torus",
@@ -116,15 +117,15 @@
         {
             "euler": [
                 0.0,
-                -0.0,
-                -50.0
+                0.0,
+                90.0
             ],
             "gateId": 5,
             "id": "Gate.005",
             "position": [
-                36.0,
-                72.0,
-                0.0
+                31.0,
+                26.0,
+                6.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -135,23 +136,81 @@
         {
             "euler": [
                 0.0,
-                -0.0,
-                -60.0
+                0.0,
+                -45.0
             ],
             "gateId": 6,
             "id": "Gate.006",
             "position": [
-                50.0,
-                80.0,
-                0.0
+                31.0,
+                14.0,
+                2.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                7,
+                8
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                -45.0
+            ],
+            "gateId": 7,
+            "id": "Gate.007",
+            "position": [
+                20.0,
+                1.0,
+                2.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                9
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                -45.0
+            ],
+            "gateId": 8,
+            "id": "Gate.008",
+            "position": [
+                16.0,
+                5.0,
+                2.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                9
+            ]
+        },
+        {
+            "euler": [
+                -45.0,
+                0.0,
+                -45.0
+            ],
+            "gateId": 9,
+            "id": "Gate.009",
+            "position": [
+                8.0,
+                -6.0,
+                10.0
             ],
             "ref": "torus",
             "refHole": "hole",
             "successors": []
         }
     ],
-    "id": 5,
-    "name": "Level 5",
+    "id": 2,
+    "name": "Level 2",
     "start": {
         "position": {
             "x": 0.0,
@@ -169,6 +228,6 @@
             "z": 0.0
         }
     },
-    "time": 70,
+    "time": 60,
     "upgrades": []
 }

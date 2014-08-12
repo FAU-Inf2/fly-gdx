@@ -72,12 +72,69 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "successors": [
+                3,
+                4
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                -2.0,
+                26.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                2.0,
+                26.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 5,
+            "id": "Gate.005",
+            "position": [
+                0.0,
+                34.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
             "successors": []
         }
     ],
     "id": 7,
     "name": "Level 7",
-    "scripts": [],
     "start": {
         "position": {
             "x": 0.0,
@@ -95,6 +152,6 @@
             "z": 0.0
         }
     },
-    "time": 70,
+    "time": 30,
     "upgrades": []
 }
