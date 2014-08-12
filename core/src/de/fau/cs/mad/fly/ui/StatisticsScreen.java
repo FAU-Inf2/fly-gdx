@@ -185,7 +185,9 @@ public class StatisticsScreen extends BasicScreen {
 		table.setFillParent(true);
 		table.debug();
 		stage.addActor(table);
-		Table.drawDebug(stage);
+		
+		// TODO: not working in 1.3.0 any more, is it needed?
+		//Table.drawDebug(stage);
 
 		infoTable = new Table();		
 		userTable = new Table();
