@@ -31,8 +31,8 @@ public class FlyShaderProvider extends BaseShaderProvider {
 	@Override
 	protected Shader createShader(Renderable renderable) {
         if (renderable.material.has(TextureAttribute.Diffuse)) {
-            return new FlyTextureShader();
+            return new FlyTextureShader(renderable);
         }
-        return new FlyShader();
+        return new FlyShader(renderable);
     }
 }
