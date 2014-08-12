@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -20,22 +21,43 @@ public class FlyTextureShader implements Shader {
 	private ShaderProgram program;
 	private Camera camera;
 	private RenderContext context;
-	private int u_ProjViewTrans, u_worldTrans, u_specularColor, u_ambientLight, texture1;
+    private Environment environment;
+	private int u_ProjViewTrans, u_worldTrans, u_specularColor, u_ambientLight, texture1, numDirLights, numPointLights;
+    private int[][] u_dirLights, u_pointLights;
+
+    public FlyTextureShader(Renderable renderable) {
+        this.environment = renderable.environment;
+        this.numDirLights = this.environment.directionalLights.size;
+        this.numPointLights = this.environment.pointLights.size;
+    }
 
 	@Override
 	public void init() {
-		String vert = Gdx.files.internal("shaders/vertex.glsl").readString();
+        String prefix = "";
+        if(numDirLights > 0) prefix += "#define numDirLights " + this.numDirLights + "\n";
+        if(numPointLights > 0) prefix += "#define numPointLights " + this.numPointLights + "\n";
+        String vert = prefix + Gdx.files.internal("shaders/vertex.glsl").readString();
 		String frag = Gdx.files.internal("shaders/texture.fragment.glsl").readString();
 		program = new ShaderProgram(vert, frag);
 		if(!program.isCompiled()) {
 			throw new GdxRuntimeException(program.getLog());
 		}
 
+        u_dirLights = new int[numDirLights][2];
+        u_pointLights = new int[numPointLights][2];
 		u_ProjViewTrans = program.getUniformLocation("u_projViewTrans");
 		u_worldTrans = program.getUniformLocation("u_worldTrans");
         u_specularColor = program.getUniformLocation("u_specularColor");
         u_ambientLight = program.getUniformLocation("u_ambientLight");
 		texture1 = program.getUniformLocation("texture1");
+        for(int i=0; i<this.numDirLights; i++) {
+            u_dirLights[i][0] = program.getUniformLocation("u_dirLights[" + i + "].direction");
+            u_dirLights[i][1] = program.getUniformLocation("u_dirLights[" + i + "].color");
+        }
+        for(int i=0; i<this.numPointLights; i++) {
+            u_pointLights[i][0] = program.getUniformLocation("u_pointLights[" + i + "].position");
+            u_pointLights[i][1] = program.getUniformLocation("u_pointLights[" + i + "].color");
+        }
 	}
 
 	@Override
@@ -69,6 +91,17 @@ public class FlyTextureShader implements Shader {
         } else {
             program.setUniformf(u_ambientLight, Color.BLACK);
         }
+        for(int i=0; i<this.numDirLights; i++) {
+            program.setUniformf(u_dirLights[i][0], this.environment.directionalLights.get(i).direction);
+            program.setUniformf(u_dirLights[i][1], this.environment.directionalLights.get(i).color);
+        }
+
+        for(int i=0; i<this.numPointLights; i++) {
+            program.setUniformf(u_pointLights[i][0], this.environment.pointLights.get(i).position);
+            program.setUniformf(u_pointLights[i][1], this.environment.pointLights.get(i).color);
+        }
+
+
         //Bind texture
 		((TextureAttribute) renderable.material.get(TextureAttribute.Diffuse)).textureDescription.texture.bind(0);
 		program.setUniformi(texture1, 0);
