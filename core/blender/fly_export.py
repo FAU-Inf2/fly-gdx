@@ -165,11 +165,17 @@ class LevelExporter:
 		if len(item.game.actuators) > 0:
 			if "Motion" in item.game.actuators[0].name:
 				act = item.game.actuators[0]
-				component['linear_velocity'] = [ act.linear_velocity.x, act.linear_velocity.y, act.linear_velocity.z ]
-				component['angular_velocity'] = [ act.angular_velocity.x, act.angular_velocity.y, act.angular_velocity.z ]
+
+				self.addIfNotZero(component, 'sinus_x', act.force)
+				self.addIfNotZero(component, 'sinus_y', act.torque)
+				self.addIfNotZero(component, 'sinus_z', act.linear_velocity)
+				self.addIfNotZero(component, 'angular_velocity', act.angular_velocity)
 		
 		return component
 		
+	def addIfNotZero(self, component, id, value):
+		if value.x != 0.0 or value.y != 0.0 or value.z != 0.0:
+			component[id] = [ value.x, value.y, value.z ]
 		
 	def setupComponents(self, export):
 		"""Creates the component information"""
