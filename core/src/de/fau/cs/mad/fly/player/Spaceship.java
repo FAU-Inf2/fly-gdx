@@ -67,8 +67,8 @@ public class Spaceship extends GameObject implements IPlane {
 		this.camera = gameController.getCamera();
 		linearMovement = new Vector3();
 		
-		particle.load(camera, batch, modelRef);
-		particle.init();
+		//particle.load(camera, batch, modelRef);
+		//particle.init();
 		
 		resetSpeed();
 
@@ -96,9 +96,9 @@ public class Spaceship extends GameObject implements IPlane {
 
 		render(batch, environment, camera);
 		
-		particleTransform = transform.cpy();
-		particleTransform.translate(particleOffset);
-		particle.render(particleTransform);
+		//particleTransform = transform.cpy();
+		//particleTransform.translate(particleOffset);
+		//particle.render(particleTransform);
 		
 		transform.rotate(movingDir, azimuthDir);
 		transform.rotate(movingDir.cpy().crs(up), -rollDir);
@@ -201,7 +201,7 @@ public class Spaceship extends GameObject implements IPlane {
 	}
 	
 	public void dispose() {
-		particle.stop();
+		//particle.stop();
 		super.dispose();
 	}
 }
