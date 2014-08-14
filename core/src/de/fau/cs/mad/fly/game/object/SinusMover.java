@@ -16,30 +16,34 @@ import de.fau.cs.mad.fly.game.GameObject;
  */
 public class SinusMover implements IGameObjectMover {
 	private GameObject gameObject;
-	private IGameObjectMover nextMover = new EmptyMover();
+	
+	private float i = 0.0f;
 	
 	private Vector3 startPosition;
-	private Matrix4 transform;
+	private Vector3 moving = new Vector3();
 	
 	// vectors which store A, B and C for x, y and z direction.
-	private Vector3 X, Y, Z;
+	public Vector3 X = new Vector3();
+	public Vector3 Y = new Vector3();
+	public Vector3 Z = new Vector3();
 	
 	public SinusMover(GameObject gameObject) {
 		this.gameObject = gameObject;
-	}
-	
-	/**
-	 * Setter for the next mover.
-	 * @param nextMover		The next mover which should be called after this mover.
-	 */
-	public void setNextMover(IGameObjectMover nextMover) {
-		this.nextMover = nextMover;
+		startPosition = new Vector3();
+		gameObject.transform.getTranslation(startPosition);
 	}
 
 	@Override
 	public void move(float delta) {
+    	// store A*sin(B*x+C) in level file for x,y,z
+		moving.x = X.x * (float) Math.sin(X.y * i + X.z) * 0.1f;
+		moving.y = Y.x * (float) Math.sin(Y.y * i + Y.z) * 0.1f;
+		moving.z = Z.x * (float) Math.sin(Z.y * i + Z.z) * 0.1f;
+
+    	gameObject.transform.setTranslation(startPosition.add(moving));
+		gameObject.getRigidBody().setWorldTransform(gameObject.transform);
 		
-		//nextMover.move(delta);
+		i += delta;
 	}
 
 }

@@ -12,7 +12,6 @@ import de.fau.cs.mad.fly.game.GameObject;
  */
 public class RotationMover implements IGameObjectMover {
 	private GameObject gameObject;
-	private IGameObjectMover nextMover = new EmptyMover();
 	
 	private Vector3 rotation;
 	private float degrees;
@@ -23,14 +22,6 @@ public class RotationMover implements IGameObjectMover {
 	 */
 	public RotationMover(GameObject gameObject) {
 		this.gameObject = gameObject;
-	}
-	
-	/**
-	 * Setter for the next mover.
-	 * @param nextMover		The next mover which should be called after this mover.
-	 */
-	public void setNextMover(IGameObjectMover nextMover) {
-		this.nextMover = nextMover;
 	}
 	
 	/**
@@ -54,11 +45,8 @@ public class RotationMover implements IGameObjectMover {
 
 	@Override
 	public void move(float delta) {
-		//System.out.println("rotate: " + rotation + " " + degrees + " " + delta);
 		gameObject.transform.rotate(rotation, degrees * delta * 10.0f);
 		gameObject.getRigidBody().setWorldTransform(gameObject.transform);
-		
-		//nextMover.move(delta);
 	}
 
 }
