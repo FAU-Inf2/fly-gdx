@@ -59,7 +59,7 @@ public class StatisticsScreen extends BasicScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				String name = newUserField.getText().trim();
-				if (!name.equals(""))// todo more check
+				if (!"".equals(name))// todo more check
 				{
 					for(PlayerProfile playerProfile : PlayerProfileManager.getInstance().getAllPlayerProfiles())
 					{
