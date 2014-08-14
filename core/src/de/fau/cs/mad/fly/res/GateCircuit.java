@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
@@ -252,6 +256,50 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
         
         for (GateDisplay d : allGateDisplays()) {
         	d.createRigidBody(collisionDetector);
+        }
+    }
+    
+    /**
+     * Moves the gates.
+     * 
+     * @param		The delta since the last call.
+     */
+    public void moveGates(float delta) {
+    	GateDisplay display;
+    	
+        final int numberOfDisplays = allGateDisplays.size();        
+        for (int i = 0; i < numberOfDisplays; i++) {
+        	display = allGateDisplays.get(i);
+        	display.move(delta);
+        	display.getGoal().move(delta);
+        }
+    }
+    
+	/**
+	 * Renders the gates.
+	 * 
+	 * @param batch				The model batch for the rendering.
+	 * @param environment		The environment for the rendering.
+	 * @param camera			The camera for the rendering.
+	 */
+    public void render(ModelBatch batch, Environment environment, PerspectiveCamera camera) {
+    	GateDisplay display;
+    	
+        final int numberOfDisplays = allGateDisplays.size();
+        //Vector3 moving = new Vector3(0.0f, 0.0f, (float) Math.sin(sin));
+        
+        for (int i = 0; i < numberOfDisplays; i++) {
+        	display = allGateDisplays.get(i);
+        	display.render(batch, environment, camera);
+        	
+        	// store vector in level file -> length of vector = degrees
+        	/*display.transform.rotate(new Vector3(0.0f, 0.0f, 1.0f), 0.1f);
+        	// store A*sin(B*x+C) in level file for x,y,z
+        	//display.transform.setTranslation(display.gatePosition.cpy().add(moving));
+        	display.getRigidBody().setWorldTransform(display.transform);
+        	
+        	display.getGoal().transform = display.transform;
+        	display.getGoal().getRigidBody().setWorldTransform(display.transform);*/
         }
     }
     

@@ -152,6 +152,15 @@ public class Level implements Disposable {
      */
     public void update(float delta, PerspectiveCamera camera) {
         borderObject.transform.setToTranslation(camera.position);
+        
+        gateCircuit.moveGates(delta);
+        
+        int i;
+        final int numberOfUpgrades = upgrades.size();
+        for (i = 0; i < numberOfUpgrades; i++) {
+        	upgrades.get(i).move(delta);
+        }
+        
         if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
             gateCircuit.circuitFinished();
         }
@@ -170,15 +179,11 @@ public class Level implements Disposable {
     public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
         int i;
         final int numberOfComponents = components.size();
-        // Gdx.app.log("components:", String.valueOf(numberOfComponents));
         for (i = 0; i < numberOfComponents; i++) {
             components.get(i).render(batch, environment, camera);
         }
         
-        final int numberOfGates = gateCircuit.allGateDisplays().size();
-        for (i = 0; i < numberOfGates; i++) {
-        	gateCircuit.allGateDisplays().get(i).render(batch, environment, camera);
-        }
+        gateCircuit.render(batch, environment, camera);
         
         final int numberOfUpgrades = upgrades.size();
         for (i = 0; i < numberOfUpgrades; i++) {

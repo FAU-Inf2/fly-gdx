@@ -156,6 +156,8 @@ public class GameController implements TimeIsUpListener {
      * {@link #optionalFeaturesToLoad} are loaded.
      */
     public void loadGame() {
+    	camera = cameraController.getCamera();
+    	
         // load features
         for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
             optionalFeature.load(this);
@@ -169,8 +171,6 @@ public class GameController implements TimeIsUpListener {
      * initialized.
      */
     public void initGame() {
-        camera = cameraController.getCamera();
-        
         // initialize features
         for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
             optionalFeature.init(this);

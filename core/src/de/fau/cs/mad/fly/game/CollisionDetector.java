@@ -134,7 +134,7 @@ public class CollisionDetector implements Disposable {
         constraintSolver = new btSequentialImpulseConstraintSolver();
         dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, constraintSolver, collisionConfig);
         dynamicsWorld.setGravity(new Vector3(0.0f, 0.0f, 0.0f));
-		
+
 		contactListener = new CollisionContactListener();
 	}
 

@@ -28,6 +28,8 @@ import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.ResizeGatesUpgrade;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.game.object.IGameObjectMover;
+import de.fau.cs.mad.fly.game.object.RotationMover;
 
 /**
  * Created by danyel on 26/05/14.
@@ -120,6 +122,8 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 	            
 	            parseTransform(display, jsonGate);
 	            goal.transform = display.transform.cpy();
+	            parseVelocity(display, jsonGate);
+        		goal.setMover(display.getMover());
 	            gateMap.put(gateId.asInt(), goal);
             } else {
             	goal = new GateGoal(-1, models.get("hole"), null);
@@ -154,23 +158,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         	o.hide();
         }
     }
-    
-    /**
-     * Parses the velocity information of the current game object.
-     * @param o		The game object.
-     * @param e		The json value of the game object.
-     */
-    private void parseVelocity(GameObject o, JsonValue e) {
-        JsonValue linearVelocity = e.get("linear_velocity");
-        if (linearVelocity != null) {
-            o.setStartLinearVelocity(new Vector3(linearVelocity.getFloat(0), linearVelocity.getFloat(1), linearVelocity.getFloat(2)));
-        }
-        JsonValue angularVelocity = e.get("angular_velocity");
-        if (angularVelocity != null) {
-            o.setStartAngularVelocity(new Vector3(angularVelocity.getFloat(0), angularVelocity.getFloat(1), angularVelocity.getFloat(2)));
-        }
-    }
-    
+
     /**
      * Parses the transform matrix of the current game object.
      * @param o		The game object.
@@ -211,6 +199,30 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             // Gdx.app.log("LevelLoader.getComponents", "No 3D info found: " + o.transform.toString());
         }
     }
+
+    /**
+     * Parses the velocity information of the current game object. Has to be called after parse transform.
+     * @param o		The game object.
+     * @param e		The json value of the game object.
+     */
+    private void parseVelocity(GameObject o, JsonValue e) {
+        JsonValue sinusX = e.get("sinus_x");
+        JsonValue sinusY = e.get("sinus_y");
+        JsonValue sinusZ = e.get("sinus_z");
+        JsonValue angular = e.get("angular_velocity");
+        if ((sinusX != null || sinusY != null || sinusZ != null) && angular!= null) {
+        	// sin + rot
+        } else if ((sinusX != null || sinusY != null || sinusZ != null) && angular == null) {
+        	// sin
+        	
+        	
+        } else if (angular != null) {
+        	// rot
+            RotationMover mover = new RotationMover(o);
+            mover.setRotation(new Vector3(angular.getFloat(0), angular.getFloat(1), angular.getFloat(2)));
+            o.setMover(mover);
+        }
+    }
     
     /**
      * Parses the upgrades in the level file.
@@ -249,10 +261,10 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             		c = new ChangeSteeringUpgrade(models.get(ref), jsonUpgrade.get("roll").asFloat(), jsonUpgrade.get("azimuth").asFloat(), jsonUpgrade.get("duration").asFloat());
             	}
                 
-            	if(c != null) {            		
+            	if (c != null) {            		
             		parseInformation(c, jsonUpgrade);
-            		parseVelocity(c, jsonUpgrade);
             		parseTransform(c, jsonUpgrade);
+            		parseVelocity(c, jsonUpgrade);
             		
             		upgradeList.add(c);
             	} else {

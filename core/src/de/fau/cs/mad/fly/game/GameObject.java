@@ -12,6 +12,9 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 import com.badlogic.gdx.utils.Disposable;
 
+import de.fau.cs.mad.fly.game.object.EmptyMover;
+import de.fau.cs.mad.fly.game.object.IGameObjectMover;
+
 /**
  * Wrapper for ModelInstance.
  * <p>
@@ -22,6 +25,11 @@ import com.badlogic.gdx.utils.Disposable;
  */
 public class GameObject extends ModelInstance implements Disposable {
 
+	/**
+	 * The mover for the game object. Empty mover is no mover is defined.
+	 */
+	private IGameObjectMover mover = new EmptyMover();
+	
 	/**
 	 * Position of the game object.
 	 */
@@ -96,9 +104,6 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * Id of the model of this game object.
 	 */
 	public String modelId;
-	
-	private Vector3 startLinearVelocity = new Vector3();
-	private Vector3 startAngularVelocity = new Vector3();
 
 	// TODO: create more constructors to match the ModelInstance constructors
 
@@ -134,9 +139,6 @@ public class GameObject extends ModelInstance implements Disposable {
 		this.filterGroup = filterGroup;
 		this.filterMask = filterMask;
 		this.rigidBody = CollisionDetector.createRigidBody(this, shape, this, info);
-		
-		rigidBody.setLinearVelocity(startLinearVelocity);
-		rigidBody.setAngularVelocity(startAngularVelocity);
 	}
 
 	/**
@@ -259,6 +261,15 @@ public class GameObject extends ModelInstance implements Disposable {
 	public void updateRigidBody() {
 		rigidBody.getWorldTransform(transform);
 	}
+	
+	/**
+	 * Moves the game object with the specific mover.
+	 * 
+	 * @param delta		The delta since the last call.
+	 */
+	public void move(float delta) {
+		mover.move(delta);
+	}
 
 	/**
 	 * Renders the game object.
@@ -314,19 +325,19 @@ public class GameObject extends ModelInstance implements Disposable {
 	}
 	
 	/**
-	 * Setter for the start linear velocity which is used for the movement when the rigid body is created.
-	 * @param vel
+	 * Getter for the game object mover.
+	 * @return mover
 	 */
-	public void setStartLinearVelocity(Vector3 vel) {
-		startLinearVelocity = vel;
+	public IGameObjectMover getMover() {
+		return mover;
 	}
 	
 	/**
-	 * Setter for the start angular velocity which is used for the rotation when the rigid body is created.
-	 * @param vel
+	 * Setter for the game object mover.
+	 * @param mover			The mover to use for this game object.
 	 */
-	public void setStartAngularVelocity(Vector3 vel) {
-		startAngularVelocity = vel;
+	public void setMover(IGameObjectMover mover) {
+		this.mover = mover;
 	}
 	
 	/**

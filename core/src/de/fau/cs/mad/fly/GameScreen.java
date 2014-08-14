@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
