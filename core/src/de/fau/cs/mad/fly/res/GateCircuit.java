@@ -286,20 +286,10 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     	GateDisplay display;
     	
         final int numberOfDisplays = allGateDisplays.size();
-        //Vector3 moving = new Vector3(0.0f, 0.0f, (float) Math.sin(sin));
         
         for (int i = 0; i < numberOfDisplays; i++) {
         	display = allGateDisplays.get(i);
         	display.render(batch, environment, camera);
-        	
-        	// store vector in level file -> length of vector = degrees
-        	/*display.transform.rotate(new Vector3(0.0f, 0.0f, 1.0f), 0.1f);
-        	// store A*sin(B*x+C) in level file for x,y,z
-        	//display.transform.setTranslation(display.gatePosition.cpy().add(moving));
-        	display.getRigidBody().setWorldTransform(display.transform);
-        	
-        	display.getGoal().transform = display.transform;
-        	display.getGoal().getRigidBody().setWorldTransform(display.transform);*/
         }
     }
     

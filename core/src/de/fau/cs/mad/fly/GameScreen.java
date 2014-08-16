@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -35,9 +34,6 @@ public class GameScreen implements Screen {
     
     @Override
     public void show() {
-        // delegate all inputs to the #inputProcessor
-        // TODO: put stage in GameScreen and new InputMultiplexer back to the
-        // constructor    	
         this.gameController = game.getGameController();
     }
     

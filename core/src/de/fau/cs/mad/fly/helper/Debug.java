@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly;
+package de.fau.cs.mad.fly.helper;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
