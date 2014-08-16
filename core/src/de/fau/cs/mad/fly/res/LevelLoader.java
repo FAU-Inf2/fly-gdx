@@ -31,6 +31,7 @@ import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.game.object.IGameObjectMover;
 import de.fau.cs.mad.fly.game.object.RotationMover;
 import de.fau.cs.mad.fly.game.object.SinusMover;
+import de.fau.cs.mad.fly.game.object.SinusRotationMover;
 
 /**
  * Created by danyel on 26/05/14.
@@ -211,22 +212,31 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         JsonValue sinusY = e.get("sinus_y");
         JsonValue sinusZ = e.get("sinus_z");
         JsonValue angular = e.get("angular_velocity");
-        // TODO: not used currently, do we need it? -> create SinusRotationMover
-        /*if ((sinusX != null || sinusY != null || sinusZ != null) && angular!= null) {
+        if ((sinusX != null || sinusY != null || sinusZ != null) && angular!= null) {
         	// sin + rot
-        } else if ((sinusX != null || sinusY != null || sinusZ != null) && angular == null) {*/
-        
-        if ((sinusX != null || sinusY != null || sinusZ != null)) {
+        	SinusRotationMover mover = new SinusRotationMover(o);
+        	if(sinusX != null) {
+        		mover.X.set(sinusX.getFloat(0) * 0.01f, sinusX.getFloat(1), sinusX.getFloat(2));
+        	}
+        	if(sinusY != null) {
+        		mover.Y.set(sinusY.getFloat(0) * 0.01f, sinusY.getFloat(1), sinusY.getFloat(2));
+        	}
+        	if(sinusZ != null) {
+        		mover.Z.set(sinusZ.getFloat(0) * 0.01f, sinusZ.getFloat(1), sinusZ.getFloat(2));
+        	}
+        	mover.setRotation(new Vector3(angular.getFloat(0), angular.getFloat(1), angular.getFloat(2)));
+        	o.setMover(mover);
+        } else if ((sinusX != null || sinusY != null || sinusZ != null) && angular == null) {
         	// sin
         	SinusMover mover = new SinusMover(o);
         	if(sinusX != null) {
-        		mover.X.set(sinusX.getFloat(0), sinusX.getFloat(1), sinusX.getFloat(2));
+        		mover.X.set(sinusX.getFloat(0) * 0.01f, sinusX.getFloat(1), sinusX.getFloat(2));
         	}
         	if(sinusY != null) {
-        		mover.Y.set(sinusY.getFloat(0), sinusY.getFloat(1), sinusY.getFloat(2));
+        		mover.Y.set(sinusY.getFloat(0) * 0.01f, sinusY.getFloat(1), sinusY.getFloat(2));
         	}
         	if(sinusZ != null) {
-        		mover.Z.set(sinusZ.getFloat(0), sinusZ.getFloat(1), sinusZ.getFloat(2));
+        		mover.Z.set(sinusZ.getFloat(0) * 0.01f, sinusZ.getFloat(1), sinusZ.getFloat(2));
         	}
         	o.setMover(mover);
         } else if (angular != null) {

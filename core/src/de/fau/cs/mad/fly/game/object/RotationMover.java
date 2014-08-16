@@ -13,8 +13,8 @@ import de.fau.cs.mad.fly.game.GameObject;
 public class RotationMover implements IGameObjectMover {
 	private GameObject gameObject;
 	
-	private Vector3 rotation;
-	private float degrees;
+	private Vector3 rotation = new Vector3();
+	private float degrees = 0.0f;
 	
 	/**
 	 * Creates a new rotation mover.
