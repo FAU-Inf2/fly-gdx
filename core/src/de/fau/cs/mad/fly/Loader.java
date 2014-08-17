@@ -6,6 +6,7 @@ import java.util.Collection;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 
+import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
@@ -72,7 +73,7 @@ public class Loader {
      * Loads the given level and makes it the current level of the current
      * player.
      */
-    public static void loadLevel(Level.Head head) {
+    public static void loadLevel(LevelProfile head) {
         final LoadingScreen loadingScreen = new LoadingScreen();
         Loader loader = Loader.create(head.file.path());
         loadingScreen.initiate(loader);

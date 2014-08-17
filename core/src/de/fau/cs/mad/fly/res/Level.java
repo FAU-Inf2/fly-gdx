@@ -1,7 +1,6 @@
 package de.fau.cs.mad.fly.res;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -12,6 +11,8 @@ import com.badlogic.gdx.utils.Disposable;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
+
+import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.player.gravity.EmptyGravity;
 import de.fau.cs.mad.fly.player.gravity.IGravity;
 
@@ -24,11 +25,7 @@ import java.util.*;
  */
 public class Level implements Disposable {
     
-    public static class Head {
-        public String name;
-        public int id;
-        public FileHandle file;
-    }
+    
     
     /**
      * Radius of the Level which defines the outer boundary which should be
@@ -36,7 +33,7 @@ public class Level implements Disposable {
      * radius 100.
      */
     public final float radius = 100.0f;
-    public final Head head;
+    public final LevelProfile head;
     
     public String levelClass = "DefaultLevel";
     
@@ -76,7 +73,7 @@ public class Level implements Disposable {
     }
     
     public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies) {
-        this.head = new Head();
+        this.head = new LevelProfile();
         this.head.name = name;
         this.components = components;
         this.start = start;

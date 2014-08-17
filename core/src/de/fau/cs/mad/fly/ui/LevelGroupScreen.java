@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.profile.LevelManager;
+import de.fau.cs.mad.fly.profile.LevelGroup;
+import de.fau.cs.mad.fly.profile.LevelGroupManager;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 
 /**
  * Offers a selection of level groups.
@@ -26,7 +28,7 @@ public class LevelGroupScreen extends BasicScreen {
 	@Override
 	public void generateContent() {
 		// calculate width and height of buttons and the space in between
-		List<LevelManager.LevelGroup> levelGroups = LevelManager.getInstance().getLevelGroups();
+		List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
 
 		// table that contains all buttons
 		Table scrollableTable = new Table(skin);
@@ -43,11 +45,12 @@ public class LevelGroupScreen extends BasicScreen {
 			int maxColumns = Math.min(levelGroups.size() - (row * UI.Buttons.BUTTONS_IN_A_ROW), UI.Buttons.BUTTONS_IN_A_ROW);
 			// fill a row with buttons
 			for (int column = 0; column < maxColumns; column++) {
-				final LevelManager.LevelGroup group = levelGroups.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
+				final LevelGroup group = levelGroups.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
 				final TextButton button = new TextButton(group.name, skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
 				button.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
+						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setChosenLevelGroup(group);
 						((Fly) Gdx.app.getApplicationListener()).setLevelChooserScreen(group);
 					}
 				});

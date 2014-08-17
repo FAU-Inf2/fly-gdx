@@ -6,8 +6,8 @@ import com.badlogic.gdx.InputAdapter;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.GameScreen;
+import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
-import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Handles the Back-Button of the Smartphone and the Escape-Button of the Desktop
@@ -22,7 +22,7 @@ public class BackProcessor extends InputAdapter {
 			Fly game = (Fly) Gdx.app.getApplicationListener();
 			//Gdx.app.log("BackProcessor.keyDown", "Back, screen.class=" + game.getScreen().getClass().getName());
 			if (game.getScreen() instanceof GameScreen) {
-				Level.Head lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+				LevelProfile lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
 				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(null);
 		    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
 			}

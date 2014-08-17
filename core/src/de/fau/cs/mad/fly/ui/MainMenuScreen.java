@@ -14,7 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
-import de.fau.cs.mad.fly.profile.LevelManager;
+import de.fau.cs.mad.fly.profile.LevelGroupManager;
+import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Level;
@@ -104,10 +105,10 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-                Level.Head levelHead = playerProfile.getLastLevel();
+                LevelProfile levelHead = playerProfile.getLastLevel();
                 if (levelHead == null) {
-                    levelHead = LevelManager.getInstance().getLevelList().get(0);
-                    playerProfile.setCurrentLevel(levelHead);
+                    levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getChosenLevelGroup().getFirstLevel();
+                    playerProfile.setCurrentLevel(levelHead);                    
                 }
                 Loader.loadLevel(levelHead);
             }
