@@ -36,7 +36,7 @@ class LevelExporter:
 		print("create level data")
 	
 		self.setupInfo(export)
-		
+
 		self.data['start'] = self.setupStartPos()
 		self.data['dependencies'] = self.setupDependencies()
 		self.data['gates'] = self.setupGates()
@@ -51,6 +51,22 @@ class LevelExporter:
 		self.data['name'] = level['Name']
 		self.data['time'] = int(level['Time'])
 		self.data['class'] = level['Class']
+
+		if len(level.game.actuators) > 0:
+			if "ConstantGravity" in level.game.actuators[0].name:
+				act = level.game.actuators[0]
+				gravity = { }
+				gravity['type'] = "ConstantGravity"
+				gravity['direction'] = [ ConvertHelper.convert_pos(act.offset_location.x), ConvertHelper.convert_pos(act.offset_location.y), ConvertHelper.convert_pos(act.offset_location.z) ]
+				self.data['gravity'] = gravity
+				
+			elif "DirectionalGravity" in level.game.actuators[0].name:
+				act = level.game.actuators[0]
+				gravity = { }
+				gravity['type'] = "DirectionalGravity"
+				gravity['position'] = [ ConvertHelper.convert_pos(act.offset_location.x), ConvertHelper.convert_pos(act.offset_location.y), ConvertHelper.convert_pos(act.offset_location.z) ]
+				gravity['strength'] = ConvertHelper.convert_pos(act.force.x)
+				self.data['gravity'] = gravity
 		
 	def setupStartPos(self):
 		"""Creates the starting position information"""
