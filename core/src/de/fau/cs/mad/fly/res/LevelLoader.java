@@ -32,6 +32,8 @@ import de.fau.cs.mad.fly.game.object.IGameObjectMover;
 import de.fau.cs.mad.fly.game.object.RotationMover;
 import de.fau.cs.mad.fly.game.object.SinusMover;
 import de.fau.cs.mad.fly.game.object.SinusRotationMover;
+import de.fau.cs.mad.fly.player.gravity.ConstantGravity;
+import de.fau.cs.mad.fly.player.gravity.DirectionalGravity;
 
 /**
  * Created by danyel on 26/05/14.
@@ -80,6 +82,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         }
         level.head.id = json.getInt("id");
         level.setLeftTime(json.getInt("time"));
+        
+        JsonValue gravity = json.get("gravity");
+        if (gravity != null) {
+        	parseGravity(level, gravity);
+        }
 
         GateCircuit gateCircuit = parseGates();
         level.addGateCircuit(gateCircuit);
@@ -87,6 +94,26 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         level.setUpgrades(parseUpgrades());
         
         return level;
+    }
+    
+    /**
+     * Parses and adds the gravity to the level.
+     * @param level		The level to add the gravity to.
+     * @param e			The json value of the level.
+     */
+    private void parseGravity(Level level, JsonValue e) {
+    	String type = e.getString("type");
+    	
+    	if(type.equals("ConstantGravity")) {
+            JsonValue dir = e.get("direction");
+    		ConstantGravity gravity = new ConstantGravity(new Vector3(dir.getFloat(0), dir.getFloat(1), dir.getFloat(2)));
+    		level.setGravity(gravity);
+    	} else if(type.equals("DirectionalGravity")) {
+            JsonValue pos = e.get("position");
+            float strength = e.getFloat("strength");
+    		DirectionalGravity gravity = new DirectionalGravity(new Vector3(pos.getFloat(0), pos.getFloat(1), pos.getFloat(2)), strength);
+    		level.setGravity(gravity);
+    	}
     }
     
     /**

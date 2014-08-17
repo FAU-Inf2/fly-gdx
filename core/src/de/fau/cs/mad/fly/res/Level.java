@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.Disposable;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.player.gravity.EmptyGravity;
+import de.fau.cs.mad.fly.player.gravity.IGravity;
 
 import java.util.*;
 
@@ -49,6 +51,8 @@ public class Level implements Disposable {
     private int leftCollisionTime = 0;
     
     private GateCircuit gateCircuit = null;
+    
+    private IGravity gravity = new EmptyGravity();
 
     private float leftTime = 0;
     
@@ -92,6 +96,22 @@ public class Level implements Disposable {
         if (borderObject == null) {
             Gdx.app.log("Level.Level", "No border specified.");
         }
+    }
+    
+    /**
+     * Setter for the gravity.
+     * @param gravity		The new gravity for the level.
+     */
+    public void setGravity(IGravity gravity) {
+    	this.gravity = gravity;
+    }
+    
+    /**
+     * Getter for the gravity.
+     * @return gravity
+     */
+    public IGravity getGravity() {
+    	return gravity;
     }
     
     public GameModel getDependency(String id) {

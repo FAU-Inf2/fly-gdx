@@ -13,6 +13,7 @@ import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.player.gravity.IGravity;
 import de.fau.cs.mad.fly.res.Perspective;
 
 public class Spaceship extends GameObject implements IPlane {
@@ -30,13 +31,15 @@ public class Spaceship extends GameObject implements IPlane {
 	
 	private SpaceshipParticle particle;
 	
+	private IGravity gravity;
+	
 	private boolean useRolling;
 
 	private String modelRef;
 	
 	private Vector3 movingDir = new Vector3(0,0,1);
 	private final Vector3 up =  new Vector3(0,1,0);
-	Vector3 linearMovement; 
+	Vector3 linearMovement;
 	
 	private float lastRoll = 0.f;
 	private float lastAzimuth = 0.f;
@@ -66,6 +69,8 @@ public class Spaceship extends GameObject implements IPlane {
 		this.environment = gameController.getLevel().getEnvironment();
 		this.camera = gameController.getCamera();
 		linearMovement = new Vector3();
+		
+		gravity = game.getLevel().getGravity();
 		
 		//particle.load(camera, batch, modelRef);
 		//particle.init();
@@ -104,6 +109,11 @@ public class Spaceship extends GameObject implements IPlane {
 		transform.rotate(movingDir.cpy().crs(up), -rollDir);
 	}
 	
+	/**
+	 * Setter if rolling should be used.
+	 * 
+	 * @param rolling		True if rolling should be used, false otherwise.
+	 */
 	public void setRolling(boolean rolling) {
 		this.useRolling = rolling;
 	}
@@ -166,10 +176,8 @@ public class Spaceship extends GameObject implements IPlane {
 		
 		float[] transformValues = rotationTransform.getValues();
 		linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
-		
-		// TODO: normalize before scl(getSpeed()) ?
-		// TODO: "gravity"
-		//linearMovement.add(new Vector3(0.0f, 0.0f, -1.0f));
+
+		gravity.applyGravity(transform, linearMovement);
 		
 		setMovement(linearMovement);
 
