@@ -1,9 +1,9 @@
 {
 	"id": 2,
-	"name": "Astero",
-	"modelRef": "asteroid",
+	"name": "Saucer",
+	"modelRef": "ufo",
 	"speed": 10,
 	"rollingSpeed": 5,
 	"azimuthSpeed": 5,
-	"lives": 3,
+	"lives": 1,
 }
