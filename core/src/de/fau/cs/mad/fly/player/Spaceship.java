@@ -30,9 +30,10 @@ public class Spaceship extends GameObject implements IPlane {
 	private Matrix4 particleTransform;
 	
 	private SpaceshipParticle particle;
-	
-	// TODO: rotation for ufo
+
 	private float i = 0.0f;
+    private float rotationSpeed = 0.0f;
+    private Vector3 rotation = null;
 	
 	private IGravity gravity;
 	
@@ -60,6 +61,11 @@ public class Spaceship extends GameObject implements IPlane {
 		this.head = head;
 		this.modelRef = head.modelRef;
 		particle = new SpaceshipParticle();
+		
+		if(head.rotation != null) {
+			rotationSpeed = head.rotationSpeed;
+			rotation = head.rotation;
+		}
 	}
 	
 	// needed anymore?
@@ -110,8 +116,9 @@ public class Spaceship extends GameObject implements IPlane {
 		transform.rotate(movingDir.cpy().crs(up), rollDir);
 		transform.rotate(movingDir, -azimuthDir);
 		
-		// TODO: enable rotation for spaceship (for example ufo)
-		//transform.rotate(new Vector3(0.0f, 1.0f, 0.0f), i * 10.0f);
+		if(rotation != null) {
+			transform.rotate(rotation, i * rotationSpeed);
+		}
 
 		render(batch, environment, camera);
 		
@@ -121,7 +128,7 @@ public class Spaceship extends GameObject implements IPlane {
 		
 		transform = storedTransform;
 		
-		//i += delta;
+		i += delta;
 	}
 	
 	/**

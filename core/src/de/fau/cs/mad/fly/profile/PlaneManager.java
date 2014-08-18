@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -44,6 +45,14 @@ public class PlaneManager {
 				spaceshipHead.rollingSpeed = json.getFloat("rollingSpeed");
 				spaceshipHead.azimuthSpeed = json.getFloat("azimuthSpeed");
 				spaceshipHead.lives = json.getInt("lives");
+				
+				JsonValue rotation = json.get("rotation");
+				if (rotation != null) {
+					Vector3 rotationVector = new Vector3(rotation.getFloat(0), rotation.getFloat(1), rotation.getFloat(2));
+					spaceshipHead.rotationSpeed = rotationVector.len();
+					spaceshipHead.rotation = rotationVector.nor();
+				}
+				
 				spaceshipHead.file = file;
 				
 				planes.add(spaceshipHead);
