@@ -41,7 +41,7 @@ void main() {
                 vec3 lightDirection;
                 for(int i=0; i<numDirLights; i++) {
                     lightDirection = - normalize(u_dirLights[i].direction);
-                    vec4 value = u_dirLights[i].color * clamp(dot(normal, lightDirection), 0, 1);
+                    vec4 value = u_dirLights[i].color * clamp(dot(normal, lightDirection), 0.0, 1.0);
                     diffuseLight += value;
                     float halfDotView = max(0.0, dot(normal, normalize(lightDirection + v_viewDirection)));
                     specularLight += value * max(0.0, pow(halfDotView, u_shininess));
@@ -52,7 +52,7 @@ void main() {
             vec3 lightDirection;
             for(int i=0; i<numPointLights; i++) {
                 lightDirection = normalize(u_pointLights[i].position - v_viewSpacePosition);
-                vec4 value = u_pointLights[i].color * clamp(dot(normal, lightDirection), 0, 1);
+                vec4 value = u_pointLights[i].color * clamp(dot(normal, lightDirection), 0.0, 1.0);
                 diffuseLight += value;
                 float halfDotView = max(0.0, dot(normal, normalize(lightDirection + v_viewDirection)));
                 specularLight += value * max(0.0, pow(halfDotView, u_shininess));
