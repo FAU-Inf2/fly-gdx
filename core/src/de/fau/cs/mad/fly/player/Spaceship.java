@@ -31,6 +31,9 @@ public class Spaceship extends GameObject implements IPlane {
 	
 	private SpaceshipParticle particle;
 	
+	// TODO: rotation for ufo
+	private float i = 0.0f;
+	
 	private IGravity gravity;
 	
 	private boolean useRolling;
@@ -44,6 +47,9 @@ public class Spaceship extends GameObject implements IPlane {
 	private float lastRoll = 0.f;
 	private float lastAzimuth = 0.f;
 	
+	private Matrix4 storedTransform;
+	private Matrix4 displayTransform = new Matrix4();
+	
 	private float speed;
 	private float azimuthSpeed;
 	private float rollingSpeed;
@@ -56,11 +62,12 @@ public class Spaceship extends GameObject implements IPlane {
 		particle = new SpaceshipParticle();
 	}
 	
-	public Spaceship(GameModel model, String modelRef) {
+	// needed anymore?
+	/*public Spaceship(GameModel model, String modelRef) {
 		super(model, "spaceship");
 		this.modelRef = modelRef;
 		particle = new SpaceshipParticle();
-	}
+	}*/
 	
 	@Override
 	public void load(final GameController game) {
@@ -95,9 +102,16 @@ public class Spaceship extends GameObject implements IPlane {
 	public void render(float delta) {
 		float rollDir = lastRoll * 10.f;// / delta / 60.f;
 		float azimuthDir = lastAzimuth * 50f;// / delta / 60.f;
+
+		storedTransform = transform;
+		displayTransform.set(transform);
+		transform = displayTransform;
 		
 		transform.rotate(movingDir.cpy().crs(up), rollDir);
 		transform.rotate(movingDir, -azimuthDir);
+		
+		// TODO: enable rotation for spaceship (for example ufo)
+		//transform.rotate(new Vector3(0.0f, 1.0f, 0.0f), i * 10.0f);
 
 		render(batch, environment, camera);
 		
@@ -105,8 +119,9 @@ public class Spaceship extends GameObject implements IPlane {
 		//particleTransform.translate(particleOffset);
 		//particle.render(particleTransform);
 		
-		transform.rotate(movingDir, azimuthDir);
-		transform.rotate(movingDir.cpy().crs(up), -rollDir);
+		transform = storedTransform;
+		
+		//i += delta;
 	}
 	
 	/**
@@ -165,7 +180,7 @@ public class Spaceship extends GameObject implements IPlane {
 	}
 
 	@Override
-	public void rotate(float rollDir, float azimuthDir, float deltaFactor) {		
+	public void rotate(float rollDir, float azimuthDir, float deltaFactor) {
 		rotationTransform = getRigidBody().getCenterOfMassTransform();
 		if(!useRolling) {
 			rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
