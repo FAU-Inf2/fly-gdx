@@ -1,7 +1,7 @@
 # Blender MTL File: 'ufo.blend'
-# Material Count: 2
+# Material Count: 1
 
-newmtl Material.001
+newmtl Material
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.604578 0.309489
@@ -9,12 +9,4 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-
-newmtl Material.002
-Ns 96.078431
-Ka 0.000000 0.000000 0.000000
-Kd 0.024851 0.024851 0.024851
-Ks 0.500000 0.500000 0.500000
-Ni 1.000000
-d 1.000000
-illum 2
+map_Kd tex.png
