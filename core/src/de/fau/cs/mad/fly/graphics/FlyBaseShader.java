@@ -26,9 +26,7 @@ public abstract class FlyBaseShader implements Shader{
     private Matrix4 modelViewMatrix, modelViewProjectionMatrix;
     protected int numDirLights, numPointLights;
     private int u_modelViewMatrix, u_modelMatrix, u_modelViewProjectionMatrix, u_shininess,
-                u_ambientColor, u_specularColor, u_normalMatrix, u_cameraPosition,
-
-    u_ProjViewTrans, u_worldTrans;
+                u_ambientColor, u_specularColor, u_normalMatrix, u_cameraPosition;
     protected int[][] u_dirLights, u_pointLights;
     protected Camera camera;
     private RenderContext context;
@@ -81,11 +79,6 @@ public abstract class FlyBaseShader implements Shader{
             u_pointLights[i][0] = program.getUniformLocation("u_pointLights[" + i + "].position");
             u_pointLights[i][1] = program.getUniformLocation("u_pointLights[" + i + "].color");
         }
-
-
-
-        u_ProjViewTrans = program.getUniformLocation("u_projViewTrans");
-        u_worldTrans = program.getUniformLocation("u_worldTrans");
     }
 
     @Override
@@ -93,7 +86,6 @@ public abstract class FlyBaseShader implements Shader{
         this.camera = camera;
         this.context = context;
         program.begin();
-        program.setUniformMatrix(u_ProjViewTrans, camera.combined);
         this.context.setDepthTest(GL20.GL_DEPTH_TEST);
         this.context.setCullFace(GL20.GL_BACK);
     }
@@ -134,9 +126,6 @@ public abstract class FlyBaseShader implements Shader{
             program.setUniformf(u_pointLights[i][1], this.environment.pointLights.get(i).color);
         }
         program.setUniformf(u_cameraPosition, camera.position);
-
-
-        program.setUniformMatrix(u_worldTrans, renderable.worldTransform);
     }
 
     @Override
