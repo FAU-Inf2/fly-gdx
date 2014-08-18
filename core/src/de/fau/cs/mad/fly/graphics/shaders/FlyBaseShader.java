@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.graphics;
+package de.fau.cs.mad.fly.graphics.shaders;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
