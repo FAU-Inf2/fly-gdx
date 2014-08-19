@@ -36,7 +36,7 @@ class LevelExporter:
 		print("create level data")
 	
 		self.setupInfo(export)
-		
+
 		self.data['start'] = self.setupStartPos()
 		self.data['dependencies'] = self.setupDependencies()
 		self.data['gates'] = self.setupGates()
@@ -51,6 +51,22 @@ class LevelExporter:
 		self.data['name'] = level['Name']
 		self.data['time'] = int(level['Time'])
 		self.data['class'] = level['Class']
+
+		if len(level.game.actuators) > 0:
+			if "ConstantGravity" in level.game.actuators[0].name:
+				act = level.game.actuators[0]
+				gravity = { }
+				gravity['type'] = "ConstantGravity"
+				gravity['direction'] = [ ConvertHelper.convert_pos(act.offset_location.x), ConvertHelper.convert_pos(act.offset_location.y), ConvertHelper.convert_pos(act.offset_location.z) ]
+				self.data['gravity'] = gravity
+				
+			elif "DirectionalGravity" in level.game.actuators[0].name:
+				act = level.game.actuators[0]
+				gravity = { }
+				gravity['type'] = "DirectionalGravity"
+				gravity['position'] = [ ConvertHelper.convert_pos(act.offset_location.x), ConvertHelper.convert_pos(act.offset_location.y), ConvertHelper.convert_pos(act.offset_location.z) ]
+				gravity['strength'] = ConvertHelper.convert_pos(act.force.x)
+				self.data['gravity'] = gravity
 		
 	def setupStartPos(self):
 		"""Creates the starting position information"""
@@ -165,11 +181,17 @@ class LevelExporter:
 		if len(item.game.actuators) > 0:
 			if "Motion" in item.game.actuators[0].name:
 				act = item.game.actuators[0]
-				component['linear_velocity'] = [ act.linear_velocity.x, act.linear_velocity.y, act.linear_velocity.z ]
-				component['angular_velocity'] = [ act.angular_velocity.x, act.angular_velocity.y, act.angular_velocity.z ]
+
+				self.addIfNotZero(component, 'sinus_x', act.force)
+				self.addIfNotZero(component, 'sinus_y', act.torque)
+				self.addIfNotZero(component, 'sinus_z', act.linear_velocity)
+				self.addIfNotZero(component, 'angular_velocity', act.angular_velocity)
 		
 		return component
 		
+	def addIfNotZero(self, component, id, value):
+		if value.x != 0.0 or value.y != 0.0 or value.z != 0.0:
+			component[id] = [ value.x, value.y, value.z ]
 		
 	def setupComponents(self, export):
 		"""Creates the component information"""

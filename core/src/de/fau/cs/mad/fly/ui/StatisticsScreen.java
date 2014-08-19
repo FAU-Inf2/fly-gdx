@@ -22,7 +22,7 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.PostHighscoreService;
 import de.fau.cs.mad.fly.HttpClient.PostUserService;
-import de.fau.cs.mad.fly.profile.LevelManager;
+import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
@@ -59,7 +59,7 @@ public class StatisticsScreen extends BasicScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				String name = newUserField.getText().trim();
-				if (!name.equals(""))// todo more check
+				if (!"".equals(name))// todo more check
 				{
 					for(PlayerProfile playerProfile : PlayerProfileManager.getInstance().getAllPlayerProfiles())
 					{
@@ -229,7 +229,7 @@ public class StatisticsScreen extends BasicScreen {
 						Score score = scores.get(levelID);
 						if (score != null && score.getTotalScore() > 0) {
 							haveScore = true;
-							String levelname = LevelManager.getInstance().getLevelName(
+							String levelname = LevelGroupManager.getInstance().getLevelGroups().get(0).getLevelName(
 									Integer.valueOf(levelID));
 							scoreTable.add(new Label(levelname, skin)).pad(6f).right();
 

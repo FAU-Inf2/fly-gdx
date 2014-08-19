@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.res;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -17,6 +18,7 @@ import de.fau.cs.mad.fly.game.GameObject;
  */
 public class GateDisplay extends GameObject implements Disposable {
     private GateGoal goal = null;
+    public Vector3 gatePosition = new Vector3();
     
     /**
      * Creates a new gate display.
@@ -32,12 +34,14 @@ public class GateDisplay extends GameObject implements Disposable {
      */
     public void createRigidBody(CollisionDetector collisionDetector) {        
         if (rigidBody == null) {
-			btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(modelId, this);
-			super.createRigidBody(modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+			btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(super.getModelId(), this);
+			super.createRigidBody(super.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
 			
 			// different scaling for the gates is buggy
 			/*transform.scl(scaling);
 			rigidBody.getCollisionShape().setLocalScaling(scaling);*/
+			
+			transform.getTranslation(gatePosition);
         }
         collisionDetector.addRigidBody(this);
     }

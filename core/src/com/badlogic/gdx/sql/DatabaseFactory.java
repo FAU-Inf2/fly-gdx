@@ -37,14 +37,14 @@ public class DatabaseFactory {
 			case Android:
 				try {
 					databaseManager = (DatabaseManager)Class.forName(androidClassname).newInstance();
-				} catch (Throwable ex) {
+				} catch (Exception ex) {
 					throw new GdxRuntimeException("Error getting database: " + androidClassname, ex);
 				}
 				break;
 			case Desktop:
 				try {
 					databaseManager = (DatabaseManager)Class.forName(desktopClassname).newInstance();
-				} catch (Throwable ex) {
+				} catch (Exception ex) {
 					throw new GdxRuntimeException("Error getting database: " + desktopClassname, ex);
 				}
 				break;
@@ -55,12 +55,13 @@ public class DatabaseFactory {
 			case iOS:
 				try {
 					databaseManager = (DatabaseManager)Class.forName(iosClassname).newInstance();
-				} catch (Throwable ex) {
+				} catch (Exception ex) {
 					throw new GdxRuntimeException("Error getting database: " + iosClassname, ex);
 				}
 				break;
 			default:
-				break;
+				throw new GdxRuntimeException("SQLite is currently not supported in " + Gdx.app.getType() + " by this libgdx extension.");
+				
 			}
 		}
 		return databaseManager.getNewDatabase(dbName, dbVersion, dbOnCreateQuery, dbOnUpgradeQuery);

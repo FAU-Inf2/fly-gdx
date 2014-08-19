@@ -1,7 +1,7 @@
 {
 	"id": 3,
-	"name": "Toru",
-	"modelRef": "torus",
+	"name": "Transporter",
+	"modelRef": "transporter",
 	"speed": 7,
 	"rollingSpeed": 5,
 	"azimuthSpeed": 5,

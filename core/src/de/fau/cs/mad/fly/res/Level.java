@@ -1,7 +1,6 @@
 package de.fau.cs.mad.fly.res;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -13,6 +12,10 @@ import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 
+import de.fau.cs.mad.fly.profile.LevelProfile;
+import de.fau.cs.mad.fly.player.gravity.EmptyGravity;
+import de.fau.cs.mad.fly.player.gravity.IGravity;
+
 import java.util.*;
 
 /**
@@ -22,19 +25,13 @@ import java.util.*;
  */
 public class Level implements Disposable {
     
-    public static class Head {
-        public String name;
-        public int id;
-        public FileHandle file;
-    }
-    
     /**
      * Radius of the Level which defines the outer boundary which should be
      * never reached by the user. The default level border defines a sphere with
      * radius 100.
      */
     public final float radius = 100.0f;
-    public final Head head;
+    public final LevelProfile head;
     
     public String levelClass = "DefaultLevel";
     
@@ -49,7 +46,9 @@ public class Level implements Disposable {
     private int leftCollisionTime = 0;
     
     private GateCircuit gateCircuit = null;
-
+    
+    private IGravity gravity = new EmptyGravity();
+    
     private float leftTime = 0;
     
     public float getLeftTime() {
@@ -70,9 +69,9 @@ public class Level implements Disposable {
     public boolean isGameOver() {
         return gameOver;
     }
-    
+
     public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies, Map<String, Environment> environments) {
-        this.head = new Head();
+        this.head = new LevelProfile();
         this.head.name = name;
         this.components = components;
         this.start = start;
@@ -83,7 +82,7 @@ public class Level implements Disposable {
         gameOver = false;
         
         for (GameObject c : components) {
-            if (c.id.equals("space")) {
+            if (c.getId().equals("space")) {
                 borderObject = c;
             }
         }
@@ -91,6 +90,25 @@ public class Level implements Disposable {
         if (borderObject == null) {
             Gdx.app.log("Level.Level", "No border specified.");
         }
+    }
+    
+    /**
+     * Setter for the gravity.
+     * 
+     * @param gravity
+     *            The new gravity for the level.
+     */
+    public void setGravity(IGravity gravity) {
+        this.gravity = gravity;
+    }
+    
+    /**
+     * Getter for the gravity.
+     * 
+     * @return gravity
+     */
+    public IGravity getGravity() {
+        return gravity;
     }
     
     public GameModel getDependency(String id) {
@@ -102,32 +120,34 @@ public class Level implements Disposable {
     }
     
     public void setUpgrades(List<Collectible> upgrades) {
-    	this.upgrades = upgrades;
+        this.upgrades = upgrades;
     }
     
     public List<Collectible> getUpgrades() {
-    	return upgrades;
+        return upgrades;
     }
-
+    
     public void finishLevel() {
         gameOver = true;
     }
     
     /**
      * Getter for the gate circuit.
+     * 
      * @return gateCircuit
      */
     public GateCircuit getGateCircuit() {
-    	return gateCircuit;
+        return gateCircuit;
     }
     
     /**
      * Adds the gate circuit to the level.
+     * 
      * @param gateCircuit
      */
     public void addGateCircuit(GateCircuit gateCircuit) {
-    	this.gateCircuit = gateCircuit;
-    	this.gateCircuit.level = this;
+        this.gateCircuit = gateCircuit;
+        this.gateCircuit.level = this;
     }
     
     /**
@@ -151,6 +171,15 @@ public class Level implements Disposable {
      */
     public void update(float delta, PerspectiveCamera camera) {
         borderObject.transform.setToTranslation(camera.position);
+        
+        gateCircuit.moveGates(delta);
+        
+        int i;
+        final int numberOfUpgrades = upgrades.size();
+        for (i = 0; i < numberOfUpgrades; i++) {
+            upgrades.get(i).move(delta);
+        }
+        
         if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
             gateCircuit.circuitFinished();
         }
@@ -169,20 +198,16 @@ public class Level implements Disposable {
     public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
         int i;
         final int numberOfComponents = components.size();
-        // Gdx.app.log("components:", String.valueOf(numberOfComponents));
         for (i = 0; i < numberOfComponents; i++) {
             if(components.get(i).environment != null) components.get(i).render(batch, camera);
             else components.get(i).render(batch, environment, camera);
         }
         
-        final int numberOfGates = gateCircuit.allGateDisplays().size();
-        for (i = 0; i < numberOfGates; i++) {
-        	gateCircuit.allGateDisplays().get(i).render(batch, environment, camera);
-        }
+        gateCircuit.render(batch, environment, camera);
         
         final int numberOfUpgrades = upgrades.size();
         for (i = 0; i < numberOfUpgrades; i++) {
-        	upgrades.get(i).render(batch, environment, camera);
+            upgrades.get(i).render(batch, environment, camera);
         }
     }
     

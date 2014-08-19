@@ -156,8 +156,9 @@ public class DesktopCursor implements DatabaseCursor {
 			resultSet = new CachedRowSetImpl();
 			resultSet.populate(resultSetRef);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Gdx.app.log(DatabaseFactory.ERROR_TAG,
+					"There was an error in setting native cursor", e);
+			throw new SQLiteGdxRuntimeException(e);
 		}
 
 	}

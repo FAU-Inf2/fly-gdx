@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -224,8 +225,8 @@ public class GameControllerBuilder {
         
         for (GameObject o : level.components) {
             if (o.getRigidBody() == null) {
-                btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(o.modelId, o);
-                o.createRigidBody(o.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+                btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(o.getModelId(), o);
+                o.createRigidBody(o.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
             }
             collisionDetector.addRigidBody(o);
         }

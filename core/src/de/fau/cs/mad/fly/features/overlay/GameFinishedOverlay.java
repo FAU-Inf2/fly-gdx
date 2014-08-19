@@ -18,12 +18,12 @@ import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
 import de.fau.cs.mad.fly.res.Assets;
-import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -59,7 +59,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      */
     @Override
     public void finish() {
-    	Level.Head lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+    	LevelProfile lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
     	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
     	
         Table outerTable = new Table();
@@ -118,7 +118,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     }
 
                     // set and load new level
-                    Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+                    LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
                     Loader.loadLevel(levelHead);
                 }
             });
@@ -137,7 +137,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 	Assets.unload(levelPath);
                 	
                 	// reload the level
-                    Level.Head levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+                    LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
                     Loader.loadLevel(levelHead);
                 }
             });

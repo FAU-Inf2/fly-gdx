@@ -20,7 +20,7 @@ public class Collectible extends GameObject {
 	 * @param model		The model of the upgrade.
 	 */
 	public Collectible(GameModel model) {
-		super(model);
+		super(model, "");
 	}
 	
 	/**

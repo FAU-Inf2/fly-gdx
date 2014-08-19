@@ -81,7 +81,7 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispos
 		
 		c.hide();
 		collectibleObjects.remove(c);
-		c.removeRigidBody();
+		//c.removeRigidBody();
 		
 		handleCollecting(c);
 	}

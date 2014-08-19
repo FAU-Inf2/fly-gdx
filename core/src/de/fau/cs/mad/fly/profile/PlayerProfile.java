@@ -16,12 +16,12 @@ public class PlayerProfile {
 	/**
 	 * The last level the player has played.
 	 */
-	private Level.Head lastLevel;
+	private LevelProfile lastLevelProfile;
 
 	/**
 	 * The last level the player has played.
 	 */
-	private Level.Head currentLevel;
+	private LevelProfile currentLevel;
 	
 	/**
 	 * The level the player is currently playing.
@@ -52,6 +52,11 @@ public class PlayerProfile {
 	 * The setting manager with all the settings set by this profile.
 	 */
     private SettingManager settingManager;
+    
+    /**
+     * The chosen level group
+     */
+	private LevelGroup chosenLevelGroup;
 
     /**
      * Creates a new profile without any more information.
@@ -123,23 +128,23 @@ public class PlayerProfile {
 	 * Getter for the last level the player has played.
 	 * @return lastLevel
 	 */
-	public Level.Head getLastLevel() {
-		return lastLevel;
+	public LevelProfile getLastLevel() {
+		return lastLevelProfile;
 	}
 
 	/**
 	 * Setter for the last level the player has played.
 	 * @param lastLevel
 	 */
-	public void setLastLevel(Level.Head lastLevel) {
-		this.lastLevel = lastLevel;
+	public void setLastLevel(LevelProfile lastLevel) {
+		this.lastLevelProfile = lastLevel;
 	}
 
 	/**
 	 * Getter for the level the player is playing.
 	 * @return currentLevel
 	 */
-	public Level.Head getCurrentLevel() {
+	public LevelProfile getCurrentLevel() {
 		return currentLevel;
 	}
 
@@ -147,8 +152,20 @@ public class PlayerProfile {
 	 * Setter for the level the player is playing.
 	 * @param currentLevel
 	 */
-	public void setCurrentLevel(Level.Head currentLevel) {
+	public void setCurrentLevel(LevelProfile currentLevel) {
 		this.currentLevel = currentLevel;
+	}
+	
+	public LevelGroup getChosenLevelGroup() {
+		if( chosenLevelGroup == null )
+		{
+			chosenLevelGroup = LevelGroupManager.getInstance().getLevelGroups().get(0);
+		}
+		return chosenLevelGroup;
+	}
+
+	public void setChosenLevelGroup(LevelGroup levelGroup) {
+		chosenLevelGroup = levelGroup;
 	}
 	
 	/**
@@ -156,9 +173,9 @@ public class PlayerProfile {
 	 */
 	public boolean nextLevel() {
 	    int nextLevelIndex = 0;
-	    List<Level.Head> allLevels = LevelManager.getInstance().getLevelList();
+	    List<LevelProfile> allLevels = getChosenLevelGroup().getLevels();
 	    for(int level = 0; level < allLevels.size(); level++) {
-	        if(allLevels.get(level) == lastLevel) {
+	        if(allLevels.get(level) == lastLevelProfile) {
 	            nextLevelIndex = level+1;
 	            level = allLevels.size();
 	        }

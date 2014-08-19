@@ -1,7 +1,6 @@
 package de.fau.cs.mad.fly.player;
 
 
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -14,7 +13,7 @@ import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.player.gravity.IGravity;
 import de.fau.cs.mad.fly.res.Perspective;
 
 public class Spaceship extends GameObject implements IPlane {
@@ -27,16 +26,30 @@ public class Spaceship extends GameObject implements IPlane {
 	private float[] transformValues;
 	private Matrix4 startTransform;
 	
+	private Vector3 particleOffset = new Vector3(0.0f, 0.03f, -0.7f);
+	private Matrix4 particleTransform;
+	
+	private SpaceshipParticle particle;
+
+	private float i = 0.0f;
+    private float rotationSpeed = 0.0f;
+    private Vector3 rotation = null;
+	
+	private IGravity gravity;
+	
 	private boolean useRolling;
 
 	private String modelRef;
 	
 	private Vector3 movingDir = new Vector3(0,0,1);
 	private final Vector3 up =  new Vector3(0,1,0);
-	Vector3 linearMovement; 
+	Vector3 linearMovement;
 	
 	private float lastRoll = 0.f;
 	private float lastAzimuth = 0.f;
+	
+	private Matrix4 storedTransform;
+	private Matrix4 displayTransform = new Matrix4();
 	
 	private float speed;
 	private float azimuthSpeed;
@@ -47,12 +60,20 @@ public class Spaceship extends GameObject implements IPlane {
 		super(model, "Spaceship");
 		this.head = head;
 		this.modelRef = head.modelRef;
+		particle = new SpaceshipParticle();
+		
+		if(head.rotation != null) {
+			rotationSpeed = head.rotationSpeed;
+			rotation = head.rotation;
+		}
 	}
 	
-	public Spaceship(GameModel model, String modelRef) {
+	// needed anymore?
+	/*public Spaceship(GameModel model, String modelRef) {
 		super(model, "spaceship");
 		this.modelRef = modelRef;
-	}
+		particle = new SpaceshipParticle();
+	}*/
 	
 	@Override
 	public void load(final GameController game) {
@@ -61,6 +82,11 @@ public class Spaceship extends GameObject implements IPlane {
 		this.environment = gameController.getLevel().getEnvironment();
 		this.camera = gameController.getCamera();
 		linearMovement = new Vector3();
+		
+		gravity = game.getLevel().getGravity();
+		
+		//particle.load(camera, batch, modelRef);
+		//particle.init();
 		
 		resetSpeed();
 
@@ -82,16 +108,34 @@ public class Spaceship extends GameObject implements IPlane {
 	public void render(float delta) {
 		float rollDir = lastRoll * 10.f;// / delta / 60.f;
 		float azimuthDir = lastAzimuth * 50f;// / delta / 60.f;
+
+		storedTransform = transform;
+		displayTransform.set(transform);
+		transform = displayTransform;
 		
 		transform.rotate(movingDir.cpy().crs(up), rollDir);
 		transform.rotate(movingDir, -azimuthDir);
+		
+		if(rotation != null) {
+			transform.rotate(rotation, i * rotationSpeed);
+		}
 
 		render(batch, environment, camera);
 		
-		transform.rotate(movingDir, azimuthDir);
-		transform.rotate(movingDir.cpy().crs(up), -rollDir);
+		//particleTransform = transform.cpy();
+		//particleTransform.translate(particleOffset);
+		//particle.render(particleTransform);
+		
+		transform = storedTransform;
+		
+		i += delta;
 	}
 	
+	/**
+	 * Setter if rolling should be used.
+	 * 
+	 * @param rolling		True if rolling should be used, false otherwise.
+	 */
 	public void setRolling(boolean rolling) {
 		this.useRolling = rolling;
 	}
@@ -143,7 +187,7 @@ public class Spaceship extends GameObject implements IPlane {
 	}
 
 	@Override
-	public void rotate(float rollDir, float azimuthDir, float deltaFactor) {		
+	public void rotate(float rollDir, float azimuthDir, float deltaFactor) {
 		rotationTransform = getRigidBody().getCenterOfMassTransform();
 		if(!useRolling) {
 			rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
@@ -154,6 +198,9 @@ public class Spaceship extends GameObject implements IPlane {
 		
 		float[] transformValues = rotationTransform.getValues();
 		linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
+
+		gravity.applyGravity(transform, linearMovement);
+		
 		setMovement(linearMovement);
 
 		lastRoll = rollDir;
@@ -181,5 +228,10 @@ public class Spaceship extends GameObject implements IPlane {
 	@Override
 	public Matrix4 getTransform() {
 		return transform;
+	}
+	
+	public void dispose() {
+		//particle.stop();
+		super.dispose();
 	}
 }

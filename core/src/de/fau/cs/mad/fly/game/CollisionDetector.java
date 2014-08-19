@@ -98,7 +98,7 @@ public class CollisionDetector implements Disposable {
 				g1 = spaceship;
 			}
 			
-			Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.id + " (userData = " + g1.userData.getClass() + "), g2 = " + g2.id + " (userData = " + g2.userData.getClass() + ")");
+			Gdx.app.log("CollisionDetector.onContactStarted", "g1 = " + g1.getId() + " (userData = " + g1.getUserData().getClass() + "), g2 = " + g2.getId() + " (userData = " + g2.getUserData().getClass() + ")");
 			for(ICollisionListener listener : listeners) {
 				listener.onCollision(g1, g2);
 			}
@@ -134,7 +134,7 @@ public class CollisionDetector implements Disposable {
         constraintSolver = new btSequentialImpulseConstraintSolver();
         dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, constraintSolver, collisionConfig);
         dynamicsWorld.setGravity(new Vector3(0.0f, 0.0f, 0.0f));
-		
+
 		contactListener = new CollisionContactListener();
 	}
 
@@ -188,7 +188,7 @@ public class CollisionDetector implements Disposable {
 	 * @param gameObject		The game object with the rigid body to add.
 	 */
 	public void addRigidBody(final GameObject gameObject) {
-		dynamicsWorld.addRigidBody(gameObject.getRigidBody(), gameObject.filterGroup, gameObject.filterMask);
+		dynamicsWorld.addRigidBody(gameObject.getRigidBody(), gameObject.getFilterGroup(), gameObject.getFilterMask());
 	}
 	
 	/**

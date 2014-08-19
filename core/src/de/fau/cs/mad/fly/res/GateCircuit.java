@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
@@ -29,9 +32,9 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
 	private Comparator<GateGoal> goalComparator = new Comparator<GateGoal>() {
 		@Override
 		public int compare(GateGoal first, GateGoal second){
-		    if(first.getId() < second.getId()) {
+		    if(first.getGateId() < second.getGateId()) {
 		    	return -1;
-		    } else if(first.getId() > second.getId()) {
+		    } else if(first.getGateId() > second.getGateId()) {
 		    	return 1;
 		    }
 		    return 0;
@@ -117,7 +120,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
      * @param gate		The gate goal to add.
      */
     public void addGate(GateGoal gate) {
-        gates.put(gate.getId(), gate);
+        gates.put(gate.getGateId(), gate);
         allGateGoals.add(gate);
         allGateDisplays.add(gate.getDisplay());
     }
@@ -173,7 +176,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     public void gatePassed(GateGoal gate) {
         int numberOfSuccessorGates = virtualGate.successors.length;
         for (int i = 0; i < numberOfSuccessorGates; i++) {
-            if (gate.getId() == virtualGate.successors[i]) {
+            if (gate.getGateId() == virtualGate.successors[i]) {
                 gate.passedTimes++;
                 activeGatePassed(gate);
                 i = numberOfSuccessorGates;
@@ -252,6 +255,40 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
         
         for (GateDisplay d : allGateDisplays()) {
         	d.createRigidBody(collisionDetector);
+        }
+    }
+    
+    /**
+     * Moves the gates.
+     * 
+     * @param		The delta since the last call.
+     */
+    public void moveGates(float delta) {
+    	GateDisplay display;
+    	
+        final int numberOfDisplays = allGateDisplays.size();        
+        for (int i = 0; i < numberOfDisplays; i++) {
+        	display = allGateDisplays.get(i);
+        	display.move(delta);
+        	display.getGoal().move(delta);
+        }
+    }
+    
+	/**
+	 * Renders the gates.
+	 * 
+	 * @param batch				The model batch for the rendering.
+	 * @param environment		The environment for the rendering.
+	 * @param camera			The camera for the rendering.
+	 */
+    public void render(ModelBatch batch, Environment environment, PerspectiveCamera camera) {
+    	GateDisplay display;
+    	
+        final int numberOfDisplays = allGateDisplays.size();
+        
+        for (int i = 0; i < numberOfDisplays; i++) {
+        	display = allGateDisplays.get(i);
+        	display.render(batch, environment, camera);
         }
     }
     

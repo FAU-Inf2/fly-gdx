@@ -2,11 +2,12 @@ package de.fau.cs.mad.fly.game;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Pool.Poolable;
 
 /**
  * Created by danyel on 12/06/14.
  */
-public class GameModel implements Disposable {
+public class GameModel implements Disposable, Poolable {
 
 	/**
 	 * The displayed model.
@@ -30,16 +31,14 @@ public class GameModel implements Disposable {
 		this.hitbox = hitbox;
 	}
 
-	/**
-	 * Constructs a new game model with display but without hitbox model.
-	 * @param display
-	 */
-	public GameModel(final Model display) {
-		this(display, display);
-	}
-
 	@Override
 	public void dispose() {
 		// TODO: dispose models, or done elsewhere?
 	}
+
+    @Override
+    public void reset() {
+        // TODO Auto-generated method stub
+        
+    }
 }
