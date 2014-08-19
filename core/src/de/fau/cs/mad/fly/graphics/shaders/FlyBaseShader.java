@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 public abstract class FlyBaseShader implements Shader{
 
     protected ShaderProgram program;
-    private Environment environment;
+    protected Environment environment;
     private Matrix3 normalMatrix;
     private Matrix4 modelViewMatrix, modelViewProjectionMatrix;
     protected int numDirLights, numPointLights;

@@ -121,6 +121,7 @@
 package de.fau.cs.mad.fly.graphics.shaders;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
@@ -150,7 +151,7 @@ public class FlyTextureShader extends FlyBaseShader {
 
     @Override
     public boolean canRender(Renderable instance) {
-        if(instance.environment != null && instance.material.has(TextureAttribute.Diffuse)) return true;
+        if(instance.environment.equals(environment) && instance.material.has(TextureAttribute.Diffuse)) return true;
 		return false;
     }
 

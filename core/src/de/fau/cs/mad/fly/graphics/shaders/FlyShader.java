@@ -176,7 +176,7 @@ public class FlyShader extends FlyBaseShader {
 
     @Override
     public boolean canRender(Renderable instance) {
-        if (instance.environment != null && !instance.material.has(TextureAttribute.Diffuse)) return true;
+        if (instance.environment.equals(environment) && !instance.material.has(TextureAttribute.Diffuse)) return true;
         return false;
     }
 
