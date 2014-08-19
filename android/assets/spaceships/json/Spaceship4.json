@@ -1,0 +1,10 @@
+{
+	"id": 4,
+	"name": "Rocket",
+	"modelRef": "rocket",
+	"speed": 16,
+	"rollingSpeed": 10,
+	"azimuthSpeed": 10,
+	"lives": 1,
+	"rotation": [ 0.0, 0.0, 50.0 ],
+}
