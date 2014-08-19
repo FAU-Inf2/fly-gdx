@@ -28,7 +28,6 @@ import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.ResizeGatesUpgrade;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.game.object.IGameObjectMover;
 import de.fau.cs.mad.fly.game.object.RotationMover;
 import de.fau.cs.mad.fly.game.object.SinusMover;
 import de.fau.cs.mad.fly.game.object.SinusRotationMover;
@@ -161,7 +160,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             }
 
             goal.successors = jsonGate.get("successors").asIntArray();
-            gateMap.put(goal.getId(), goal);
+            gateMap.put(goal.getGateId(), goal);
         }
     	
 	    if (dummyGate == null) {
@@ -180,7 +179,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
      * @param e		The json value of the game object.
      */
     private void parseInformation(GameObject o, JsonValue e) {
-    	o.id = e.getString("id");
+    	o.setId(e.getString("id"));
     	
         JsonValue visible = e.get("visible");
         if (visible != null && !visible.asBoolean()) {
@@ -204,7 +203,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             // Gdx.app.log("LevelLoader.getComponents", "Position: " + pos.toString());
             JsonValue scale = e.get("scale");
             if (scale != null) {
-                o.scaling.set(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
+                o.setScaling(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
             }
             
             JsonValue euler = e.get("euler");
@@ -363,15 +362,16 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         GameObject o;
         for (JsonValue e : json.get("components")) {            
             String ref = e.getString("ref");
-            o = new GameObject(models.get(ref));
-            o.modelId = ref;
+            long timeStart = System.currentTimeMillis(); 
+            o = new GameObject(models.get(ref), ref);
+            Gdx.app.log("loadGameObject", String.valueOf(System.currentTimeMillis() - timeStart));
 
             parseInformation(o, e);	            
             parseTransform(o, e);
             parseVelocity(o, e);
             
-            components.put(o.id, o);
-            System.out.println(o.id);
+            components.put(o.getId(), o);
+            System.out.println(o.getId());
         }
     }
     

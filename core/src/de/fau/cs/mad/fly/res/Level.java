@@ -25,8 +25,6 @@ import java.util.*;
  */
 public class Level implements Disposable {
     
-    
-    
     /**
      * Radius of the Level which defines the outer boundary which should be
      * never reached by the user. The default level border defines a sphere with
@@ -50,7 +48,7 @@ public class Level implements Disposable {
     private GateCircuit gateCircuit = null;
     
     private IGravity gravity = new EmptyGravity();
-
+    
     private float leftTime = 0;
     
     public float getLeftTime() {
@@ -85,7 +83,7 @@ public class Level implements Disposable {
         gameOver = false;
         
         for (GameObject c : components) {
-            if (c.id.equals("space")) {
+            if (c.getId().equals("space")) {
                 borderObject = c;
             }
         }
@@ -97,18 +95,21 @@ public class Level implements Disposable {
     
     /**
      * Setter for the gravity.
-     * @param gravity		The new gravity for the level.
+     * 
+     * @param gravity
+     *            The new gravity for the level.
      */
     public void setGravity(IGravity gravity) {
-    	this.gravity = gravity;
+        this.gravity = gravity;
     }
     
     /**
      * Getter for the gravity.
+     * 
      * @return gravity
      */
     public IGravity getGravity() {
-    	return gravity;
+        return gravity;
     }
     
     public GameModel getDependency(String id) {
@@ -120,32 +121,34 @@ public class Level implements Disposable {
     }
     
     public void setUpgrades(List<Collectible> upgrades) {
-    	this.upgrades = upgrades;
+        this.upgrades = upgrades;
     }
     
     public List<Collectible> getUpgrades() {
-    	return upgrades;
+        return upgrades;
     }
-
+    
     public void finishLevel() {
         gameOver = true;
     }
     
     /**
      * Getter for the gate circuit.
+     * 
      * @return gateCircuit
      */
     public GateCircuit getGateCircuit() {
-    	return gateCircuit;
+        return gateCircuit;
     }
     
     /**
      * Adds the gate circuit to the level.
+     * 
      * @param gateCircuit
      */
     public void addGateCircuit(GateCircuit gateCircuit) {
-    	this.gateCircuit = gateCircuit;
-    	this.gateCircuit.level = this;
+        this.gateCircuit = gateCircuit;
+        this.gateCircuit.level = this;
     }
     
     /**
@@ -175,7 +178,7 @@ public class Level implements Disposable {
         int i;
         final int numberOfUpgrades = upgrades.size();
         for (i = 0; i < numberOfUpgrades; i++) {
-        	upgrades.get(i).move(delta);
+            upgrades.get(i).move(delta);
         }
         
         if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
@@ -204,7 +207,7 @@ public class Level implements Disposable {
         
         final int numberOfUpgrades = upgrades.size();
         for (i = 0; i < numberOfUpgrades; i++) {
-        	upgrades.get(i).render(batch, environment, camera);
+            upgrades.get(i).render(batch, environment, camera);
         }
     }
     

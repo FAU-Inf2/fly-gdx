@@ -225,8 +225,8 @@ public class GameControllerBuilder {
         
         for (GameObject o : level.components) {
             if (o.getRigidBody() == null) {
-                btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(o.modelId, o);
-                o.createRigidBody(o.modelId, displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+                btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(o.getModelId(), o);
+                o.createRigidBody(o.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
             }
             collisionDetector.addRigidBody(o);
         }
