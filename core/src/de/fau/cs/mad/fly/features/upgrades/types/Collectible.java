@@ -34,10 +34,7 @@ public class Collectible extends GameObject {
         	createRigidBody(type, shape, 1.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
         	getRigidBody().setCollisionFlags(getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
         	CollisionDetector.getInstance().addRigidBody(this);
-
-        	addMotionState();
         	setDummy(true);
-        	getRigidBody().setSleepingThresholds(0.01f, 0.01f);
         }
     }
 

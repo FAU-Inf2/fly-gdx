@@ -255,7 +255,7 @@ public class GameController implements TimeIsUpListener {
     public void renderGame(float delta) {
         stage.act(delta);
         int len, i;
-        
+
         if (gameState == GameState.RUNNING) {
             // update features if the game is not paused
             

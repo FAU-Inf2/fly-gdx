@@ -437,7 +437,6 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             parseVelocity(o, e);
             
             components.put(o.getId(), o);
-            System.out.println(o.getId());
         }
     }
     
