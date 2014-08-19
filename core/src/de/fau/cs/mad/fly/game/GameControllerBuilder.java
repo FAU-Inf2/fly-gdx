@@ -41,7 +41,7 @@ import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.LinearSpeedUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.ResizeGatesUpgradeHandler;
-import de.fau.cs.mad.fly.graphics.FlyShaderProvider;
+import de.fau.cs.mad.fly.graphics.shaders.FlyShaderProvider;
 import de.fau.cs.mad.fly.levels.DefaultLevel;
 import de.fau.cs.mad.fly.levels.ILevel;
 import de.fau.cs.mad.fly.player.IPlane;

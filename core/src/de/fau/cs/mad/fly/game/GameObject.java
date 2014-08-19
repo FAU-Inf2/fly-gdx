@@ -96,6 +96,11 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * Id of the model of this game object.
 	 */
 	public String modelId;
+
+    /**
+     * Environment this GameObject is to be rendered with (if it is rendered)
+     */
+    public Environment environment;
 	
 	private Vector3 startLinearVelocity = new Vector3();
 	private Vector3 startAngularVelocity = new Vector3();
@@ -267,7 +272,7 @@ public class GameObject extends ModelInstance implements Disposable {
 	 * @param cam		The camera used to display the world.
 	 */
 	public void render(ModelBatch batch, PerspectiveCamera cam) {
-		render(batch, null, cam);
+		render(batch, environment, cam);
 	}
 	
 	/**

@@ -12,6 +12,11 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -45,6 +50,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private AssetManager manager;
     private FileHandle file;
     private LevelParameters parameter;
+    private Map<String, Environment> environments;
     
     /**
      * Constructor, sets the
@@ -64,12 +70,13 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         for (Map.Entry<String, String> e : dependencies.entrySet()) {
             models.put(e.getKey(), dependencyFor(e.getKey()));
         }
+        environments = parseEnvironments();
         parseComponents();
         Perspective start = auto.fromJson(Perspective.class, json.get("start").toString());
 
         ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
         componentsList.addAll(components.values());
-        Level level = new Level(json.getString("name"), start, componentsList, models);
+        Level level = new Level(json.getString("name"), start, componentsList, models, environments);
         JsonValue levelClass = json.get("class");
         if (levelClass != null) {
         	level.levelClass = levelClass.asString();
@@ -263,6 +270,60 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     	
     	return upgradeList;
     }
+
+    /**
+     * Parses the environments
+     */
+    private Map<String, Environment> parseEnvironments() {
+        Environment ambientEnvironment = new Environment();
+        Environment lightingEnvironment = new Environment();
+        Map<String, Environment> envList = new HashMap<String, Environment>();
+
+        JsonValue environments = json.get("environments");
+        if(environments == null) {
+            //Set default environments if they aren't specified
+            ambientEnvironment.set(new ColorAttribute(ColorAttribute.AmbientLight, 1f, 1f, 1f, 1f));
+            lightingEnvironment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.3f, 0.3f, 0.3f, 1f));
+            lightingEnvironment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, 0.8f, -0.2f));
+            envList.put("ambient", ambientEnvironment);
+            envList.put("lighting", lightingEnvironment);
+            return envList;
+        }
+
+        JsonValue ambient = environments.get("ambient");
+        ambientEnvironment.set(new ColorAttribute(ColorAttribute.AmbientLight, ambient.getFloat(0), ambient.getFloat(1), ambient.getFloat(2), ambient.getFloat(3)));
+        JsonValue lighting = environments.get("lighting");
+        if(lighting != null) {
+            ambient = lighting.get("ambientLight");
+            if (ambient != null) {
+                lightingEnvironment.set(new ColorAttribute(ColorAttribute.AmbientLight, ambient.getFloat(0), ambient.getFloat(1), ambient.getFloat(2), ambient.getFloat(3)));
+            }
+            JsonValue directionalLights = lighting.get("directionalLights");
+            if (directionalLights != null) {
+                for(int i=0; i<directionalLights.size; i++) {
+                    JsonValue colorValue = directionalLights.get(i).get("color");
+                    JsonValue directionValue = directionalLights.get(i).get("direction");
+                    Color color = new Color(colorValue.getFloat(0), colorValue.getFloat(1), colorValue.getFloat(2), colorValue.getFloat(3));
+                    Vector3 direction = new Vector3(directionValue.getFloat(0), directionValue.getFloat(1), directionValue.getFloat(2));
+                    lightingEnvironment.add(new DirectionalLight().set(color, direction));
+                }
+            }
+            JsonValue pointLights = lighting.get("pointLights");
+            if (pointLights != null) {
+                for(int i=0; i<pointLights.size; i++) {
+                    JsonValue colorValue = pointLights.get(i).get("color");
+                    JsonValue positionValue = pointLights.get(i).get("position");
+                    JsonValue intensityValue = pointLights.get(i).get("intensity");
+                    Color color = new Color(colorValue.getFloat(0), colorValue.getFloat(1), colorValue.getFloat(2), colorValue.getFloat(3));
+                    Vector3 position = new Vector3(positionValue.getFloat(0), positionValue.getFloat(1), positionValue.getFloat(2));
+                    lightingEnvironment.add(new PointLight().set(color, position, intensityValue.asFloat()));
+                }
+            }
+        }
+        envList.put("ambient", ambientEnvironment);
+        envList.put("lighting", lightingEnvironment);
+        return envList;
+    }
     
     /**
      * Parses the json file.
@@ -303,8 +364,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             String ref = e.getString("ref");
             o = new GameObject(models.get(ref));
             o.modelId = ref;
+            if(e.has("environment")) {
+                o.environment = environments.get(e.getString("environment"));
+            }
 
-            parseInformation(o, e);	            
+            parseInformation(o, e);
             parseTransform(o, e);
             parseVelocity(o, e);
             

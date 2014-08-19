@@ -41,7 +41,7 @@ public class Level implements Disposable {
     public List<GameObject> components;
     private List<Collectible> upgrades;
     public final Perspective start;
-    private final Environment environment;
+    private final Environment environment, ambientEnvironment;
     private final Map<String, GameModel> dependencies;
     
     private GameObject borderObject = null;
@@ -71,15 +71,14 @@ public class Level implements Disposable {
         return gameOver;
     }
     
-    public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies) {
+    public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies, Map<String, Environment> environments) {
         this.head = new Head();
         this.head.name = name;
         this.components = components;
         this.start = start;
-        this.environment = new Environment();
         this.dependencies = Collections.unmodifiableMap(dependencies);
-        setUpEnvironment();
-        
+        this.environment = environments.get("lighting");
+        this.ambientEnvironment = environments.get("ambient");
         InitCollisionTime();
         gameOver = false;
         
@@ -172,7 +171,8 @@ public class Level implements Disposable {
         final int numberOfComponents = components.size();
         // Gdx.app.log("components:", String.valueOf(numberOfComponents));
         for (i = 0; i < numberOfComponents; i++) {
-            components.get(i).render(batch, environment, camera);
+            if(components.get(i).environment != null) components.get(i).render(batch, camera);
+            else components.get(i).render(batch, environment, camera);
         }
         
         final int numberOfGates = gateCircuit.allGateDisplays().size();
@@ -184,14 +184,6 @@ public class Level implements Disposable {
         for (i = 0; i < numberOfUpgrades; i++) {
         	upgrades.get(i).render(batch, environment, camera);
         }
-    }
-    
-    /**
-     * Sets up the environment for the level with its light.
-     */
-    private void setUpEnvironment() {
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
     }
     
     @Override

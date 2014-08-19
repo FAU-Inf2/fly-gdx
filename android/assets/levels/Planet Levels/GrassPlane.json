@@ -3,7 +3,8 @@
     "components": [
         {
             "id": "space",
-            "ref": "space"
+            "ref": "space",
+            "environment": "ambient"
         },
         {
             "euler": [
@@ -17,7 +18,8 @@
                 0.0,
                 -5.0
             ],
-            "ref": "grassPlane"
+            "ref": "grassPlane",
+            "environment": "ambient"
         }
     ],
     "dependencies": {
@@ -118,5 +120,37 @@
             "time": 100,
             "type": "ChangeTimeUpgrade"
         }
-    ]
+    ],
+    "environments": {
+        "ambient":  [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "lighting": {
+            "ambientLight": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "pointLights": [
+                {
+                    "color": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "intensity": 1.0
+                }
+            ]
+        }
+    }
 }
