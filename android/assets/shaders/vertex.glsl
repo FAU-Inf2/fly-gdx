@@ -9,7 +9,7 @@ uniform float u_shininess;
 
 varying vec2 v_texCoord0;
 varying vec3 v_normal, v_viewDirection;
-varying vec3 v_viewSpacePosition;
+varying vec3 v_worldSpacePosition;
 
 void main() {
     vec4 position = vec4(a_position, 1.0);
@@ -19,7 +19,7 @@ void main() {
 
     gl_Position = u_modelViewProjectionMatrix * position;
 
-    v_viewSpacePosition = (u_modelViewMatrix * position).xyz;
+    v_worldSpacePosition = (u_modelMatrix * position).xyz;
 
     v_viewDirection = normalize(u_cameraPosition - (u_modelMatrix * position).xyz);
 }
