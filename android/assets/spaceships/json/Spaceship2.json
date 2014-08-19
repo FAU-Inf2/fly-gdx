@@ -6,4 +6,7 @@
 	"rollingSpeed": 5,
 	"azimuthSpeed": 5,
 	"lives": 3,
+	"upgrades": [
+		0
+	]
 }

@@ -145,6 +145,7 @@ public class EndlessLevelGenerator {
 			//Gdx.app.log("myApp", "generateRandomGate");
 			GateDisplay newDisplay = new GateDisplay(level.getDependency("torus"));
 			GateGoal newGoal = new GateGoal(currGate, level.getDependency("hole"), newDisplay);
+			newDisplay.setGoal(newGoal);
 
 			Vector3 newDirection;
 			

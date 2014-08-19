@@ -34,6 +34,11 @@ public class PlayerProfile {
 	private IPlane.Head plane;
 	
 	/**
+	 * The amount of money the player currently has
+	 */
+	private int money;
+	
+	/**
 	 * The name of the player profile.
 	 */
 	private String name;
@@ -117,6 +122,30 @@ public class PlayerProfile {
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	/**
+	 * Getter for the current money
+	 * @return
+	 */
+	public int getMoney() {
+		return money;
+	}
+	
+	/**
+	 * Adds a certain amount of money to the current money the player has
+	 * @param money       The Amount of money to add, may be positive or negative
+	 * @return            false if the new amount of money would be negative, the current money then remains unchanged
+	 */
+	public boolean addMoney(int money) {
+		int newMoney = this.money + money;
+		
+		if(newMoney < 0) {
+			return false;
+		}
+		
+		this.money = newMoney;
+		return true;
 	}
 
 	/**

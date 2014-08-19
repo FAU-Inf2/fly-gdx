@@ -1,5 +1,8 @@
 package de.fau.cs.mad.fly.player;
 
+import java.util.List;
+import java.util.Map;
+
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Matrix4;
@@ -27,6 +30,10 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public float azimuthSpeed;
         public int lives;
         public FileHandle file;
+        public int[] upgradeTypes;
+        public List<String> upgrades;
+        
+        public Map<String, Integer> upgradesBought;
     }
 	
 	/**
