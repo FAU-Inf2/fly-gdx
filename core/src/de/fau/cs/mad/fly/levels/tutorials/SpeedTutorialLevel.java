@@ -37,7 +37,7 @@ public class SpeedTutorialLevel implements ILevel, IFeatureInit, ICollisionListe
 		}
 		List<GameObject> objects = GameController.getInstance().getLevel().components;
 		for(GameObject object : objects) {
-			if(object.id.equals("IndicatorArrow")) {
+			if(object.getId().equals("IndicatorArrow")) {
 				object.hide();
 				return;
 			}
