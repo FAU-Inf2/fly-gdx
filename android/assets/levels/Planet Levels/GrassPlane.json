@@ -6,6 +6,7 @@
             "ref": "space"
         },
         {
+            "environment": "ambient",
             "euler": [
                 -90.0,
                 0.0,
@@ -23,9 +24,70 @@
     "dependencies": {
         "grassPlane": "grassPlane",
         "hole": "torusHoleBox",
-        "space": "skysphere",
+        "space": "spacesphere",
         "timeUpgrade": "timeUpgrade",
         "torus": "torus"
+    },
+    "environments": {
+        "ambient": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "lighting": {
+            "ambientLight": [
+                0.3,
+                0.3,
+                0.3,
+                1.0
+            ],
+            "directionalLights": [
+                {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "direction": [
+                        -0.5,
+                        0.0,
+                        -0.866
+                    ]
+                }
+            ],
+            "pointLights": [
+                {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 1.0,
+                    "position": [
+                        0.0,
+                        34.0,
+                        8.0
+                    ]
+                },
+                {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 1.0,
+                    "position": [
+                        -20.0,
+                        0.0,
+                        17.0
+                    ]
+                }
+            ]
+        }
     },
     "gates": [
         {
@@ -71,8 +133,7 @@
         }
     ],
     "id": 1,
-    "name": "Grass Level",
-    "scripts": [],
+    "name": "Grass Planet",
     "start": {
         "position": {
             "x": 0.0,
@@ -104,11 +165,6 @@
                 0.0
             ],
             "id": "changeTimeUpgrade",
-            "linear_velocity": [
-                0.0,
-                0.0,
-                0.0
-            ],
             "position": [
                 -3.0,
                 20.0,

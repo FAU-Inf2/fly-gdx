@@ -7,4 +7,7 @@
 	"azimuthSpeed": 10,
 	"lives": 1,
 	"rotation": [ 0.0, 0.0, 50.0 ],
+	"upgrades": [
+		0
+	]
 }

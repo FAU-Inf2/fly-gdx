@@ -36,7 +36,7 @@ public class ChangeTimeUpgradeHandler extends CollectibleObjects implements IFea
 	}
 
 	@Override
-	protected void handleCollecting(Collectible c) {
+	protected void handleCollecting(Collectible c) {		
 		ChangeTimeUpgrade upgrade = (ChangeTimeUpgrade) c;
 		timeController.addBonusTime(upgrade.getTimeChange());
 		InfoOverlay.getInstance().setOverlay(I18n.t("timeUpgradeCollected") + "\n" + I18n.t("bonus") + " " + (upgrade.getTimeChange()) + "s", 3);

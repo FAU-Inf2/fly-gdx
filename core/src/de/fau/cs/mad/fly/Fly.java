@@ -3,6 +3,8 @@ package de.fau.cs.mad.fly;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g3d.particles.ParticleSystem;
+import com.badlogic.gdx.graphics.g3d.particles.batches.PointSpriteParticleBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.db.FlyDBManager;
@@ -49,7 +51,7 @@ public class Fly extends Game {
     private SkinManager skinManager;
     
     @Override
-    public void create() {
+    public void create() {    	
         Assets.init();
         skinManager = new SkinManager("uiskin.json");
         
@@ -75,8 +77,6 @@ public class Fly extends Game {
 		if(skinManager == null) {
 			skinManager = new SkinManager("uiskin.json");
 		}
-		
-		
 	}
     
     @Override

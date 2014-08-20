@@ -43,6 +43,8 @@ class LevelExporter:
 		self.data['upgrades'] = self.setupUpgrades()
 		self.data['components'] = self.setupComponents(export)
 		
+		self.setupEnvironments()
+		
 	def setupInfo(self, export):
 		"""Creates the level information"""		
 		level = bpy.data.objects['Level']
@@ -67,6 +69,55 @@ class LevelExporter:
 				gravity['position'] = [ ConvertHelper.convert_pos(act.offset_location.x), ConvertHelper.convert_pos(act.offset_location.y), ConvertHelper.convert_pos(act.offset_location.z) ]
 				gravity['strength'] = ConvertHelper.convert_pos(act.force.x)
 				self.data['gravity'] = gravity
+
+	def setupEnvironments(self):
+		environments = { }
+		lighting = { }
+		pointLights = [ ]
+		dirLights = [ ]
+		
+		storeEnv = False
+		storeLighting = False
+		
+		for lamp in bpy.data.lamps:
+			if "Ambient" == lamp.name:
+				storeEnv = True
+				environments['ambient'] = [ ConvertHelper.convert_pos(lamp.color.r), ConvertHelper.convert_pos(lamp.color.g), ConvertHelper.convert_pos(lamp.color.b), 1.0 ]
+
+			if "AmbientLight" == lamp.name:
+				storeLighting = True
+				lighting['ambientLight'] = [ ConvertHelper.convert_pos(lamp.color.r), ConvertHelper.convert_pos(lamp.color.g), ConvertHelper.convert_pos(lamp.color.b), 1.0 ]
+				
+			if "Point" in lamp.name:
+				storeLighting = True
+				lightObject = bpy.data.objects[lamp.name]
+				
+				pointLight = { }
+				pointLight['color'] = [ ConvertHelper.convert_pos(lamp.color.r), ConvertHelper.convert_pos(lamp.color.g), ConvertHelper.convert_pos(lamp.color.b), 1.0 ]
+				pointLight['position'] = [ ConvertHelper.convert_pos(lightObject.location.x), ConvertHelper.convert_pos(lightObject.location.y), ConvertHelper.convert_pos(lightObject.location.z) ]
+				pointLight['intensity'] = lamp.energy
+				pointLights.append(pointLight)
+				
+			if "Spot" in lamp.name:
+				storeLighting = True
+				lightObject = bpy.data.objects[lamp.name]
+				
+				dirLight = { }
+				dirLight['color'] = [ ConvertHelper.convert_pos(lamp.color.r), ConvertHelper.convert_pos(lamp.color.g), ConvertHelper.convert_pos(lamp.color.b), 1.0 ]
+				"""dirLight['direction'] = [ ConvertHelper.convert_pos(lightObject.location.x), ConvertHelper.convert_pos(lightObject.location.y), ConvertHelper.convert_pos(lightObject.location.z) ]"""
+				
+				dir = Vector((0.0, 0.0, -1.0))
+				dir.rotate(lightObject.rotation_euler)
+				dirLight['direction'] = [ ConvertHelper.convert_pos(dir.x), ConvertHelper.convert_pos(dir.y), ConvertHelper.convert_pos(dir.z),]
+				dirLights.append(dirLight)
+				
+		if storeLighting:
+			lighting['pointLights'] = pointLights
+			lighting['directionalLights'] = dirLights
+			environments['lighting'] = lighting
+		
+		if storeEnv:
+			self.data['environments'] = environments
 		
 	def setupStartPos(self):
 		"""Creates the starting position information"""
@@ -173,6 +224,9 @@ class LevelExporter:
 		component['euler'] = [ ConvertHelper.convert_angle(item.rotation_euler.x) - 90.0, ConvertHelper.convert_angle(item.rotation_euler.y), ConvertHelper.convert_angle(item.rotation_euler.z) ]
 		if item.scale.x != 1.0 or item.scale.y != 1.0 or item.scale.z != 1.0:
 			component['scale'] = [ ConvertHelper.convert_pos(item.scale.x), ConvertHelper.convert_pos(item.scale.y), ConvertHelper.convert_pos(item.scale.z) ]
+			
+		if "Environment" in item:
+			component['environment'] = item['Environment']
 
 		if "Visible" in item:
 			if "false" in item['Visible']:

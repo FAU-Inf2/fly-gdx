@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.graphics;
+package de.fau.cs.mad.fly.graphics.shaders;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -9,60 +9,67 @@ import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import de.fau.cs.mad.fly.game.GameController;
-
 /**
- * Created by tschaei on 22.07.14.
+ * Created by tschaei on 13.08.14.
  */
-public class FlyShader implements Shader {
+public abstract class FlyBaseShader implements Shader{
 
-    private ShaderProgram program;
-    private Camera camera;
-    private RenderContext context;
-    private int u_ProjViewTrans, u_worldTrans, u_diffuseColor, u_dirLightDirection, u_dirLightColor,
-                u_normalMatrix, u_shininess, u_cameraPosition, u_specularColor, u_ambientColor, numDirLights, numPointLights;
-    private int[][] u_dirLights, u_pointLights;
+    protected ShaderProgram program;
+    protected Environment environment;
     private Matrix3 normalMatrix;
-    private Environment environment;
+    private Matrix4 modelViewMatrix, modelViewProjectionMatrix;
+    protected int numDirLights, numPointLights;
+    private int u_modelViewMatrix, u_modelMatrix, u_modelViewProjectionMatrix, u_shininess,
+                u_ambientColor, u_specularColor, u_normalMatrix, u_cameraPosition;
+    protected int[][] u_dirLights, u_pointLights;
+    protected Camera camera;
+    private RenderContext context;
 
-    public FlyShader(Renderable renderable) {
+    public FlyBaseShader() {
+
+    }
+
+    public FlyBaseShader(Renderable renderable) {
         this.environment = renderable.environment;
         this.numDirLights = this.environment.directionalLights.size;
         this.numPointLights = this.environment.pointLights.size;
     }
 
-    @Override
-    public void init() {
+    protected void createShaderProgram(String vertexShader, String fragmentShader) {
+        //Prepare and compile the ShaderProgram
         String prefix = "";
         if(numDirLights > 0) prefix += "#define numDirLights " + this.numDirLights + "\n";
         if(numPointLights > 0) prefix += "#define numPointLights " + this.numPointLights + "\n";
-        String vert = prefix + Gdx.files.internal("shaders/vertex.glsl").readString();
-        String frag = Gdx.files.internal("shaders/fragment.glsl").readString();
+        String vert = prefix + vertexShader;
+        String frag = prefix + fragmentShader;
         program = new ShaderProgram(vert, frag);
         if (!program.isCompiled()) {
             throw new GdxRuntimeException(program.getLog());
         }
+    }
+
+    @Override
+    public void init() {
         u_dirLights = new int[this.numDirLights][2];
         u_pointLights = new int[this.numPointLights][2];
         normalMatrix = new Matrix3();
+        modelViewMatrix = new Matrix4();
+        modelViewProjectionMatrix = new Matrix4();
 
-        //Store the uniform locations
-        u_ProjViewTrans = program.getUniformLocation("u_projViewTrans");
-        u_worldTrans = program.getUniformLocation("u_worldTrans");
-        u_ambientColor = program.getUniformLocation("u_ambientColor");
-        u_diffuseColor = program.getUniformLocation("u_diffuseColor");
-        u_specularColor = program.getUniformLocation("u_specularColor");
-        u_dirLightDirection = program.getUniformLocation("u_dirLightDirection");
-        u_dirLightColor = program.getUniformLocation("u_dirLightColor");
-        u_normalMatrix = program.getUniformLocation("u_normalMatrix");
+        //Save the uniform locations
+        u_modelViewMatrix = program.getUniformLocation("u_modelViewMatrix");
+        u_modelMatrix = program.getUniformLocation("u_modelMatrix");
+        u_modelViewProjectionMatrix = program.getUniformLocation("u_modelViewProjectionMatrix");
         u_shininess = program.getUniformLocation("u_shininess");
+        u_ambientColor = program.getUniformLocation("u_ambientColor");
+        u_specularColor = program.getUniformLocation("u_specularColor");
+        u_normalMatrix = program.getUniformLocation("u_normalMatrix");
         u_cameraPosition = program.getUniformLocation("u_cameraPosition");
         for(int i=0; i<this.numDirLights; i++) {
             u_dirLights[i][0] = program.getUniformLocation("u_dirLights[" + i + "].direction");
@@ -75,39 +82,28 @@ public class FlyShader implements Shader {
     }
 
     @Override
-    public int compareTo(Shader other) {
-        return 0;
-    }
-
-    @Override
-    public boolean canRender(Renderable instance) {
-        if (instance.environment != null && !instance.material.has(TextureAttribute.Diffuse)) return true;
-        return false;
-    }
-
-    @Override
     public void begin(Camera camera, RenderContext context) {
         this.camera = camera;
         this.context = context;
         program.begin();
-        program.setUniformMatrix(u_ProjViewTrans, camera.combined);
-        context.setDepthTest(GL20.GL_DEPTH_TEST);
-        context.setCullFace(GL20.GL_BACK);
+        this.context.setDepthTest(GL20.GL_DEPTH_TEST);
+        this.context.setCullFace(GL20.GL_BACK);
     }
 
     @Override
-    public void render(Renderable renderable) {
-        //Set all the uniforms for this renderable
-        program.setUniformMatrix(u_worldTrans, renderable.worldTransform);
-        if(renderable.environment.has(ColorAttribute.AmbientLight)) {
-            program.setUniformf(u_ambientColor, ((ColorAttribute) renderable.environment.get(ColorAttribute.AmbientLight)).color);
-        } else {
-            program.setUniformf(u_ambientColor, Color.BLACK);
-        }
-        program.setUniformf(u_diffuseColor, ((ColorAttribute) renderable.material.get(ColorAttribute.Diffuse)).color);
-        program.setUniformMatrix(u_normalMatrix, normalMatrix.set(renderable.worldTransform).inv().transpose());
-//        program.setUniformf(u_dirLightDirection, renderable.environment.directionalLights.get(0).direction);
-//        program.setUniformf(u_dirLightColor, renderable.environment.directionalLights.get(0).color);
+    public boolean canRender(Renderable renderable) {
+        return false;
+    }
+
+    protected void setUpBaseUniforms(Renderable renderable) {
+        //Calculate the normal matrix
+        normalMatrix.set(renderable.worldTransform).inv().transpose();
+
+        //Pass the uniform values
+        program.setUniformMatrix(u_normalMatrix, normalMatrix);
+        program.setUniformMatrix(u_modelMatrix, renderable.worldTransform);
+        program.setUniformMatrix(u_modelViewMatrix, modelViewMatrix.set(camera.view).mul(renderable.worldTransform));
+        program.setUniformMatrix(u_modelViewProjectionMatrix, modelViewProjectionMatrix.set(camera.combined).mul(renderable.worldTransform));
         if (renderable.material.has(FloatAttribute.Shininess)) {
             program.setUniformf(u_shininess, ((FloatAttribute) renderable.material.get(FloatAttribute.Shininess)).value);
             program.setUniformf(u_specularColor, ((ColorAttribute) renderable.material.get(ColorAttribute.Specular)).color);
@@ -115,8 +111,11 @@ public class FlyShader implements Shader {
             program.setUniformf(u_shininess, 0.0f);
             program.setUniformf(u_specularColor, Color.BLACK);
         }
-        program.setUniformf(u_cameraPosition, this.camera.position);
-
+        if(renderable.environment.has(ColorAttribute.AmbientLight)) {
+            program.setUniformf(u_ambientColor, ((ColorAttribute) renderable.environment.get(ColorAttribute.AmbientLight)).color);
+        } else {
+            program.setUniformf(u_ambientColor, Color.BLACK);
+        }
         for(int i=0; i<this.numDirLights; i++) {
             program.setUniformf(u_dirLights[i][0], this.environment.directionalLights.get(i).direction);
             program.setUniformf(u_dirLights[i][1], this.environment.directionalLights.get(i).color);
@@ -126,9 +125,7 @@ public class FlyShader implements Shader {
             program.setUniformf(u_pointLights[i][0], this.environment.pointLights.get(i).position);
             program.setUniformf(u_pointLights[i][1], this.environment.pointLights.get(i).color);
         }
-
-        //Render the renderable
-        renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize);
+        program.setUniformf(u_cameraPosition, camera.position);
     }
 
     @Override

@@ -7,7 +7,6 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
-import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Provides a screen for the game itself.

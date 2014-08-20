@@ -1,7 +1,10 @@
 package de.fau.cs.mad.fly.profile;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -11,6 +14,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import de.fau.cs.mad.fly.player.IPlane;
+import de.fau.cs.mad.fly.res.PlaneUpgrade;
 
 /**
  * Manages the different Spaceships
@@ -20,7 +24,8 @@ import de.fau.cs.mad.fly.player.IPlane;
 public class PlaneManager {
 	
 	private JsonReader reader = new JsonReader();
-	private List<IPlane.Head> planes;
+	//private List<IPlane.Head> planes;
+	private Map<Integer, IPlane.Head> planes;
 	private IPlane.Head chosenPlane;
 	
 	private static PlaneManager Instance = new PlaneManager();
@@ -29,60 +34,70 @@ public class PlaneManager {
 		return Instance;
 	}
 
-	public List<IPlane.Head> getSpaceshipList() {
+	public Map<Integer, IPlane.Head> getSpaceshipList() {
 		if (planes == null) {
 			
-			planes = new ArrayList<IPlane.Head>();
+			//planes = new ArrayList<IPlane.Head>();
+			planes = new HashMap<Integer, IPlane.Head>();
 			FileHandle dirHandle = Gdx.files.internal("spaceships/json/");
 			for (FileHandle file : dirHandle.list()) {
 				JsonValue json = reader.parse(file);
-				IPlane.Head spaceshipHead = new IPlane.Head();
+				IPlane.Head planeHead = new IPlane.Head();
 				
-				spaceshipHead.id = json.getInt("id");
-				spaceshipHead.name = json.getString("name");
-				spaceshipHead.modelRef = json.getString("modelRef");
-				spaceshipHead.speed = json.getFloat("speed");
-				spaceshipHead.rollingSpeed = json.getFloat("rollingSpeed");
-				spaceshipHead.azimuthSpeed = json.getFloat("azimuthSpeed");
-				spaceshipHead.lives = json.getInt("lives");
-				
+				int id = json.getInt("id");
+				planeHead.id = id;
+				planeHead.name = json.getString("name");
+				planeHead.modelRef = json.getString("modelRef");
+				planeHead.speed = json.getFloat("speed");
+				planeHead.rollingSpeed = json.getFloat("rollingSpeed");
+				planeHead.azimuthSpeed = json.getFloat("azimuthSpeed");
+				planeHead.lives = json.getInt("lives");
 				JsonValue rotation = json.get("rotation");
 				if (rotation != null) {
 					Vector3 rotationVector = new Vector3(rotation.getFloat(0), rotation.getFloat(1), rotation.getFloat(2));
-					spaceshipHead.rotationSpeed = rotationVector.len();
-					spaceshipHead.rotation = rotationVector.nor();
+					planeHead.rotationSpeed = rotationVector.len();
+					planeHead.rotation = rotationVector.nor();
 				}
 				
-				spaceshipHead.file = file;
+				planeHead.file = file;
 				
-				planes.add(spaceshipHead);
+				int[] upgradeTypes = json.get("upgrades").asIntArray();
+				planeHead.upgradeTypes = upgradeTypes;
+				
+				Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
+				Map<String, Integer> upgradeMap = new HashMap<String, Integer>();
+				
+				int size = upgradeTypes.length;
+				for(PlaneUpgrade upgrade : upgrades) {
+					for(int i = 0; i < size; i++) {
+						if(upgrade.type == upgradeTypes[i]) {
+							upgradeMap.put(upgrade.name, 0);
+						}
+					}
+				}
+				
+				planeHead.upgradesBought = upgradeMap;
+				
+				//planes.add(spaceshipHead);
+				planes.put(id, planeHead);
 			}
 		}
 		return planes;
 	}
 
-	public String getSpaceshipName(int levelID) {
-		for (IPlane.Head spaceship : getSpaceshipList()) {
-			if (spaceship.id == levelID) {
-				return spaceship.name;
-			}
-		}
-		return Integer.toString(levelID);
-	}
-
 	public IPlane.Head getChosenPlane() {
 		if (chosenPlane == null) {
-			chosenPlane = getSpaceshipList().get(0);
+			chosenPlane = getSpaceshipList().get(1);
 		}
 		return chosenPlane;
 	}
 	
 	public IPlane.Head getNextPlane(int left) {
 		if(chosenPlane == null) {
-			chosenPlane = getSpaceshipList().get(0);
+			chosenPlane = getSpaceshipList().get(1);
 		}
 		
-		int chosenPlaneId = chosenPlane.id - 1;
+		int chosenPlaneId = chosenPlane.id;
 		
 		chosenPlaneId -= left;
 		if(chosenPlaneId < 0) {
@@ -101,5 +116,37 @@ public class PlaneManager {
 
 	public void setChosenPlane(IPlane.Head plane) {
 		chosenPlane = plane;
+	}
+	
+	public IPlane.Head upgradePlane(String upgradeName, int signum) {
+		PlaneUpgrade upgrade = PlaneUpgradeManager.getInstance().getUpgrade(upgradeName);
+		
+		/*int size = upgrade.upgradeValues.length;
+		for(int i = 0; i < size; i++) {
+			plane.
+		}*/
+		int[] values = upgrade.upgradeValues;
+		
+		chosenPlane.speed += values[0] * signum;
+		chosenPlane.rollingSpeed += values[1] * signum;
+		chosenPlane.azimuthSpeed += values[2] * signum;
+		chosenPlane.lives += values[3] * signum;
+		
+		planes.put(chosenPlane.id, chosenPlane);
+		
+		return chosenPlane;
+	}
+	
+	public void buyUpgradeForPlane(String upgradeName) {
+		int currentUpgradeBought = chosenPlane.upgradesBought.get(upgradeName);
+		
+		PlaneUpgrade upgrade = PlaneUpgradeManager.getInstance().getUpgrade(upgradeName);
+		int maxUpgrade = upgrade.timesAvailable;
+		
+		if(currentUpgradeBought < maxUpgrade) {
+			if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(-upgrade.price)) {
+				chosenPlane.upgradesBought.put(upgradeName, currentUpgradeBought + 1);
+			}
+		}
 	}
 }

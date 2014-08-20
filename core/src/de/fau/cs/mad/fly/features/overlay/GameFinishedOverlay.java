@@ -85,6 +85,10 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             messageTable.add(infoLabel);
             //Score newScore = gameController.getLevel().getScore();
             newScore = gameController.getScoreController().getEndScore(gameController);
+            
+            // adds an amount of money to the players profile that equals the score he got in this level
+            PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(newScore.getTotalScore());
+            
             String scoreString = I18n.t("newScore") + newScore.getTotalScore();
             final Label scoreLabel = new Label(scoreString, skin);
             messageTable.add(scoreLabel).pad(15f);
