@@ -285,3 +285,10 @@ helpBackground
   orig: 6, 6
   offset: 0, 0
   index: -1
+questionmark
+  rotate: false
+  xy: 402, 446
+  size: 120, 230
+  orig: 120, 230
+  offset: 0, 0
+  index: -1
