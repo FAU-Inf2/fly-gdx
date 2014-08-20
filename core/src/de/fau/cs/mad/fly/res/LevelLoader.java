@@ -143,8 +143,14 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 	            String ref = jsonGate.getString("ref");
 	            String refHole = jsonGate.getString("refHole");
 	
-	            display = new GateDisplay(models.get(ref));
+	            long time = System.currentTimeMillis();
+	            display = new GateDisplay(models.get(ref), ref);
+	            Gdx.app.log("loadGameObject", "LevelLoader.parseGates(visible): " + String.valueOf(System.currentTimeMillis() - time));
+	            time = System.currentTimeMillis();
 	            goal = new GateGoal(gateId.asInt(), models.get(refHole), display);
+	            Gdx.app.log("loadGameObject", "LevelLoader.parseGates(goal): " + String.valueOf(System.currentTimeMillis() - time));
+	            
+	            
 	            goal.hide();
 	            display.setGoal(goal);
 	            

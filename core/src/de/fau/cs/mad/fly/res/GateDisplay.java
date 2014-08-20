@@ -14,7 +14,7 @@ import de.fau.cs.mad.fly.game.GameObject;
  * Displays the visible part of the gate.
  * 
  * @author Tobi
- *
+ * 
  */
 public class GateDisplay extends GameObject implements Disposable {
     private GateGoal goal = null;
@@ -22,63 +22,72 @@ public class GateDisplay extends GameObject implements Disposable {
     
     /**
      * Creates a new gate display.
-     * @param model		The model of the gate display.
+     * 
+     * @param model
+     *            The model of the gate display.
      */
-    public GateDisplay(GameModel model) {
-    	super(model, "GateDisplay");
+    public GateDisplay(GameModel model, String type) {
+        super(model, type);
     }
     
     /**
      * Creates the rigid body of the gate display if its not already created.
+     * 
      * @param collisionDetector
      */
-    public void createRigidBody(CollisionDetector collisionDetector) {        
+    public void createRigidBody(CollisionDetector collisionDetector) {
         if (rigidBody == null) {
-			btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(super.getModelId(), this);
-			super.createRigidBody(super.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-			
-			// different scaling for the gates is buggy
-			/*transform.scl(scaling);
-			rigidBody.getCollisionShape().setLocalScaling(scaling);*/
-			
-			transform.getTranslation(gatePosition);
+            btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(super.getModelId(), this);
+            super.createRigidBody(super.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+            
+            // different scaling for the gates is buggy
+            /*
+             * transform.scl(scaling);
+             * rigidBody.getCollisionShape().setLocalScaling(scaling);
+             */
+            
+            transform.getTranslation(gatePosition);
         }
         collisionDetector.addRigidBody(this);
     }
     
     /**
      * Setter for the gate goal for this display.
-     * @param goal		The gate goal.
+     * 
+     * @param goal
+     *            The gate goal.
      */
     public void setGoal(GateGoal goal) {
-    	this.goal = goal;
+        this.goal = goal;
     }
     
     /**
      * Getter for the gate goal for this display.
+     * 
      * @return goal
      */
     public GateGoal getGoal() {
-    	return goal;
+        return goal;
     }
     
-	/**
-	 * Marks the game object with a special color.
-	 */
-	public void mark() {
-		materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
-	}
-
-	/**
-	 * Unmarks the object.
-	 */
-	public void unmark() {
-		materials.get(0).set(ColorAttribute.createDiffuse(Color.GRAY));
-	}
+    /**
+     * Marks the game object with a special color.
+     */
+    public void mark() {
+        materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
+    }
+    
+    /**
+     * Unmarks the object.
+     */
+    public void unmark() {
+        materials.get(0).set(ColorAttribute.createDiffuse(Color.GRAY));
+    }
     
     @Override
     public void dispose() {
         CollisionDetector.getInstance().removeRigidBody(this);
         super.dispose();
     }
+    
 }

@@ -82,7 +82,9 @@ public class FlyingObjects implements IFeatureLoad, IFeatureInit, IFeatureUpdate
 	 * @return GameObject
 	 */
 	private GameObject createFlyingObject(GameModel model, int id) {
+	    long time = System.currentTimeMillis();
 		GameObject flyingObject = new GameObject(model, this.id + "_" + id);
+		Gdx.app.log("loadGameObject", "createFlyingObject: " + String.valueOf(System.currentTimeMillis() - time));
 		
 		Vector3 position;
 		do {

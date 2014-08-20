@@ -24,7 +24,7 @@ import de.fau.cs.mad.fly.game.object.IGameObjectMover;
  * 
  * @author Tobias Zangl
  */
-public class GameObject extends ModelInstance implements Disposable, Poolable {
+public class GameObject extends ModelInstance implements Disposable {
     
     /**
      * The mover for the game object. Empty mover is no mover is defined.
@@ -115,14 +115,10 @@ public class GameObject extends ModelInstance implements Disposable, Poolable {
      * @param id
      */
     public GameObject(GameModel model, String id) {
-        // the following 4 lines are only dependent from the model
         super(model.display);
         this.gmodel = model;
         this.userData = this;
         this.id = id;
-        // the other members have to be reseted. has to be done before bounding
-        // box is initialized
-        reset();
         
         initBoundingBox();
     }
@@ -429,20 +425,5 @@ public class GameObject extends ModelInstance implements Disposable, Poolable {
 
     public void setModelId(String modelId) {
         this.modelId = modelId;
-    }
-    
-    @Override
-    public void reset() {
-        if (mover == null || !(mover instanceof EmptyMover)) {
-            mover = new EmptyMover();
-        }
-        position.setZero();
-        center.setZero();
-        dimensions.setZero();
-        scaling.set(1.0f, 1.0f, 1.0f);
-        motionState = null;
-        
-        visible = true;
-        dummy = false;
     }
 }

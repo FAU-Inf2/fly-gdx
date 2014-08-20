@@ -20,6 +20,7 @@ public class Collectible extends GameObject {
 	 * @param model		The model of the upgrade.
 	 */
 	public Collectible(GameModel model) {
+	    // TODO: use a proper string for the creation of the GameObject
 		super(model, "");
 	}
 	
