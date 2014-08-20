@@ -48,6 +48,17 @@ Deco:
 - special custom property:
 	Type: deco
 
+Lamps:
+- light always has to have the same name like the object
+	(click on the light -> button 3rd from right on the long button row -> the names must be the same)
+- 1 lamp called Ambient		-> color
+- 1 lamp called AmbientLight	-> color
+
+- Point.XXX for point lights	-> color, energy as intensity, position as position
+- Spot.XXX for spot lights	-> color, rotation as direction
+
+- every object can have an optional custom property called "Environment" with possible values "ambient" oder "lighting"
+
 
 Gates + Upgrades:
 - location / rotation / scale define the position / rotation / scaling of the gate (scaling not working for gates yet)
