@@ -38,7 +38,7 @@ public class PointsTutorialLevel implements ILevel, IFeatureInit, ICollisionList
 		}
 		List<GameObject> objects = GameController.getInstance().getLevel().components;
 		for(GameObject object : objects) {
-			if(object.id.equals("IndicatorArrow")) {
+			if(object.getId().equals("IndicatorArrow")) {
 				object.hide();
 				return;
 			}

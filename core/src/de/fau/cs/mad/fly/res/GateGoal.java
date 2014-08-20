@@ -42,8 +42,8 @@ public class GateGoal extends GameObject implements Disposable {
      */
     public void createRigidBody(CollisionDetector collisionDetector) {        
         if (rigidBody == null) {
-			btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(modelId + ".goal", new Vector3(0.8f, 0.1f, 0.8f));
-			super.createRigidBody(modelId + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+			btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(super.getModelId() + ".goal", new Vector3(0.8f, 0.1f, 0.8f));
+			super.createRigidBody(super.getModelId() + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
 			rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
 			
 			// different scaling for the gates is buggy
@@ -73,7 +73,7 @@ public class GateGoal extends GameObject implements Disposable {
      * Getter for the id of this gate.
      * @return gateId
      */
-    public int getId() {
+    public int getGateId() {
     	return gateId;
     }
     

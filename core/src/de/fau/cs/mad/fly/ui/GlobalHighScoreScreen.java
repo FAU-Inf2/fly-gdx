@@ -13,8 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService;
 import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.ResponseItem;
-import de.fau.cs.mad.fly.profile.LevelManager;
-import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.profile.LevelGroupManager;
+import de.fau.cs.mad.fly.profile.LevelProfile;
 
 /**
  * @author Qufang Fan
@@ -26,9 +26,9 @@ public class GlobalHighScoreScreen extends BasicScreen {
 
 	public class GetLevelHighScoreListener implements FlyHttpResponseListener {
 
-		final Level.Head level;
+		final LevelProfile level;
 
-		public GetLevelHighScoreListener(Level.Head level) {
+		public GetLevelHighScoreListener(LevelProfile level) {
 			this.level = level;
 		}
 
@@ -97,8 +97,9 @@ public class GlobalHighScoreScreen extends BasicScreen {
 	protected void generateContentDynamic() {
 		infoTable.clear();
 
-		List<Level.Head> allLevels = LevelManager.getInstance().getLevelList();
-		for (Level.Head level : allLevels) {
+		//todo
+		List<LevelProfile> allLevels = LevelGroupManager.getInstance().getLevelGroups().get(0).getLevels();
+		for (LevelProfile level : allLevels) {
 			final FlyHttpResponseListener listener = new GetLevelHighScoreListener(level);
 			GetLevelHighScoreService getLevelHighScoreService = new GetLevelHighScoreService(listener);
 

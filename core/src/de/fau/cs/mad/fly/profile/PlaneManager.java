@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -51,6 +52,13 @@ public class PlaneManager {
 				planeHead.rollingSpeed = json.getFloat("rollingSpeed");
 				planeHead.azimuthSpeed = json.getFloat("azimuthSpeed");
 				planeHead.lives = json.getInt("lives");
+				JsonValue rotation = json.get("rotation");
+				if (rotation != null) {
+					Vector3 rotationVector = new Vector3(rotation.getFloat(0), rotation.getFloat(1), rotation.getFloat(2));
+					planeHead.rotationSpeed = rotationVector.len();
+					planeHead.rotation = rotationVector.nor();
+				}
+				
 				planeHead.file = file;
 				
 				int[] upgradeTypes = json.get("upgrades").asIntArray();

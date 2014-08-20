@@ -12,6 +12,11 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -28,10 +33,11 @@ import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.ResizeGatesUpgrade;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.game.object.IGameObjectMover;
 import de.fau.cs.mad.fly.game.object.RotationMover;
 import de.fau.cs.mad.fly.game.object.SinusMover;
 import de.fau.cs.mad.fly.game.object.SinusRotationMover;
+import de.fau.cs.mad.fly.player.gravity.ConstantGravity;
+import de.fau.cs.mad.fly.player.gravity.DirectionalGravity;
 
 /**
  * Created by danyel on 26/05/14.
@@ -49,6 +55,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private AssetManager manager;
     private FileHandle file;
     private LevelParameters parameter;
+    private Map<String, Environment> environments;
     
     /**
      * Constructor, sets the
@@ -68,18 +75,24 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         for (Map.Entry<String, String> e : dependencies.entrySet()) {
             models.put(e.getKey(), dependencyFor(e.getKey()));
         }
+        environments = parseEnvironments();
         parseComponents();
         Perspective start = auto.fromJson(Perspective.class, json.get("start").toString());
 
         ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
         componentsList.addAll(components.values());
-        Level level = new Level(json.getString("name"), start, componentsList, models);
+        Level level = new Level(json.getString("name"), start, componentsList, models, environments);
         JsonValue levelClass = json.get("class");
         if (levelClass != null) {
         	level.levelClass = levelClass.asString();
         }
         level.head.id = json.getInt("id");
         level.setLeftTime(json.getInt("time"));
+        
+        JsonValue gravity = json.get("gravity");
+        if (gravity != null) {
+        	parseGravity(level, gravity);
+        }
 
         GateCircuit gateCircuit = parseGates();
         level.addGateCircuit(gateCircuit);
@@ -87,6 +100,26 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         level.setUpgrades(parseUpgrades());
         
         return level;
+    }
+    
+    /**
+     * Parses and adds the gravity to the level.
+     * @param level		The level to add the gravity to.
+     * @param e			The json value of the level.
+     */
+    private void parseGravity(Level level, JsonValue e) {
+    	String type = e.getString("type");
+    	
+    	if(type.equals("ConstantGravity")) {
+            JsonValue dir = e.get("direction");
+    		ConstantGravity gravity = new ConstantGravity(new Vector3(dir.getFloat(0), dir.getFloat(1), dir.getFloat(2)));
+    		level.setGravity(gravity);
+    	} else if(type.equals("DirectionalGravity")) {
+            JsonValue pos = e.get("position");
+            float strength = e.getFloat("strength");
+    		DirectionalGravity gravity = new DirectionalGravity(new Vector3(pos.getFloat(0), pos.getFloat(1), pos.getFloat(2)), strength);
+    		level.setGravity(gravity);
+    	}
     }
     
     /**
@@ -134,7 +167,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             }
 
             goal.successors = jsonGate.get("successors").asIntArray();
-            gateMap.put(goal.getId(), goal);
+            gateMap.put(goal.getGateId(), goal);
         }
     	
 	    if (dummyGate == null) {
@@ -153,7 +186,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
      * @param e		The json value of the game object.
      */
     private void parseInformation(GameObject o, JsonValue e) {
-    	o.id = e.getString("id");
+    	o.setId(e.getString("id"));
     	
         JsonValue visible = e.get("visible");
         if (visible != null && !visible.asBoolean()) {
@@ -177,7 +210,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             // Gdx.app.log("LevelLoader.getComponents", "Position: " + pos.toString());
             JsonValue scale = e.get("scale");
             if (scale != null) {
-                o.scaling.set(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
+                o.setScaling(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
             }
             
             JsonValue euler = e.get("euler");
@@ -298,6 +331,60 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     	
     	return upgradeList;
     }
+
+    /**
+     * Parses the environments
+     */
+    private Map<String, Environment> parseEnvironments() {
+        Environment ambientEnvironment = new Environment();
+        Environment lightingEnvironment = new Environment();
+        Map<String, Environment> envList = new HashMap<String, Environment>();
+
+        JsonValue environments = json.get("environments");
+        if(environments == null) {
+            //Set default environments if they aren't specified
+            ambientEnvironment.set(new ColorAttribute(ColorAttribute.AmbientLight, 1f, 1f, 1f, 1f));
+            lightingEnvironment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.3f, 0.3f, 0.3f, 1f));
+            lightingEnvironment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, 0.8f, -0.2f));
+            envList.put("ambient", ambientEnvironment);
+            envList.put("lighting", lightingEnvironment);
+            return envList;
+        }
+
+        JsonValue ambient = environments.get("ambient");
+        ambientEnvironment.set(new ColorAttribute(ColorAttribute.AmbientLight, ambient.getFloat(0), ambient.getFloat(1), ambient.getFloat(2), ambient.getFloat(3)));
+        JsonValue lighting = environments.get("lighting");
+        if(lighting != null) {
+            ambient = lighting.get("ambientLight");
+            if (ambient != null) {
+                lightingEnvironment.set(new ColorAttribute(ColorAttribute.AmbientLight, ambient.getFloat(0), ambient.getFloat(1), ambient.getFloat(2), ambient.getFloat(3)));
+            }
+            JsonValue directionalLights = lighting.get("directionalLights");
+            if (directionalLights != null) {
+                for(int i=0; i<directionalLights.size; i++) {
+                    JsonValue colorValue = directionalLights.get(i).get("color");
+                    JsonValue directionValue = directionalLights.get(i).get("direction");
+                    Color color = new Color(colorValue.getFloat(0), colorValue.getFloat(1), colorValue.getFloat(2), colorValue.getFloat(3));
+                    Vector3 direction = new Vector3(directionValue.getFloat(0), directionValue.getFloat(1), directionValue.getFloat(2));
+                    lightingEnvironment.add(new DirectionalLight().set(color, direction));
+                }
+            }
+            JsonValue pointLights = lighting.get("pointLights");
+            if (pointLights != null) {
+                for(int i=0; i<pointLights.size; i++) {
+                    JsonValue colorValue = pointLights.get(i).get("color");
+                    JsonValue positionValue = pointLights.get(i).get("position");
+                    JsonValue intensityValue = pointLights.get(i).get("intensity");
+                    Color color = new Color(colorValue.getFloat(0), colorValue.getFloat(1), colorValue.getFloat(2), colorValue.getFloat(3));
+                    Vector3 position = new Vector3(positionValue.getFloat(0), positionValue.getFloat(1), positionValue.getFloat(2));
+                    lightingEnvironment.add(new PointLight().set(color, position, intensityValue.asFloat()));
+                }
+            }
+        }
+        envList.put("ambient", ambientEnvironment);
+        envList.put("lighting", lightingEnvironment);
+        return envList;
+    }
     
     /**
      * Parses the json file.
@@ -336,15 +423,20 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         GameObject o;
         for (JsonValue e : json.get("components")) {            
             String ref = e.getString("ref");
-            o = new GameObject(models.get(ref));
-            o.modelId = ref;
 
-            parseInformation(o, e);	            
+            long timeStart = System.currentTimeMillis(); 
+            o = new GameObject(models.get(ref), ref);
+            Gdx.app.log("loadGameObject", String.valueOf(System.currentTimeMillis() - timeStart));
+
+            if(e.has("environment")) {
+                o.environment = environments.get(e.getString("environment"));
+            }
+
+            parseInformation(o, e);
             parseTransform(o, e);
             parseVelocity(o, e);
             
-            components.put(o.id, o);
-            System.out.println(o.id);
+            components.put(o.getId(), o);
         }
     }
     

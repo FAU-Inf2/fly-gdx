@@ -13,6 +13,7 @@ import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.player.gravity.IGravity;
 import de.fau.cs.mad.fly.res.Perspective;
 
 public class Spaceship extends GameObject implements IPlane {
@@ -29,6 +30,12 @@ public class Spaceship extends GameObject implements IPlane {
 	private Matrix4 particleTransform;
 	
 	private SpaceshipParticle particle;
+
+	private float i = 0.0f;
+    private float rotationSpeed = 0.0f;
+    private Vector3 rotation = null;
+	
+	private IGravity gravity;
 	
 	private boolean useRolling;
 
@@ -36,10 +43,13 @@ public class Spaceship extends GameObject implements IPlane {
 	
 	private Vector3 movingDir = new Vector3(0,0,1);
 	private final Vector3 up =  new Vector3(0,1,0);
-	Vector3 linearMovement; 
+	Vector3 linearMovement;
 	
 	private float lastRoll = 0.f;
 	private float lastAzimuth = 0.f;
+	
+	private Matrix4 storedTransform;
+	private Matrix4 displayTransform = new Matrix4();
 	
 	private float speed;
 	private float azimuthSpeed;
@@ -51,13 +61,19 @@ public class Spaceship extends GameObject implements IPlane {
 		this.head = head;
 		this.modelRef = head.modelRef;
 		particle = new SpaceshipParticle();
+		
+		if(head.rotation != null) {
+			rotationSpeed = head.rotationSpeed;
+			rotation = head.rotation;
+		}
 	}
 	
-	public Spaceship(GameModel model, String modelRef) {
+	// needed anymore?
+	/*public Spaceship(GameModel model, String modelRef) {
 		super(model, "spaceship");
 		this.modelRef = modelRef;
 		particle = new SpaceshipParticle();
-	}
+	}*/
 	
 	@Override
 	public void load(final GameController game) {
@@ -66,6 +82,8 @@ public class Spaceship extends GameObject implements IPlane {
 		this.environment = gameController.getLevel().getEnvironment();
 		this.camera = gameController.getCamera();
 		linearMovement = new Vector3();
+		
+		gravity = game.getLevel().getGravity();
 		
 		//particle.load(camera, batch, modelRef);
 		//particle.init();
@@ -90,9 +108,17 @@ public class Spaceship extends GameObject implements IPlane {
 	public void render(float delta) {
 		float rollDir = lastRoll * 10.f;// / delta / 60.f;
 		float azimuthDir = lastAzimuth * 50f;// / delta / 60.f;
+
+		storedTransform = transform;
+		displayTransform.set(transform);
+		transform = displayTransform;
 		
 		transform.rotate(movingDir.cpy().crs(up), rollDir);
 		transform.rotate(movingDir, -azimuthDir);
+		
+		if(rotation != null) {
+			transform.rotate(rotation, i * rotationSpeed);
+		}
 
 		render(batch, environment, camera);
 		
@@ -100,10 +126,16 @@ public class Spaceship extends GameObject implements IPlane {
 		//particleTransform.translate(particleOffset);
 		//particle.render(particleTransform);
 		
-		transform.rotate(movingDir, azimuthDir);
-		transform.rotate(movingDir.cpy().crs(up), -rollDir);
+		transform = storedTransform;
+		
+		i += delta;
 	}
 	
+	/**
+	 * Setter if rolling should be used.
+	 * 
+	 * @param rolling		True if rolling should be used, false otherwise.
+	 */
 	public void setRolling(boolean rolling) {
 		this.useRolling = rolling;
 	}
@@ -155,7 +187,7 @@ public class Spaceship extends GameObject implements IPlane {
 	}
 
 	@Override
-	public void rotate(float rollDir, float azimuthDir, float deltaFactor) {		
+	public void rotate(float rollDir, float azimuthDir, float deltaFactor) {
 		rotationTransform = getRigidBody().getCenterOfMassTransform();
 		if(!useRolling) {
 			rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
@@ -166,10 +198,8 @@ public class Spaceship extends GameObject implements IPlane {
 		
 		float[] transformValues = rotationTransform.getValues();
 		linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
-		
-		// TODO: normalize before scl(getSpeed()) ?
-		// TODO: "gravity"
-		//linearMovement.add(new Vector3(0.0f, 0.0f, -1.0f));
+
+		gravity.applyGravity(transform, linearMovement);
 		
 		setMovement(linearMovement);
 

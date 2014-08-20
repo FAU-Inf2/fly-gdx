@@ -29,6 +29,8 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public float rollingSpeed;
         public float azimuthSpeed;
         public int lives;
+        public float rotationSpeed = 0.0f;
+        public Vector3 rotation = null;
         public FileHandle file;
         public int[] upgradeTypes;
         public List<String> upgrades;

@@ -41,7 +41,7 @@ public class SteeringTutorialLevel implements ILevel, IFeatureInit, ICollisionLi
 		}
 		List<GameObject> objects = GameController.getInstance().getLevel().components;
 		for(GameObject object : objects) {
-			if(object.id.equals("IndicatorArrow")) {
+			if(object.getId().equals("IndicatorArrow")) {
 				object.hide();
 				return;
 			}

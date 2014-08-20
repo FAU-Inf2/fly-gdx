@@ -10,7 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Loader;
-import de.fau.cs.mad.fly.profile.LevelManager;
+import de.fau.cs.mad.fly.profile.LevelGroup;
+import de.fau.cs.mad.fly.profile.LevelGroupManager;
+import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.res.Level;
 
 /**
@@ -19,14 +21,14 @@ import de.fau.cs.mad.fly.res.Level;
  * @author Lukas Hahmann
  */
 public class LevelChooserScreen extends BasicScreen {
-	private LevelManager.LevelGroup levelGroup;
+	private LevelGroup levelGroup;
 	
 	/**
 	 * Shows a list of all available levels.
 	 */
 	public void generateDynamicContent() {
 		// calculate width and height of buttons and the space in between
-		List<Level.Head> allLevels = levelGroup.levels;
+		List<LevelProfile> allLevels = levelGroup.getLevels();
 		
 		stage.clear();
 
@@ -45,7 +47,7 @@ public class LevelChooserScreen extends BasicScreen {
 			int maxColumns = Math.min(allLevels.size() - (row * UI.Buttons.BUTTONS_IN_A_ROW), UI.Buttons.BUTTONS_IN_A_ROW);
 			// fill a row with buttons
 			for (int column = 0; column < maxColumns; column++) {
-				final Level.Head level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
+				final LevelProfile level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
 				final TextButton button = new TextButton(level.name, skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
 				button.addListener(new ClickListener() {
 					@Override
@@ -65,7 +67,7 @@ public class LevelChooserScreen extends BasicScreen {
 	 * 
 	 * @param group		The group to display.
 	 */
-	public void setGroup(LevelManager.LevelGroup group) {
+	public void setGroup(LevelGroup group) {
 		levelGroup = group;
 	}
 	

@@ -26,7 +26,7 @@ public class ScoreManager {
 		return Instance;
 	}
 
-	public void saveBestScore(PlayerProfile playerProfile, Level.Head level, Score score) {
+	public void saveBestScore(PlayerProfile playerProfile, LevelProfile level, Score score) {
 		Score compareScore = getLevelBestScore(playerProfile, level);
 		if (compareScore != null && compareScore.getTotalScore() > score.getTotalScore())
 			return;
@@ -120,7 +120,7 @@ public class ScoreManager {
 		return getPlayerBestScores(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
 	}
 
-	public Score getLevelBestScore(PlayerProfile playerProfile, Level.Head level) {
+	public Score getLevelBestScore(PlayerProfile playerProfile, LevelProfile level) {
 		String selectScore = "select " + FlyDBManager.SCORE_COLUMN_SCORE + ", "
 				+ FlyDBManager.SCORE_COLUMN_COMPARESCORE + ", "
 				+ FlyDBManager.SCORE_COLUMN_REACHEDDATE + " from " + FlyDBManager.TABLE_SCORE

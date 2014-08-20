@@ -8,7 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
-import de.fau.cs.mad.fly.profile.LevelManager;
+import de.fau.cs.mad.fly.profile.LevelGroup;
+import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
@@ -59,7 +60,7 @@ public class Fly extends Game {
 			}
 		}).start();
         
-        LevelManager.createLevelManager();
+        LevelGroupManager.createLevelManager();
         
         setMainMenuScreen();
 
@@ -130,7 +131,7 @@ public class Fly extends Game {
     /**
      * Lazy loading of screen to choose level.
      */
-    public void setLevelChooserScreen(LevelManager.LevelGroup group) {
+    public void setLevelChooserScreen(LevelGroup group) {
         if (levelChooserScreen == null) {
             levelChooserScreen = new LevelChooserScreen();
         }
