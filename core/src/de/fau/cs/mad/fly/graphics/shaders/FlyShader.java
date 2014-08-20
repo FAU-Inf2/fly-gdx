@@ -164,8 +164,6 @@ public class FlyShader extends FlyBaseShader {
         super.createShaderProgram(Gdx.files.internal("shaders/vertex.glsl").readString(), Gdx.files.internal("shaders/fragment.glsl").readString());
         super.init();
 
-        Gdx.app.log("FlyShader.init", Integer.toString(numPointLights));
-
         u_diffuseColor = program.getUniformLocation("u_diffuseColor");
     }
 
