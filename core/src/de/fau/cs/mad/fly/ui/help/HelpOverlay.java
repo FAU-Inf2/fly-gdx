@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -70,11 +71,14 @@ public class HelpOverlay extends ClickListener implements InputProcessor {
     }
     
     /**
-     * When pressing a key, the next {@link HelpFrame} should be displayed.
+     * When pressing the back key or Esc the help mode should be ended.
      */
     @Override
     public boolean keyDown(int keycode) {
-        switchFrameOrQuit();
+        if ( keycode == Keys.ESCAPE || keycode == Keys.BACK ) {
+            currentHelpFrame = 0;
+            backListener.endHelp();
+        }
         return true;
     }
     
