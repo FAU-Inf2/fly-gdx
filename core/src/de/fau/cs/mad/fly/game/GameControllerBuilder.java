@@ -224,11 +224,11 @@ public class GameControllerBuilder {
         Gdx.app.log("GameControllerBuilder.createDecoRigidBodies", "Setting up collision for decoration.");
         
         for (GameObject o : level.components) {
-            if (o.getRigidBody() == null) {
-                btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(o.getModelId(), o);
-                o.createRigidBody(o.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-            }
-            collisionDetector.addRigidBody(o);
+			if (o.getRigidBody() == null && !o.getId().equals("space")) {
+			    btCollisionShape displayShape = collisionDetector.getShapeManager().createConvexShape(o.getModelId(), o);
+			    o.createRigidBody(o.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+			    collisionDetector.addRigidBody(o);
+			}
         }
     }
     
