@@ -33,8 +33,6 @@ public class PlaneUpgradesOverlay {
 	private final Skin skin;
     private final Stage stage;
     private final PlaneChooserScreen screen;
-	private float screenHeight = Gdx.graphics.getHeight();
-	private float screenWidth = Gdx.graphics.getWidth();
     
     private Table scrollableTable;
     
@@ -50,9 +48,9 @@ public class PlaneUpgradesOverlay {
 		scrollableTable = new Table(skin);
 		scrollableTable.top().right();
 		ScrollPane scrollPane = new ScrollPane(scrollableTable, skin);
-		scrollPane.setFillParent(true);
+		//scrollPane.setFillParent(true);
 		//scrollPane.setScrollingDisabled(true, false);
-		//scrollPane.setBounds(UI.Window.REFERENCE_WIDTH/3*2, UI.Window.REFERENCE_HEIGHT/3, UI.Window.REFERENCE_WIDTH/3, UI.Window.REFERENCE_HEIGHT/3*2);
+		scrollPane.setBounds(UI.Window.REFERENCE_WIDTH/3*2, UI.Window.REFERENCE_HEIGHT/3, UI.Window.REFERENCE_WIDTH/3, UI.Window.REFERENCE_HEIGHT/3*2);
 		scrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
 		
 		openButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
