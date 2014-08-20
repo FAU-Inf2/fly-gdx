@@ -17,6 +17,7 @@ import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LevelGroupScreen;
+import de.fau.cs.mad.fly.ui.LevelsStatisScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
@@ -216,10 +217,19 @@ public class Fly extends Game {
     /**
      * Switches the current Screen to the StatisticsScreen.
      */
-    public void setGlobalHighScoreScreen() {
+    public void setGlobalHighScoreScreen(LevelGroup levelGroup) {
         if (globalHighScoreScreen == null) {
-            globalHighScoreScreen = new GlobalHighScoreScreen();
+            globalHighScoreScreen = new GlobalHighScoreScreen(levelGroup);
         }
         setScreen(globalHighScoreScreen);
+    }
+    
+    /**
+     * Switches the current Screen to the level StatisticsScreen.
+     */
+    public void setLevelsStatisScreen(LevelGroup group) {
+       
+    	LevelsStatisScreen levelsStatisScreen = new LevelsStatisScreen(group);        
+        setScreen(levelsStatisScreen);
     }
 }

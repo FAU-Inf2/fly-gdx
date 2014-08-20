@@ -67,6 +67,13 @@ public final class UI {
         /** This is the default font size for all Buttons */
         public static final int DEFAULT_FONT_SIZE = 150;
         
+        public static final int SMALL_BUTTON_WIDTH = 1200;
+        
+        public static final int SMALL_BUTTON_HEIGHT = 260;
+		
+		/** This is the default font size for small Buttons */
+        public static final int SMALL_FONT_SIZE = 100;
+        
         public static final String DEFAULT_STYLE = "rounded";
         
         /** Max. number of buttons for level to show in a row */

@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.ui;
 
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -22,6 +23,7 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.PostHighscoreService;
 import de.fau.cs.mad.fly.HttpClient.PostUserService;
+import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -38,13 +40,11 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
  */
 public class StatisticsScreen extends BasicScreen {
 
-	private TextButton addUserButton;
-	private TextButton uploadScoreButton;
-	private TextButtonStyle textButtonStyle;
-	private TextButton globalHighScoreButton;
+	private TextButton addUserButton;	
+	private TextButtonStyle textButtonStyle;	
 	private Table infoTable;
 	private Table userTable;
-	private Table scoreTable;	
+	private Table levelgroupTable;	
 	private TextField newUserField;
 	
 	private PlayerProfile playerProfile;
@@ -94,16 +94,8 @@ public class StatisticsScreen extends BasicScreen {
 					}.show(stage);
 				}
 			}
-		});
-		
-		globalHighScoreButton = new TextButton("Global highscores",
-				textButtonStyle);
-		globalHighScoreButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				((Fly) Gdx.app.getApplicationListener()).setGlobalHighScoreScreen();
-			}
-		});
+		});		
+	
 	}
 	
 	private void genarateUserTable() {
@@ -137,7 +129,6 @@ public class StatisticsScreen extends BasicScreen {
 					PlayerProfileManager.getInstance().setCurrentPlayer(temPlayerProfile);
 					AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.CHOSEN_USER,
 							temPlayerProfile.getId());
-					genarateScoreTable();
 				}
 				return false;
 			}
@@ -171,9 +162,7 @@ public class StatisticsScreen extends BasicScreen {
 		userList.getSelection().setToggle(true);		
 		userList.layout();
 	}
-	private void genarateScoreTable(){	
-		new Thread(new showScore()).start();
-	}
+	
 	
 	@Override
 	protected void generateContent() {
@@ -191,9 +180,10 @@ public class StatisticsScreen extends BasicScreen {
 		genarateUserTable();
 		infoTable.add(userTable);
 		infoTable.row();
-		scoreTable = new Table();
-		scoreTable.add(new Label("Loading...", skin));
-		infoTable.add(scoreTable);
+		
+		initLevegroups();
+		
+		infoTable.add(levelgroupTable);
 
 		final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
 		statisticsPane.setFadeScrollBars(false);
@@ -204,180 +194,38 @@ public class StatisticsScreen extends BasicScreen {
 		table.add(statisticsPane);
 	}
 	
+	private void initLevegroups()
+	{
+		levelgroupTable = new Table();
+		levelgroupTable.add(new Label(" ", skin)).pad(6f).colspan(2).left();
+		levelgroupTable.row().expand();
+		levelgroupTable.add(new Label("Please select a group to check highscores ", skin)).pad(6f).colspan(2).left();
+		levelgroupTable.row().expand();
+		List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
+		// create a button for each level group
+				int maxRows = (int) Math.ceil((double) levelGroups.size() / (double) UI.Buttons.BUTTONS_IN_A_ROW);
+				
+				for (int row = 0; row < maxRows; row++) {
+					int maxColumns = Math.min(levelGroups.size() - (row * UI.Buttons.BUTTONS_IN_A_ROW), UI.Buttons.BUTTONS_IN_A_ROW);
+					// fill a row with buttons
+					for (int column = 0; column < maxColumns; column++) {
+						final LevelGroup group = levelGroups.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
+						final TextButton button = new TextButton(group.name, skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
+						button.addListener(new ClickListener() {
+							@Override
+							public void clicked(InputEvent event, float x, float y) {
+								PlayerProfileManager.getInstance().getCurrentPlayerProfile().setChosenLevelGroup(group);
+								((Fly) Gdx.app.getApplicationListener()).setLevelsStatisScreen(group);
+							}
+						});
+						levelgroupTable.add(button).width(UI.Buttons.SMALL_BUTTON_WIDTH).height(UI.Buttons.SMALL_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
+					}
+					levelgroupTable.row().expand();
+				}
+	}
 	@Override
 	public void show() {
 		super.show();
-		genarateScoreTable();
 	}
-	
-	public class showScore implements Runnable {
-		Map<String, Score> scores;
-
-		@Override
-		public void run() {
-			scores = ScoreManager.getInstance().getcurrentBestScores();			
-
-			//it is faster if we remove this, but it may also bring in UI render exception
-//			Gdx.app.postRunnable(new Runnable() {				
-//				@Override
-//				public void run() {		
-					scoreTable.clear();
-					// add scores details
-					boolean haveScore = false;
-
-					for (String levelID : scores.keySet()) {
-						Score score = scores.get(levelID);
-						if (score != null && score.getTotalScore() > 0) {
-							haveScore = true;
-							String levelname = LevelGroupManager.getInstance().getLevelGroups().get(0).getLevelName(
-									Integer.valueOf(levelID));
-							scoreTable.add(new Label(levelname, skin)).pad(6f).right();
-
-							scoreTable.add(new Label(score.getTotalScore() + "", skin)).pad(6f)
-									.uniform();
-							for (ScoreDetail detail : score.getScoreDetails()) {
-								scoreTable.row().expand();
-								scoreTable.add(new Label(I18n.t(detail.getDetailName()), skin))
-										.pad(6f).right();
-								scoreTable.add(new Label(detail.getValue(), skin)).pad(6f)
-										.uniform();
-							}
-
-							final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
-							requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile()
-									.getFlyID();
-							requestData.LevelID = Integer.valueOf(levelID);
-							requestData.Score = score.getTotalScore();
-							final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener();
-							final PostHighscoreService postHighscoreService = new PostHighscoreService(
-									postScoreListener, requestData);
-
-							uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"),
-									textButtonStyle);
-							uploadScoreButton.addListener(new ClickListener() {
-								@Override
-								public void clicked(InputEvent event, float x, float y) {
-									if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() <= 0) {
-										FlyHttpResponseListener listener = new PostUserHttpRespListener(
-												requestData, postHighscoreService);
-										PostUserService postUser = new PostUserService(listener);
-
-										postUser.execute(PlayerProfileManager.getInstance()
-												.getCurrentPlayerProfile().getName());
-									} else {
-										postHighscoreService.execute();
-									}
-								}
-							});
-							scoreTable.row().expand();
-							scoreTable.add(uploadScoreButton).pad(6f).colspan(2);
-						}
-					}
-
-					// if no score at all
-					if (!haveScore) {
-						scoreTable.row().expand();
-						scoreTable.add(new Label(I18n.t("noScore"), skin)).pad(6f).uniform();
-					}
-
-					// global high score button
-					scoreTable.row().expand();
-					scoreTable.add(new Label("", skin)).pad(6f).uniform();
-					scoreTable.row().expand();
-				
-					scoreTable.add(globalHighScoreButton).colspan(2);
-
-					//scoreTable.setColor(0, 0, 0, 0f);
-					//scoreTable.addAction(Actions.fadeIn(2f));
-					
-					Gdx.app.log("StaticScreen",
-							"end generateContentDynamic " + System.currentTimeMillis());
-					scoreTable.layout();
-//				}
-//			});
-
-		}
-	}
-
-	public class PostUserHttpRespListener implements FlyHttpResponseListener {
-		final PostHighscoreService.RequestData requestData;
-		final PostHighscoreService postHighscoreService;
-
-		public PostUserHttpRespListener(PostHighscoreService.RequestData data,
-				PostHighscoreService service) {
-			requestData = data;
-			postHighscoreService = service;
-		}
-
-		@Override
-		public void successful(Object obj) {
-
-			int flyID = Integer.valueOf(obj.toString());
-			PlayerProfileManager.getInstance().getCurrentPlayerProfile().setFlyID(flyID);
-			PlayerProfileManager.getInstance().saveFlyID(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
-			requestData.FlyID = flyID;
-			postHighscoreService.execute();
-		}
-
-		@Override
-		public void failed(String msg) {
-			final String msgg = msg;
-			Gdx.app.postRunnable(new Runnable() {
-				@Override
-				public void run() {
-					new Dialog("", skin) {
-						{
-							text(msgg.substring(0, 20) + "...");
-							button("OK");
-						}
-					}.show(stage);				
-					
-				}
-			});
-		}
-
-		@Override
-		public void cancelled() {
-		}
-	}
-
-	public class PostScoreHttpRespListener implements FlyHttpResponseListener {
-		@Override
-		public void successful(Object obj) {
-//			Gdx.app.postRunnable(new Runnable() {
-//				@Override
-//				public void run() {
-					new Dialog("", skin) {
-						{
-							text("Uploaded!");
-							button("OK");
-						}
-					}.show(stage);
-//				}
-//			});
-		}
-
-		@Override
-		public void failed(String msg) {
-			final String msgg = msg;
-			// Since we are downloading on a background thread, post
-			// a runnable to touch ui
-//			Gdx.app.postRunnable(new Runnable() {
-//				@Override
-//				public void run() {
-					new Dialog("", skin) {
-						{
-							text(msgg.substring(0, 20) + "...");
-							button("OK");
-						}
-					}.show(stage);
-//				}
-//			});
-		}
-
-		@Override
-		public void cancelled() {
-		}
-	};	
-		 
+	 
 }

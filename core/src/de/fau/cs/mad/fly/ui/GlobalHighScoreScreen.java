@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService;
 import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.ResponseItem;
+import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 
@@ -23,6 +24,13 @@ import de.fau.cs.mad.fly.profile.LevelProfile;
 public class GlobalHighScoreScreen extends BasicScreen {
 
 	private Table infoTable;
+	
+	private LevelGroup levelGroup;
+	
+	public GlobalHighScoreScreen(LevelGroup group)
+	{
+		levelGroup = group;
+	}
 
 	public class GetLevelHighScoreListener implements FlyHttpResponseListener {
 
