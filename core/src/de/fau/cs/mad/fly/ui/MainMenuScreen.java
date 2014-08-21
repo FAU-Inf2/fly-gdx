@@ -57,7 +57,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         Button statsButton = new TextButton(I18n.t("highscores"), textButtonStyle);
         Button settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
 
-        Label versionLabel = new Label(createVersion(), skin);
+        Label versionLabel = new Label(createVersion(), skin, "small");
         
         final Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
         

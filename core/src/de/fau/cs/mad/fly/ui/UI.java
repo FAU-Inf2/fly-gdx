@@ -94,6 +94,6 @@ public final class UI {
         private Labels() {
         }
         
-        public static final int MAIN_LABEL_VERSION_WIDTH = 1400;
+        public static final int MAIN_LABEL_VERSION_WIDTH = 400;
     }
 }

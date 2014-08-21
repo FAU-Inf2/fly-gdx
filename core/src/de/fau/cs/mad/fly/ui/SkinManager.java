@@ -38,6 +38,10 @@ public class SkinManager implements Disposable {
         texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);
         BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/sans.fnt"), new TextureRegion(texture), false);
         skin.add("default-font", font);
+        font = new BitmapFont(Gdx.files.internal("fonts/sans.fnt"), new TextureRegion(texture), false);
+        font.scale(-0.5f);
+        skin.add("small-font", font);
+
         skin.load(Gdx.files.internal(skinFile));
     }
     
