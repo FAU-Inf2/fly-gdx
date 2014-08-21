@@ -1,18 +1,19 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
@@ -55,11 +56,14 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         Button chooseLevelButton = new TextButton(I18n.t("choose.level"), textButtonStyle);
         Button choosePlaneButton = new TextButton(I18n.t("choose.plane"), textButtonStyle);
         Button statsButton = new TextButton(I18n.t("highscores"), textButtonStyle);
-        Button settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
-
-        Label versionLabel = new Label(createVersion(), skin, "small");
+        ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+        TextureRegion gear = skin.getRegion("gear");
+        gear.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        TextureRegionDrawable drawableGear = new TextureRegionDrawable(gear);
+        settingsButton.getImage().setDrawable(drawableGear);
+        Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
         
-        final Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
+        Label versionLabel = new Label(createVersion(), skin, "small");
         
         table.add(helpButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).left();
         table.add();
