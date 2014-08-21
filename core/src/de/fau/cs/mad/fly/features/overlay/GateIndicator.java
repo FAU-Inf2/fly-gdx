@@ -65,19 +65,19 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
      * Distance from the arrows to the mid of the screen. It is limited by the
      * reset-steering button, because it should not overlay this button.
      */
-    private final int radius = 250;
+    private static final int radius = 250;
     
     /**
      * Horizontal center of the screen. It defines the mid point of the circle
      * the arrows cover.
      */
-    private final float horizontalCenter = Gdx.graphics.getWidth() / 2;
+    private final float horizontalCenter = (float) Gdx.graphics.getWidth() / 2.0f;
     
     /**
      * Vertical center of the screen. It defines the mid point of the circle the
      * arrows cover.
      */
-    private final float verticalCenter = Gdx.graphics.getHeight() / 2;
+    private static final float verticalCenter = (float) Gdx.graphics.getHeight() / 2.0f;
     
     /**
      * Horizontal starting position, where the arrow is placed when angle = 0°
@@ -87,7 +87,7 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
     /**
      * Vertical starting position, where the arrow is placed when angle = 0°
      */
-    private final float startPosY = verticalCenter + radius;
+    private static final float startPosY = verticalCenter + radius;
     
     /** Height of the arrow to indicate the next gate */
     private final float arrowHeigth;
@@ -103,17 +103,6 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
     
     /** Rotation angle of the arrow. */
     private float angle = 0;
-    
-    /** Reference to the current gate. */
-    private GameObject gate;
-    
-    /**
-     * Flag which indicates weather batch.begin() has been called. Used to avoid
-     * unnecessary batch calls in the case nothing has to be drawn.
-     */
-    private boolean batchBegin;
-    
-    
     
     public GateIndicator(final TextureRegion arrow) {
         this.arrow = arrow;
@@ -136,7 +125,6 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
         this.camera = gameController.getCamera();
         this.vectorToTarget = new Vector3();
         this.cross = new Vector3();
-        this.batchBegin = false;
     }
     
     @Override
@@ -144,35 +132,39 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
         // vector orthogonal to up and cameraDirection
         cross.set(camera.up).crs(camera.direction);
         GateCircuit gateCircuit = level.getGateCircuit();
+        int numberOfGates = gateCircuit.currentGates().length;
+        boolean drawIndicator = true;
         
-        for (int i = 0; i < gateCircuit.currentGates().length; i++) {
-            gate = gateCircuit.getGateGoalById(gateCircuit.currentGates()[i]);
-            // only draw a gate indicator when the next gate is not visible. If
-            // it is visible, the gate itself is highlighted
-            if (!gate.isVisible(camera)) {
-                // get the midpoint in the near plane to compute the vector to
-                // the projected point
+        // only show gate indicator when no next gate is visible
+        for (int i = 0; i < numberOfGates; i++) {
+            GameObject gate = gateCircuit.getGateGoalById(gateCircuit.currentGates()[i]);
+            if (gate.isVisible(camera)) {
+                drawIndicator = false;
+                i = numberOfGates;
+            }
+        }
+        
+        if (drawIndicator) {
+            batch.begin();
+            for (int i = 0; i < numberOfGates; i++) {
+                GameObject gate = gateCircuit.getGateGoalById(gateCircuit.currentGates()[i]);
+                
+                // get the midpoint in the near plane to compute the vector
+                // to the projected point
                 midPoint.set(camera.direction).scl(camera.near).add(camera.position);
                 vectorToTarget.set(projectPointToPlane(gate.getPosition(), cross, camera.up));
                 vectorToTarget.sub(camera.position);
                 angle = angleBetweenTwoVectors(camera.up, vectorToTarget);
-                // as the angle is only computed from 0 to 180°, it is necessary
-                // to flip the direction, if it has the other direction than the
-                // reference vector. Otherwise the indicator would only point
-                // left
+                // as the angle is only computed from 0 to 180°, it is
+                // necessary to flip the direction, if it has the other
+                // direction than the reference vector. Otherwise the indicator
+                // would only point left
                 if (vectorToTarget.hasOppositeDirection(cross)) {
                     angle = 360 - angle;
                 }
-                if (!batchBegin) {
-                    batch.begin();
-                    batchBegin = true;
-                }
                 batch.draw(arrow, startPosX, startPosY, originX, originY, arrowWidth, arrowHeigth, scalingFactor, scalingFactor, angle);
             }
-        }
-        if (batchBegin) {
             batch.end();
-            batchBegin = false;
         }
     }
     
