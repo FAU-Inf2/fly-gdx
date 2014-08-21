@@ -38,24 +38,33 @@ public class SpaceshipParticle implements Disposable {
 	public void load(Camera camera, ModelBatch batch, String plane) {
 		this.batch = batch;
 
+		Gdx.app.log("SpaceshipParticle", "1");
+		
 		particleSystem = ParticleSystem.get();
+		Gdx.app.log("SpaceshipParticle", "2");
 		pointSpriteBatch = new PointSpriteParticleBatch();
+		Gdx.app.log("SpaceshipParticle", "3");
 		
 		pointSpriteBatch.setCamera(camera);
+		Gdx.app.log("SpaceshipParticle", "4");
 		particleSystem.add(pointSpriteBatch);
+		Gdx.app.log("SpaceshipParticle", "5");
 
 		assetRef = "models/planes/" + plane + "/effects.pfx";
 		Gdx.app.log("SpaceshipParticle", "Trying to load " + assetRef);
 
 		ParticleEffectLoader.ParticleEffectLoadParameter loadParam = new ParticleEffectLoader.ParticleEffectLoadParameter(particleSystem.getBatches());
 		ParticleEffectLoader loader = new ParticleEffectLoader(new InternalFileHandleResolver());
+		Gdx.app.log("SpaceshipParticle", "6");
 		Assets.manager.setLoader(ParticleEffect.class, loader);
 		Assets.manager.load(assetRef, ParticleEffect.class, loadParam);
 		Assets.manager.finishLoading();
 	}
 	
 	public void init() {
+		Gdx.app.log("SpaceshipParticle", "7");
 		ParticleEffect originalEffect = Assets.manager.get(assetRef);
+		Gdx.app.log("SpaceshipParticle", "8");
 
 		effect = originalEffect.copy();
 		effect.init();

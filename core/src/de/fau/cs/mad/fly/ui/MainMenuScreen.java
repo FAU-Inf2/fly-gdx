@@ -6,9 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Fly;
@@ -53,6 +56,8 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         Button choosePlaneButton = new TextButton(I18n.t("choose.plane"), textButtonStyle);
         Button statsButton = new TextButton(I18n.t("highscores"), textButtonStyle);
         Button settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+
+        Label versionLabel = new Label(createVersion(), skin);
         
         final Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
         
@@ -74,7 +79,11 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         table.row().expand();
         table.add();
         table.add(statsButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-        table.row().expand();
+        table.add();
+        table.row();
+        table.add();
+        table.add();
+        table.add(versionLabel).width(UI.Labels.MAIN_LABEL_VERSION_WIDTH);
         
         chooseLevelButton.addListener(new ClickListener() {
             @Override
@@ -131,6 +140,18 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
                 ((Fly) Gdx.app.getApplicationListener()).setStatisticsScreen();
             }
         });
+    }
+    
+    /**
+     * Creates the version text.
+     * <p>
+     * "Version: Major.Minor.Patch"
+     * 
+     * @return version text
+     */
+    private String createVersion() {
+        //return I18n.t("version") + ": " + Fly.VERSION_MAJOR + "." + Fly.VERSION_MINOR + "." + Fly.VERSION_PATCH;
+    	return I18n.t("version") + ": " + Fly.VERSION;
     }
     
     @Override
