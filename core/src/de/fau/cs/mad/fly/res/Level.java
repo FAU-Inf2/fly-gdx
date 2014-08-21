@@ -36,7 +36,6 @@ public class Level implements Disposable {
     public String levelClass = "DefaultLevel";
     
     public List<GameObject> components;
-    private List<Collectible> upgrades;
     public final Perspective start;
     private final Environment environment, ambientEnvironment;
     private final Map<String, GameModel> dependencies;
@@ -46,6 +45,7 @@ public class Level implements Disposable {
     private int leftCollisionTime = 0;
     
     private GateCircuit gateCircuit = null;
+    private CollectibleManager collectibleManager = null;
     
     private IGravity gravity = new EmptyGravity();
     
@@ -118,17 +118,27 @@ public class Level implements Disposable {
     public Map<String, GameModel> getDependencies() {
         return dependencies;
     }
-    
-    public void setUpgrades(List<Collectible> upgrades) {
-        this.upgrades = upgrades;
-    }
-    
-    public List<Collectible> getUpgrades() {
-        return upgrades;
-    }
-    
+
     public void finishLevel() {
         gameOver = true;
+    }
+    
+    /**
+     * Getter for the collectible manager.
+     * 
+     * @return collectibleManager
+     */
+    public CollectibleManager getCollectibleManager() {
+        return collectibleManager;
+    }
+    
+    /**
+     * Adds the collectible manager to the level.
+     * 
+     * @param collectibleManager
+     */
+    public void addCollectibleManager(CollectibleManager collectibleManager) {
+        this.collectibleManager = collectibleManager;
     }
     
     /**
@@ -174,11 +184,7 @@ public class Level implements Disposable {
         
         gateCircuit.moveGates(delta);
         
-        int i;
-        final int numberOfUpgrades = upgrades.size();
-        for (i = 0; i < numberOfUpgrades; i++) {
-            upgrades.get(i).move(delta);
-        }
+        collectibleManager.moveCollectibles(delta);
         
         if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
             gateCircuit.circuitFinished();
@@ -205,10 +211,7 @@ public class Level implements Disposable {
         
         gateCircuit.render(batch, environment, camera);
         
-        final int numberOfUpgrades = upgrades.size();
-        for (i = 0; i < numberOfUpgrades; i++) {
-            upgrades.get(i).render(batch, environment, camera);
-        }
+        collectibleManager.render(batch, environment, camera);
     }
     
     @Override

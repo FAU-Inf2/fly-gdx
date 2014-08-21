@@ -94,10 +94,8 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         	parseGravity(level, gravity);
         }
 
-        GateCircuit gateCircuit = parseGates();
-        level.addGateCircuit(gateCircuit);
-        
-        level.setUpgrades(parseUpgrades());
+        level.addGateCircuit(parseGates());
+        level.addCollectibleManager(parseCollectibles());
         
         return level;
     }
@@ -281,14 +279,14 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     }
     
     /**
-     * Parses the upgrades in the level file.
-     * @return list of collectibles.
+     * Parses the collectibles in the level file.
+     * @return CollectibleManager
      */
-    private List<Collectible> parseUpgrades() {
+    private CollectibleManager parseCollectibles() {
     	List<Collectible> upgradeList = new ArrayList<Collectible>();
     	JsonValue upgrades = json.get("upgrades");
     	if(upgrades == null) {
-    		return upgradeList;
+    		return new CollectibleManager();
     	}
 
     	int len = upgrades.size;
@@ -328,8 +326,8 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             	}
             }
         }
-    	
-    	return upgradeList;
+
+    	return new CollectibleManager(upgradeList);
     }
 
     /**

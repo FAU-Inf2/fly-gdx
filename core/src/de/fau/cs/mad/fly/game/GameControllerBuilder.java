@@ -319,9 +319,9 @@ public class GameControllerBuilder {
      * @return true, if it contains an upgrade, false otherwise.
      */
     private boolean checkUpgrade(String type) {
-        int size = level.getUpgrades().size();
+        int size = level.getCollectibleManager().getCollectibles().size();
         for (int i = 0; i < size; i++) {
-            if (level.getUpgrades().get(i).getType().equals(type)) {
+            if (level.getCollectibleManager().getCollectibles().get(i).getType().equals(type)) {
                 return true;
             }
         }
