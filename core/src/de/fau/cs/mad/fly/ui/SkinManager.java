@@ -34,14 +34,10 @@ public class SkinManager implements Disposable {
         Assets.load(Assets.textureAtlas);
         skin = new Skin(Assets.manager.get(Assets.textureAtlas));
         
-        long time = System.currentTimeMillis();
-        Texture texture = new Texture(Gdx.files.internal("fonts/sans.png"), true); // true enables mipmaps
+        Texture texture = new Texture(Gdx.files.internal("fonts/sans.png"), true);
         texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);
         BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/sans.fnt"), new TextureRegion(texture), false);
         skin.add("default-font", font);
-        Gdx.app.log("Font", "SkinManager.createSkin: normal font " + String.valueOf(System.currentTimeMillis()-time));
-        
-        //TODO: remove
         skin.load(Gdx.files.internal(skinFile));
     }
     
