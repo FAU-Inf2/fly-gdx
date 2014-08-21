@@ -77,7 +77,7 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
      * Vertical center of the screen. It defines the mid point of the circle the
      * arrows cover.
      */
-    private static final float verticalCenter = (float) Gdx.graphics.getHeight() / 2.0f;
+    private final float verticalCenter = (float) Gdx.graphics.getHeight() / 2.0f;
     
     /**
      * Horizontal starting position, where the arrow is placed when angle = 0°
@@ -87,7 +87,7 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
     /**
      * Vertical starting position, where the arrow is placed when angle = 0°
      */
-    private static final float startPosY = verticalCenter + radius;
+    private final float startPosY = verticalCenter + radius;
     
     /** Height of the arrow to indicate the next gate */
     private final float arrowHeigth;
