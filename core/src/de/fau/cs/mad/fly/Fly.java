@@ -3,8 +3,6 @@ package de.fau.cs.mad.fly;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g3d.particles.ParticleSystem;
-import com.badlogic.gdx.graphics.g3d.particles.batches.PointSpriteParticleBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.db.FlyDBManager;
@@ -52,20 +50,35 @@ public class Fly extends Game {
     private SkinManager skinManager;
     
     @Override
-    public void create() {    	
-        Assets.init();
-        skinManager = new SkinManager("uiskin.json");
+    public void create() {
+        // for nex5 this message comes directly after pressing the icon
+        Gdx.app.log("timing", "Fly.create enter");
         
+        long time = System.currentTimeMillis();
+        Assets.init(); //nex5: 10 ms
+        Gdx.app.log("timing", "Fly.create assets init: " + String.valueOf(System.currentTimeMillis()-time));
+        
+        time = System.currentTimeMillis();
+        skinManager = new SkinManager("uiskin.json"); // nex5: 150 ms
+        Gdx.app.log("timing", "Fly.create creating skin manager: " + String.valueOf(System.currentTimeMillis()-time));
+        
+        time = System.currentTimeMillis();
         new Thread(new Runnable() {
 			@Override
 			public void run() {
 				PlayerProfileManager.getInstance().getCurrentPlayerProfile();
 			}
-		}).start();
+		}).start(); //nex5: 1 ms
+        Gdx.app.log("timing", "Fly.create starting player profile thread: " + String.valueOf(System.currentTimeMillis()-time));
         
-        LevelGroupManager.createLevelManager();
+        time = System.currentTimeMillis();
         
-        setMainMenuScreen();
+        LevelGroupManager.createLevelManager(); //nex5: 1500 ms
+        Gdx.app.log("timing", "Fly.create create level manager: " + String.valueOf(System.currentTimeMillis()-time));
+        
+        time = System.currentTimeMillis();
+        setMainMenuScreen(); // nex5: 125 ms
+        Gdx.app.log("timing", "Fly.create set main menu screen: " + String.valueOf(System.currentTimeMillis()-time));
 
         // disabled for debugging reasons
         // setSplashScreen();
