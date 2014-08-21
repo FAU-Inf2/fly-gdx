@@ -16,6 +16,15 @@ desktop/.classpath
 desktop/.project
 desktop/.settings/
 desktop/bin/
+desktop/background.png
+desktop/config/
+desktop/fonts/
+desktop/models/
+desktop/scripts/
+desktop/shaders/
+desktop/uiskin.atlas
+desktop/uiskin.json
+desktop/uiskin.png
 ios/.classpath
 ios/.project
 ios/.settings/

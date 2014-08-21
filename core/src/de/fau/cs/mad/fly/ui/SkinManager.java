@@ -1,7 +1,10 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -30,8 +33,15 @@ public class SkinManager implements Disposable {
     public void createSkin(String skinFile) {
         Assets.load(Assets.textureAtlas);
         skin = new Skin(Assets.manager.get(Assets.textureAtlas));
-        BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/OpenSans.fnt"), Gdx.files.internal("fonts/OpenSans_0.png"), false);
+        
+        long time = System.currentTimeMillis();
+        Texture texture = new Texture(Gdx.files.internal("fonts/sans.png"), true); // true enables mipmaps
+        texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);
+        BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/sans.fnt"), new TextureRegion(texture), false);
         skin.add("default-font", font);
+        Gdx.app.log("Font", "SkinManager.createSkin: normal font " + String.valueOf(System.currentTimeMillis()-time));
+        
+        //TODO: remove
         skin.load(Gdx.files.internal(skinFile));
     }
     
