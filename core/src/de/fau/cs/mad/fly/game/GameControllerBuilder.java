@@ -24,9 +24,9 @@ import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
-import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
+import de.fau.cs.mad.fly.features.overlay.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.InfoButtonOverlay;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
@@ -414,7 +414,7 @@ public class GameControllerBuilder {
      * @return Builder instance with GateIndicator
      */
     private GameControllerBuilder addGateIndicator() {
-        GateIndicator gateIndicator = new GateIndicator(game.getSkin());
+        GateIndicator gateIndicator = new GateIndicator(game.getSkin().getRegion("arrow"));
         addFeatureToLists(gateIndicator);
         return this;
     }

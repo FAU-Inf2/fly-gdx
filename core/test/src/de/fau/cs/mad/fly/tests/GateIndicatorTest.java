@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector3;
 
-import de.fau.cs.mad.fly.features.game.GateIndicator;
+import de.fau.cs.mad.fly.features.overlay.GateIndicator;
 
 public class GateIndicatorTest {
     
