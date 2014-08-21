@@ -13,7 +13,6 @@ import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.CollectibleManager;
-import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Used do display and handle any sort of collectible objects in the game.

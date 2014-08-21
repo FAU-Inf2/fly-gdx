@@ -4,11 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Disposable;
 
-import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 
@@ -41,8 +38,6 @@ public class Level implements Disposable {
     private final Map<String, GameModel> dependencies;
     
     private GameObject borderObject = null;
-    private int CollisionTime = 0;
-    private int leftCollisionTime = 0;
     
     private GateCircuit gateCircuit = null;
     private CollectibleManager collectibleManager = null;
@@ -58,17 +53,6 @@ public class Level implements Disposable {
     public void setLeftTime(float leftTime) {
         this.leftTime = leftTime;
     }
-    
-    protected void InitCollisionTime() {
-        CollisionTime = 3;
-        leftCollisionTime = CollisionTime;
-    }
-    
-    private boolean gameOver = false;
-    
-    public boolean isGameOver() {
-        return gameOver;
-    }
 
     public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies, Map<String, Environment> environments) {
         this.head = new LevelProfile();
@@ -78,8 +62,6 @@ public class Level implements Disposable {
         this.dependencies = Collections.unmodifiableMap(dependencies);
         this.environment = environments.get("lighting");
         this.ambientEnvironment = environments.get("ambient");
-        InitCollisionTime();
-        gameOver = false;
         
         for (GameObject c : components) {
             if (c.getId().equals("space")) {
@@ -113,14 +95,6 @@ public class Level implements Disposable {
     
     public GameModel getDependency(String id) {
         return dependencies.get(id);
-    }
-    
-    public Map<String, GameModel> getDependencies() {
-        return dependencies;
-    }
-
-    public void finishLevel() {
-        gameOver = true;
     }
     
     /**
@@ -185,10 +159,6 @@ public class Level implements Disposable {
         gateCircuit.moveGates(delta);
         
         collectibleManager.moveCollectibles(delta);
-        
-        if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
-            gateCircuit.circuitFinished();
-        }
     }
     
     /**

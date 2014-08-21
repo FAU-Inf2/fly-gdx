@@ -50,14 +50,11 @@ public class ScoreController extends GateCircuitAdapter {
 	 * @return the score of the player with score details.
 	 */
     public Score getEndScore(GameController gameController) {
-        if (gameController.getLevel().isGameOver()) {
+        if (gameController.isVictory()) {
             Score newScore = new Score();
             newScore.setReachedDate(new Date());
             
             int score = gatePassedScore;
-            /*for (Gate gate : gateCircuit.allGates()) {
-                score += gate.score * gate.passedTimes;
-            }*/
             newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + ""));
             
             int leftTimeScore = gameController.getTimeController().getIntegerTime() * 20;

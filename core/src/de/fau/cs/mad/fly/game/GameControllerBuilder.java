@@ -157,7 +157,7 @@ public class GameControllerBuilder {
                 
                 if (!player.decreaseLives()) {
                     // Debug.setOverlay(0, "DEAD");
-                    game.getGameController().finishGame();
+                    game.getGameController().finishGame(false);
                 } else {
                     // Debug.setOverlay(0, player.getLives());
                 }
@@ -578,7 +578,7 @@ public class GameControllerBuilder {
         level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override
             public void onFinished() {
-                gc.finishGame();
+                gc.finishGame(true);
             }
         });
         return gc;
