@@ -13,6 +13,7 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.res.GateCircuit;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * This class implements the function to show in the game small arrows that
@@ -50,6 +51,9 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
     
     /** Texture that is used to draw the indicator for the next gate */
     private final TextureRegion arrow;
+    
+    /** Factor to scale the arrow according to the resolution */
+    private float scalingFactor;
     
     /** Batch that is used for rendering the indicators */
     private final Batch batch;
@@ -123,6 +127,7 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
         this.midPoint = new Vector3();
         
         this.batch = new SpriteBatch();
+        this.scalingFactor = Gdx.graphics.getWidth() / UI.Window.REFERENCE_WIDTH * 2f;
     }
     
     @Override
@@ -162,7 +167,7 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
                     batch.begin();
                     batchBegin = true;
                 }
-                batch.draw(arrow, startPosX, startPosY, originX, originY, arrowWidth, arrowHeigth, 1f, 1f, angle);
+                batch.draw(arrow, startPosX, startPosY, originX, originY, arrowWidth, arrowHeigth, scalingFactor, scalingFactor, angle);
             }
         }
         if (batchBegin) {
