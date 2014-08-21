@@ -37,6 +37,17 @@ import de.fau.cs.mad.fly.ui.StatisticsScreen;
  * @author Tobias Zangl
  */
 public class Fly extends Game {
+	
+	// not used atm
+	public static int VERSION_MAJOR = 1;
+	public static int VERSION_MINOR = 0;
+	public static int VERSION_PATCH = 0;
+	
+	/**
+	 * The version of the app. (works only on android)
+	 */
+	public static String VERSION = "1.0.0";
+
     private SplashScreen splashScreen;
     private LevelGroupScreen levelGroupScreen;
     private LevelChooserScreen levelChooserScreen;

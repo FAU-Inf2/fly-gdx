@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.android;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -22,6 +23,14 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		addShortcut();
 		initialize(new Fly(), config);
+		
+		Context context = getApplicationContext();
+		try {
+			String versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+			Fly.VERSION = versionName;
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/** adds a shortcut to the launcher when the app is started. Only done if no

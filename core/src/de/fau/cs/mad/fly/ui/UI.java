@@ -86,4 +86,14 @@ public final class UI {
         public static final String SETTING_BUTTON_STYLE = "settings";
         public static final String HELP_BUTTON_STYLE = "help";
     }
+    
+    /** This class contains all parameters related to labels. */
+    public static final class Labels {
+        
+        /** This class should not be instantiated */
+        private Labels() {
+        }
+        
+        public static final int MAIN_LABEL_VERSION_WIDTH = 1400;
+    }
 }

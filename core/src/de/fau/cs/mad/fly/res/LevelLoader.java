@@ -390,8 +390,9 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
      * Parses the json file.
      */
     private void parseJson() {
-        if (json == null)
+        if (json == null) {
             json = reader.parse(file);
+        }
     }
     
     /**
