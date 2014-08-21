@@ -128,6 +128,8 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 
 public class FlyTextureShader extends FlyBaseShader {
 
+    private String VERTEX_SHADER = "shaders/vertex.glsl";
+    private String FRAGMENT_SHADER = "shaders/texture.fragment.glsl";
     private int texture1;
 
     public FlyTextureShader(Renderable renderable) {
@@ -137,7 +139,7 @@ public class FlyTextureShader extends FlyBaseShader {
     @Override
     public void init() {
         //Prepare and compile the ShaderProgram
-        super.createShaderProgram(Gdx.files.internal("shaders/vertex.glsl").readString(), Gdx.files.internal("shaders/texture.fragment.glsl").readString());
+        super.createShaderProgram(VERTEX_SHADER, FRAGMENT_SHADER);
 
         super.init();
 
