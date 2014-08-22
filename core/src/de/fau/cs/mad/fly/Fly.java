@@ -247,7 +247,6 @@ public class Fly extends Game {
      * Switches the current Screen to the level StatisticsScreen.
      */
     public void setLevelsStatisScreen(LevelGroup group) {
-       
     	LevelsStatisScreen levelsStatisScreen = new LevelsStatisScreen(group);        
         setScreen(levelsStatisScreen);
     }
