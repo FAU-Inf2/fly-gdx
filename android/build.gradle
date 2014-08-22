@@ -99,7 +99,7 @@ def updateVersion() {
 		def nextVersionName = majorVersion + "." + minorVersion + "." + commitCount
 		def manifestContent = matcher.replaceAll("versionName=\"" + nextVersionName + "\"")
 		manifestFile.write(manifestContent)
-		println 'Android Manifest updated'
+		println 'Android Manifest updated with ' + commitCount
 	}
 }
 
