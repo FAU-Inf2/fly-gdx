@@ -44,6 +44,7 @@ import de.fau.cs.mad.fly.player.gravity.DirectionalGravity;
  */
 public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.LevelParameters> {
 	private static final String MODEL_FOLDER = "models/";
+	private static final int DEFAULT_GATE_SCORE = 50;
 	
     Level level;
     private final JsonReader reader;
@@ -149,7 +150,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
 	            String refHole = jsonGate.getString("refHole");
 	
 	            display = new GateDisplay(models.get(ref));
-	            goal = new GateGoal(gateId.asInt(), models.get(refHole), display);
+	            JsonValue scoreJS = jsonGate.get("score");
+	            int score = DEFAULT_GATE_SCORE;	            
+	            if(scoreJS != null)
+	            	score = scoreJS.asInt();	            
+	            goal = new GateGoal(gateId.asInt(), models.get(refHole), score, display);
 	            goal.hide();
 	            display.setGoal(goal);
 	            
@@ -159,7 +164,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         		goal.setMover(display.getMover());
 	            gateMap.put(gateId.asInt(), goal);
             } else {
-            	goal = new GateGoal(-1, models.get("hole"), null);
+            	goal = new GateGoal(-1, models.get("hole"),0, null);
             	goal.hide();
 	            dummyGate = goal;
             }

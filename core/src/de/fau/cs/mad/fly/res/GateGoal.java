@@ -28,10 +28,10 @@ public class GateGoal extends GameObject implements Disposable {
      * @param model			The model of the goal. It is usually not visible.
      * @param display		The displayed part of the goal.
      */
-    public GateGoal(int gateId, GameModel model, GateDisplay display) {
+    public GateGoal(int gateId, GameModel model, int gateScore, GateDisplay display) {
     	super(model, "GateGoal " + gateId);
         this.gateId = gateId;
-        this.score = 50;
+        this.score = gateScore;
         this.display = display;
         dummy = true;
     }

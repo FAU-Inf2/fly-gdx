@@ -39,6 +39,8 @@ public class EndlessLevelGenerator {
 	private float difficulty;
 	private boolean increasingDifficulty;
 	
+	private int defaultGateScore = 50;
+	
 	/**
 	 * 
      * @param level
@@ -55,9 +57,9 @@ public class EndlessLevelGenerator {
 		this.gateGoals = new ArrayList<GateGoal>();
 		this.predecessors = new ArrayList<GateGoal>();
 		
-		lastGatePassed = new GateGoal(-2, level.getDependency("hole"), new GateDisplay(level.getDependency("torus")));
+		lastGatePassed = new GateGoal(-2, level.getDependency("hole"), defaultGateScore, new GateDisplay(level.getDependency("torus")));
 		lastGatePassed.successors = new int[0];
-		lastRemoved = new GateGoal(-3, level.getDependency("hole"), new GateDisplay(level.getDependency("torus")));
+		lastRemoved = new GateGoal(-3, level.getDependency("hole"), defaultGateScore, new GateDisplay(level.getDependency("torus")));
 		lastRemoved.successors = new int[0];
 		
 		this.gateGoals = level.getGateCircuit().allGateGoals();
@@ -151,7 +153,7 @@ public class EndlessLevelGenerator {
 			
             // Gdx.app.log("myApp", "generateRandomGate");
 			GateDisplay newDisplay = new GateDisplay(level.getDependency("torus"));
-			GateGoal newGoal = new GateGoal(currGate, level.getDependency("hole"), newDisplay);
+			GateGoal newGoal = new GateGoal(currGate, level.getDependency("hole"), defaultGateScore, newDisplay);
 			newDisplay.setGoal(newGoal);
 
 			Vector3 newDirection;
