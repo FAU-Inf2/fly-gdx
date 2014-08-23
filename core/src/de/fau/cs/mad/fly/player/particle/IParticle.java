@@ -1,7 +1,5 @@
 package de.fau.cs.mad.fly.player.particle;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -14,11 +12,9 @@ import com.badlogic.gdx.utils.Disposable;
 public interface IParticle extends Disposable {
 	/**
 	 * Loads the particle effect.
-	 * @param camera			The camera to render.
-	 * @param batch				The model batch to render.
 	 * @param plane				The plane to which the particle effect belongs.
 	 */
-	void load(Camera camera, ModelBatch batch, String plane);
+	void load(String plane);
 	
 	/**
 	 * Initializes the particle effect.

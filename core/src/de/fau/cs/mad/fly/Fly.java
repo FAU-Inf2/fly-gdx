@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
+import de.fau.cs.mad.fly.game.ParticleController;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -81,6 +82,8 @@ public class Fly extends Game {
         
         LevelGroupManager.createLevelManager(); //nex5: 1500 ms
         Gdx.app.log("timing", "Fly.create create level manager: " + String.valueOf(System.currentTimeMillis()-time));
+        
+        ParticleController.createParticleController();
         
         time = System.currentTimeMillis();
         setMainMenuScreen(); // nex5: 125 ms

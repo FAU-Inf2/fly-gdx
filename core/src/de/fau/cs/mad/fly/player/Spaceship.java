@@ -88,7 +88,7 @@ public class Spaceship extends GameObject implements IPlane {
 		
 		gravity = game.getLevel().getGravity();
 		
-		particle.load(camera, batch, modelRef);
+		particle.load(modelRef);
 		particle.init();
 		
 		resetSpeed();

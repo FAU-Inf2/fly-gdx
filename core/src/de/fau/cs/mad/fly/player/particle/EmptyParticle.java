@@ -1,7 +1,5 @@
 package de.fau.cs.mad.fly.player.particle;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Matrix4;
 
 /**
@@ -19,7 +17,7 @@ public class EmptyParticle implements IParticle {
 	}
 
 	@Override
-	public void load(Camera camera, ModelBatch batch, String plane) {
+	public void load(String plane) {
 		// TODO Auto-generated method stub
 
 	}

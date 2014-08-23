@@ -161,6 +161,7 @@ public class GameController implements TimeIsUpListener {
      */
     public void loadGame() {
     	camera = cameraController.getCamera();
+        ParticleController.getInstance().load(camera, batch);
     	
         // load features
         for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
@@ -179,10 +180,6 @@ public class GameController implements TimeIsUpListener {
         for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
             optionalFeature.init(this);
         }
-        
-        //player.resetLives();
-        // Debug.setOverlay(0,
-        // PlayerManager.getInstance().getCurrentPlayer().getLives());
         
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(inputProcessor);
@@ -306,6 +303,7 @@ public class GameController implements TimeIsUpListener {
         for (i = 0; i < len; i++) {
             optionalFeaturesToRender.get(i).render(delta);
         }
+        ParticleController.getInstance().render();
         batch.end();
         
         // draw features
