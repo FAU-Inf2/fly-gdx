@@ -67,15 +67,10 @@
                 2.0,
                 0.0
             ],
-			"angular_velocity": [
-                1.0,
-                0.0,
-                0.0
-            ],
             "successors": []
         }
     ],
-    "id": 12,
+    "id": 25,
     "name": "Test 2",
     "start": {
         "position": {
