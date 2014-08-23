@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
-import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 
 /**
  * Offers a selection of level groups.

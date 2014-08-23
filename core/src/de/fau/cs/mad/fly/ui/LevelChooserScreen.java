@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -12,10 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.profile.LevelGroup;
-import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
-import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Offers a selection of levels to start.
