@@ -13,7 +13,6 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstruct
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
-import de.fau.cs.mad.fly.game.object.EmptyMover;
 import de.fau.cs.mad.fly.game.object.IGameObjectMover;
 
 /**
@@ -29,7 +28,7 @@ public class GameObject extends ModelInstance implements Disposable {
     /**
      * The mover for the game object. Empty mover is no mover is defined.
      */
-    private IGameObjectMover mover = new EmptyMover();
+    private IGameObjectMover mover = null;
 
     /**
      * Position of the game object.
@@ -284,7 +283,9 @@ public class GameObject extends ModelInstance implements Disposable {
      *            The delta since the last call.
      */
     public void move(float delta) {
-        mover.move(delta);
+    	if(mover != null) {
+    		mover.move(delta);
+    	}
     }
 
     /**

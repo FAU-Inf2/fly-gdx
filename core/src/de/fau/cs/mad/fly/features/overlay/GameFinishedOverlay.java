@@ -45,7 +45,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     @Override
     public void init(final GameController gameController) {
         this.gameController = gameController;
-        
     }
     
     /**
@@ -70,6 +69,9 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+            	LevelProfile lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(null);
+		    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
                 ((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
             }
         });
