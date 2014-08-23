@@ -58,6 +58,10 @@ public class PlaneManager {
 					planeHead.rotationSpeed = rotationVector.len();
 					planeHead.rotation = rotationVector.nor();
 				}
+				JsonValue particleOffset = json.get("particleOffset");
+				if (particleOffset != null) {
+					planeHead.particleOffset = new Vector3(particleOffset.getFloat(0), particleOffset.getFloat(1), particleOffset.getFloat(2));
+				}
 				
 				planeHead.file = file;
 				

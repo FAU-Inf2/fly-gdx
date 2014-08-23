@@ -29,7 +29,7 @@ public class Spaceship extends GameObject implements IPlane {
 	private float[] transformValues;
 	private Matrix4 startTransform;
 	
-	private Vector3 particleOffset = new Vector3(0.0f, 0.03f, -0.5f);
+	private Vector3 particleOffset = null;
 	private Matrix4 particleTransform;
 	
 	private IParticle particle;
@@ -63,25 +63,20 @@ public class Spaceship extends GameObject implements IPlane {
 		super(model, "Spaceship");
 		this.head = head;
 		this.modelRef = head.modelRef;
-		
-		if(modelRef.equals("shuttle")) {
-			particle = new ShuttleParticle();
-		} else {
-			particle = new EmptyParticle();
-		}
-		
+
 		if(head.rotation != null) {
 			rotationSpeed = head.rotationSpeed;
 			rotation = head.rotation;
 		}
+		
+		if(head.particleOffset != null) {
+			particleOffset = head.particleOffset;
+			particle = new ShuttleParticle();
+		} else {
+			particleOffset = new Vector3();
+			particle = new EmptyParticle();
+		}
 	}
-	
-	// needed anymore?
-	/*public Spaceship(GameModel model, String modelRef) {
-		super(model, "spaceship");
-		this.modelRef = modelRef;
-		particle = new SpaceshipParticle();
-	}*/
 	
 	@Override
 	public void load(final GameController game) {

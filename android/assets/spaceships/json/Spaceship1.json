@@ -8,5 +8,8 @@
 	"lives": 1,
 	"upgrades": [
 		0
+	],
+	"particleOffset": [
+		0, 0.03, -0.5
 	]
 }

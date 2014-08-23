@@ -33,7 +33,6 @@ public class ShuttleParticle implements IParticle {
 	public ShuttleParticle() {
 	}
 
-	
 	public void load(Camera camera, ModelBatch batch, String plane) {
 		this.batch = batch;
 

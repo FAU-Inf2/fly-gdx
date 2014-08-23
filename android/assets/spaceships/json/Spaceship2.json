@@ -2,7 +2,7 @@
 	"id": 2,
 	"name": "Saucer",
 	"modelRef": "ufo",
-	"speed": 30,
+	"speed": 10,
 	"rollingSpeed": 5,
 	"azimuthSpeed": 5,
 	"lives": 1,

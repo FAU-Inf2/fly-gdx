@@ -31,6 +31,7 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public int lives;
         public float rotationSpeed = 0.0f;
         public Vector3 rotation = null;
+        public Vector3 particleOffset = null;
         public FileHandle file;
         public int[] upgradeTypes;
         public List<String> upgrades;
