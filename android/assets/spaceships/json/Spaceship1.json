@@ -1,7 +1,7 @@
 {
 	"id": 1,
-	"name": "Spaceship",
-	"modelRef": "spaceship",
+	"name": "Shuttle",
+	"modelRef": "shuttle",
 	"speed": 10,
 	"rollingSpeed": 9,
 	"azimuthSpeed": 9,
