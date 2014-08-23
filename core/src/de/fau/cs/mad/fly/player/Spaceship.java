@@ -14,6 +14,9 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.player.gravity.IGravity;
+import de.fau.cs.mad.fly.player.particle.EmptyParticle;
+import de.fau.cs.mad.fly.player.particle.IParticle;
+import de.fau.cs.mad.fly.player.particle.ShuttleParticle;
 import de.fau.cs.mad.fly.res.Perspective;
 
 public class Spaceship extends GameObject implements IPlane {
@@ -26,10 +29,10 @@ public class Spaceship extends GameObject implements IPlane {
 	private float[] transformValues;
 	private Matrix4 startTransform;
 	
-	private Vector3 particleOffset = new Vector3(0.0f, 0.03f, -0.7f);
+	private Vector3 particleOffset = new Vector3(0.0f, 0.03f, -0.5f);
 	private Matrix4 particleTransform;
 	
-	private SpaceshipParticle particle;
+	private IParticle particle;
 
 	private float i = 0.0f;
     private float rotationSpeed = 0.0f;
@@ -60,7 +63,12 @@ public class Spaceship extends GameObject implements IPlane {
 		super(model, "Spaceship");
 		this.head = head;
 		this.modelRef = head.modelRef;
-		particle = new SpaceshipParticle();
+		
+		if(modelRef.equals("shuttle")) {
+			particle = new ShuttleParticle();
+		} else {
+			particle = new EmptyParticle();
+		}
 		
 		if(head.rotation != null) {
 			rotationSpeed = head.rotationSpeed;
@@ -85,8 +93,8 @@ public class Spaceship extends GameObject implements IPlane {
 		
 		gravity = game.getLevel().getGravity();
 		
-		//particle.load(camera, batch, modelRef);
-		//particle.init();
+		particle.load(camera, batch, modelRef);
+		particle.init();
 		
 		resetSpeed();
 
@@ -122,9 +130,9 @@ public class Spaceship extends GameObject implements IPlane {
 
 		render(batch, environment, camera);
 		
-		//particleTransform = transform.cpy();
-		//particleTransform.translate(particleOffset);
-		//particle.render(particleTransform);
+		particleTransform = transform.cpy();
+		particleTransform.translate(particleOffset);
+		particle.render(particleTransform);
 		
 		transform = storedTransform;
 		
@@ -231,7 +239,7 @@ public class Spaceship extends GameObject implements IPlane {
 	}
 	
 	public void dispose() {
-		//particle.stop();
+		particle.stop();
 		super.dispose();
 	}
 }
