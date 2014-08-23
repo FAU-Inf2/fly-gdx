@@ -37,17 +37,19 @@ public class ShuttleParticle implements IParticle {
 		this.batch = batch;
 
 		particleSystem = ParticleSystem.get();
-		billboardParticleBatch = new BillboardParticleBatch();
+		particleSystem.removeAll();
+		particleSystem.getBatches().clear();
 		
+		billboardParticleBatch = new BillboardParticleBatch();
 		billboardParticleBatch.setCamera(camera);
 		particleSystem.add(billboardParticleBatch);
 
 		assetRef = "models/planes/" + plane + "/effects.pfx";
 		Gdx.app.log("SpaceshipParticle", "Trying to load " + assetRef);
 
-		ParticleEffectLoader.ParticleEffectLoadParameter loadParam = new ParticleEffectLoader.ParticleEffectLoadParameter(particleSystem.getBatches());
 		ParticleEffectLoader loader = new ParticleEffectLoader(new InternalFileHandleResolver());
 		Assets.manager.setLoader(ParticleEffect.class, loader);
+		ParticleEffectLoader.ParticleEffectLoadParameter loadParam = new ParticleEffectLoader.ParticleEffectLoadParameter(particleSystem.getBatches());
 		Assets.manager.load(assetRef, ParticleEffect.class, loadParam);
 		Assets.manager.finishLoading();
 	}
@@ -79,6 +81,6 @@ public class ShuttleParticle implements IParticle {
 	}
 	
 	public void dispose() {
-		
+		Assets.manager.unload(assetRef);
 	}
 }

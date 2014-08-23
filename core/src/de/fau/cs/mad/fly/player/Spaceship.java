@@ -235,6 +235,7 @@ public class Spaceship extends GameObject implements IPlane {
 	
 	public void dispose() {
 		particle.stop();
+		particle.dispose();
 		super.dispose();
 	}
 }
