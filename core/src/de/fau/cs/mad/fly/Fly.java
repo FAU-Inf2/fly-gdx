@@ -73,15 +73,24 @@ public class Fly extends Game {
         new Thread(new Runnable() {
 			@Override
 			public void run() {
+				long time = System.currentTimeMillis();
 				PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+				 Gdx.app.log("timing", "Fly.create creating db and getCurrentPlayerProfile " + String.valueOf(System.currentTimeMillis()-time));
 			}
 		}).start(); //nex5: 1 ms
         Gdx.app.log("timing", "Fly.create starting player profile thread: " + String.valueOf(System.currentTimeMillis()-time));
         
         time = System.currentTimeMillis();
         
-        LevelGroupManager.createLevelManager(); //nex5: 1500 ms
-        Gdx.app.log("timing", "Fly.create create level manager: " + String.valueOf(System.currentTimeMillis()-time));
+        new Thread(new Runnable() {
+			@Override
+			public void run() {
+				long time = System.currentTimeMillis();
+				LevelGroupManager.createLevelManager(); //nex5: 1500 ms
+				Gdx.app.log("timing", "Fly.create create level manager: " + String.valueOf(System.currentTimeMillis()-time));
+			}
+        }).start();
+        Gdx.app.log("timing", "Fly.create start level manager thread: " + String.valueOf(System.currentTimeMillis()-time));
         
         ParticleController.createParticleController();
         

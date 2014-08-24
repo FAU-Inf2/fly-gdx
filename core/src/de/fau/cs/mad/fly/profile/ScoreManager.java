@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.badlogic.gdx.sql.DatabaseCursor;
 import de.fau.cs.mad.fly.db.FlyDBManager;
-import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Manage scores of all player. 
@@ -32,23 +31,13 @@ public class ScoreManager {
 			return;
 		int levelgroupID = playerProfile.getChosenLevelGroup().id;
 
-		String deleteDetail = "delete from " + FlyDBManager.TABLE_SCORE_DETAIL + " where "
-				+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + playerProfile.getId() + " and "
-				+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + "=" + level.id + " and "
-				+ FlyDBManager.SCORE_COLUMN_LEVELGROUPID + "=" + levelgroupID;
+		String deleteDetail = "delete from score_detail where player_id=" + playerProfile.getId() + " and level_id=" + level.id + " and level_group_id=" + levelgroupID;
 
-		String deleteScore = "delete from " + FlyDBManager.TABLE_SCORE + " where "
-				+ FlyDBManager.SCORE_COLUMN_PLAYERID + "=" + playerProfile.getId() + " and "
-				+ FlyDBManager.SCORE_COLUMN_LEVELID + "=" + level.id + " and "
-				+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELGROUPID + "=" + levelgroupID;
+		String deleteScore = "delete from score where player_id=" + playerProfile.getId() + " and level_id=" + level.id + " and level_group_id=" + levelgroupID;
 
-		String insertScore = "insert into " + FlyDBManager.TABLE_SCORE + "("
-				+ FlyDBManager.SCORE_COLUMN_PLAYERID + ", " + FlyDBManager.SCORE_COLUMN_LEVELID
-				+ ", " + FlyDBManager.SCORE_COLUMN_SCORE + ", "
-				+ FlyDBManager.SCORE_COLUMN_COMPARESCORE + ","
-				+ FlyDBManager.SCORE_COLUMN_LEVELGROUPID 
+		String insertScore = "insert into score(player_id, level_id, score, compare_score,level_group_id) values (" 			
 				// todo+ ", " + FlyDBManager.SCORE_COLUMN_REACHEDDATE
-				+ ") values (" + playerProfile.getId() + ", " + level.id + ", " + score.getTotalScore()
+				+ playerProfile.getId() + ", " + level.id + ", " + score.getTotalScore()
 				+ ", '" + score.getCompareScore() + "'," + levelgroupID + ") ";
 
 		// FlyDBManager.getInstance().openDatabase();
@@ -56,13 +45,7 @@ public class ScoreManager {
 		FlyDBManager.getInstance().execSQL(deleteScore);
 		FlyDBManager.getInstance().execSQL(insertScore);
 		for (ScoreDetail detail : score.getScoreDetails()) {
-			String insertDetail = "insert into " + FlyDBManager.TABLE_SCORE_DETAIL + "("
-					+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + ", "
-					+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + ", "
-					+ FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL + ", "
-					+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + ","
-					+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELGROUPID
-					+ ") values (" + playerProfile.getId() + ", "
+			String insertDetail = "insert into score_detail(player_id,level_id,score_detail,_value,level_group_id) values (" + playerProfile.getId() + ", "
 					+ level.id + ", '" + detail.getDetailName() + "', '" 
 					+ detail.getValue() + "'," +levelgroupID + ")";
 			FlyDBManager.getInstance().execSQL(insertDetail);
@@ -85,12 +68,8 @@ public class ScoreManager {
 	 * @return
 	 */
 	public Map<String, Score> getPlayerBestScores(PlayerProfile playerProfile, LevelGroup levelGroup) {
-		String selectScore = "select " + FlyDBManager.SCORE_COLUMN_LEVELID + ", "
-				+ FlyDBManager.SCORE_COLUMN_SCORE + ", " + FlyDBManager.SCORE_COLUMN_COMPARESCORE
-				+ ", " + FlyDBManager.SCORE_COLUMN_REACHEDDATE + " from "
-				+ FlyDBManager.TABLE_SCORE + " where " + FlyDBManager.SCORE_COLUMN_PLAYERID + " ="
-				+ playerProfile.getId() + " and " + FlyDBManager.SCORE_COLUMN_LEVELGROUPID 
-				+ "=" + levelGroup.id;
+		String selectScore = "select level_id, score, compare_score, reached_date from score where player_id ="
+				+ playerProfile.getId() + " and level_group_id=" + levelGroup.id;
 		Map<String, Score> map = new HashMap<String, Score>();
 
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectScore);
@@ -103,12 +82,9 @@ public class ScoreManager {
 				score.setCompareScore(cursor.getString(2));
 				// todo score.setReachedDate(cursor.getString(3));
 
-				String selectDetail = "select " + FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL + ", "
-						+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + " from "
-						+ FlyDBManager.TABLE_SCORE_DETAIL + " where "
-						+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + playerProfile.getId()
-						+ " and " + FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + "=" + levelId
-						+ " and " + FlyDBManager.SCORE_DETAIL_COLUMN_LEVELGROUPID + "=" + levelGroup.id;
+				String selectDetail = "select score_detail,_value from score_detail where player_id=" + playerProfile.getId()
+						+ " and level_id=" + levelId
+						+ " and level_group_id=" + levelGroup.id;
 
 				List<ScoreDetail> details = new ArrayList<ScoreDetail>();
 				DatabaseCursor subCursor = FlyDBManager.getInstance().selectData(selectDetail);
@@ -140,19 +116,10 @@ public class ScoreManager {
 
 	public Score getLevelBestScore(PlayerProfile playerProfile, LevelProfile level) {
 		int levelgroupID = playerProfile.getChosenLevelGroup().id;
-		String selectScore = "select " + FlyDBManager.SCORE_COLUMN_SCORE + ", "
-				+ FlyDBManager.SCORE_COLUMN_COMPARESCORE + ", "
-				+ FlyDBManager.SCORE_COLUMN_REACHEDDATE + " from " + FlyDBManager.TABLE_SCORE
-				+ " where " + FlyDBManager.SCORE_COLUMN_PLAYERID + " =" + playerProfile.getId() + " and "
-				+ FlyDBManager.SCORE_COLUMN_LEVELID + "=" + level.id + " and "
-				+ FlyDBManager.SCORE_COLUMN_LEVELGROUPID + "=" + levelgroupID;
+		String selectScore = "select score, compare_score, reached_date from score where player_id =" + playerProfile.getId() + " and level_id=" + level.id 
+				+ " and level_group_id=" + levelgroupID;
 
-		String selectDetail = "select " + FlyDBManager.SCORE_DETAIL_COLUMN_DETAIL + ", "
-				+ FlyDBManager.SCORE_DETAIL_COLUMN_VALUE + " from "
-				+ FlyDBManager.TABLE_SCORE_DETAIL + " where "
-				+ FlyDBManager.SCORE_DETAIL_COLUMN_PLAYERID + "=" + playerProfile.getId() + " and "
-				+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELID + "=" + level.id + " and "
-				+ FlyDBManager.SCORE_DETAIL_COLUMN_LEVELGROUPID + "=" + levelgroupID;
+		String selectDetail = "select score_detail,_value from score_detail where player_id=" + playerProfile.getId() + " and level_id=" + level.id + " and level_group_id=" + levelgroupID;
 		Score score = null;
 
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectScore);

@@ -23,62 +23,16 @@ public class FlyDBManager {
 
 	Database dbHandler;
 
-	public static final String TABLE_PLAYER = "player";
-	public static final String PLAYER_COLUMN_ID = "player_id";
-	public static final String PLAYER_COLUMN_FLY_ID = "fly_id";
-	public static final String PLAYER_COLUMN_NAME = "name";
-	public static final String PLAYER_COLUMN_SOCIAL_TYPE = "social_type";
-	public static final String PLAYER_COLUMN_SOCIAL_NAME = "social_name";
-	public static final String PLAYER_COLUMN_SOCIAL_PASSWORD = "social_password";
-	public static final String PLAYER_COLUMN_TOTALSCORE = "total_score";
-	public static final String PLAYER_COLUMN_TOTALGELD = "total_geld";
+	private static String createTablePlayer = "create table if not exists player(player_id integer primary key autoincrement, fly_id text, name text not null, social_type text, social_name text, social_password text)";
 
-	public static final String TABLE_SCORE = "score";
-	public static final String SCORE_COLUMN_PLAYERID = "player_id";
-	public static final String SCORE_COLUMN_LEVELID = "level_id";
-	public static final String SCORE_COLUMN_LEVELGROUPID = "level_group_id";
-	public static final String SCORE_COLUMN_SCORE = "score";
-	public static final String SCORE_COLUMN_COMPARESCORE = "compare_score";
-	public static final String SCORE_COLUMN_REACHEDDATE = "reached_date";
+	private static String createTableScore = "create table if not exists score(player_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date)";
 
-	public static final String TABLE_SCORE_DETAIL = "score_detail";
-	public static final String SCORE_DETAIL_COLUMN_ID = "scoredetail_id";
-	public static final String SCORE_DETAIL_COLUMN_PLAYERID = "player_id";
-	public static final String SCORE_DETAIL_COLUMN_LEVELID = "level_id";
-	public static final String SCORE_DETAIL_COLUMN_LEVELGROUPID = "level_group_id";
-	public static final String SCORE_DETAIL_COLUMN_DETAIL = "score_detail";
-	public static final String SCORE_DETAIL_COLUMN_VALUE = "_value";
+	private static String createTableScoreDetail = "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
 
-	private static String createTablePlayer = "create table if not exists " + TABLE_PLAYER + "("
-			+ PLAYER_COLUMN_ID + " integer primary key autoincrement, " + PLAYER_COLUMN_FLY_ID
-			+ " text, " + PLAYER_COLUMN_NAME + " text not null, " + PLAYER_COLUMN_SOCIAL_TYPE
-			+ " text, " + PLAYER_COLUMN_SOCIAL_NAME + " text, " + PLAYER_COLUMN_SOCIAL_PASSWORD
-			+ " text); ";
-
-	private static String createTableScore = "create table if not exists " + TABLE_SCORE + "("
-			+ SCORE_COLUMN_PLAYERID + " integer not null, " + SCORE_COLUMN_LEVELID
-			+ " integer not null, " + SCORE_COLUMN_SCORE + " integer not null, "
-			+ SCORE_COLUMN_COMPARESCORE + " text, " + SCORE_COLUMN_REACHEDDATE + " date ); ";
-
-	private static String createTableScoreDetail = "create table if not exists "
-			+ TABLE_SCORE_DETAIL + "(" + SCORE_DETAIL_COLUMN_ID
-			+ " integer primary key autoincrement, " + SCORE_DETAIL_COLUMN_PLAYERID
-			+ " integer not null, " + SCORE_DETAIL_COLUMN_LEVELID + " integer not null, "
-			+ SCORE_DETAIL_COLUMN_DETAIL + " text not null, " + SCORE_DETAIL_COLUMN_VALUE
-			+ " text); ";
-
-	private static String addColLevelGroup1 = "alter table " +  TABLE_SCORE +
-			" add column " + SCORE_COLUMN_LEVELGROUPID +
-			" integer not null default  1 ";
-	private static String addColLevelGoup2 = "alter table " +  TABLE_SCORE_DETAIL +
-			" add column " + SCORE_DETAIL_COLUMN_LEVELGROUPID +
-			" integer not null default  1 ";
-	private static String addColScore = "alter table " +  TABLE_PLAYER +
-			" add column " + PLAYER_COLUMN_TOTALSCORE +
-			" integer not null default  0";
-	private static String addColGeld ="alter table " +  TABLE_PLAYER +
-			" add column " + PLAYER_COLUMN_TOTALGELD +
-			" integer not null default  0";
+	private static String addColLevelGroup1 = "alter table score add column level_group_id integer not null default  1 ";
+	private static String addColLevelGoup2 = "alter table score_detail add column level_group_id integer not null default  1 ";
+	private static String addColScore = "alter table player add column total_score integer not null default  0";
+	private static String addColGeld ="alter table player add column total_geld integer not null default  0";
 	
 	
 	private FlyDBManager() {

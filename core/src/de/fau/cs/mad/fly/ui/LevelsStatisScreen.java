@@ -63,6 +63,7 @@ public class LevelsStatisScreen extends BasicScreen {
 	 */
 	@Override
 	protected void generateContent() {
+		long begin = System.currentTimeMillis();
 		initButtons();
 		stage.clear();
 		final Table table = new Table();
@@ -84,31 +85,44 @@ public class LevelsStatisScreen extends BasicScreen {
 				ScrollPane.ScrollPaneStyle.class));
 		table.row().expand();
 		table.add(statisticsPane);
-
+		Gdx.app.log("timing", "LevelsStatisScreen generateContent " + (System.currentTimeMillis()-begin));
+	}
+		
+	@Override
+	public void show() {
+		long begin = System.currentTimeMillis();
+		super.show();
+		genarateScoreTable();
+		Gdx.app.log("timing", "LevelsStatisScreen show " + (System.currentTimeMillis()-begin));
 	}
 	
 	private void genarateScoreTable(){	
 		new Thread(new showScore()).start();
 	}
-	
-	@Override
-	public void show() {
-		super.show();
-		genarateScoreTable();
-	}
 
 	public class showScore implements Runnable {
+		
 		Map<String, Score> scores;
+		long begin,end;
 
 		@Override
 		public void run() {
-			scores = ScoreManager.getInstance().getPlayerBestScores(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), levelGroup);			
-
+			 begin = System.currentTimeMillis();
+			scores = ScoreManager.getInstance().getPlayerBestScores(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), levelGroup);
+			 end =System.currentTimeMillis();
+			Gdx.app.log("timing", "get data from db " + (end-begin));
+			begin = end;
 			//it is faster if we remove this, but it may also bring in UI render exception
 			Gdx.app.postRunnable(new Runnable() {				
 				@Override
-				public void run() {		
+				public void run() {	
+					end =System.currentTimeMillis();
+					Gdx.app.log("timing", "begin run postrunable " + (end-begin));
+					begin = end;
 					scoreTable.clear();
+					end =System.currentTimeMillis();
+					Gdx.app.log("timing", "clear UI table " + (end-begin));
+					begin = end;
 					scoreTable.add(new Label(levelGroup.name, skin)).pad(6f).colspan(2);
 					scoreTable.row().expand();
 					
@@ -180,9 +194,13 @@ public class LevelsStatisScreen extends BasicScreen {
 					//scoreTable.setColor(0, 0, 0, 0f);
 					//scoreTable.addAction(Actions.fadeIn(2f));
 					
-					Gdx.app.log("StaticScreen",
-							"end generateContentDynamic " + System.currentTimeMillis());
+					end =System.currentTimeMillis();
+					Gdx.app.log("timing", " UI table builded " + (end-begin));
+					begin = end;
 					scoreTable.layout();
+					end =System.currentTimeMillis();
+					Gdx.app.log("timing", " UI table updated" + (end-begin));
+					begin = end;
 				}
 			});
 
