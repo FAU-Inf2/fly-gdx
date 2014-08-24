@@ -8,10 +8,10 @@
     ],
     "dependencies": {
         "asteroid": "asteroid",
-        "changePointsUpgrade": "changePointsUpgrade",
-        "changeTimeUpgrade": "changeTimeUpgrade",
         "hole": "torusHoleBox",
+        "pointsUpgrade": "pointsUpgrade",
         "space": "spacesphere",
+        "timeUpgrade": "timeUpgrade",
         "torus": "torus"
     },
     "gates": [
@@ -262,20 +262,20 @@
         },
         {
             "euler": [
-                10.0,
-                45.0,
-                -110.0001
+                30.000100000000003,
+                0.0,
+                -90.0
             ],
             "gateId": 12,
             "id": "Gate.012",
             "position": [
-                29.0,
-                52.0,
+                28.0,
+                50.0,
                 3.0
             ],
             "ref": "torus",
             "refHole": "hole",
-            "score": 65,
+            "score": 55,
             "successors": [
                 13
             ]
@@ -398,7 +398,7 @@
             "z": 0.0
         }
     },
-    "time": 90,
+    "time": 70,
     "upgrades": [
         {
             "angular_velocity": [
@@ -418,7 +418,7 @@
                 45.0,
                 6.0
             ],
-            "ref": "changePointsUpgrade",
+            "ref": "pointsUpgrade",
             "type": "ChangePointsUpgrade"
         },
         {
@@ -432,13 +432,13 @@
                 0.0,
                 0.0
             ],
-            "id": "changeTimeUpgrade.001",
+            "id": "changeTimeUpgrade",
             "position": [
                 26.0,
                 26.0,
                 1.0
             ],
-            "ref": "changeTimeUpgrade",
+            "ref": "timeUpgrade",
             "time": 5,
             "type": "ChangeTimeUpgrade"
         }

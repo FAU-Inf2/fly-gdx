@@ -762,7 +762,7 @@
             "z": 0.0
         }
     },
-    "time": 80,
+    "time": 50,
     "upgrades": [
         {
             "angular_velocity": [
@@ -781,7 +781,7 @@
                 47.0,
                 -10.0
             ],
-            "ref": "changeTimeUpgrade",
+            "ref": "timeUpgrade",
             "time": 5,
             "type": "ChangeTimeUpgrade"
         }
