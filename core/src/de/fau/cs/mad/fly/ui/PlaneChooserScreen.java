@@ -79,6 +79,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     private Vector3 yAxis = new Vector3(0.f, 1.f, 0.f);
     private Vector3 xRotationAxis = new Vector3(1.f, 0.f, 0.f);
     private Vector3 yRotationAxis = new Vector3(0.f, 1.f, 0.f);
+    private Vector3 camVec;
     
     private Environment environment;
     private PerspectiveCamera camera;
@@ -88,9 +89,10 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 	private Viewport viewport;
 	
 	private int xDif, yDif;
-	private boolean touched;
-	private float xFactor = 0.f, yFactor = 0.f;
+	private boolean touched, secondTouch;
+	private float xFactor = 0.f, yFactor = 0.f, touchDistance;
 	private int lastX = 0, lastY = 0;
+	private float scale = 1;
 	
 	private String name, speed, pitch, turnSpeed ,lives;
 
@@ -331,6 +333,8 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		camera.near = 0.1f;
 		camera.far = 100.f;
 		camera.update();
+		
+		camVec = camera.position.cpy();
 	}
 
 	@Override
@@ -350,38 +354,62 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		touched = true;
-		lastX = screenX;
-		lastY = screenY;
-		
+		if(pointer == 0) {
+			touched = true;
+			lastX = screenX;
+			lastY = screenY;
+		} else if(pointer == 1) {
+			secondTouch = true;
+			float xDif = lastX - screenX;
+			float yDif = lastY - screenY;
+			touchDistance = (float) Math.sqrt(xDif * xDif + yDif * yDif);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		touched = false;
-		xFactor = 0;
-		yFactor = 0;
+		if(pointer == 0) {
+			touched = false;
+			xFactor = 0;
+			yFactor = 0;
+		}else if(pointer == 1) {
+			secondTouch = false;
+			touchDistance = 0;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		xDif = lastX - screenX;
-		yDif = lastY - screenY;
-		
-		xFactor = -xDif / screenWidth;
-		yFactor = yDif / screenHeight;
-		
-		instance.transform.rotate(yRotationAxis, xFactor * 360);
-		instance.transform.rotate(xRotationAxis, yFactor * 360);
-		yAxis = yRotationAxis;
-		xAxis = xRotationAxis;
-		xRotationAxis.rotate(yAxis, -xFactor * 360);
-		yRotationAxis.rotate(xAxis, -yFactor * 360);
-		
-		lastX = screenX;
-		lastY = screenY;
+		if(pointer == 0) {
+			xDif = lastX - screenX;
+			yDif = lastY - screenY;
+			
+			xFactor = -xDif / screenWidth;
+			yFactor = yDif / screenHeight;
+			
+			instance.transform.rotate(yRotationAxis, xFactor * 360);
+			instance.transform.rotate(xRotationAxis, yFactor * 360);
+			yAxis = yRotationAxis;
+			xAxis = xRotationAxis;
+			xRotationAxis.rotate(yAxis, -xFactor * 360);
+			yRotationAxis.rotate(xAxis, -yFactor * 360);
+			
+			lastX = screenX;
+			lastY = screenY;
+		} if(pointer == 1 && touched) {
+			float xDif = lastX - screenX;
+			float yDif = lastY - screenY;
+			float newTouchDistance = (float) Math.sqrt(xDif * xDif + yDif * yDif);
+			
+			float scale = touchDistance / newTouchDistance;
+			
+			touchDistance = newTouchDistance;
+			
+			camera.translate(camVec.cpy().scl(scale - 1));
+			camera.update();
+		}
 		return false;
 	}
 
@@ -393,7 +421,9 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
+		scale = amount * 0.1f;
+		camera.translate(camVec.cpy().scl(scale));
+		camera.update();
 		return false;
 	}
 }
