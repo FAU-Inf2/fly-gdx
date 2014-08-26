@@ -70,17 +70,20 @@ public class PlaneManager {
 				
 				Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
 				Map<String, Integer> upgradeMap = new HashMap<String, Integer>();
+				Map<String, Integer> equipedMap = new HashMap<String, Integer>();
 				
 				int size = upgradeTypes.length;
 				for(PlaneUpgrade upgrade : upgrades) {
 					for(int i = 0; i < size; i++) {
 						if(upgrade.type == upgradeTypes[i]) {
 							upgradeMap.put(upgrade.name, 0);
+							equipedMap.put(upgrade.name, 0);
 						}
 					}
 				}
 				
 				planeHead.upgradesBought = upgradeMap;
+				planeHead.upgradesEquiped = equipedMap;
 				
 				//planes.add(spaceshipHead);
 				planes.put(id, planeHead);
@@ -136,6 +139,9 @@ public class PlaneManager {
 		chosenPlane.azimuthSpeed += values[2] * signum;
 		chosenPlane.lives += values[3] * signum;
 		
+		int oldValue = chosenPlane.upgradesEquiped.get(upgradeName);
+		chosenPlane.upgradesEquiped.put(upgradeName, oldValue + signum);
+		
 		planes.put(chosenPlane.id, chosenPlane);
 		
 		return chosenPlane;
@@ -152,5 +158,13 @@ public class PlaneManager {
 				chosenPlane.upgradesBought.put(upgradeName, currentUpgradeBought + 1);
 			}
 		}
+	}
+	
+	public boolean upgradeCanBeBought(PlaneUpgrade upgrade) {
+		int currentlyBought = chosenPlane.upgradesBought.get(upgrade.name);
+		if(currentlyBought < upgrade.timesAvailable) {
+			return true;
+		}
+		return false;
 	}
 }

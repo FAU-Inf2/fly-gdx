@@ -1,15 +1,12 @@
 package de.fau.cs.mad.fly.ui;
 
-import java.util.List;
 import java.util.Map;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.features.overlay.PlaneUpgradesOverlay;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.player.IPlane;
-import de.fau.cs.mad.fly.player.IPlane.Head;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.res.Assets;
 
@@ -39,11 +36,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -66,12 +61,12 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 	protected final Color backgroundColor;
 	
     private Stage stage;
+	private Viewport viewport;
     private ModelBatch batch;
 	private Batch backgroundBatch;
 	private Sprite background;
 	
 	private Label nameLabel, speedLabel, rollingSpeedLabel, azimuthSpeedLabel, livesLabel;
-	private PlaneUpgradesOverlay upgradeOverlay;
 	
     private InputMultiplexer inputProcessor;
 
@@ -85,8 +80,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     private PerspectiveCamera camera;
 	private float screenHeight = Gdx.graphics.getHeight();
 	private float screenWidth = Gdx.graphics.getWidth();
-	
-	private Viewport viewport;
 	
 	private int xDif, yDif;
 	private boolean touched, secondTouch;
@@ -183,9 +176,22 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		}
 		background.setPosition(deltaX, deltaY);
 		
-		// initialize the upgradeOverlay
-		upgradeOverlay = new PlaneUpgradesOverlay(skin, stage, this);
-		upgradeOverlay.init();
+		// adding the button that opens the UpgradeScreen
+		ImageButton openButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+		
+		Table table = new Table(skin);
+		table.setFillParent(true);
+		table.top().right();
+		table.add(openButton);
+		
+		stage.addActor(table);
+		
+		openButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				((Fly) Gdx.app.getApplicationListener()).setPlaneUpgradeScreen();
+			}
+		});
 		
 		// initialize the InputProcessor
 		//inputProcessor = new InputMultiplexer(this, stage, new BackProcessor());
@@ -253,8 +259,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		instance = new GameObject(model, "spaceship");
 		
 		updateOverlay();
-		
-		upgradeOverlay.show();
 	}
 	
 	/**

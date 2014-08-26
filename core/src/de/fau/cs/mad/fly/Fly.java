@@ -19,6 +19,7 @@ import de.fau.cs.mad.fly.ui.LevelGroupScreen;
 import de.fau.cs.mad.fly.ui.LevelsStatisScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
+import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.SplashScreen;
@@ -46,6 +47,7 @@ public class Fly extends Game {
     private LevelGroupScreen levelGroupScreen;
     private LevelChooserScreen levelChooserScreen;
     private PlaneChooserScreen planeChooserScreen;
+    private PlaneUpgradeScreen planeUpgradeScreen;
     private MainMenuScreen mainMenuScreen;
     private SettingScreen settingScreen;
     private StatisticsScreen statisticsScreen;
@@ -121,6 +123,7 @@ public class Fly extends Game {
         disposeScreen(levelGroupScreen);
         disposeScreen(levelChooserScreen);
         disposeScreen(planeChooserScreen);
+        disposeScreen(planeUpgradeScreen);
         disposeScreen(mainMenuScreen);
         disposeScreen(settingScreen);
         disposeScreen(statisticsScreen);
@@ -179,6 +182,16 @@ public class Fly extends Game {
         	planeChooserScreen = new PlaneChooserScreen();
         }
         setScreen(planeChooserScreen);
+    }
+    
+    /**
+     * Lazy loading of screen to upgrade the planes.
+     */
+    public void setPlaneUpgradeScreen() {
+        if (planeUpgradeScreen == null) {
+        	planeUpgradeScreen = new PlaneUpgradeScreen();
+        }
+        setScreen(planeUpgradeScreen);
     }
     
     /**

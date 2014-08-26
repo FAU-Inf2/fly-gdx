@@ -37,6 +37,7 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public List<String> upgrades;
         
         public Map<String, Integer> upgradesBought;
+        public Map<String, Integer> upgradesEquiped;
     }
 	
 	/**

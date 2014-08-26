@@ -62,6 +62,12 @@ public class Spaceship extends GameObject implements IPlane {
 	public Spaceship(GameModel model, IPlane.Head head) {
 		super(model, "Spaceship");
 		this.head = head;
+		
+		// TODO: adjust the speed, currently just divided by 5 because it was too fast
+		this.speed = head.speed / 5;
+		this.azimuthSpeed = head.azimuthSpeed;
+		this.rollingSpeed = head.rollingSpeed;
+		
 		this.modelRef = head.modelRef;
 
 		if(head.rotation != null) {
@@ -91,7 +97,7 @@ public class Spaceship extends GameObject implements IPlane {
 		particle.load(modelRef);
 		particle.init();
 		
-		resetSpeed();
+		//resetSpeed();
 
 		transform.setToTranslation(game.getLevel().start.position);
 		
