@@ -276,8 +276,8 @@ public class FlightController implements InputProcessor {
             float length = (float) Math.sqrt(xDif * xDif + yDif * yDif);
             
             if (length <= radius) {
-                setAzimuthFactor(-xDif / radius / 0.075f);
-                setRollFactor(-yDif / radius / 0.075f);
+                setAzimuthFactor(-xDif / radius);
+                setRollFactor(-yDif / radius);
                 inTouch = true;
             } else {
             	inTouch = false;
