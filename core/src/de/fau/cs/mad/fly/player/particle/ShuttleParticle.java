@@ -27,7 +27,7 @@ public class ShuttleParticle implements IParticle {
 	 * @param plane			The shuttle.
 	 */
 	public void load(String plane) {
-		assetRef = "models/planes/" + plane + "/effects.pfx";
+		assetRef = "models/planes/effects/" + plane + ".pfx";
 		Gdx.app.log("SpaceshipParticle", "Trying to load " + assetRef);
 
 		ParticleEffectLoader.ParticleEffectLoadParameter loadParam = new ParticleEffectLoader.ParticleEffectLoadParameter(ParticleController.getInstance().getBatches());

@@ -9,5 +9,8 @@
 	"upgrades": [
 		0,
 		2
+	],
+	"particleOffset": [
+		0, 0, -0.36
 	]
 }
