@@ -1,0 +1,316 @@
+{
+    "class": "medium.GravityLevel",
+    "components": [
+        {
+            "id": "space",
+            "ref": "space"
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "hole": "torusHoleBox",
+        "pointsUpgrade": "pointsUpgrade",
+        "space": "spacesphere",
+        "timeUpgrade": "timeUpgrade",
+        "torus": "torus"
+    },
+    "gates": [
+        {
+            "successors": [
+                0
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                1
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                20.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 2,
+            "id": "Gate.002",
+            "position": [
+                0.0,
+                20.0,
+                3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                3
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                0.0,
+                10.0,
+                3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                4
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                0.0,
+                0.0,
+                3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 5,
+            "id": "Gate.005",
+            "position": [
+                0.0,
+                0.0,
+                6.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                7
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 6,
+            "id": "Gate.006",
+            "position": [
+                0.0,
+                10.0,
+                6.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                8
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 7,
+            "id": "Gate.007",
+            "position": [
+                0.0,
+                20.0,
+                6.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                6
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 8,
+            "id": "Gate.008",
+            "position": [
+                0.0,
+                20.0,
+                -3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                10
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 9,
+            "id": "Gate.009",
+            "position": [
+                0.0,
+                10.0,
+                -3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": []
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 10,
+            "id": "Gate.010",
+            "position": [
+                0.0,
+                0.0,
+                -3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                9
+            ]
+        }
+    ],
+    "id": 6,
+    "name": "Level 6",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": -0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 100,
+    "upgrades": [
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changePointsUpgrade",
+            "points": 150,
+            "position": [
+                -3.0,
+                10.0,
+                0.0
+            ],
+            "ref": "pointsUpgrade",
+            "type": "ChangePointsUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changePointsUpgrade.001",
+            "points": 300,
+            "position": [
+                3.0,
+                20.0,
+                6.0
+            ],
+            "ref": "pointsUpgrade",
+            "type": "ChangePointsUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade",
+            "position": [
+                0.0,
+                30.0,
+                0.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 50,
+            "type": "ChangeTimeUpgrade"
+        }
+    ]
+}

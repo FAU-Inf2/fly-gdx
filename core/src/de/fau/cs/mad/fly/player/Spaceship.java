@@ -244,4 +244,14 @@ public class Spaceship extends GameObject implements IPlane {
 		particle.dispose();
 		super.dispose();
 	}
+
+	@Override
+	public void setGravity(IGravity gravity) {
+		this.gravity = gravity;
+	}
+
+	@Override
+	public IGravity getGravity() {
+		return gravity;
+	}
 }
