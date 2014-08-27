@@ -54,7 +54,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
         restartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file.path();
+            	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file;
             	Assets.unload(levelPath);
             	
                 LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();

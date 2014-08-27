@@ -75,7 +75,7 @@ public class Loader {
      */
     public static void loadLevel(LevelProfile head) {
         final LoadingScreen loadingScreen = new LoadingScreen();
-        Loader loader = Loader.create(head.file.path());
+        Loader loader = Loader.create(head.file);
         loadingScreen.initiate(loader);
         loader.initiate();
         ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);

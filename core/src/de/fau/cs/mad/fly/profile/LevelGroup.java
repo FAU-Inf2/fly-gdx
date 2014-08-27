@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -20,7 +21,8 @@ public class LevelGroup {
 	public int id;
 	public String name;
 	private List<LevelProfile> levels;
-	public FileHandle groupFileHandle;
+	//public FileHandle groupFileHandle;
+	public String path;
 
 	/**
 	 * Comparator for the level heads.
@@ -51,21 +53,30 @@ public class LevelGroup {
 	}
 
 	private void readLevelGroup() {
+		long time = System.currentTimeMillis();
 		levels = new ArrayList<LevelProfile>();
 		// check for all the levels
 		JsonReader reader = new JsonReader();
-		for (FileHandle handle : groupFileHandle.list()) {
-			if (!handle.isDirectory()) {
-				if (!handle.name().equals("group.json")) {
-					JsonValue json = reader.parse(handle);
-					LevelProfile levelprofile = new LevelProfile();
-					levelprofile.name = json.getString("name");
-					levelprofile.id = json.getInt("id");// todo ? + group.id;
-					levelprofile.file = handle;
-					levels.add(levelprofile);
-				}
+		
+		FileHandle dirHandle = Gdx.files.internal(path);
+		FileHandle handle = dirHandle.child("group.json");
+		if (handle != null) {
+			JsonValue json = reader.parse(handle);
+			JsonValue groups = json.get("levels");
+			if(groups!=null)
+			{
+				for (int i = 0; i < groups.size; i++) {
+					LevelProfile  levelProfile = new LevelProfile();
+					JsonValue groupJS = groups.get(i);
+					levelProfile.id = groupJS.getInt("id");
+					levelProfile.name = groupJS.getString("name");
+					levelProfile.file = path + groupJS.getString("file");	
+					levels.add(levelProfile);
+				}					
 			}
-		}
+		}	
+		
+		Gdx.app.log("timing", "read levels " + path + (System.currentTimeMillis()-time));
 		Collections.sort(levels, levelComparator);
 	}
 

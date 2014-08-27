@@ -1,4 +1,11 @@
 {
-	"id": 10,
-	"name": "Endless Levels"
+	"id": 0,
+	"name": "Endless Levels",
+	"levels": [
+		{
+			"id": 1,
+			"name": "Endless",
+			"file": "randomEndlessLevel.json"
+		}
+	]
 }

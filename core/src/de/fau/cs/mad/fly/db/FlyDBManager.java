@@ -23,20 +23,15 @@ public class FlyDBManager {
 
 	Database dbHandler;
 
-	private static String createTablePlayer = "create table if not exists player(player_id integer primary key autoincrement, fly_id text, name text not null, social_type text, social_name text, social_password text)";
-
-	private static String createTableScore = "create table if not exists score(player_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date)";
-
-	private static String createTableScoreDetail = "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
-
-	private static String addColLevelGroup1 = "alter table score add column level_group_id integer not null default  1 ";
-	private static String addColLevelGoup2 = "alter table score_detail add column level_group_id integer not null default  1 ";
-	private static String addColScore = "alter table player add column total_score integer not null default  0";
-	private static String addColGeld ="alter table player add column total_geld integer not null default  0";
 	
+
 	
 	private FlyDBManager() {
 		Gdx.app.log("FlyDBManager", "setupDatabase begin " + System.currentTimeMillis());
+		String createTablePlayer = "create table if not exists player(player_id integer primary key autoincrement, fly_id text, name text not null, social_type text, social_name text, social_password text)";
+		String createTableScore = "create table if not exists score(player_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date)";
+		String createTableScoreDetail = "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
+
 		List<String> createSQLs = new ArrayList<String>();
 		createSQLs.add(createTablePlayer);
 		createSQLs.add(createTableScore);
@@ -54,11 +49,11 @@ public class FlyDBManager {
 			
 			int dbVersion = AppSettingsManager.Instance.getIntegerSetting(AppSettingsManager.DATABASE_VERSION, 0);
 			if(dbVersion < 2 )
-			{
-				dbHandler.execSQL(addColLevelGroup1);
-				dbHandler.execSQL(addColLevelGoup2);
-				dbHandler.execSQL(addColScore);
-				dbHandler.execSQL(addColGeld);
+			{				
+				dbHandler.execSQL("alter table score add column level_group_id integer not null default  1");
+				dbHandler.execSQL("alter table score_detail add column level_group_id integer not null default 1");
+				dbHandler.execSQL("alter table player add column total_score integer not null default 0");
+				dbHandler.execSQL("alter table player add column total_geld integer not null default 0");
 			}
 			AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.DATABASE_VERSION, LASTEST_DATABASE_VERSION);		
 		}
@@ -78,20 +73,20 @@ public class FlyDBManager {
 	 * open and close database methods.
 	 */
 	public void execSQL(String sql) {
-		Gdx.app.log("FlyDBManager.execSQL", "execSQL begin " + System.currentTimeMillis());
-		Gdx.app.log("FlyDBManager.execSQL", sql);
+		//Gdx.app.log("FlyDBManager.execSQL", "execSQL begin " + System.currentTimeMillis());
+		//Gdx.app.log("FlyDBManager.execSQL", sql);
 		synchronized (dbHandler) {
 			dbHandler.execSQL(sql);
 		}
-		Gdx.app.log("FlyDBManager.execSQL", "execSQL end   " + System.currentTimeMillis());
+		//Gdx.app.log("FlyDBManager.execSQL", "execSQL end   " + System.currentTimeMillis());
 	}
 	
 	public void openDatabase() {
-		Gdx.app.log("FlyDBManager.openDatabase", "open db begin " + System.currentTimeMillis());
+		//Gdx.app.log("FlyDBManager.openDatabase", "open db begin " + System.currentTimeMillis());
 		synchronized (dbHandler) {
 			dbHandler.openOrCreateDatabase();
 		}
-		Gdx.app.log("FlyDBManager.openDatabase", "open db end   " + System.currentTimeMillis());
+		//Gdx.app.log("FlyDBManager.openDatabase", "open db end   " + System.currentTimeMillis());
 	}
 
 	/*
@@ -99,13 +94,13 @@ public class FlyDBManager {
 	 * database methods.
 	 */
 	public DatabaseCursor selectData(String selectSQL) {
-		Gdx.app.log("FlyDBManager.selectData", "selectData  begin " + System.currentTimeMillis());
+		//Gdx.app.log("FlyDBManager.selectData", "selectData  begin " + System.currentTimeMillis());
 		DatabaseCursor cursor = null;
-		Gdx.app.log("FlyDBManager.selectData", selectSQL);
+		//Gdx.app.log("FlyDBManager.selectData", selectSQL);
 		synchronized (dbHandler) {
 			cursor = dbHandler.rawQuery(selectSQL);
 		}
-		Gdx.app.log("FlyDBManager.selectData", "selectData  end   " + System.currentTimeMillis());
+		//Gdx.app.log("FlyDBManager.selectData", "selectData  end   " + System.currentTimeMillis());
 		return cursor;
 	}
 
@@ -119,13 +114,12 @@ public class FlyDBManager {
 		} catch (Exception e) {
 			Gdx.app.error("FlyDBManager.closeDatabase", e.toString());
 		}
-		Gdx.app.log("FlyDBManager.closeDatabase", "close db at:" + System.currentTimeMillis());
+		//Gdx.app.log("FlyDBManager.closeDatabase", "close db at:" + System.currentTimeMillis());
 	}
 
 	public void dispose() {
 		closeDatabase();
 		Instance=null;
-
 		Gdx.app.log("FlyDBManager", "db is closed and disposed");
 	}
 }
