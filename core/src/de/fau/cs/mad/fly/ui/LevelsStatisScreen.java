@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.fau.cs.mad.fly.ui;
 
 import java.util.Map;

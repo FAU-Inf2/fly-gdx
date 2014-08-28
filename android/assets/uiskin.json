@@ -56,7 +56,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	black: { font: default-font, fontColor: black }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
-	default: { selection: selection, background: textfield, font: default-font, fontColor: black, cursor: cursor }
+	default: { selection: selection, background: textfield, font: default-font, fontColor: black, cursor: cursor },
+	rounded: { selection: selection, background: green-text-field, font: default-font, fontColor: black, cursor: cursor }
 },
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }

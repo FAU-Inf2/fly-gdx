@@ -27,7 +27,8 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.AppSettingsManager;
 
 /**
- * UI for checking scores of user, also for add and change user
+ * UI for checking scores of user, also for add and change user. Is called from
+ * the main menu screen.
  * 
  * 
  * @author Qufang Fan
@@ -125,7 +126,7 @@ public class StatisticsScreen extends BasicScreen {
         userTable.add(userList).width(800).pad(6f).uniform();
         userTable.row().expand();
         
-        newUserField = new TextField("", skin);
+        newUserField = new TextField("", skin, "rounded");
         newUserField.setMessageText("User name");
         userTable.add(newUserField).width(1200f).height(200f).pad(6f).uniform();
         userTable.add(addUserButton).pad(6f).uniform().width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);

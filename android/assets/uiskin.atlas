@@ -144,7 +144,7 @@ default-splitpane
 cursor
   rotate: false
   xy: 23, 1
-  size: 3, 3
+  size: 8, 3
   split: 1, 1, 1, 1
   orig: 3, 3
   offset: 0, 0
@@ -259,7 +259,7 @@ watch
   index: -1
 star
   rotate: false
-  xy: 400, 300
+  xy: 401, 253
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
@@ -287,8 +287,16 @@ helpBackground
   index: -1
 questionmark
   rotate: false
-  xy: 402, 446
+  xy: 402, 492
   size: 120, 230
   orig: 120, 230
+  offset: 0, 0
+  index: -1
+green-text-field
+  rotate: false
+  xy: 401,373
+  size: 110, 110
+  split: 54, 54, 54, 54
+  orig: 110, 110
   offset: 0, 0
   index: -1
