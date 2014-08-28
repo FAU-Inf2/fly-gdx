@@ -30,7 +30,7 @@ public class SteeringTutorialLevel implements ILevel, IFeatureInit, ICollisionLi
 		game.getFlightController().setRollFactorChange(-1.0f);
 		game.getFlightController().setAzimuthFactorChange(-1.0f);
 		
-		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.steering"), 5);
+		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.steering"), 5);
 	}
 	
 

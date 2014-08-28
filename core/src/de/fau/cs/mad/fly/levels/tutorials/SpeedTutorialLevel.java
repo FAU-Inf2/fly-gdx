@@ -27,7 +27,7 @@ public class SpeedTutorialLevel implements ILevel, IFeatureInit, ICollisionListe
 
 	@Override
 	public void init(GameController game) {
-		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.speed"), 5);
+		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.speed"), 5);
 	}
 
 	@Override

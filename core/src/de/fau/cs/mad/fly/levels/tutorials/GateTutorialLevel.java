@@ -32,7 +32,7 @@ public class GateTutorialLevel implements ILevel, IFeatureInit, GateCircuitListe
 
 	@Override
 	public void init(GameController game) {
-		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate"), 5);
+		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.gate"), 5);
 	}
 
 	@Override
@@ -46,13 +46,13 @@ public class GateTutorialLevel implements ILevel, IFeatureInit, GateCircuitListe
 		gateCounter++;
 		
 		if(gateCounter < 3) {
-			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
+			InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
 		} else if(gateCounter == 3) {
-			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate.indicator"), 5);
+			InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.gate.indicator"), 5);
 		} else if(gateCounter == 4) {
-			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate.choose"), 5);
+			InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.gate.choose"), 5);
 		} else {
-			InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.gate.finish"), 5);
+			InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.gate.finish"), 5);
 		}
 	}
 }

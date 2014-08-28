@@ -1,4 +1,36 @@
 {
 	"id": 2,
-	"name": "Medium Levels"
+	"name": "Medium Levels",
+	"levels": [
+		{
+			"id": 1,
+			"name": "Level 1",
+			"file": "level1.json"
+		},
+		{
+			"id": 2,
+			"name": "Level 2",
+			"file": "level2.json"
+		},
+		{
+			"id": 3,
+			"name": "Level 3",
+			"file": "level3.json"
+		},
+		{
+			"id": 4,
+			"name": "Level 4",
+			"file": "level4.json"
+		},
+		{
+			"id": 5,
+			"name": "Level 5",
+			"file": "level5.json"
+		},
+		{
+			"id": 6,
+			"name": "Level 6",
+			"file": "level6.json"
+		}
+	]
 }

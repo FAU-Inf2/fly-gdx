@@ -17,9 +17,10 @@ import com.badlogic.gdx.utils.JsonValue;
  * @author Qufang Fan
  */
 public class LevelGroupManager {	
+	private static String LEVEL_FOLDER = "levels/";
 
 	private LevelGroupManager() {
-		loadLevelGroups("levels/");
+		loadLevelGroups(LEVEL_FOLDER);
 	}	
     
 	/**
@@ -50,8 +51,6 @@ public class LevelGroupManager {
 		instance = new LevelGroupManager();
 	}
 
-	private JsonReader reader = new JsonReader();
-
 	/**
 	 * List of level groups.
 	 */
@@ -64,15 +63,25 @@ public class LevelGroupManager {
 	 */
 	private void loadLevelGroups(String folder) {
 		levelGroups = new ArrayList<LevelGroup>();
-		//levels = new ArrayList<LevelProfile>();
+		JsonReader reader = new JsonReader();
 		
 		FileHandle dirHandle = Gdx.files.internal(folder);
-		for (FileHandle handle : dirHandle.list()) {
-			if(handle.isDirectory()) {
-				readLevelGroup(handle);
+		FileHandle handle = dirHandle.child("groups.json");
+		if (handle != null) {
+			JsonValue json = reader.parse(handle);
+			JsonValue groups = json.get("groups");
+			if(groups!=null)
+			{
+				for (int i = 0; i < groups.size; i++) {
+					LevelGroup group = new LevelGroup();
+					JsonValue groupJS = groups.get(i);
+					group.id = groupJS.getInt("id");
+					group.name = groupJS.getString("name");
+					group.path = LEVEL_FOLDER + groupJS.getString("path");	
+					levelGroups.add(group);
+				}
 			}
-		}
-		
+		}		
 		Collections.sort(levelGroups, levelGroupComparator);
 	}
 	
@@ -85,19 +94,17 @@ public class LevelGroupManager {
 		LevelGroup group = new LevelGroup();		
 		group.name = dirHandle.name();
 		group.id = 0;
-		group.groupFileHandle = dirHandle;
+		group.path = dirHandle.path();
 
+		JsonReader reader = new JsonReader();
 		// check for group.json in the directory
-		for (FileHandle handle : dirHandle.list()) {
-			if(!handle.isDirectory()) {
-				JsonValue json = reader.parse(handle);
-				if(handle.name().equals("group.json")) {
-					group.name = json.getString("name");
-					group.id = json.getInt("id") * 100;
-				}
-			}
+		FileHandle handle = dirHandle.child("group.json");
+		if (handle != null) {
+			JsonValue json = reader.parse(handle);
+			group.name = json.getString("name");
+			group.id = json.getInt("id") * 100;
+			Gdx.app.log("timing", handle.name() + "is loaded");
 		}		
-		
 		levelGroups.add(group);
 	}
 	

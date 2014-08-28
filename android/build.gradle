@@ -82,7 +82,7 @@ task copyAndroidNatives() {
 
 def updateVersion() {
     def commitCount = 0
-    def process = "git rev-list master --count".execute()
+    def process = "git rev-list HEAD --count".execute()
 	def commitText = process.text
 	
 	if (commitText) {

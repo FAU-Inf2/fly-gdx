@@ -1,4 +1,127 @@
 {
 	"id": 1,
-	"name": "Beginner Levels"
+	"name": "Beginner Levels",
+	
+	"levels": [
+		{
+			"id": 1,
+			"name": "Level 1",
+			"file": "level1.json"
+		},
+		{
+			"id": 2,
+			"name": "Level 2",
+			"file": "level2.json"
+		},
+		{
+			"id": 3,
+			"name": "Level 3",
+			"file": "level3.json"
+		},
+		{
+			"id": 4,
+			"name": "Level 4",
+			"file": "level4.json"
+		},
+		{
+			"id": 5,
+			"name": "Level 5",
+			"file": "level5.json"
+		},
+		{
+			"id": 6,
+			"name": "Level 6",
+			"file": "level6.json"
+		},
+		{
+			"id": 7,
+			"name": "Level 7",
+			"file": "level7.json"
+		},
+		{
+			"id": 8,
+			"name": "Level 8",
+			"file": "level8.json"
+		},
+		{
+			"id": 9,
+			"name": "Level 9",
+			"file": "level9.json"
+		},
+		{
+			"id": 10,
+			"name": "Level 10",
+			"file": "level10.json"
+		},
+		{
+			"id": 11,
+			"name": "Level 11",
+			"file": "level11.json"
+		},
+		{
+			"id": 12,
+			"name": "Level 12",
+			"file": "level12.json"
+		},
+		{
+			"id": 13,
+			"name": "Level 13",
+			"file": "level13.json"
+		},
+		{
+			"id": 14,
+			"name": "Level 14",
+			"file": "level14.json"
+		},
+		{
+			"id": 15,
+			"name": "Level 15",
+			"file": "level15.json"
+		},
+		{
+			"id": 16,
+			"name": "Level 16",
+			"file": "level16.json"
+		},
+		{
+			"id": 17,
+			"name": "Level 17",
+			"file": "level17.json"
+		},
+		{
+			"id": 18,
+			"name": "Level 18",
+			"file": "level18.json"
+		},
+		{
+			"id": 19,
+			"name": "Level 19",
+			"file": "level19.json"
+		},
+		{
+			"id": 20,
+			"name": "Level 20",
+			"file": "level20.json"
+		},
+		{
+			"id": 21,
+			"name": "Level 21",
+			"file": "level21.json"
+		},
+		{
+			"id": 22,
+			"name": "Level 22",
+			"file": "level22.json"
+		},
+		{
+			"id": 23,
+			"name": "Level 23",
+			"file": "level23.json"
+		},
+		{
+			"id": 24,
+			"name": "Level 24",
+			"file": "level24.json"
+		}		
+	]
 }

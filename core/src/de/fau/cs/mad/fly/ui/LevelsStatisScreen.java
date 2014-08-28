@@ -144,34 +144,12 @@ public class LevelsStatisScreen extends BasicScreen {
 										.pad(6f).right();
 								scoreTable.add(new Label(detail.getValue(), skin)).pad(6f)
 										.uniform();
-							}
+							}						
 
-							final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
-							requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile()
-									.getFlyID();
-							requestData.LevelID = Integer.valueOf(levelID);
-							requestData.Score = score.getTotalScore();
-							final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener();
-							final PostHighscoreService postHighscoreService = new PostHighscoreService(
-									postScoreListener, requestData);
-
+							Gdx.app.log("timing", " UI one score record UI builded " + (end-begin));
 							uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"),
 									textButtonStyle);
-							uploadScoreButton.addListener(new ClickListener() {
-								@Override
-								public void clicked(InputEvent event, float x, float y) {
-									if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() <= 0) {
-										FlyHttpResponseListener listener = new PostUserHttpRespListener(
-												requestData, postHighscoreService);
-										PostUserService postUser = new PostUserService(listener);
-
-										postUser.execute(PlayerProfileManager.getInstance()
-												.getCurrentPlayerProfile().getName());
-									} else {
-										postHighscoreService.execute();
-									}
-								}
-							});
+							uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score.getTotalScore()));
 							scoreTable.row().expand();
 							scoreTable.add(uploadScoreButton).pad(6f).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
 							scoreTable.row().expand();
@@ -204,6 +182,41 @@ public class LevelsStatisScreen extends BasicScreen {
 				}
 			});
 
+		}
+	}
+	
+	public class UploadScoreClickListener extends ClickListener{
+		
+		private int levelgroupId;
+		private int levelId;
+		private int score;
+		
+		public UploadScoreClickListener( int levelgroup, int level, int score){
+			super();
+			levelgroupId = levelgroup;
+			levelId = level;
+			this.score = score;	
+		}
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
+			requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile()
+					.getFlyID();
+			requestData.LevelID = levelId;// Integer.valueOf(levelID);
+			requestData.Score = score;//score.getTotalScore();
+			final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener();
+			final PostHighscoreService postHighscoreService = new PostHighscoreService(
+					postScoreListener, requestData);
+			if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() <= 0) {
+				FlyHttpResponseListener listener = new PostUserHttpRespListener(
+						requestData, postHighscoreService);
+				PostUserService postUser = new PostUserService(listener);
+
+				postUser.execute(PlayerProfileManager.getInstance()
+						.getCurrentPlayerProfile().getName());
+			} else {
+				postHighscoreService.execute();
+			}
 		}
 	}
 

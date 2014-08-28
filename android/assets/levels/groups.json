@@ -1,0 +1,29 @@
+{
+	"groups": [
+		{
+			"id": -1,
+			"name": "Tutorial Levels",
+			"path":	"Tutorials/"
+		},
+		{
+			"id": 0,
+			"name": "Endless Levels",
+			"path": "Endless/"
+		},
+		{
+			"id": 1,
+			"name": "Beginner Levels",
+			"path": "Beginner Levels/"
+		},	
+		{
+			"id": 2,
+			"name": "Medium Levels",
+			"path": "Medium Levels/"
+		},		
+		{
+			"id": 3,
+			"name": "Planet Levels",
+			"path": "Planet Levels/"
+		}		
+	]
+}

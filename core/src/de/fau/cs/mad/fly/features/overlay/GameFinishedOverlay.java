@@ -119,7 +119,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 public void clicked(InputEvent event, float x, float y) {
                     // unload old level if it is not the same as the last level
                     if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().nextLevel()) {
-                    	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file.path();
+                    	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file;
                         Assets.unload(levelPath);
                     }
 
@@ -139,7 +139,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                 	// unload old level
-                	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file.path();
+                	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file;
                 	Assets.unload(levelPath);
                 	
                 	// reload the level

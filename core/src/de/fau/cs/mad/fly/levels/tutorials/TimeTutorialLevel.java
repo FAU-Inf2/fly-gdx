@@ -27,7 +27,7 @@ public class TimeTutorialLevel implements ILevel, IFeatureInit, ICollisionListen
 
 	@Override
 	public void init(GameController game) {
-		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.time"), 5);
+		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.time"), 5);
 	}
 	
 

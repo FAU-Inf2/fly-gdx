@@ -44,7 +44,7 @@ public class GameScreen implements Screen {
         // unload the last level if it is not the same as the current
         LevelProfile lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel();
         if(!(lastLevel.equals(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel()))) {
-	        String levelPath = lastLevel.file.path();
+	        String levelPath = lastLevel.file;
 	        Gdx.app.log("Gamescreen.hide", "dispose level: " + levelPath);
 	        Assets.unload(levelPath);
         }
