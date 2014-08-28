@@ -127,9 +127,10 @@ public class StatisticsScreen extends BasicScreen {
         userTable.row().expand();
         
         newUserField = new TextField("", skin, "rounded");
+        newUserField.setTextFieldFilter(new UserNameTextFieldFilter());
         newUserField.setMessageText("User name");
-        userTable.add(newUserField).width(1200f).height(200f).pad(6f).uniform();
-        userTable.add(addUserButton).pad(6f).uniform().width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH);
+        userTable.add(addUserButton).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         userTable.row().expand();
         userTable.layout();
     }
