@@ -173,7 +173,7 @@ public class LevelsStatisScreen extends BasicScreen {
 								}
 							});
 							scoreTable.row().expand();
-							scoreTable.add(uploadScoreButton).pad(6f).width(UI.Buttons.SMALL_BUTTON_WIDTH).height(UI.Buttons.SMALL_BUTTON_HEIGHT).colspan(2);
+							scoreTable.add(uploadScoreButton).pad(6f).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
 							scoreTable.row().expand();
 						}
 					}
@@ -189,7 +189,7 @@ public class LevelsStatisScreen extends BasicScreen {
 					scoreTable.add(new Label("", skin)).pad(6f).uniform();
 					scoreTable.row().expand();
 				
-					scoreTable.add(globalHighScoreButton).width(UI.Buttons.SMALL_BUTTON_WIDTH).height(UI.Buttons.SMALL_BUTTON_HEIGHT).colspan(2);
+					scoreTable.add(globalHighScoreButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
 
 					//scoreTable.setColor(0, 0, 0, 0f);
 					//scoreTable.addAction(Actions.fadeIn(2f));

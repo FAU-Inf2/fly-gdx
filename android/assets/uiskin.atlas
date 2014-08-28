@@ -244,7 +244,7 @@ green-progress-bar
   index: -1
 grey-progress-bar
   rotate: false
-  xy: 112, 310
+  xy: 112, 309
   size: 133, 133
   split: 66, 66, 66, 66
   orig: 133, 133

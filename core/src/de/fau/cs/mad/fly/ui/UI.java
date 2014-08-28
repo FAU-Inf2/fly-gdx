@@ -60,9 +60,9 @@ public final class UI {
         private Buttons() {
         }
         
-        public static final int MAIN_BUTTON_WIDTH = 1600;
+        public static final int MAIN_BUTTON_WIDTH = 1550;
         
-        public static final int MAIN_BUTTON_HEIGHT = 380;
+        public static final int MAIN_BUTTON_HEIGHT = 320;
         
         /** This is the default font size for all Buttons */
         public static final int DEFAULT_FONT_SIZE = 150;

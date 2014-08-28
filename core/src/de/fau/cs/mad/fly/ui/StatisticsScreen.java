@@ -128,7 +128,7 @@ public class StatisticsScreen extends BasicScreen {
         newUserField = new TextField("", skin);
         newUserField.setMessageText("User name");
         userTable.add(newUserField).width(1200f).height(200f).pad(6f).uniform();
-        userTable.add(addUserButton).pad(6f).uniform();
+        userTable.add(addUserButton).pad(6f).uniform().width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         userTable.row().expand();
         userTable.layout();
     }
@@ -173,24 +173,23 @@ public class StatisticsScreen extends BasicScreen {
         
         infoTable.add(levelgroupTable);
         
-        final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
+        final ScrollPane statisticsPane = new ScrollPane(infoTable, skin, UI.Window.TRANSPARENT_SCROLL_PANE_STYLE);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
-        statisticsPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
         table.row().expand();
         table.add(statisticsPane);
     }
     
     private void initLevegroups() {
         levelgroupTable = new Table();
-        levelgroupTable.pad(300, 0, 0, 0);
+        levelgroupTable.pad(200, 0, 0, 0);
         Label selectLevelGroup = new Label(I18n.t("selectLevelGroup"), skin);
         selectLevelGroup.setAlignment(Align.center);
         levelgroupTable.add(selectLevelGroup).pad(6f).colspan(2).center();
         levelgroupTable.row().expand();
         List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
         // create a button for each level group
-        int maxRows = (int) Math.ceil((double) levelGroups.size() / (double) UI.Buttons.BUTTONS_IN_A_ROW);
+        int maxRows = (int) Math.ceil((float) levelGroups.size() / (float) UI.Buttons.BUTTONS_IN_A_ROW);
         
         for (int row = 0; row < maxRows; row++) {
             int maxColumns = Math.min(levelGroups.size() - (row * UI.Buttons.BUTTONS_IN_A_ROW), UI.Buttons.BUTTONS_IN_A_ROW);
@@ -205,7 +204,7 @@ public class StatisticsScreen extends BasicScreen {
                         ((Fly) Gdx.app.getApplicationListener()).setLevelsStatisScreen(group);
                     }
                 });
-                levelgroupTable.add(button).width(UI.Buttons.SMALL_BUTTON_WIDTH).height(UI.Buttons.SMALL_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
+                levelgroupTable.add(button).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
             }
             levelgroupTable.row().expand();
         }
