@@ -33,9 +33,9 @@ public class RollTutorialLevel implements ILevel, IFeatureInit, GateCircuitListe
 		
         Preferences preferences = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences();
         if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
-        	InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.roll.touch"), 5);
+        	InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.roll.touch"), 5);
         } else {
-        	InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.roll.sensor"), 5);
+        	InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.roll.sensor"), 5);
         }
 	}
 
@@ -47,6 +47,6 @@ public class RollTutorialLevel implements ILevel, IFeatureInit, GateCircuitListe
 
 	@Override
 	public void onGatePassed(GateGoal gate) {
-		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
+		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
 	}
 }

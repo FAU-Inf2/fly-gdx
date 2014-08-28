@@ -10,33 +10,42 @@ import java.util.Locale;
  * Created by danyel on 16/06/14.
  */
 public final class I18n {
-	public static Locale locale = Locale.ENGLISH;
+	/**
+	 * Locale used for the UI, settings etc.
+	 */
+	public static Locale gameLocale = Locale.ENGLISH;
+	
+	/**
+	 * Locale used for the specific messages in the level script files.
+	 */
+	public static Locale levelLocale = Locale.ENGLISH;
 
-	private static final FileHandle baseFileHandle = Gdx.files.internal("config/locales/Bundle");
-	private static I18NBundle bundle = I18NBundle.createBundle(baseFileHandle, locale);
+	private static final FileHandle gameBaseFileHandle = Gdx.files.internal("config/locales/Bundle");
+	private static I18NBundle gameBundle = I18NBundle.createBundle(gameBaseFileHandle, gameLocale);
+	
+	private static final FileHandle levelBaseFileHandle = Gdx.files.internal("config/locales/LevelBundle");
+	private static I18NBundle levelBundle = I18NBundle.createBundle(levelBaseFileHandle, levelLocale);
 
 	public static String f(String key, Object... args) {
-		return format(key, args);
-	}
-
-	public static String format(String key, Object... args) {
-		// TODO: updateLocal is very time consuming, check if updateLocal is actually needed (seems to work without it)
-		//updateLocale();
-		return bundle.format(key, args);
+		return gameBundle.format(key, args);
 	}
 
 	public static String t(String key) {
-		return translate(key);
+		return gameBundle.get(key);
+	}
+	
+	public static String fLevel(String key, Object... args) {
+		return levelBundle.format(key, args);
 	}
 
-	public static String translate(String key) {
-		//updateLocale();
-		return bundle.get(key);
+	public static String tLevel(String key) {
+		return levelBundle.get(key);
 	}
 
-	private static void updateLocale() {
-		if ( locale == bundle.getLocale() )
+	private static void updateLocales() {
+		if ( gameLocale == gameBundle.getLocale() && levelLocale == levelBundle.getLocale() )
 			return;
-		bundle = I18NBundle.createBundle(baseFileHandle, locale);
+		gameBundle = I18NBundle.createBundle(gameBaseFileHandle, gameLocale);
+		levelBundle = I18NBundle.createBundle(levelBaseFileHandle, levelLocale);
 	}
 }

@@ -38,10 +38,10 @@ public class GravityLevel implements ILevel, IFeatureInit, GateCircuitListener {
 		gateCounter++;
 
 		if(gateCounter == 2) {
-			InfoOverlay.getInstance().setOverlay(I18n.t("medium.gravity.firstChange"), 5);
+			InfoOverlay.getInstance().setOverlay(I18n.tLevel("medium.gravity.firstChange"), 5);
 			gameController.getPlayer().getPlane().setGravity(rightGravity);
 		} else if(gateCounter == 6) {
-			InfoOverlay.getInstance().setOverlay(I18n.t("medium.gravity.secondChange"), 5);
+			InfoOverlay.getInstance().setOverlay(I18n.tLevel("medium.gravity.secondChange"), 5);
 			gameController.getPlayer().getPlane().setGravity(leftGravity);
 		}
 	}

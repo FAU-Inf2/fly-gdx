@@ -27,7 +27,7 @@ public class PointsTutorialLevel implements ILevel, IFeatureInit, ICollisionList
 
 	@Override
 	public void init(GameController game) {
-		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.points"), 5);
+		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.points"), 5);
 	}
 	
 
