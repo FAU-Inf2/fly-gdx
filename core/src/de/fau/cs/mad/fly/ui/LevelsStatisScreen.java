@@ -24,6 +24,7 @@ import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
 
 /**
+ * Display the highscores of all levels in one level group
  * @author Qufang Fan
  *
  */
@@ -38,11 +39,14 @@ public class LevelsStatisScreen extends BasicScreen {
 	
 	private LevelGroup levelGroup;
 	
+	/**
+	 * init buttons, which don't need to be created dynamically
+	 */
 	private void initButtons() {
 		textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
 		
 		
-		globalHighScoreButton = new TextButton("Global highscores",
+		globalHighScoreButton = new TextButton(I18n.t("GlobalHighscores"),
 				textButtonStyle);
 		globalHighScoreButton.addListener(new ClickListener() {
 			@Override
@@ -55,8 +59,9 @@ public class LevelsStatisScreen extends BasicScreen {
 	public LevelsStatisScreen(LevelGroup group){
 		this.levelGroup = group;
 	}
-	/* (non-Javadoc)
-	 * @see de.fau.cs.mad.fly.ui.BasicScreen#generateContent()
+	
+	/* generate Content
+	 * Display text "loading" at first, then start a new thread to loading scores data from Database and display 
 	 */
 	@Override
 	protected void generateContent() {
@@ -72,7 +77,7 @@ public class LevelsStatisScreen extends BasicScreen {
 		infoTable = new Table();
 		
 		scoreTable = new Table();
-		scoreTable.add(new Label("Loading...", skin));
+		scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
 		infoTable.add(scoreTable);
 
 		final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
@@ -85,6 +90,9 @@ public class LevelsStatisScreen extends BasicScreen {
 		Gdx.app.log("timing", "LevelsStatisScreen generateContent " + (System.currentTimeMillis()-begin));
 	}
 		
+	/**
+	 * start a new thread to loading scores data from Database and display 
+	 */
 	@Override
 	public void show() {
 		long begin = System.currentTimeMillis();
@@ -93,10 +101,19 @@ public class LevelsStatisScreen extends BasicScreen {
 		Gdx.app.log("timing", "LevelsStatisScreen show " + (System.currentTimeMillis()-begin));
 	}
 	
+	/**
+	 * 
+	 * start a new thread to loading scores data from Database and display 
+	 */
 	private void genarateScoreTable(){	
 		new Thread(new showScore()).start();
 	}
 
+	/**
+	 * a thread for loading scores data from Database and display 
+	 * @author Fan
+	 *
+	 */
 	public class showScore implements Runnable {
 		
 		Map<String, Score> scores;
@@ -104,12 +121,12 @@ public class LevelsStatisScreen extends BasicScreen {
 
 		@Override
 		public void run() {
-			 begin = System.currentTimeMillis();
+			begin = System.currentTimeMillis();
 			scores = ScoreManager.getInstance().getPlayerBestScores(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), levelGroup);
-			 end =System.currentTimeMillis();
+			end =System.currentTimeMillis();
 			Gdx.app.log("timing", "get data from db " + (end-begin));
 			begin = end;
-			//it is faster if we remove this, but it may also bring in UI render exception
+			//it is faster if we remove this postRunnable, but it may also bring in UI render exception
 			Gdx.app.postRunnable(new Runnable() {				
 				@Override
 				public void run() {	
@@ -166,9 +183,6 @@ public class LevelsStatisScreen extends BasicScreen {
 				
 					scoreTable.add(globalHighScoreButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
 
-					//scoreTable.setColor(0, 0, 0, 0f);
-					//scoreTable.addAction(Actions.fadeIn(2f));
-					
 					end =System.currentTimeMillis();
 					Gdx.app.log("timing", " UI table builded " + (end-begin));
 					begin = end;
@@ -182,6 +196,12 @@ public class LevelsStatisScreen extends BasicScreen {
 		}
 	}
 	
+	/**
+	 * Upload score to server
+	 * if the current user have to fly-id (user id got from server side) in database, then call another service to get fly-id
+	 * @author Lenovo
+	 *
+	 */
 	public class UploadScoreClickListener extends ClickListener{
 		
 		private int levelgroupId;
@@ -199,11 +219,13 @@ public class LevelsStatisScreen extends BasicScreen {
 			final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
 			requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile()
 					.getFlyID();
-			requestData.LevelID = levelId;// Integer.valueOf(levelID);
-			requestData.Score = score;//score.getTotalScore();
+			requestData.LevelID = levelId;
+			requestData.Score = score;
 			final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener();
 			final PostHighscoreService postHighscoreService = new PostHighscoreService(
 					postScoreListener, requestData);
+			//if the current user have to fly-id (user id got from server side) in database,
+			//then call another service PostUserService to get fly-id
 			if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() <= 0) {
 				FlyHttpResponseListener listener = new PostUserHttpRespListener(
 						requestData, postHighscoreService);
@@ -217,6 +239,11 @@ public class LevelsStatisScreen extends BasicScreen {
 		}
 	}
 
+	/**
+	 * call service to get fly-id from server
+	 * @author Fan
+	 *
+	 */
 	public class PostUserHttpRespListener implements FlyHttpResponseListener {
 		final PostHighscoreService.RequestData requestData;
 		final PostHighscoreService postHighscoreService;
@@ -246,7 +273,7 @@ public class LevelsStatisScreen extends BasicScreen {
 					new Dialog("", skin) {
 						{
 							text(msgg.substring(0, 20) + "...");
-							button("OK");
+							button(I18n.t("ok"));
 						}
 					}.show(stage);				
 					
@@ -259,44 +286,46 @@ public class LevelsStatisScreen extends BasicScreen {
 		}
 	}
 
+	/**
+	 * call service to upload local highscore to server
+	 * @author Fan
+	 *
+	 */
 	public class PostScoreHttpRespListener implements FlyHttpResponseListener {
 		@Override
 		public void successful(Object obj) {
-//			Gdx.app.postRunnable(new Runnable() {
-//				@Override
-//				public void run() {
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
 					new Dialog("", skin) {
 						{
-							text("Uploaded!");
-							button("OK");
+							text(I18n.t("ScoreUploaded"));
+							button(I18n.t("ok)"));
 						}
 					}.show(stage);
-//				}
-//			});
+				}
+			});
 		}
 
 		@Override
 		public void failed(String msg) {
 			final String msgg = msg;
-			// Since we are downloading on a background thread, post
-			// a runnable to touch ui
-//			Gdx.app.postRunnable(new Runnable() {
-//				@Override
-//				public void run() {
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
 					new Dialog("", skin) {
 						{
 							text(msgg.substring(0, 20) + "...");
-							button("OK");
+							button(I18n.t("ok)"));
 						}
 					}.show(stage);
-//				}
-//			});
+				}
+			});
 		}
 
 		@Override
 		public void cancelled() {
 		}
-	};	
-		
+	};			
 
 }

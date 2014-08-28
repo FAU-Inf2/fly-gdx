@@ -46,22 +46,29 @@ public class StatisticsScreen extends BasicScreen {
     private int selectedUserindex = 0;
     private SelectBox<String> userList;
     
+    /**
+     * init buttons, which don't need to be created dynamically
+     */
     private void initButtons() {
         textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
-        addUserButton = new TextButton(I18n.t("addUserButtonText"), textButtonStyle);
         
+        //init add user button
+        addUserButton = new TextButton(I18n.t("addUserButtonText"), textButtonStyle);        
         addUserButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 String name = newUserField.getText().trim();
-                if (!"".equals(name))// todo more check
+                //TODO add more check for the new user name, like length or begin letters and more
+                //TODO if it is not too slow, can use a regular expression to check it.
+                
+                if (!"".equals(name))
                 {
                     for (PlayerProfile playerProfile : PlayerProfileManager.getInstance().getAllPlayerProfiles()) {
                         if (playerProfile.getName().equals(name)) {
                             new Dialog("", skin) {
                                 {
-                                    text("The user already exists!");
-                                    button("OK");
+                                    text(I18n.t("UserExists"));
+                                    button(I18n.t("ok"));
                                 }
                             }.show(stage);
                             return;
@@ -74,26 +81,30 @@ public class StatisticsScreen extends BasicScreen {
                     updateUserTable();
                     new Dialog("", skin) {
                         {
-                            text("User Added.");
-                            button("OK");
+                            text(I18n.t("UserAdded"));
+                            button(I18n.t("ok"));
                         }
                     }.show(stage);
                 } else {
                     new Dialog("", skin) {
                         {
-                            text("User name should not be null!");
+                            text(I18n.t("NullUserName"));
                             button("OK");
                         }
                     }.show(stage);
                 }
             }
-        });
-        
+        });        
     }
     
+    /**
+     * init the UI controls which are relative to User management operations.
+     * all these control are placed in userTable
+     */
     private void genarateUserTable() {
         userTable.clear();
-        // add user name and add user buttons
+        
+        // add all user to userList and set the current user to display value
         String userName = playerProfile.getName();
         userTable.add(new Label(I18n.t("usernameLableText"), skin)).pad(6f);
         
@@ -111,6 +122,8 @@ public class StatisticsScreen extends BasicScreen {
         userList.setSelectedIndex(selectedUserindex);
         userList.getSelection().setRequired(false);
         userList.getSelection().setToggle(true);
+        
+        //handle event when another user was selected
         userList.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
@@ -126,15 +139,20 @@ public class StatisticsScreen extends BasicScreen {
         userTable.add(userList).width(800).pad(6f).uniform();
         userTable.row().expand();
         
+        //add user field and button
         newUserField = new TextField("", skin, "rounded");
         newUserField.setTextFieldFilter(new UserNameTextFieldFilter());
-        newUserField.setMessageText("User name");
+        newUserField.setMessageText(I18n.t("TipsUserName"));
         userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH);
         userTable.add(addUserButton).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         userTable.row().expand();
+        //TODO delete user and change user name
         userTable.layout();
     }
     
+    /**
+     * when a new user is added, call this function to update userList
+     */
     private void updateUserTable() {
         String userName = playerProfile.getName();
         userList.clear();
@@ -154,6 +172,10 @@ public class StatisticsScreen extends BasicScreen {
         userList.layout();
     }
     
+    /**
+     * generate Content
+     * here two Tables are used to show the content: userTable and levelgroupTable
+     */
     @Override
     protected void generateContent() {
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
@@ -182,6 +204,9 @@ public class StatisticsScreen extends BasicScreen {
         table.add(statisticsPane);
     }
     
+    /**
+     * init and display the level groups
+     */
     private void initLevegroups() {
         levelgroupTable = new Table();
         levelgroupTable.pad(200, 0, 0, 0);
@@ -210,11 +235,6 @@ public class StatisticsScreen extends BasicScreen {
             }
             levelgroupTable.row().expand();
         }
-    }
-    
-    @Override
-    public void show() {
-        super.show();
     }
     
 }
