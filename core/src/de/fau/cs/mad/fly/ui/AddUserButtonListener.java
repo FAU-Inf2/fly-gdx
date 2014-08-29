@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -57,7 +58,7 @@ public class AddUserButtonListener extends ChangeListener {
     public void changed(ChangeEvent event, Actor actor) {
         String name = newUserField.getText();
         Stage stage = event.getStage();
-        Dialog dialog = new Dialog("", skin);
+        Dialog dialog = new Dialog("", skin, "dialog");
         boolean userExists = false;
         
         if (!"".equals(name)) {
@@ -83,7 +84,8 @@ public class AddUserButtonListener extends ChangeListener {
         } else {
             dialog.text(I18n.t("NullUserName"));
         }
-        dialog.button(I18n.t("ok"));
+        TextButton button = new TextButton(I18n.t("ok"), skin, "rounded");
+        dialog.button(button);
         dialog.show(stage);
     }
     

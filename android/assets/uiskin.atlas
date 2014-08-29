@@ -28,7 +28,7 @@ default-select
   index: -1
 default-round-large
   rotate: false
-  xy: 57, 29
+  xy: 58, 29
   size: 40, 20
   split: 5, 5, 5, 4
   orig: 40, 20
@@ -36,7 +36,7 @@ default-round-large
   index: -1
 default-scroll
   rotate: false
-  xy: 57, 8
+  xy: 58, 8
   size: 40, 20
   split: 2, 2, 2, 2
   orig: 40, 20
@@ -294,25 +294,33 @@ questionmark
   index: -1
 green-text-field
   rotate: false
-  xy: 404,373
-  size: 108, 108
+  xy: 404,374
+  size: 107, 108
   split: 52, 52, 52, 52
   orig: 108, 108
   offset: 0, 0
   index: -1
 green-select-box
   rotate: false
-  xy: 544,0
-  size: 165, 219
+  xy: 545,0
+  size: 164, 219
   split: 52, 109, 52, 52
   orig: 165, 219
   offset: 0, 0
   index: -1
 grey-select-drop-down
   rotate: false
-  xy: 523, 557
-  size: 198, 165
-  split: 66, 124, 98, 66
-  orig: 198, 165
+  xy: 524, 530
+  size: 227, 176
+  split: 66, 160, 109, 66
+  orig: 227, 176
+  offset: 0, 0
+  index: -1
+dialog-background
+  rotate: false
+  xy: 523, 397
+  size: 131, 131
+  split: 65, 65, 65, 65
+  orig: 133, 133
   offset: 0, 0
   index: -1
