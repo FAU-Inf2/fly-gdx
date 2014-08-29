@@ -80,7 +80,7 @@ task copyAndroidNatives() {
     }
 }
 
-def updateVersion() {
+def updateAndroidVersion() {
     def commitCount = 0
     def process = "git rev-list HEAD --count".execute()
 	def commitText = process.text
@@ -104,7 +104,7 @@ def updateVersion() {
 }
 
 task run(type: Exec) {
-	updateVersion()
+	updateAndroidVersion()
     def adb = "$System.env.ANDROID_HOME/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'de.fau.cs.mad.fly.android/de.fau.cs.mad.fly.android.AndroidLauncher'
 }
