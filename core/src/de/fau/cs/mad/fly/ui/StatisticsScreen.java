@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.ui;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
@@ -51,12 +53,10 @@ public class StatisticsScreen extends BasicScreen {
     private void initButtons() {      
         // init add user button
         addUserButton = new TextButton(I18n.t("addUserButtonText"), skin, UI.Buttons.DEFAULT_STYLE);
-        addUserButton.addListener(new ClickListener() {
+        addUserButton.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                String name = newUserField.getText().trim();
-                // TODO add more check for the new user name, like length or
-                // begin letters and more
+            public void changed(ChangeEvent event, Actor actor) {
+                String name = newUserField.getText();
                 // TODO if it is not too slow, can use a regular expression to
                 // check it.
                 
@@ -76,7 +76,7 @@ public class StatisticsScreen extends BasicScreen {
                     playerProfile.setName(name);
                     
                     PlayerProfileManager.getInstance().savePlayer(playerProfile);
-                    updateUserTable();
+                    generateUserTable();
                     new Dialog("", skin) {
                         {
                             text(I18n.t("UserAdded"));
@@ -99,7 +99,7 @@ public class StatisticsScreen extends BasicScreen {
      * init the UI controls which are relative to User management operations.
      * all these control are placed in userTable
      */
-    private void genarateUserTable() {
+    private void generateUserTable() {
         userTable.clear();
         
         // add all user to userList and set the current user to display value
@@ -187,7 +187,7 @@ public class StatisticsScreen extends BasicScreen {
         
         infoTable = new Table();
         userTable = new Table();
-        genarateUserTable();
+        generateUserTable();
         infoTable.add(userTable);
         infoTable.row();
         

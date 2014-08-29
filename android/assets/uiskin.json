@@ -16,7 +16,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: { down: default-round-down, up: default-round, font: default-font, fontColor: black },
-	rounded: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-font, fontColor: white}
+	rounded: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-font, fontColor: white, disabled: grey-progress-bar, disabledFontColor: lightGrey}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	settings: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: gear, imageDown: gear },
