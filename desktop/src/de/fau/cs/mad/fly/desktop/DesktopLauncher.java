@@ -1,5 +1,9 @@
 package de.fau.cs.mad.fly.desktop;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -12,5 +16,14 @@ public class DesktopLauncher {
 		config.width = 1024;
 		config.height = 860;
 		new LwjglApplication(new Fly(), config);
+
+		try {
+			Scanner in = new Scanner(new FileReader("DesktopVersion.txt"));
+			Fly.VERSION = in.nextLine().substring(8);
+			in.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
