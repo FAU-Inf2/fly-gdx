@@ -3,11 +3,9 @@ package de.fau.cs.mad.fly.ui;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
@@ -16,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
@@ -38,61 +35,12 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
 public class StatisticsScreen extends BasicScreen {
     
     private TextButton addUserButton;
-    private Table infoTable;
     private Table userTable;
     private Table levelgroupTable;
     private TextField newUserField;
     
-    private PlayerProfile playerProfile;
     private int selectedUserindex = 0;
     private SelectBox<String> userList;
-    
-    /**
-     * init buttons, which don't need to be created dynamically
-     */
-    private void initButtons() {      
-        // init add user button
-        addUserButton = new TextButton(I18n.t("addUserButtonText"), skin, UI.Buttons.DEFAULT_STYLE);
-        addUserButton.addListener(new ChangeListener() {
-
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                String name = newUserField.getText();
-                
-                if (!"".equals(name)) {
-                    for (PlayerProfile playerProfile : PlayerProfileManager.getInstance().getAllPlayerProfiles()) {
-                        if (playerProfile.getName().equals(name)) {
-                            new Dialog("", skin) {
-                                {
-                                    text(I18n.t("UserExists"));
-                                    button(I18n.t("ok"));
-                                }
-                            }.show(stage);
-                            return;
-                        }
-                    }
-                    PlayerProfile playerProfile = new PlayerProfile();
-                    playerProfile.setName(name);
-                    
-                    PlayerProfileManager.getInstance().savePlayer(playerProfile);
-                    generateUserTable();
-                    new Dialog("", skin) {
-                        {
-                            text(I18n.t("UserAdded"));
-                            button(I18n.t("ok"));
-                        }
-                    }.show(stage);
-                } else {
-                    new Dialog("", skin) {
-                        {
-                            text(I18n.t("NullUserName"));
-                            button("OK");
-                        }
-                    }.show(stage);
-                }
-            }
-        });
-    }
     
     /**
      * init the UI controls which are relative to User management operations.
@@ -102,23 +50,11 @@ public class StatisticsScreen extends BasicScreen {
         userTable.clear();
         
         // add all user to userList and set the current user to display value
-        String userName = playerProfile.getName();
+        
         userTable.add(new Label(I18n.t("usernameLableText"), skin)).pad(6f);
         
         userList = new SelectBox<String>(skin, "rounded");
-        Array<String> nameList = new Array<String>();
-        java.util.List<PlayerProfile> playerList = PlayerProfileManager.getInstance().getAllPlayerProfiles();
-        for (int i = 0; i < playerList.size(); i++) {
-            PlayerProfile playerProfile = playerList.get(i);
-            nameList.add(playerProfile.getName());
-            if (userName.equals(playerProfile.getName())) {
-                selectedUserindex = i;
-            }
-        }
-        userList.setItems(nameList);
-        userList.setSelectedIndex(selectedUserindex);
-        userList.getSelection().setRequired(false);
-        userList.getSelection().setToggle(true);
+        updateUserTable();
         
         // handle event when another user was selected
         userList.addListener(new EventListener() {
@@ -147,26 +83,20 @@ public class StatisticsScreen extends BasicScreen {
         userTable.layout();
     }
     
-    /**
-     * when a new user is added, call this function to update userList
-     */
-    private void updateUserTable() {
-        String userName = playerProfile.getName();
-        userList.clear();
+    public void updateUserTable() {
+        String currentUserName = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName();
         Array<String> nameList = new Array<String>();
         java.util.List<PlayerProfile> playerList = PlayerProfileManager.getInstance().getAllPlayerProfiles();
+        String name;
         for (int i = 0; i < playerList.size(); i++) {
-            PlayerProfile playerProfile = playerList.get(i);
-            nameList.add(playerProfile.getName());
-            if (userName.equals(playerProfile.getName())) {
+            name = playerList.get(i).getName();
+            nameList.add(name);
+            if (currentUserName.equals(name)) {
                 selectedUserindex = i;
             }
         }
         userList.setItems(nameList);
         userList.setSelectedIndex(selectedUserindex);
-        userList.getSelection().setRequired(false);
-        userList.getSelection().setToggle(true);
-        userList.layout();
     }
     
     /**
@@ -175,18 +105,19 @@ public class StatisticsScreen extends BasicScreen {
      */
     @Override
     protected void generateContent() {
-        playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-        initButtons();
+        addUserButton = new TextButton(I18n.t("addUserButtonText"), skin, UI.Buttons.DEFAULT_STYLE);
         stage.clear();
         final Table table = new Table();
-        table.pad(Gdx.graphics.getWidth() * 0.1f);
+        table.pad(UI.Window.BORDER_SPACE);
         table.setFillParent(true);
         table.debug();
         stage.addActor(table);
         
-        infoTable = new Table();
+        Table infoTable = new Table();
         userTable = new Table();
         generateUserTable();
+        
+        addUserButton.addListener(new AddUserButtonListener(skin, newUserField, this));
         infoTable.add(userTable);
         infoTable.row();
         
