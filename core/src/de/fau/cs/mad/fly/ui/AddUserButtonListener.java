@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.ui;
 
+import java.util.List;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -55,38 +57,34 @@ public class AddUserButtonListener extends ChangeListener {
     public void changed(ChangeEvent event, Actor actor) {
         String name = newUserField.getText();
         Stage stage = event.getStage();
+        Dialog dialog = new Dialog("", skin);
+        boolean userExists = false;
         
         if (!"".equals(name)) {
-            for (PlayerProfile playerProfile : PlayerProfileManager.getInstance().getAllPlayerProfiles()) {
+            List<PlayerProfile> allPlayerProfiles = PlayerProfileManager.getInstance().getAllPlayerProfiles();
+            int numberOfAllPlayerProfiles = allPlayerProfiles.size();
+            PlayerProfile playerProfile;
+            for (int i = 0; i < numberOfAllPlayerProfiles; i++) {
+                playerProfile = allPlayerProfiles.get(i);
                 if (playerProfile.getName().equals(name)) {
-                    new Dialog("", skin) {
-                        {
-                            text(I18n.t("UserExists"));
-                            button(I18n.t("ok"));
-                        }
-                    }.show(stage);
-                    return;
+                    userExists = true;
+                    i = numberOfAllPlayerProfiles;
                 }
             }
-            PlayerProfile playerProfile = new PlayerProfile();
-            playerProfile.setName(name);
-            
-            PlayerProfileManager.getInstance().savePlayer(playerProfile);
-            statisticsScreen.updateUserTable();
-            new Dialog("", skin) {
-                {
-                    text(I18n.t("UserAdded"));
-                    button(I18n.t("ok"));
-                }
-            }.show(stage);
+            if (userExists) {
+                dialog.text(I18n.t("UserExists"));
+            } else {
+                playerProfile = new PlayerProfile();
+                playerProfile.setName(name);
+                PlayerProfileManager.getInstance().savePlayer(playerProfile);
+                statisticsScreen.updateUserTable();
+                dialog.text(I18n.t("UserAdded"));
+            }
         } else {
-            new Dialog("", skin) {
-                {
-                    text(I18n.t("NullUserName"));
-                    button("OK");
-                }
-            }.show(stage);
+            dialog.text(I18n.t("NullUserName"));
         }
+        dialog.button(I18n.t("ok"));
+        dialog.show(stage);
     }
     
 }

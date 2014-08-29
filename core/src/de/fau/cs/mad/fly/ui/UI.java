@@ -66,8 +66,8 @@ public final class UI {
         
         /** This is the default font size for all Buttons */
         public static final int DEFAULT_FONT_SIZE = 150;
-		
-		/** This is the default font size for small Buttons */
+        
+        /** This is the default font size for small Buttons */
         public static final int SMALL_FONT_SIZE = 100;
         
         public static final String DEFAULT_STYLE = "rounded";
