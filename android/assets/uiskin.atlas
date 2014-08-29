@@ -287,16 +287,24 @@ helpBackground
   index: -1
 questionmark
   rotate: false
-  xy: 402, 492
-  size: 120, 230
-  orig: 120, 230
+  xy: 403, 485
+  size: 118, 230
+  orig: 118, 230
   offset: 0, 0
   index: -1
 green-text-field
   rotate: false
-  xy: 402,373
-  size: 110, 110
-  split: 54, 54, 54, 54
-  orig: 110, 110
+  xy: 404,373
+  size: 108, 108
+  split: 52, 52, 52, 52
+  orig: 108, 108
+  offset: 0, 0
+  index: -1
+green-select-box
+  rotate: false
+  xy: 544,0
+  size: 165, 219
+  split: 52, 109, 52, 52
+  orig: 165, 219
   offset: 0, 0
   index: -1

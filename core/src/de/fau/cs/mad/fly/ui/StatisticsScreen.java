@@ -36,7 +36,6 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
 public class StatisticsScreen extends BasicScreen {
     
     private TextButton addUserButton;
-    private TextButtonStyle textButtonStyle;
     private Table infoTable;
     private Table userTable;
     private Table levelgroupTable;
@@ -49,20 +48,19 @@ public class StatisticsScreen extends BasicScreen {
     /**
      * init buttons, which don't need to be created dynamically
      */
-    private void initButtons() {
-        textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
-        
-        //init add user button
-        addUserButton = new TextButton(I18n.t("addUserButtonText"), textButtonStyle);        
+    private void initButtons() {      
+        // init add user button
+        addUserButton = new TextButton(I18n.t("addUserButtonText"), skin, UI.Buttons.DEFAULT_STYLE);
         addUserButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 String name = newUserField.getText().trim();
-                //TODO add more check for the new user name, like length or begin letters and more
-                //TODO if it is not too slow, can use a regular expression to check it.
+                // TODO add more check for the new user name, like length or
+                // begin letters and more
+                // TODO if it is not too slow, can use a regular expression to
+                // check it.
                 
-                if (!"".equals(name))
-                {
+                if (!"".equals(name)) {
                     for (PlayerProfile playerProfile : PlayerProfileManager.getInstance().getAllPlayerProfiles()) {
                         if (playerProfile.getName().equals(name)) {
                             new Dialog("", skin) {
@@ -94,7 +92,7 @@ public class StatisticsScreen extends BasicScreen {
                     }.show(stage);
                 }
             }
-        });        
+        });
     }
     
     /**
@@ -108,7 +106,7 @@ public class StatisticsScreen extends BasicScreen {
         String userName = playerProfile.getName();
         userTable.add(new Label(I18n.t("usernameLableText"), skin)).pad(6f);
         
-        userList = new SelectBox<String>(skin);
+        userList = new SelectBox<String>(skin, "rounded");
         Array<String> nameList = new Array<String>();
         java.util.List<PlayerProfile> playerList = PlayerProfileManager.getInstance().getAllPlayerProfiles();
         for (int i = 0; i < playerList.size(); i++) {
@@ -123,7 +121,7 @@ public class StatisticsScreen extends BasicScreen {
         userList.getSelection().setRequired(false);
         userList.getSelection().setToggle(true);
         
-        //handle event when another user was selected
+        // handle event when another user was selected
         userList.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
@@ -136,17 +134,17 @@ public class StatisticsScreen extends BasicScreen {
                 return false;
             }
         });
-        userTable.add(userList).width(800).pad(6f).uniform();
+        userTable.add(userList).width(UI.Buttons.MAIN_BUTTON_WIDTH).pad(6f).uniform();
         userTable.row().expand();
         
-        //add user field and button
+        // add user field and button
         newUserField = new TextField("", skin, "rounded");
         newUserField.setTextFieldFilter(new UserNameTextFieldFilter());
         newUserField.setMessageText(I18n.t("TipsUserName"));
         userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH);
         userTable.add(addUserButton).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         userTable.row().expand();
-        //TODO delete user and change user name
+        // TODO delete user and change user name
         userTable.layout();
     }
     
@@ -173,8 +171,8 @@ public class StatisticsScreen extends BasicScreen {
     }
     
     /**
-     * generate Content
-     * here two Tables are used to show the content: userTable and levelgroupTable
+     * generate Content here two Tables are used to show the content: userTable
+     * and levelgroupTable
      */
     @Override
     protected void generateContent() {
