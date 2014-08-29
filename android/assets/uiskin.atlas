@@ -308,3 +308,11 @@ green-select-box
   orig: 165, 219
   offset: 0, 0
   index: -1
+grey-select-drop-down
+  rotate: false
+  xy: 523, 557
+  size: 198, 165
+  split: 66, 124, 98, 66
+  orig: 198, 165
+  offset: 0, 0
+  index: -1
