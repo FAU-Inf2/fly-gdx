@@ -14,7 +14,7 @@ import de.fau.cs.mad.fly.settings.SettingManager;
  */
 public class PlayerProfile {
 	/**
-	 * The last level the player has played.
+	 * The results of the last level the player has played.
 	 */
 	private LevelProfile lastLevelProfile;
 

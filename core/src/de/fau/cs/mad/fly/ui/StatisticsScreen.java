@@ -54,11 +54,10 @@ public class StatisticsScreen extends BasicScreen {
         // init add user button
         addUserButton = new TextButton(I18n.t("addUserButtonText"), skin, UI.Buttons.DEFAULT_STYLE);
         addUserButton.addListener(new ChangeListener() {
+
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String name = newUserField.getText();
-                // TODO if it is not too slow, can use a regular expression to
-                // check it.
                 
                 if (!"".equals(name)) {
                     for (PlayerProfile playerProfile : PlayerProfileManager.getInstance().getAllPlayerProfiles()) {
