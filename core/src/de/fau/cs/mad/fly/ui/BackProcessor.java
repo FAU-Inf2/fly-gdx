@@ -22,9 +22,6 @@ public class BackProcessor extends InputAdapter {
 			Fly game = (Fly) Gdx.app.getApplicationListener();
 			//Gdx.app.log("BackProcessor.keyDown", "Back, screen.class=" + game.getScreen().getClass().getName());
 			if (game.getScreen() instanceof GameScreen) {
-				LevelProfile lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
-				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(null);
-		    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
 			}
 			if (game.getScreen() instanceof LevelChooserScreen) {
 				game.setLevelGroupScreen();

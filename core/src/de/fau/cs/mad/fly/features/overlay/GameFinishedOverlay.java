@@ -58,9 +58,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      */
     @Override
     public void finish() {
-    	LevelProfile lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
-    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
-    	
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         
@@ -69,9 +66,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	LevelProfile lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
-				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(null);
-		    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
                 ((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
             }
         });
@@ -117,14 +111,15 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             nextLevelButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    // unload old level if it is not the same as the last level
-                    if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().nextLevel()) {
-                    	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file;
+                	//TODO, change button text
+                	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().file;
+                    if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevel()) {                    	
                         Assets.unload(levelPath);
+                        PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(null);
                     }
 
                     // set and load new level
-                    LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+                    LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
                     Loader.loadLevel(levelHead);
                 }
             });
@@ -138,12 +133,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             restartButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                	// unload old level
-                	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file;
-                	Assets.unload(levelPath);
-                	
                 	// reload the level
-                    LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
+                    LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
                     Loader.loadLevel(levelHead);
                 }
             });

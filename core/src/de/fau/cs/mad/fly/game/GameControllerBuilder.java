@@ -112,7 +112,7 @@ public class GameControllerBuilder {
         this.game = game;
         player = new Player();
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-        level = playerProfile.getLevel();
+        level = playerProfile.getCurrentLevel();
         flightController = new FlightController(player, playerProfile);
         cameraController = new CameraController(player, playerProfile);
         
@@ -192,7 +192,7 @@ public class GameControllerBuilder {
         gateCircuit.addListener(scoreController);
         
         if (level.head.name.equals("Endless")) {
-            generator = new EndlessLevelGenerator(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLevel());
+            generator = new EndlessLevelGenerator(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel());
             
             gateCircuit.addListener(new GateCircuitAdapter() {
                 @Override

@@ -79,12 +79,12 @@ public class Loader {
         loadingScreen.initiate(loader);
         loader.initiate();
         ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
-        PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(head);
+        PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevelProfile(head);
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
             public void progressFinished(Level level) {
 				level.getGateCircuit().reset();
-				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLevel(level);
+				PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(level);
 				((Fly) Gdx.app.getApplicationListener()).initGameController();
 				
 				loadingScreen.addButton();

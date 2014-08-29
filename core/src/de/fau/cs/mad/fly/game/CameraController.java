@@ -65,10 +65,10 @@ public class CameraController {
 	private final void setUpCamera() {
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
-		camera.position.set(playerProfile.getLevel().start.position);
-		camera.lookAt(playerProfile.getLevel().start.viewDirection);
+		camera.position.set(playerProfile.getCurrentLevel().start.position);
+		camera.lookAt(playerProfile.getCurrentLevel().start.viewDirection);
 		camera.near = 0.1f;
-		camera.far = playerProfile.getLevel().radius * 2;
+		camera.far = playerProfile.getCurrentLevel().radius * 2;
 		camera.update();
 	}
 }

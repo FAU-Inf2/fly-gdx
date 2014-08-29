@@ -14,19 +14,14 @@ import de.fau.cs.mad.fly.settings.SettingManager;
  */
 public class PlayerProfile {
 	/**
-	 * The results of the last level the player has played.
+	 * The info. read from json of the current level the player is playing or just finished.
 	 */
-	private LevelProfile lastLevelProfile;
-
-	/**
-	 * The last level the player has played.
-	 */
-	private LevelProfile currentLevel;
+	private LevelProfile currentLevelProfile;
 	
 	/**
-	 * The level the player is currently playing.
+	 * The 3D info of the current level the player is playing or just finished.
 	 */
-	private Level level;
+	private Level currentLevel;
 
 	/**
 	 * The plane the player is currently flying.
@@ -154,35 +149,23 @@ public class PlayerProfile {
 	}
 
 	/**
-	 * Getter for the last level the player has played.
-	 * @return lastLevel
-	 */
-	public LevelProfile getLastLevel() {
-		return lastLevelProfile;
-	}
-
-	/**
-	 * Setter for the last level the player has played.
-	 * @param lastLevel
-	 */
-	public void setLastLevel(LevelProfile lastLevel) {
-		this.lastLevelProfile = lastLevel;
-	}
-
-	/**
 	 * Getter for the level the player is playing.
 	 * @return currentLevel
 	 */
-	public LevelProfile getCurrentLevel() {
-		return currentLevel;
+	public LevelProfile getCurrentLevelProfile() {
+		return currentLevelProfile;
 	}
 
 	/**
 	 * Setter for the level the player is playing.
 	 * @param currentLevel
 	 */
-	public void setCurrentLevel(LevelProfile currentLevel) {
-		this.currentLevel = currentLevel;
+	public void setCurrentLevelProfile(LevelProfile currentLevel) {
+		if( this.currentLevelProfile != currentLevel )
+		{
+			this.currentLevelProfile = currentLevel;
+			this.currentLevel = null;
+		}
 	}
 	
 	public LevelGroup getChosenLevelGroup() {
@@ -198,38 +181,40 @@ public class PlayerProfile {
 	}
 	
 	/**
-	 * If possible lastLevel is set to the next level.
+	 * If possible currentLevelProfile is set to the next level.
 	 */
-	public boolean nextLevel() {
+	public boolean setToNextLevel() {
 	    int nextLevelIndex = 0;
 	    List<LevelProfile> allLevels = getChosenLevelGroup().getLevels();
 	    for(int level = 0; level < allLevels.size(); level++) {
-	        if(allLevels.get(level) == lastLevelProfile) {
+	        if(allLevels.get(level) == getCurrentLevelProfile()) {
 	            nextLevelIndex = level+1;
 	            level = allLevels.size();
 	        }
 	    }
 	    if(nextLevelIndex < allLevels.size()) {
-	        currentLevel = allLevels.get(nextLevelIndex);
+	    	setCurrentLevelProfile(allLevels.get(nextLevelIndex));
 	        return true;
 	    }
 	    return false;
 	}
+	
+	
 
 	/**
 	 * Setter for the current level the player is playing.
 	 * @param l
 	 */
-	public void setLevel(Level l) {
-		this.level = l;
+	public void setCurrentLevel(Level level) {
+		this.currentLevel = level;
 	}
 
 	/**
 	 * Getter for the current level the player is playing.
 	 * @return level
 	 */
-	public Level getLevel() {
-		return level;
+	public Level getCurrentLevel() {
+		return currentLevel;
 	}
 
 	/**

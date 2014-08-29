@@ -52,7 +52,7 @@ public class LevelChooserScreen extends BasicScreen {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setChosenLevelGroup(levelGroup);
-						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(level);
+						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevelProfile(level);
 						Loader.loadLevel(level);
 					}
 				});

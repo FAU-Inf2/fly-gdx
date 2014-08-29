@@ -54,12 +54,12 @@ public class ScoreManager {
 	}
 
 	public void saveBestScore(PlayerProfile playerProfile, Score score) {
-		saveBestScore(playerProfile, playerProfile.getLevel().head, score);
+		saveBestScore(playerProfile, playerProfile.getCurrentLevelProfile(), score);
 	}
 
 	public void saveBestScore(Score score) {
 		saveBestScore(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), PlayerProfileManager.getInstance()
-				.getCurrentPlayerProfile().getLevel().head, score);
+				.getCurrentPlayerProfile().getCurrentLevelProfile(), score);
 	}
 
 	/**
@@ -150,11 +150,11 @@ public class ScoreManager {
 	}
 
 	public Score getLevelBestScore(PlayerProfile playerProfile) {
-		return getLevelBestScore(playerProfile, playerProfile.getLevel().head);
+		return getLevelBestScore(playerProfile, playerProfile.getCurrentLevelProfile());
 	}
 
 	public Score getCurrentLevelBestScore() {
 		return getLevelBestScore(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), PlayerProfileManager
-				.getInstance().getCurrentPlayerProfile().getLevel().head);
+				.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile());
 	}
 }
