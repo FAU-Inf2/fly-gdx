@@ -47,7 +47,8 @@ public class AddUserButtonListener extends ChangeListener {
      * 2) Does the player already exists? - If so, display a corresponding
      * {@link Dialog}.
      * <p>
-     * 
+     * Other checks are done in {@link UserNameTextFieldFilter}
+     * <p>
      * If a new player is created, display a corresponding {@link Dialog}.
      */
     @Override

@@ -15,14 +15,10 @@ public class UserNameTextFieldFilter implements TextFieldFilter {
     
     @Override
     public boolean acceptChar(TextField textField, char c) {
-        if(textField.getText().length() >= 9) {
+        if (textField.getText().length() >= 9) {
             return false;
-        }
-        else if (Character.isAlphabetic(c) || Character.isDigit(c)) {
-            return true;
         } else {
-            return false;
+            return Character.isAlphabetic(c) || Character.isDigit(c);
         }
     }
-    
 }
