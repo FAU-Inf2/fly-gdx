@@ -318,7 +318,7 @@ grey-select-drop-down
   index: -1
 dialog-background
   rotate: false
-  xy: 523, 397
+  xy: 524, 397
   size: 131, 131
   split: 65, 65, 65, 65
   orig: 133, 133
