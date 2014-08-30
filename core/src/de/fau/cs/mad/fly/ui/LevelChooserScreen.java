@@ -2,13 +2,12 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.List;
 
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelProfile;
@@ -48,11 +47,19 @@ public class LevelChooserScreen extends BasicScreen {
 			for (int column = 0; column < maxColumns; column++) {
 				final LevelProfile level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
 				final TextButton button = new TextButton(level.name, skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
-				button.addListener(new ClickListener() {
+				
+				if (levelGroup.id > PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID()
+						|| (levelGroup.id == PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID() && level.id > PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelID())) {
+					button.setDisabled(true);
+				}
+				button.addListener(new ChangeListener() {
 					@Override
-					public void clicked(InputEvent event, float x, float y) {
-						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setChosenLevelGroup(levelGroup);
+					public void changed(ChangeEvent event, Actor actor) {
+						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevelGroup(levelGroup);
+						PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelGroup();
+						
 						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevelProfile(level);
+						PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelProfile();
 						Loader.getInstance().loadLevel(level);
 					}
 				});

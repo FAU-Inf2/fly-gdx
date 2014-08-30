@@ -120,7 +120,6 @@ public class Loader {
         loadingScreen.initiate(loader);
         loader.initiate();
         ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
-        PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevelProfile(levelProfile);
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
             public void progressFinished(Level level) {

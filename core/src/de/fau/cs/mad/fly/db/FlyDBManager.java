@@ -8,8 +8,6 @@ import com.badlogic.gdx.sql.Database;
 import com.badlogic.gdx.sql.DatabaseCursor;
 import com.badlogic.gdx.sql.DatabaseFactory;
 
-import de.fau.cs.mad.fly.settings.AppSettingsManager;
-
 /**
  * Manages the database of fly 
  *
@@ -17,9 +15,9 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
  */
 public class FlyDBManager {
 
-	private static final String DATABASE_NAME = "faumadfly.db";
+	private static final String DATABASE_NAME = "faumadfly01.db";
 	private static final int DATABASE_VERSION = 1;
-	private static final int LASTEST_DATABASE_VERSION = 2;
+	private static final int LASTEST_DATABASE_VERSION = 1;
 
 	Database dbHandler;
 
@@ -28,14 +26,20 @@ public class FlyDBManager {
 	
 	private FlyDBManager() {
 		Gdx.app.log("FlyDBManager", "setupDatabase begin " + System.currentTimeMillis());
-		String createTablePlayer = "create table if not exists player(player_id integer primary key autoincrement, fly_id text, name text not null, social_type text, social_name text, social_password text)";
-		String createTableScore = "create table if not exists score(player_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date)";
-		String createTableScoreDetail = "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
+		String createTablePlayer = "create table if not exists player(player_id integer primary key autoincrement, fly_id text, name text not null, total_score integer not null default 0, total_geld integer not null default 0, current_levelgroup_id integer not null default -1, current_level_id integer not null default 1,"
+				+ "passed_levelgroup_id integer not null default 1, passed_level_id integer not null default 1)";
+		String createTableScore = "create table if not exists score(player_id integer not null, level_group_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date)";
+		String createTableScoreDetail = "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, level_group_id integer not null, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
+		String createTavleVersion = "create table if not exists fly_db_version(_version interger not null)";
+		String insertDBVersion = "insert into fly_db_version values(1)";
 
 		List<String> createSQLs = new ArrayList<String>();
 		createSQLs.add(createTablePlayer);
 		createSQLs.add(createTableScore);
 		createSQLs.add(createTableScoreDetail);
+		createSQLs.add(createTavleVersion);
+		createSQLs.add(insertDBVersion);
+		
 		List<String> upgradeSQLs = null;		
 		dbHandler = DatabaseFactory.getNewDatabase(DATABASE_NAME, DATABASE_VERSION, createSQLs,
 				upgradeSQLs);
@@ -47,20 +51,32 @@ public class FlyDBManager {
 			dbHandler.openOrCreateDatabase();
 			Gdx.app.log("FlyDBManager", "database opened " + System.currentTimeMillis());
 			
-			int dbVersion = AppSettingsManager.Instance.getIntegerSetting(AppSettingsManager.DATABASE_VERSION, 0);
-			if(dbVersion < 2 )
+			int dbVersion = getDBVersion();
+			if(dbVersion < LASTEST_DATABASE_VERSION )
 			{				
-				dbHandler.execSQL("alter table score add column level_group_id integer not null default  1");
-				dbHandler.execSQL("alter table score_detail add column level_group_id integer not null default 1");
-				dbHandler.execSQL("alter table player add column total_score integer not null default 0");
-				dbHandler.execSQL("alter table player add column total_geld integer not null default 0");
+				//change LASTEST_DATABASE_VERSION amd add db update sql here when new version needs
+				updateDBversion(LASTEST_DATABASE_VERSION);
 			}
-			AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.DATABASE_VERSION, LASTEST_DATABASE_VERSION);		
 		}
 		
 	}
 
 	private static FlyDBManager Instance = new FlyDBManager();
+	
+	private int getDBVersion() {
+		DatabaseCursor cursor = dbHandler.rawQuery("select _version from fly_db_version");
+		if (cursor != null && cursor.getCount() > 0) {
+			cursor.next();
+			int ret = cursor.getInt(0);
+			cursor.close();
+			return ret;
+		}
+		return 0;
+	}
+	
+	private void updateDBversion( int version ){
+		 dbHandler.execSQL("update fly_db_version set _version=" + version );		
+	}
 
 	public static FlyDBManager getInstance() {
 		if( Instance ==null)
@@ -74,7 +90,7 @@ public class FlyDBManager {
 	 */
 	public void execSQL(String sql) {
 		//Gdx.app.log("FlyDBManager.execSQL", "execSQL begin " + System.currentTimeMillis());
-		//Gdx.app.log("FlyDBManager.execSQL", sql);
+		Gdx.app.log("FlyDBManager.execSQL", sql);
 		synchronized (dbHandler) {
 			dbHandler.execSQL(sql);
 		}

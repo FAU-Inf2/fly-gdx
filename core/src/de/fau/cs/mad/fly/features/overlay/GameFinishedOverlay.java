@@ -19,11 +19,11 @@ import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.profile.LevelProfile;
+import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
-import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -77,14 +77,19 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 			}
 		});
 
+		PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
 		final Table messageTable = new Table();
 		NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
 		messageTable.setBackground(background);
 
 		if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
 
-			if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().IsLastLevel()) {
-				if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().IsLastLevelGroup()) {
+			if (currentPlayer.IsLastLevel()) {
+				if (currentPlayer.IsLastLevelGroup()) {
+//					if(currentPlayer.getPassedLevelID()!= currentPlayer.getCurrentLevelProfile().id) {
+//						currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id);
+//						currentPlayer.savePassedLevelID();
+//					}
 					showInfoLabel(messageTable, "ALLGroupPassed");
 
 					showScore(messageTable);
@@ -92,15 +97,23 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 					// Label(I18n.t("ALLGroupPassed"),skin)).pad(UI.Buttons.SPACE_WIDTH);
 					messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).colspan(2);
 				} else {
+					if( currentPlayer.getPassedLevelgroupID()==currentPlayer.getCurrentLevelGroup().id){
+						currentPlayer.setPassedLevelgroupID(currentPlayer.getnextLevelGroup().id);
+						currentPlayer.savePassedLevelgroupID();
+						currentPlayer.setPassedLevelID(currentPlayer.getnextLevelGroup().getFirstLevel().id);
+						currentPlayer.savePassedLevelID();
+					}					
+					
 					showInfoLabel(messageTable, "OneGroupPassed");
-
 					showScore(messageTable);
-
+					
 					TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), textButtonStyle);
 					nextGroupButton.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
 							PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevelGroup();
+							PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelGroup();
+							PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelProfile();
 							// set and load new level
 							LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
 							Loader.getInstance().loadLevel(levelHead);
@@ -112,6 +125,12 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 				}
 
 			} else {
+				if( currentPlayer.getPassedLevelgroupID()==currentPlayer.getCurrentLevelGroup().id
+						&& currentPlayer.getPassedLevelID()==currentPlayer.getCurrentLevelProfile().id){
+					currentPlayer.setPassedLevelID(currentPlayer.getNextLevel().id);
+					currentPlayer.savePassedLevelID();
+				}
+					
 				showInfoLabel(messageTable, "level.congratulations");
 				showScore(messageTable);
 				TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), textButtonStyle);
@@ -119,6 +138,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevel();
+						PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelProfile();
 						// set and load new level
 						LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
 						Loader.getInstance().loadLevel(levelHead);

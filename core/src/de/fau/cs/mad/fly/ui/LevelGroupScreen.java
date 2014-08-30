@@ -3,16 +3,16 @@ package de.fau.cs.mad.fly.ui;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 
 /**
  * Offers a selection of level groups.
@@ -24,8 +24,7 @@ public class LevelGroupScreen extends BasicScreen {
 	/**
 	 * Shows a list of all available level groups.
 	 */
-	@Override
-	public void generateContent() {
+	public void generateDynamicContent() {
 		// calculate width and height of buttons and the space in between
 		List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
 
@@ -46,10 +45,13 @@ public class LevelGroupScreen extends BasicScreen {
 			for (int column = 0; column < maxColumns; column++) {
 				final LevelGroup group = levelGroups.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
 				final TextButton button = new TextButton(group.name, skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
-				button.addListener(new ClickListener() {
+				if (group.id > PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID()) {
+					button.setDisabled(true);
+				}
+
+				button.addListener(new ChangeListener() {
 					@Override
-					public void clicked(InputEvent event, float x, float y) {
-						
+					public void changed(ChangeEvent event, Actor actor) {
 						((Fly) Gdx.app.getApplicationListener()).setLevelChooserScreen(group);
 					}
 				});
@@ -58,5 +60,17 @@ public class LevelGroupScreen extends BasicScreen {
 			scrollableTable.row().expand();
 		}
 		stage.addActor(levelScrollPane);
+	}
+	
+	@Override
+	public void show() {
+		super.show();
+		generateDynamicContent();
+	}
+	
+	@Override
+	protected void generateContent() {
+		// TODO Auto-generated method stub
+		
 	}
 }

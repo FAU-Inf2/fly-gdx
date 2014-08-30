@@ -48,8 +48,15 @@ public class LevelGroup {
 	}
 
 	public LevelProfile getFirstLevel() {
-		
 		return getLevels().get(0);
+	}
+	
+	public LevelProfile getLevelProfile( int id ) {
+		for( LevelProfile lp : getLevels())	{
+			if(lp.id == id)
+				return lp;
+		}
+		return null;
 	}
 
 	private void readLevelGroup() {

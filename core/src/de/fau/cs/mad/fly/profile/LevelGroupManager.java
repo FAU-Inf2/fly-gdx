@@ -62,6 +62,8 @@ public class LevelGroupManager {
 	 * @param folder		The main folder for the levels.
 	 */
 	private void loadLevelGroups(String folder) {
+		if( levelGroups != null)
+			return;
 		levelGroups = new ArrayList<LevelGroup>();
 		JsonReader reader = new JsonReader();
 		
@@ -114,6 +116,18 @@ public class LevelGroupManager {
 	 * @return list of level groups.
 	 */
 	public List<LevelGroup> getLevelGroups() {
+		if( levelGroups == null){
+			this.loadLevelGroups(LEVEL_FOLDER);
+		}		
 		return levelGroups;
+	}
+	
+	
+	public LevelGroup getLevelGroup( int id ){
+		for( LevelGroup group : getLevelGroups()){
+			if( group.id == id)
+				return group;
+		}
+		return null;
 	}
 }

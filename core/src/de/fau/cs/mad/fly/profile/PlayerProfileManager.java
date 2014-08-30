@@ -87,7 +87,7 @@ public class PlayerProfileManager {
 	
 	private void setPlayers() {
 		playerProfiles = new ArrayList<PlayerProfile>();
-		final String selectSQL = "select player_id, fly_id, name from player";
+		final String selectSQL = "select player_id,fly_id,name,total_score,total_geld,current_levelgroup_id,current_level_id,passed_levelgroup_id,passed_level_id from player";
 
 		// FlyDBManager.getInstance().openDatabase();
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
@@ -98,6 +98,12 @@ public class PlayerProfileManager {
 				playerProfile.setId(cursor.getInt(0));
 				playerProfile.setFlyID(cursor.getInt(1));
 				playerProfile.setName(cursor.getString(2));
+				playerProfile.setMoney(cursor.getInt(3));
+				playerProfile.setCurrentLevelGroup(LevelGroupManager.getInstance().getLevelGroup(cursor.getInt(5)));
+				playerProfile.setCurrentLevelProfile(cursor.getInt(6));
+				playerProfile.setPassedLevelgroupID(cursor.getInt(7));
+				playerProfile.setPassedLevelID(cursor.getInt(8));
+				
 				playerProfiles.add(playerProfile);
 			}
 			cursor.close();
@@ -133,6 +139,11 @@ public class PlayerProfileManager {
 
 		final String sql = "update player set fly_id=" + playerProfile.getFlyID() + " where player_id=" + playerProfile.getId();
 
+		FlyDBManager.getInstance().execSQL(sql);
+	}
+	
+	public void updateIntColumn(PlayerProfile playerProfile, String colname, int newValue) {
+		final String sql = "update player set " + colname + "=" + newValue + " where player_id=" + playerProfile.getId();
 		FlyDBManager.getInstance().execSQL(sql);
 	}
 

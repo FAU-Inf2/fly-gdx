@@ -29,7 +29,7 @@ public class ScoreManager {
 		Score compareScore = getLevelBestScore(playerProfile, level);
 		if (compareScore != null && compareScore.getTotalScore() > score.getTotalScore())
 			return;
-		int levelgroupID = playerProfile.getChosenLevelGroup().id;
+		int levelgroupID = playerProfile.getCurrentLevelGroup().id;
 
 		String deleteDetail = "delete from score_detail where player_id=" + playerProfile.getId() + " and level_id=" + level.id + " and level_group_id=" + levelgroupID;
 
@@ -107,7 +107,7 @@ public class ScoreManager {
 	}
 
 	public Map<String, Score> getPlayerBestScores(PlayerProfile playerProfile){
-		return getPlayerBestScores(playerProfile, playerProfile.getChosenLevelGroup());
+		return getPlayerBestScores(playerProfile, playerProfile.getCurrentLevelGroup());
 	}
 	
 	public Map<String, Score> getcurrentBestScores() {
@@ -115,7 +115,7 @@ public class ScoreManager {
 	}
 
 	public Score getLevelBestScore(PlayerProfile playerProfile, LevelProfile level) {
-		int levelgroupID = playerProfile.getChosenLevelGroup().id;
+		int levelgroupID = playerProfile.getCurrentLevelGroup().id;
 		String selectScore = "select score, compare_score, reached_date from score where player_id =" + playerProfile.getId() + " and level_id=" + level.id 
 				+ " and level_group_id=" + levelgroupID;
 

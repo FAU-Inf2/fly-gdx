@@ -3,7 +3,6 @@ package de.fau.cs.mad.fly.profile;
 import java.util.List;
 
 import de.fau.cs.mad.fly.player.IPlane;
-import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
@@ -13,6 +12,16 @@ import de.fau.cs.mad.fly.settings.SettingManager;
  *
  */
 public class PlayerProfile {
+	/**
+	 * default passed level group id for a new user
+	 */
+	public static int DEFAULT_PASSED_LEVELGROUP_ID = 1;
+	
+	/**
+	 * default passed level id for a new user
+	 */
+	public static int DEFAULT_PASSED_LEVEL_ID = 1;
+	
 	/**
 	 * The info. read from json of the current level the player is playing or just finished.
 	 */
@@ -49,9 +58,67 @@ public class PlayerProfile {
     private SettingManager settingManager;
     
     /**
-     * The chosen level group
+     * The current chosen level group
      */
-	private LevelGroup chosenLevelGroup;
+	private LevelGroup currentLevelGroup;
+	
+	/**
+	 * the max level group id that user already passed
+	 */
+	private int passedLevelgroupID = DEFAULT_PASSED_LEVELGROUP_ID;
+
+    /**
+	/**
+	 * the max level id of the passedLevelgroup that user already reached
+	 */
+	private int passedLevelID = DEFAULT_PASSED_LEVEL_ID;
+	
+	/**
+	 * get max passed level group id, default is the beginner group
+	 * @return
+	 */
+	public int getPassedLevelgroupID() {
+		return passedLevelgroupID;
+	}
+
+	/**
+	 * set max passed level group id
+	 * @param passedLevelgroup
+	 */
+	public void setPassedLevelgroupID(int passedLevelgroup) {
+		this.passedLevelgroupID = passedLevelgroup;
+	}
+	
+	/**
+	 * save max passed level group id to database
+	 */
+	public void savePassedLevelgroupID() {
+		PlayerProfileManager.getInstance().updateIntColumn(this, "passed_levelgroup_id", passedLevelgroupID);
+	}
+	
+
+	/**
+	 * get the max passed level id, default is the first level of PassedLevelgroup
+	 * @return
+	 */
+    public int getPassedLevelID() {
+		return passedLevelID;
+	}
+
+    /**
+     * set max passed level id
+     * @param passedLevel
+     */
+	public void setPassedLevelID(int passedLevel) {
+		this.passedLevelID = passedLevel;
+	}
+	
+	/**
+	 * save max passed level id to database
+	 */
+	public void savePassedLevelID() {
+		PlayerProfileManager.getInstance().updateIntColumn(this, "passed_level_id", passedLevelID);
+	}
 
     /**
      * Creates a new profile without any more information.
@@ -128,6 +195,14 @@ public class PlayerProfile {
 	}
 	
 	/**
+	 * Setter for the current money
+	 * @return
+	 */
+	public void setMoney(int money) {
+		this.money = money;
+	}
+	
+	/**
 	 * Adds a certain amount of money to the current money the player has
 	 * @param money       The Amount of money to add, may be positive or negative
 	 * @return            false if the new amount of money would be negative, the current money then remains unchanged
@@ -144,47 +219,88 @@ public class PlayerProfile {
 	}
 
 	/**
-	 * Getter for the level the player is playing.
+	 * Getter for the current chosen level 
+	 * for a new player, return the first level of the current chosen level group
 	 * @return currentLevel
 	 */
 	public LevelProfile getCurrentLevelProfile() {
+		if (currentLevelProfile == null) {
+			currentLevelProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelGroup().getFirstLevel();
+		}
 		return currentLevelProfile;
 	}
 
 	/**
-	 * Setter for the level the player is playing.
+	 * Setter for the current chosen level.
 	 * @param currentLevel
 	 */
 	public void setCurrentLevelProfile(LevelProfile currentLevel) {
-		if( this.currentLevelProfile != currentLevel )
-		{
+		if( this.currentLevelProfile != currentLevel ){
 			this.currentLevelProfile = currentLevel;
 		}
 	}
 	
-	public LevelGroup getChosenLevelGroup() {
-		if( chosenLevelGroup == null )
-		{
-			chosenLevelGroup = LevelGroupManager.getInstance().getLevelGroups().get(0);
-		}
-		return chosenLevelGroup;
-	}
-
-	public void setChosenLevelGroup(LevelGroup levelGroup) {
-		chosenLevelGroup = levelGroup;
+	/**
+	 * Setter for the current chosen level 
+	 * @param currentLevel
+	 */
+	public void setCurrentLevelProfile(int levelID) {
+		this.currentLevelProfile = this.getCurrentLevelGroup().getLevelProfile(levelID);
 	}
 	
+	/**
+	 * save current chosen level profile to database
+	 */
+	public void saveCurrentLevelProfile() {
+		PlayerProfileManager.getInstance().updateIntColumn(this, "current_level_id", currentLevelProfile.id);
+	}
+	
+	/**
+	 * get current chosen level group, if it is a new user, return the fist group of all
+	 * @return
+	 */
+	public LevelGroup getCurrentLevelGroup() {
+		if( currentLevelGroup == null ){
+			setCurrentLevelGroup(LevelGroupManager.getInstance().getLevelGroups().get(0));
+		}
+		return currentLevelGroup;
+	}
+
+	/**
+	 * set current chosen level group
+	 * @param levelGroup
+	 */
+	public void setCurrentLevelGroup(LevelGroup levelGroup) {
+		currentLevelGroup = levelGroup;
+	}
+	
+	/**
+	 * save current level group to database
+	 */
+	public void saveCurrentLevelGroup() {
+		PlayerProfileManager.getInstance().updateIntColumn(this, "current_levelgroup_id", currentLevelGroup.id);
+	}
+	
+	
+	/**
+	 * Is current level the last level of group
+	 * @return
+	 */
 	public boolean IsLastLevel() {
-		List<LevelProfile> allLevels = getChosenLevelGroup().getLevels();
+		List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
 		if (getCurrentLevelProfile() == allLevels.get(allLevels.size() - 1)) {
 			return true;
 		}
 		return false;
 	}
 	
+	/**
+	 * Is current level group the last group of all
+	 * @return
+	 */
 	public boolean IsLastLevelGroup(){
 		List<LevelGroup> allGroups = LevelGroupManager.getInstance().getLevelGroups();
-		if (this.getChosenLevelGroup() == allGroups.get(allGroups.size() - 1)) {
+		if (this.getCurrentLevelGroup() == allGroups.get(allGroups.size() - 1)) {
 			return true;
 		}
 		return false;
@@ -195,7 +311,7 @@ public class PlayerProfile {
 	 */
 	public boolean setToNextLevel() {
 	    int nextLevelIndex = 0;
-	    List<LevelProfile> allLevels = getChosenLevelGroup().getLevels();
+	    List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
 	    for(int level = 0; level < allLevels.size(); level++) {
 	        if(allLevels.get(level) == getCurrentLevelProfile()) {
 	            nextLevelIndex = level+1;
@@ -210,7 +326,25 @@ public class PlayerProfile {
 	}
 	
 	/**
-	 * If possible currentLevelProfile is set to the next level.
+	 * If possible return the next level profile of currentLevelProfile
+	 */
+	public LevelProfile getNextLevel() {
+	    int nextLevelIndex = 0;
+	    List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
+	    for(int level = 0; level < allLevels.size(); level++) {
+	        if(allLevels.get(level) == getCurrentLevelProfile()) {
+	            nextLevelIndex = level+1;
+	            level = allLevels.size();
+	        }
+	    }
+	    if(nextLevelIndex < allLevels.size()) {
+	    	return allLevels.get(nextLevelIndex);
+	    }
+	    return null;
+	}
+	
+	/**
+	 * If possible currentLevelGroup is set to the next level.
 	 */
 	public boolean setToNextLevelGroup() {
 		if (this.IsLastLevel() && !this.IsLastLevelGroup()) {
@@ -218,16 +352,15 @@ public class PlayerProfile {
 			List<LevelGroup> allGroups = LevelGroupManager.getInstance()
 					.getLevelGroups();
 			for (int i = 0; i < allGroups.size(); i++) {
-				if (allGroups.get(i) == this.getChosenLevelGroup()) {
+				if (allGroups.get(i) == this.getCurrentLevelGroup()) {
 					currentGroup = i;
 					break;
 				}
 			}
 			if (currentGroup < allGroups.size() - 2) {
 
-				this.setChosenLevelGroup(allGroups.get(currentGroup + 1));
-				this.setCurrentLevelProfile(this.getChosenLevelGroup()
-						.getFirstLevel());
+				this.setCurrentLevelGroup(allGroups.get(currentGroup + 1));
+				this.setCurrentLevelProfile(this.getCurrentLevelGroup().getFirstLevel());
 				return true;
 			}
 			return false;
@@ -236,6 +369,27 @@ public class PlayerProfile {
 		return false;
 	}
 
+	/**
+	 * If possible, get the next level group of current level group
+	 * @return
+	 */
+	public LevelGroup getnextLevelGroup() {
+		if (this.IsLastLevel() && !this.IsLastLevelGroup()) {
+			int currentGroup = 0;
+			List<LevelGroup> allGroups = LevelGroupManager.getInstance().getLevelGroups();
+			for (int i = 0; i < allGroups.size(); i++) {
+				if (allGroups.get(i) == this.getCurrentLevelGroup()) {
+					currentGroup = i;
+					break;
+				}
+			}
+			if (currentGroup < allGroups.size() - 2) {
+				return allGroups.get(currentGroup + 1);
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Setter for the current plane the player is flying.
 	 * @param p
