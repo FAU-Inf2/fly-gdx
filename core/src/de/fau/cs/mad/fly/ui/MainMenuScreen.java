@@ -113,7 +113,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
                 	currentLevelProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getChosenLevelGroup().getFirstLevel();
                     playerProfile.setCurrentLevelProfile(currentLevelProfile);
                 }
-                Loader.loadLevel(currentLevelProfile);
+                Loader.getInstance().loadLevel(currentLevelProfile);
             }
         });
         

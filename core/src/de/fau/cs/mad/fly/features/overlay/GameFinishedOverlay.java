@@ -47,104 +47,150 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         this.gameController = gameController;
     }
     
-    /**
-     * When the game is finished, 3 states are possible:
-     * <p>
-     * 1) finished in time, not dead: message, score and back button are shown
-     * <p>
-     * 2) time is up, no score: only message and back button are shown
-     * <p>
-     * 3) spaceship broken: only message and back button are shown
-     */
-    @Override
-    public void finish() {
-        Table outerTable = new Table();
-        outerTable.setFillParent(true);
-        
-        TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
-        TextButton backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), textButtonStyle);
-        backToMainMenuButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
-            }
-        });
-        
-        Label infoLabel;
-        
-        final Table messageTable = new Table();
-        NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
-        messageTable.setBackground(background);
-        
-        if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
-            infoLabel = new Label(I18n.t("level.congratulations"), skin);
-            messageTable.add(infoLabel);
-            //Score newScore = gameController.getLevel().getScore();
-            newScore = gameController.getScoreController().getEndScore(gameController);
-            
-            // adds an amount of money to the players profile that equals the score he got in this level
-            PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(newScore.getTotalScore());
-            
-            String scoreString = I18n.t("newScore") + newScore.getTotalScore();
-            final Label scoreLabel = new Label(scoreString, skin);
-            messageTable.add(scoreLabel).pad(15f);
-            messageTable.row().expand();
-            for (ScoreDetail detail : newScore.getScoreDetails()) {
-                messageTable.row().expand();
-                messageTable.add(new Label(I18n.t(detail.getDetailName()), skin)).pad(6f).uniform();
-                messageTable.add(new Label(detail.getValue(), skin)).pad(6f).uniform();
-            }
-            Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
-            if ( tmpScore == null || newScore.getTotalScore() > tmpScore.getTotalScore()) {
-            	new Thread(new Runnable() {
-        			@Override
-        			public void run() {
-        				ScoreManager.getInstance().saveBestScore(newScore);        				
-        			}
-        		}).start();
+	/**
+	 * When the game is finished, 5 states are possible:
+	 * <p>
+	 * 1) finished in time, not dead:
+	 * <p>
+	 * 1.1 it is not the last level of the level group, then message, score and next level and back button are shown
+	 * <p>
+	 * 1.2 it is the last level of the level group, then message, score and next group and back button are shown
+	 * <p>
+	 * 1.3 it is the last level of the last level group, then message, score and back button are shown 2) spaceship broken:
+	 * <p>
+	 * 2.1 it is a normal level, then only message, restart and back button are shown
+	 * <p>
+	 * 2.2 it is a endless level, then show score, restart and back button
+	 * <p>
+	 */
+	@Override
+	public void finish() {
+		Table outerTable = new Table();
+		outerTable.setFillParent(true);
 
-                messageTable.row().expand();
-                messageTable.add(new Label(I18n.t("newRecord"), skin)).pad(6f).uniform();
-            }
-            messageTable.row().expand();
-            TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), textButtonStyle);
-            nextLevelButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                	//TODO, change button text
-                	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().file;
-                    if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevel()) {                    	
-                        Assets.unload(levelPath);
-                        PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevel(null);
-                    }
+		TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
+		TextButton backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), textButtonStyle);
+		backToMainMenuButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
+			}
+		});
 
-                    // set and load new level
-                    LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
-                    Loader.loadLevel(levelHead);
-                }
-            });
-            messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH);
-            messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
-        } else if (gameController.getPlayer().isDead()) {
-            infoLabel = new Label(I18n.t("ship.destroyed"), skin);
-            messageTable.add(infoLabel).colspan(2);
-            
-            TextButton restartButton = new TextButton(I18n.t("restart"), textButtonStyle);
-            restartButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                	// reload the level
-                    LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
-                    Loader.loadLevel(levelHead);
-                }
-            });
-            messageTable.row().expand();
-            messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH);
-            messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
-            messageTable.row().expand();
-        }
-        
-        outerTable.add(messageTable).center();
-        stage.addActor(outerTable);
+		final Table messageTable = new Table();
+		NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
+		messageTable.setBackground(background);
+
+		if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
+
+			if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().IsLastLevel()) {
+				if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().IsLastLevelGroup()) {
+					showInfoLabel(messageTable, "ALLGroupPassed");
+
+					showScore(messageTable);
+					// messageTable.add(new
+					// Label(I18n.t("ALLGroupPassed"),skin)).pad(UI.Buttons.SPACE_WIDTH);
+					messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).colspan(2);
+				} else {
+					showInfoLabel(messageTable, "OneGroupPassed");
+
+					showScore(messageTable);
+
+					TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), textButtonStyle);
+					nextGroupButton.addListener(new ClickListener() {
+						@Override
+						public void clicked(InputEvent event, float x, float y) {
+							PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevelGroup();
+							// set and load new level
+							LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
+							Loader.getInstance().loadLevel(levelHead);
+						}
+					});
+
+					messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH);
+					messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
+				}
+
+			} else {
+				showInfoLabel(messageTable, "level.congratulations");
+				showScore(messageTable);
+				TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), textButtonStyle);
+				nextLevelButton.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevel();
+						// set and load new level
+						LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
+						Loader.getInstance().loadLevel(levelHead);
+					}
+				});
+				messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH);
+				messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
+			}
+
+		} else if (gameController.getPlayer().isDead()) {
+			showInfoLabel(messageTable, "ship.destroyed");
+
+			if (gameController.getLevel().head.name.equals("Endless")) {
+				showScore(messageTable);
+			}
+
+			TextButton restartButton = new TextButton(I18n.t("restart"), textButtonStyle);
+			restartButton.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					// reload the level
+					LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
+					Loader.getInstance().loadLevel(levelHead);
+				}
+			});
+
+			messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH);
+			messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
+			messageTable.row().expand();
+		}
+
+		outerTable.add(messageTable).center();
+		stage.addActor(outerTable);
+	}
+    
+    private void showInfoLabel(final Table messageTable, String info) {
+    	Label infoLabel = new Label(I18n.t(info), skin);            		
+        messageTable.add(infoLabel).colspan(2);
+        messageTable.row().expand();
     }
+
+	/**
+	 * @param messageTable
+	 */
+	private void showScore(final Table messageTable) {
+		//Score newScore = gameController.getLevel().getScore();
+		newScore = gameController.getScoreController().getEndScore(gameController);
+		
+		// adds an amount of money to the players profile that equals the score he got in this level
+		PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(newScore.getTotalScore());
+		
+		String scoreString = I18n.t("newScore") + newScore.getTotalScore();
+		final Label scoreLabel = new Label(scoreString, skin);
+		messageTable.add(scoreLabel).pad(15f);
+		messageTable.row().expand();
+		for (ScoreDetail detail : newScore.getScoreDetails()) {
+		    messageTable.row().expand();
+		    messageTable.add(new Label(I18n.t(detail.getDetailName()), skin)).pad(6f).uniform();
+		    messageTable.add(new Label(detail.getValue(), skin)).pad(6f).uniform();
+		}
+		Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
+		if ( tmpScore == null || newScore.getTotalScore() > tmpScore.getTotalScore()) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					ScoreManager.getInstance().saveBestScore(newScore);        				
+				}
+			}).start();
+
+		    messageTable.row().expand();
+		    messageTable.add(new Label(I18n.t("newRecord"), skin)).pad(6f).uniform().colspan(2);
+		}
+		messageTable.row().expand();
+	}
 }

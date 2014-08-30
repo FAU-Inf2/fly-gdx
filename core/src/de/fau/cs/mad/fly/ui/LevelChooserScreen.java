@@ -53,7 +53,7 @@ public class LevelChooserScreen extends BasicScreen {
 					public void clicked(InputEvent event, float x, float y) {
 						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setChosenLevelGroup(levelGroup);
 						PlayerProfileManager.getInstance().getCurrentPlayerProfile().setCurrentLevelProfile(level);
-						Loader.loadLevel(level);
+						Loader.getInstance().loadLevel(level);
 					}
 				});
 				scrollableTable.add(button).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();

@@ -19,11 +19,6 @@ public class PlayerProfile {
 	private LevelProfile currentLevelProfile;
 	
 	/**
-	 * The 3D info of the current level the player is playing or just finished.
-	 */
-	private Level currentLevel;
-
-	/**
 	 * The plane the player is currently flying.
 	 */
 	private IPlane.Head plane;
@@ -164,7 +159,6 @@ public class PlayerProfile {
 		if( this.currentLevelProfile != currentLevel )
 		{
 			this.currentLevelProfile = currentLevel;
-			this.currentLevel = null;
 		}
 	}
 	
@@ -178,6 +172,22 @@ public class PlayerProfile {
 
 	public void setChosenLevelGroup(LevelGroup levelGroup) {
 		chosenLevelGroup = levelGroup;
+	}
+	
+	public boolean IsLastLevel() {
+		List<LevelProfile> allLevels = getChosenLevelGroup().getLevels();
+		if (getCurrentLevelProfile() == allLevels.get(allLevels.size() - 1)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean IsLastLevelGroup(){
+		List<LevelGroup> allGroups = LevelGroupManager.getInstance().getLevelGroups();
+		if (this.getChosenLevelGroup() == allGroups.get(allGroups.size() - 1)) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -199,22 +209,31 @@ public class PlayerProfile {
 	    return false;
 	}
 	
-	
-
 	/**
-	 * Setter for the current level the player is playing.
-	 * @param l
+	 * If possible currentLevelProfile is set to the next level.
 	 */
-	public void setCurrentLevel(Level level) {
-		this.currentLevel = level;
-	}
+	public boolean setToNextLevelGroup() {
+		if (this.IsLastLevel() && !this.IsLastLevelGroup()) {
+			int currentGroup = 0;
+			List<LevelGroup> allGroups = LevelGroupManager.getInstance()
+					.getLevelGroups();
+			for (int i = 0; i < allGroups.size(); i++) {
+				if (allGroups.get(i) == this.getChosenLevelGroup()) {
+					currentGroup = i;
+					break;
+				}
+			}
+			if (currentGroup < allGroups.size() - 2) {
 
-	/**
-	 * Getter for the current level the player is playing.
-	 * @return level
-	 */
-	public Level getCurrentLevel() {
-		return currentLevel;
+				this.setChosenLevelGroup(allGroups.get(currentGroup + 1));
+				this.setCurrentLevelProfile(this.getChosenLevelGroup()
+						.getFirstLevel());
+				return true;
+			}
+			return false;
+		}
+
+		return false;
 	}
 
 	/**

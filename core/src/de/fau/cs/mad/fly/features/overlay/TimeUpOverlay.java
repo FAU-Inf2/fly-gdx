@@ -51,7 +51,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
-                Loader.loadLevel(levelHead);
+                Loader.getInstance().loadLevel(levelHead);
             }
         });
         

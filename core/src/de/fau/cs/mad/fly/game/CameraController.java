@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 
+import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 
@@ -65,10 +66,10 @@ public class CameraController {
 	private final void setUpCamera() {
 		camera = new PerspectiveCamera(67, screenWidth, screenHeight);
 
-		camera.position.set(playerProfile.getCurrentLevel().start.position);
-		camera.lookAt(playerProfile.getCurrentLevel().start.viewDirection);
+		camera.position.set(Loader.getInstance().getCurrentLevel().start.position);
+		camera.lookAt(Loader.getInstance().getCurrentLevel().start.viewDirection);
 		camera.near = 0.1f;
-		camera.far = playerProfile.getCurrentLevel().radius * 2;
+		camera.far = Loader.getInstance().getCurrentLevel().radius * 2;
 		camera.update();
 	}
 }
