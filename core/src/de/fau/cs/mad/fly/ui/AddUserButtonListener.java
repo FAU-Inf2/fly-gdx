@@ -75,10 +75,15 @@ public class AddUserButtonListener extends ChangeListener {
             if (userExists) {
                 dialog.text(I18n.t("UserExists"));
             } else {
+                // update player profile
                 playerProfile = new PlayerProfile();
                 playerProfile.setName(name);
                 PlayerProfileManager.getInstance().savePlayer(playerProfile);
                 statisticsScreen.updateUserTable();
+                // reset user input field
+                newUserField.setText("");
+                newUserField.setMessageText(I18n.t("TipsUserName"));
+                // set dialog text
                 dialog.text(I18n.t("UserAdded"));
             }
         } else {

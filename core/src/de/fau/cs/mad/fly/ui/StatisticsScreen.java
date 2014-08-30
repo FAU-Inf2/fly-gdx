@@ -48,11 +48,8 @@ public class StatisticsScreen extends BasicScreen {
      */
     private void generateUserTable() {
         userTable.clear();
-        
-        // add all user to userList and set the current user to display value
-        
         userTable.add(new Label(I18n.t("usernameLableText"), skin)).pad(6f);
-        
+        // add all user to userList and set the current user to display value
         userList = new SelectBox<String>(skin, "rounded");
         updateUserTable();
         
@@ -83,6 +80,9 @@ public class StatisticsScreen extends BasicScreen {
         userTable.layout();
     }
     
+    /**
+     * Method that is called, if the list of user changes.
+     */
     public void updateUserTable() {
         String currentUserName = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName();
         Array<String> nameList = new Array<String>();
