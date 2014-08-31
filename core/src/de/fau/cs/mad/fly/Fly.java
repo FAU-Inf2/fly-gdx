@@ -118,6 +118,7 @@ public class Fly extends Game {
         Gdx.app.log("Fly", "dispose game");
         
         FlyDBManager.getInstance().dispose();
+        Loader.getInstance().dispose();
         
         disposeScreen(splashScreen);
         disposeScreen(levelGroupScreen);

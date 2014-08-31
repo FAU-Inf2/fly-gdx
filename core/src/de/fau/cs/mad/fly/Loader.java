@@ -132,4 +132,10 @@ public class Loader {
             }
         });
     }
+    
+    public void dispose() {
+		
+		instance=null;
+		Gdx.app.log("Loader", "loader is disposed");
+	}
 }

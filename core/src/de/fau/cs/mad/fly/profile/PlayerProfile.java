@@ -357,7 +357,7 @@ public class PlayerProfile {
 					break;
 				}
 			}
-			if (currentGroup < allGroups.size() - 2) {
+			if (currentGroup < (allGroups.size() - 1)) {
 
 				this.setCurrentLevelGroup(allGroups.get(currentGroup + 1));
 				this.setCurrentLevelProfile(this.getCurrentLevelGroup().getFirstLevel());
@@ -374,18 +374,16 @@ public class PlayerProfile {
 	 * @return
 	 */
 	public LevelGroup getnextLevelGroup() {
-		if (this.IsLastLevel() && !this.IsLastLevelGroup()) {
-			int currentGroup = 0;
-			List<LevelGroup> allGroups = LevelGroupManager.getInstance().getLevelGroups();
-			for (int i = 0; i < allGroups.size(); i++) {
-				if (allGroups.get(i) == this.getCurrentLevelGroup()) {
-					currentGroup = i;
-					break;
-				}
+		int currentGroup = 0;
+		List<LevelGroup> allGroups = LevelGroupManager.getInstance().getLevelGroups();
+		for (int i = 0; i < allGroups.size(); i++) {
+			if (allGroups.get(i) == this.getCurrentLevelGroup()) {
+				currentGroup = i;
+				break;
 			}
-			if (currentGroup < allGroups.size() - 2) {
-				return allGroups.get(currentGroup + 1);
-			}
+		}
+		if (currentGroup < (allGroups.size() - 1)) {
+			return allGroups.get(currentGroup + 1);
 		}
 		return null;
 	}

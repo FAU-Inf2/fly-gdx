@@ -65,6 +65,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 	 */
 	@Override
 	public void finish() {
+		Gdx.app.log("fantest", "gamefinishedoverlay:finish()");
 		Table outerTable = new Table();
 		outerTable.setFillParent(true);
 
@@ -86,15 +87,15 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 
 			if (currentPlayer.IsLastLevel()) {
 				if (currentPlayer.IsLastLevelGroup()) {
-//					if(currentPlayer.getPassedLevelID()!= currentPlayer.getCurrentLevelProfile().id) {
-//						currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id);
-//						currentPlayer.savePassedLevelID();
-//					}
-					showInfoLabel(messageTable, "ALLGroupPassed");
+					if(currentPlayer.getPassedLevelID() == currentPlayer.getCurrentLevelProfile().id) {
+						currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
+						currentPlayer.savePassedLevelID();
+						showInfoLabel(messageTable, "ALLGroupPassed");
+					} else {
+						showInfoLabel(messageTable, "level.congratulations");				
+					}
 
 					showScore(messageTable);
-					// messageTable.add(new
-					// Label(I18n.t("ALLGroupPassed"),skin)).pad(UI.Buttons.SPACE_WIDTH);
 					messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).colspan(2);
 				} else {
 					if( currentPlayer.getPassedLevelgroupID()==currentPlayer.getCurrentLevelGroup().id){
@@ -102,9 +103,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 						currentPlayer.savePassedLevelgroupID();
 						currentPlayer.setPassedLevelID(currentPlayer.getnextLevelGroup().getFirstLevel().id);
 						currentPlayer.savePassedLevelID();
-					}					
+						showInfoLabel(messageTable, "OneGroupPassed");
+					} else {
+						showInfoLabel(messageTable, "level.congratulations");
+					}
 					
-					showInfoLabel(messageTable, "OneGroupPassed");
 					showScore(messageTable);
 					
 					TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), textButtonStyle);
