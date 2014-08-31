@@ -65,7 +65,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 	 */
 	@Override
 	public void finish() {
-		Gdx.app.log("fantest", "gamefinishedoverlay:finish()");
 		Table outerTable = new Table();
 		outerTable.setFillParent(true);
 
@@ -154,7 +153,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 		} else if (gameController.getPlayer().isDead()) {
 			showInfoLabel(messageTable, "ship.destroyed");
 
-			if (gameController.getLevel().head.name.equals("Endless")) {
+			if (gameController.getLevel().head.isEndless()) {
 				showScore(messageTable);
 			}
 
@@ -193,26 +192,26 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 		// adds an amount of money to the players profile that equals the score he got in this level
 		PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(newScore.getTotalScore());
 		
-		String scoreString = I18n.t("newScore") + newScore.getTotalScore();
-		final Label scoreLabel = new Label(scoreString, skin);
-		messageTable.add(scoreLabel).pad(15f);
+		messageTable.add(new Label(I18n.t("newScore"), skin)).pad(6f).uniform();
+		messageTable.add(new Label(newScore.getTotalScore()+"", skin)).pad(6f).uniform();		
 		messageTable.row().expand();
+		
 		for (ScoreDetail detail : newScore.getScoreDetails()) {
 		    messageTable.row().expand();
 		    messageTable.add(new Label(I18n.t(detail.getDetailName()), skin)).pad(6f).uniform();
 		    messageTable.add(new Label(detail.getValue(), skin)).pad(6f).uniform();
 		}
 		Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
-		if ( tmpScore == null || newScore.getTotalScore() > tmpScore.getTotalScore()) {
+		if ((tmpScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > tmpScore.getTotalScore()) {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					ScoreManager.getInstance().saveBestScore(newScore);        				
+					ScoreManager.getInstance().saveBestScore(newScore);
 				}
 			}).start();
 
-		    messageTable.row().expand();
-		    messageTable.add(new Label(I18n.t("newRecord"), skin)).pad(6f).uniform().colspan(2);
+			messageTable.row().expand();
+			messageTable.add(new Label(I18n.t("newRecord"), skin)).pad(6f).uniform().colspan(2);
 		}
 		messageTable.row().expand();
 	}

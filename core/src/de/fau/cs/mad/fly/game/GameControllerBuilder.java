@@ -176,7 +176,7 @@ public class GameControllerBuilder {
             public void onGatePassed(GateGoal passed) {
                 GateCircuit gateCircuit = level.getGateCircuit();
                 
-                if (level.head.name.equals("Endless")) {
+                if (level.head.isEndless()) {
                     for (GateGoal g : generator.getGates())
                         g.unmark();
                 } else {
@@ -192,7 +192,7 @@ public class GameControllerBuilder {
         
         gateCircuit.addListener(scoreController);
         
-        if (level.head.name.equals("Endless")) {
+        if (level.head.isEndless()) {
             generator = new EndlessLevelGenerator(Loader.getInstance().getCurrentLevel());
             
             gateCircuit.addListener(new GateCircuitAdapter() {
