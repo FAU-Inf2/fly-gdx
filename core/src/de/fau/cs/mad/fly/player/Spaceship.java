@@ -1,6 +1,6 @@
 package de.fau.cs.mad.fly.player;
 
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -95,22 +95,28 @@ public class Spaceship extends GameObject implements IPlane {
 		gravity = game.getLevel().getGravity();
 		
 		particle.load(modelRef);
+		Gdx.app.log("Spaceship.load", "Initializing particle...");
 		particle.init();
-		
+		Gdx.app.log("Spaceship.load", "Initializing particle: Done!");
 		//resetSpeed();
 
 		transform.setToTranslation(game.getLevel().start.position);
 		
+		Gdx.app.log("Spaceship.load", "Creating collision shape...");
 		btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(modelRef, this);
 
+		Gdx.app.log("Spaceship.load", "Scaling bounding box...");
 		scaleBoundingBox();
 		createRigidBody(modelRef, shape, 1.0f, CollisionDetector.PLAYER_FLAG, CollisionDetector.ALL_FLAG);
-		
-		addMotionState();		
+		Gdx.app.log("Spaceship.load", "Adding motion state...");
+		addMotionState();
 		getRigidBody().setDamping(0.0f, 0.5f);
+		Gdx.app.log("Spaceship.load", "Adjusting scaling...");
 		getRigidBody().getCollisionShape().setLocalScaling(new Vector3(0.7f, 0.7f, 0.7f));
+		Gdx.app.log("Spaceship.load", "Adding rigid body to collision detector...");
 
 		CollisionDetector.getInstance().addRigidBody(this);
+		Gdx.app.log("Spaceship.load", "EXIT");
 	}
 
 	@Override

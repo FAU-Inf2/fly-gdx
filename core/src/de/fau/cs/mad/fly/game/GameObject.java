@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -256,9 +257,13 @@ public class GameObject extends ModelInstance implements Disposable {
      * the transform matrix if the rigid body is updated by the dynamic world.
      */
     public void addMotionState() {
+        Gdx.app.log("GameObject.addMotionState", "ENTER");
         motionState = new GameObjectMotionState();
+        Gdx.app.log("GameObject.addMotionState", "created motionState");
         motionState.transform = transform;
         rigidBody.setMotionState(motionState);
+        Gdx.app.log("GameObject.addMotionState", "added motionState to rigidBody");
+        Gdx.app.log("GameObject.addMotionState", "EXIT");
     }
 
     /**

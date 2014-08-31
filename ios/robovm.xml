@@ -18,6 +18,9 @@
     </resource>
   </resources>
   <forceLinkClasses>
+    <pattern>de.fau.cs.mad.fly.levels.**.*</pattern>
+    <pattern>com.badlogic.gdx.graphics.g3d.particles.renderers.*</pattern>
+    <pattern>com.badlogic.gdx.graphics.g3d.particles.influencers.*</pattern>
     <pattern>com.badlogic.gdx.scenes.scene2d.ui.*</pattern>
     <pattern>com.android.org.conscrypt.OpenSSLProvider</pattern>
     <pattern>org.apache.harmony.security.provider.cert.DRLCertFactory</pattern>
