@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
+import de.fau.cs.mad.fly.Fly.Mode3d2dChangedEvent;
 import de.fau.cs.mad.fly.game.TimeIsUpListener;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -70,6 +71,8 @@ public class TimeUpOverlay implements TimeIsUpListener {
         outerTable.add(messageTable).center();
         
         stage.addActor(outerTable);
+        Fly game = (Fly) Gdx.app.getApplicationListener();
+        game.onMode3d2dChanged(Mode3d2dChangedEvent.MODE_2D);
         
         return false;
     }

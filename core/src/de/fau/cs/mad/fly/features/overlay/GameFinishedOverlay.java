@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
+import de.fau.cs.mad.fly.Fly.Mode3d2dChangedEvent;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
@@ -174,6 +175,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 
 		outerTable.add(messageTable).center();
 		stage.addActor(outerTable);
+		Fly game = (Fly) Gdx.app.getApplicationListener();
+        game.onMode3d2dChanged(Mode3d2dChangedEvent.MODE_2D);
 	}
     
     private void showInfoLabel(final Table messageTable, String info) {
