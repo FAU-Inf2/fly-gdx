@@ -83,9 +83,9 @@ public class InfoButtonOverlay {
 	 */
 	public void setOverlay(String text) {
 		if(text.contains("\n")) {
-			innerTable.setBounds(800, 1600, 2400, 750);
+			innerTable.setBounds(800, 1600, 2200, 750);
 		} else {		
-			innerTable.setBounds(800, 1800, 2400, 550);
+			innerTable.setBounds(800, 1800, 2200, 550);
 		}
 		infoLabel.setText(text);
 		setVisible(true);

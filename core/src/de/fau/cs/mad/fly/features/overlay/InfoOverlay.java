@@ -88,9 +88,9 @@ public class InfoOverlay implements IFeatureUpdate {
 		this.duration = (float) duration;
 		
 		if(text.contains("\n")) {
-			innerTable.setBounds(800, 1950, 2400, 400);
+			innerTable.setBounds(800, 1950, 2200, 400);
 		} else {		
-			innerTable.setBounds(800, 2050, 2400, 200);
+			innerTable.setBounds(800, 2050, 2200, 200);
 		}
 		infoLabel.setText(text);
 		setVisible(true);
