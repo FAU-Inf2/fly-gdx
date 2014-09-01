@@ -3,14 +3,15 @@ package de.fau.cs.mad.fly.ui;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
@@ -156,7 +157,10 @@ public class LevelsStatisScreen extends BasicScreen {
                             
                             Gdx.app.log("timing", " UI one score record UI builded " + (end - begin));
                             uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin, UI.Buttons.DEFAULT_STYLE);
-                            uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score.getTotalScore()));
+                            if(score.getIsUploaded()) {
+                            	uploadScoreButton.setDisabled(true);
+                            }
+                            uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score.getTotalScore(),uploadScoreButton));
                             scoreTable.row().expand();
                             scoreTable.add(uploadScoreButton).pad(6f).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
                             scoreTable.row().expand();
@@ -196,26 +200,29 @@ public class LevelsStatisScreen extends BasicScreen {
      * @author Lenovo
      * 
      */
-    public class UploadScoreClickListener extends ClickListener {
+    public class UploadScoreClickListener extends ChangeListener {
         
         private int levelgroupId;
         private int levelId;
         private int score;
+        private TextButton button;
         
-        public UploadScoreClickListener(int levelgroup, int level, int score) {
+        public UploadScoreClickListener(int levelgroup, int level, int score, TextButton button) {
             super();
             levelgroupId = levelgroup;
             levelId = level;
             this.score = score;
+            this.button = button;
         }
         
         @Override
-        public void clicked(InputEvent event, float x, float y) {
+        public void changed(ChangeEvent event, Actor actor) {
             final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
             requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
             requestData.LevelID = levelId;
             requestData.Score = score;
-            final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener();
+            requestData.LevelgroupID = levelgroupId;
+            final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener(button);
             final PostHighscoreService postHighscoreService = new PostHighscoreService(postScoreListener, requestData);
             // if the current user have to fly-id (user id got from server side)
             // in database,
@@ -262,7 +269,11 @@ public class LevelsStatisScreen extends BasicScreen {
                 @Override
                 public void run() {
                     Dialog dialog = new Dialog("", skin, "dialog");
-                    dialog.text(msgg.substring(0, 20) + "...");
+                    if(msgg!=null && msgg.length()>21){
+                    	dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");
+                    } else {
+                    	dialog.text(I18n.t("ConnectServerError") + msgg);
+                    }
                     TextButton button = new TextButton(I18n.t("ok"), skin, "rounded");
                     dialog.button(button);
                     dialog.show(stage);
@@ -282,11 +293,17 @@ public class LevelsStatisScreen extends BasicScreen {
      * 
      */
     public class PostScoreHttpRespListener implements FlyHttpResponseListener {
+    	private TextButton button;
+    	
+    	public PostScoreHttpRespListener(TextButton button){
+    		this.button = button;
+    	}
         @Override
         public void successful(Object obj) {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
+                	button.setDisabled(true);
                     Dialog dialog = new Dialog("", skin, "dialog");
                     dialog.text(I18n.t("ScoreUploaded"));
                     TextButton button = new TextButton(I18n.t("ok"), skin, "rounded");
@@ -303,7 +320,11 @@ public class LevelsStatisScreen extends BasicScreen {
                 @Override
                 public void run() {
                     Dialog dialog = new Dialog("", skin, "dialog");
-                    dialog.text(msgg.substring(0, 20) + "...");
+                    if(msgg!=null && msgg.length()>21){
+                    	dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");
+                    } else {
+                    	dialog.text(I18n.t("ConnectServerError") + msgg);
+                    }
                     TextButton button = new TextButton(I18n.t("ok"), skin, "rounded");
                     dialog.button(button);
                     dialog.show(stage);

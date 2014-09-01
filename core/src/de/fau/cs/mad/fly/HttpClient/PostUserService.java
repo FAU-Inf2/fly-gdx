@@ -40,14 +40,14 @@ public class PostUserService {
 					Gdx.app.log("PostUserService", id + "");
 					listener.successful(id);
 				} else {
-					Gdx.app.log("PostUserService", "new" + String.valueOf(status.getStatusCode()));
+					Gdx.app.log("PostUserService", "new fly id server return code: " + String.valueOf(status.getStatusCode()));
 					listener.failed(String.valueOf(status.getStatusCode()));
 				}
 			}
 
 			@Override
 			public void failed(Throwable t) {
-				Gdx.app.log("PostUserService", t.getMessage());
+				Gdx.app.log("PostUserService", "new fly id server failed msg" + t.getMessage());
 				listener.failed(t.getLocalizedMessage());
 			}
 

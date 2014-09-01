@@ -28,7 +28,7 @@ public class FlyDBManager {
 		Gdx.app.log("FlyDBManager", "setupDatabase begin " + System.currentTimeMillis());
 		String createTablePlayer = "create table if not exists player(player_id integer primary key autoincrement, fly_id text, name text not null, total_score integer not null default 0, total_geld integer not null default 0, current_levelgroup_id integer not null default -1, current_level_id integer not null default 1,"
 				+ "passed_levelgroup_id integer not null default 1, passed_level_id integer not null default 1)";
-		String createTableScore = "create table if not exists score(player_id integer not null, level_group_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date)";
+		String createTableScore = "create table if not exists score(player_id integer not null, level_group_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date, is_uploaded integer not null default 0)";
 		String createTableScoreDetail = "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, level_group_id integer not null, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
 		String createTavleVersion = "create table if not exists fly_db_version(_version interger not null)";
 		String insertDBVersion = "insert into fly_db_version values(1)";
