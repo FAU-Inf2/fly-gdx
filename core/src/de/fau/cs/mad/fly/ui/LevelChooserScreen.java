@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+
+import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelProfile;
@@ -48,7 +50,7 @@ public class LevelChooserScreen extends BasicScreen {
 				final LevelProfile level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
 				final TextButton button = new TextButton(level.name, skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
 				
-				if (levelGroup.id > PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID()
+				if (!Fly.DEBUG_MODE && levelGroup.id > PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID()
 						|| (levelGroup.id == PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID() && level.id > PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelID())) {
 					button.setDisabled(true);
 				}

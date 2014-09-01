@@ -47,6 +47,13 @@ public class Fly extends Game {
 	 * The version of the app. (works only on android)
 	 */
 	public static String VERSION = "1.0.0";
+	
+	/**
+	 * True if debug mode is enabled, false otherwise.
+	 * <p>
+	 * Currently debug mode only disables the level dependencies.
+	 */
+	public static boolean DEBUG_MODE = false;
 
     private SplashScreen splashScreen;
     private LevelGroupScreen levelGroupScreen;
