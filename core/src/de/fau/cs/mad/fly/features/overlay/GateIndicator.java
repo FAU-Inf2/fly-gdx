@@ -113,16 +113,13 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
         this.arrow = arrow;
         this.arrowWidth = arrow.getRegionWidth();
         this.arrowHeigth = arrow.getRegionHeight();
-        
         this.originX = arrow.getRegionWidth() / 2;
         this.originY = -radius;
-        
         this.startPosX = horizontalCenter - arrow.getRegionWidth() / 2;
-        
         this.batch = new SpriteBatch();
-        this.scalingFactor = Gdx.graphics.getWidth() / UI.Window.REFERENCE_WIDTH * 1f;
-        this.maxScalingFactor = Gdx.graphics.getWidth() / UI.Window.REFERENCE_WIDTH * 2f;
-        this.minScalingFactor = Gdx.graphics.getWidth() / UI.Window.REFERENCE_WIDTH * 1f;
+        this.scalingFactor = Gdx.graphics.getWidth() / UI.Window.REFERENCE_WIDTH;
+        this.maxScalingFactor = scalingFactor * 2f;
+        this.minScalingFactor = scalingFactor;
         this.toGate = new Vector3();
     }
     
