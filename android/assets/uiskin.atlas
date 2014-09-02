@@ -244,10 +244,10 @@ green-progress-bar
   index: -1
 grey-progress-bar
   rotate: false
-  xy: 112, 309
-  size: 133, 133
-  split: 66, 66, 66, 66
-  orig: 133, 133
+  xy: 112, 310
+  size: 131, 131
+  split: 65, 65, 65, 65
+  orig: 131, 131
   offset: 0, 0
   index: -1
 watch
