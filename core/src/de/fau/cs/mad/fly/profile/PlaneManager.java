@@ -161,8 +161,9 @@ public class PlaneManager {
 	}
 	
 	public boolean upgradeCanBeBought(PlaneUpgrade upgrade) {
+		int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
 		int currentlyBought = chosenPlane.upgradesBought.get(upgrade.name);
-		if(currentlyBought < upgrade.timesAvailable) {
+		if(currentlyBought < upgrade.timesAvailable && upgrade.price <= money) {
 			return true;
 		}
 		return false;

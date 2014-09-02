@@ -69,23 +69,29 @@ public class PlaneUpgradeScreen implements Screen {
         
         // adding the background
         initBackground();
-        
-        // initializing the overlay which contains the details of the current spaceship
-     	initOverlay();
 		
 		// initialize the upgradeOverlay
 		upgradeOverlay = new PlaneUpgradesOverlay(skin, stage, this);
 		upgradeOverlay.init();
+        
+        // initializing the overlay which contains the details of the current spaceship
+     	initOverlay();
 		
 		// initialize the InputProcessor
 		inputProcessor = new InputMultiplexer(stage, new BackProcessor());
 	}
 	
+	/**
+	 * updates the overlay to the current status of the current plane
+	 */
 	public void update() {
 		updateOverlay();
 	}
 	
-	public void initBackground() {
+	/**
+	 * initiates the background of the screen
+	 */
+	private void initBackground() {
 		Assets.load(new AssetDescriptor<Texture>("spaceships/previews/" + currentPlane.modelRef + ".png", Texture.class));
 		
 		background = new Sprite(Assets.manager.get(new AssetDescriptor<Texture>("spaceships/previews/" + currentPlane.modelRef + ".png", Texture.class)));
@@ -108,27 +114,29 @@ public class PlaneUpgradeScreen implements Screen {
 	/**
 	 * initializes the overlay which contains the details of the current spaceship
 	 */
-	private void initOverlay() {
+	public void initOverlay() {
+		float xPos = upgradeOverlay.getButtonWidth() * 1.1f;
+		
 		LabelStyle labelStyle = skin.get("red", LabelStyle.class);
 		nameLabel = new Label("", labelStyle);
         stage.addActor(nameLabel);
-        nameLabel.setPosition(100, viewport.getWorldHeight()-200);
+        nameLabel.setPosition(xPos, 1000);
         
         speedLabel = new Label("", labelStyle);
         stage.addActor(speedLabel);
-        speedLabel.setPosition(100, viewport.getWorldHeight()-400);
+        speedLabel.setPosition(xPos, 800);
         
         rollingSpeedLabel = new Label("", labelStyle);
         stage.addActor(rollingSpeedLabel);
-        rollingSpeedLabel.setPosition(100, viewport.getWorldHeight()-600);
+        rollingSpeedLabel.setPosition(xPos, 600);
         
         azimuthSpeedLabel = new Label("", labelStyle);
         stage.addActor(azimuthSpeedLabel);
-        azimuthSpeedLabel.setPosition(100, viewport.getWorldHeight()-800);
+        azimuthSpeedLabel.setPosition(xPos, 400);
         
         livesLabel = new Label("", labelStyle);
         stage.addActor(livesLabel);
-        livesLabel.setPosition(100, viewport.getWorldHeight()-1000);
+        livesLabel.setPosition(xPos, 200);
 	}
 	
 	/**
@@ -140,6 +148,17 @@ public class PlaneUpgradeScreen implements Screen {
 		rollingSpeedLabel.setText(pitch + ": " + Float.toString(currentPlane.rollingSpeed));
 		azimuthSpeedLabel.setText(turnSpeed + ": " + Float.toString(currentPlane.azimuthSpeed));
 		livesLabel.setText(lives + ": " + Integer.toString(currentPlane.lives));
+	}
+	
+	/**
+	 * adds the Overlay with information about the current plane to the screen
+	 */
+	public void addOverlay() {
+		stage.addActor(nameLabel);
+		stage.addActor(speedLabel);
+		stage.addActor(rollingSpeedLabel);
+		stage.addActor(azimuthSpeedLabel);
+		stage.addActor(livesLabel);
 	}
 
 	@Override
@@ -169,24 +188,25 @@ public class PlaneUpgradeScreen implements Screen {
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		updateOverlay();
+		//updateOverlay();
+		
+		addOverlay();
+		update();
+		upgradeOverlay.show();
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
 
