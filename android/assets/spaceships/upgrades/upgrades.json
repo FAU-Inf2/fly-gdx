@@ -36,7 +36,7 @@
 	]
 },
 {
-	"name": "armored hull",
+	"name": "armoredHull",
 	"times": 1,
 	"price": 5000,
 	"type": 0,
@@ -60,7 +60,7 @@
 	]
 },
 {
-	"name": "steamlined shape",
+	"name": "steamlinedShape",
 	"times": 2,
 	"price": 1000,
 	"type": 2,
@@ -72,7 +72,7 @@
 	]
 },
 {
-	"name": "hover module",
+	"name": "hoverModule",
 	"times": 3,
 	"price": 1000,
 	"type": 2,

@@ -57,11 +57,11 @@ public class PlaneUpgradesOverlay {
 		this.stage = stage;
 		this.screen = screen;
 		
-		buyButton = new TextButton("buy", skin, UI.Buttons.DEFAULT_STYLE);
-		upgradeButton = new TextButton(" + ", skin, UI.Buttons.DEFAULT_STYLE);
-		downgradeButton = new TextButton(" - ", skin, UI.Buttons.DEFAULT_STYLE);
-		backButton = new TextButton("back", skin, UI.Buttons.DEFAULT_STYLE);
-		cancelButton = new TextButton("cancel", skin, UI.Buttons.DEFAULT_STYLE);
+		buyButton = new TextButton(I18n.t("buy"), skin, UI.Buttons.DEFAULT_STYLE);
+		upgradeButton = new TextButton(I18n.t("equip"), skin, UI.Buttons.DEFAULT_STYLE);
+		downgradeButton = new TextButton(I18n.t("unequip"), skin, UI.Buttons.DEFAULT_STYLE);
+		backButton = new TextButton(I18n.t("back"), skin, UI.Buttons.DEFAULT_STYLE);
+		cancelButton = new TextButton(I18n.t("cancel"), skin, UI.Buttons.DEFAULT_STYLE);
 		
 		upgradeButtons = new ArrayList<TextButton>();
 		
@@ -97,7 +97,7 @@ public class PlaneUpgradesOverlay {
 			for(int i = 0; i < size; i++) {
 				if(upgrade.type == upgradeTypes[i]) {
 					
-					final String name = upgrade.name;
+					final String name = I18n.t(upgrade.name);
 					final TextButton button = new TextButton(name, skin, UI.Buttons.DEFAULT_STYLE);
 					button.pad(10);
 					
@@ -124,9 +124,6 @@ public class PlaneUpgradesOverlay {
 		cancelButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				/*scrollableTable.clear();
-				scrollableTable.top().right();
-				scrollableTable.add(openButton);*/
 				((Fly) Gdx.app.getApplicationListener()).setPlaneChoosingScreen();
 			}
 		});
@@ -149,11 +146,11 @@ public class PlaneUpgradesOverlay {
 					int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
 					//nameLabel.setText("current money: " + money);
 					
-					upgradeButton.setText("equip");
+					upgradeButton.setText(I18n.t(I18n.t("equip")));
 					upgradeButton.setColor(Color.WHITE);
 					
 					if(!PlaneManager.getInstance().upgradeCanBeBought(currentUpgrade)) {
-						buyButton.setText("can't buy");
+						buyButton.setText(I18n.t("can't") + " " +I18n.t("buy"));
 						buyButton.setColor(Color.GRAY);
 					}
 				}
@@ -168,7 +165,7 @@ public class PlaneUpgradesOverlay {
 				int bought = PlaneManager.getInstance().getChosenPlane().upgradesBought.get(name);
 				if(equiped != bought) {
 					if(equiped == 0) {
-						downgradeButton.setText("unequip");
+						downgradeButton.setText(I18n.t("unequip"));
 						downgradeButton.setColor(Color.WHITE);
 					}
 					
@@ -176,7 +173,7 @@ public class PlaneUpgradesOverlay {
 					screen.update();
 					
 					if(equiped + 1 == bought) {
-						upgradeButton.setText("can't equip");
+						upgradeButton.setText(I18n.t("can't") + " " + I18n.t("equip"));
 						upgradeButton.setColor(Color.GRAY);
 					}
 				}
@@ -191,7 +188,7 @@ public class PlaneUpgradesOverlay {
 				
 				if(equiped != 0) {
 					if(equiped == currentUpgrade.timesAvailable) {
-						upgradeButton.setText(" + ");
+						upgradeButton.setText(I18n.t("equip"));
 						upgradeButton.setColor(Color.WHITE);
 					}
 					
@@ -199,7 +196,7 @@ public class PlaneUpgradesOverlay {
 					screen.update();
 					
 					if(equiped - 1 == 0) {
-						downgradeButton.setText("can't unequip");
+						downgradeButton.setText(I18n.t("can't") + " " + I18n.t("unequip"));
 						downgradeButton.setColor(Color.GRAY);
 					}
 				}
@@ -236,22 +233,24 @@ public class PlaneUpgradesOverlay {
 		int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
 		
 		// setting up the Lables and Buttons according to current Upgrade
-		upgradeNameLabel.setText("Upgrade: " + currentUpgrade.name);
-		changeLabel.setText("changes: " + getChanges());
-		upgradeCostLabel.setText("cost: " + currentUpgrade.price + "\ncurrent money: " + money);
-		upgradeStateLabel.setText("maximum: " + currentUpgrade.timesAvailable + "\nbought: " + bought + "\nequiped: " + equiped);
+		upgradeNameLabel.setText(I18n.t("upgrade") + ": " + I18n.t(currentUpgrade.name));
+		changeLabel.setText(I18n.t("changes") + ": " + getChanges());
+		upgradeCostLabel.setText(I18n.t("cost") + ": " + currentUpgrade.price + "\n" + I18n.t("currentMoney") + ": " + money);
+		upgradeStateLabel.setText(I18n.t("maximum") + ": " + currentUpgrade.timesAvailable + 
+									"\n" + I18n.t("bought") + ": " + bought + 
+									"\n" + I18n.t("equiped") + ": " + equiped);
 		
 		if(!PlaneManager.getInstance().upgradeCanBeBought(currentUpgrade)) {
-			buyButton.setText("can't buy");
+			buyButton.setText(I18n.t("can't") + " " + I18n.t("buy"));
 			buyButton.setColor(Color.GRAY);
 		}
 		
 		if(equiped == bought) {
-			upgradeButton.setText("can't equip");
+			upgradeButton.setText(I18n.t("can't") + " " + I18n.t("equip"));
 			upgradeButton.setColor(Color.GRAY);
 		}
 		if(equiped == 0) {
-			downgradeButton.setText("can't unequip");
+			downgradeButton.setText(I18n.t("can't") + " " + I18n.t("unequip"));
 			downgradeButton.setColor(Color.GRAY);
 		}
 		
@@ -332,7 +331,7 @@ public class PlaneUpgradesOverlay {
 		
 		for(int i = 0; i < values.length; i++) {
 			if(values[i] != 0) {
-				changes += "\n    " + names[i] + " by " + values[i];
+				changes += "\n    " + I18n.t(names[i]) + " " + I18n.t("by") + " " + values[i];
 			}
 		}
 		
