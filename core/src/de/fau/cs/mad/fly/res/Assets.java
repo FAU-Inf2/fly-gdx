@@ -18,7 +18,7 @@ public class Assets {
     public static final AssetDescriptor<TextureAtlas> textureAtlas = new AssetDescriptor<TextureAtlas>("uiskin.atlas", TextureAtlas.class);
     
     public static final AssetDescriptor<GameModel> arrow = new AssetDescriptor<GameModel>("3d/arrow/arrow", GameModel.class);
-    public static final AssetDescriptor<Texture> background = new AssetDescriptor<Texture>("background.png", Texture.class);
+    public static final AssetDescriptor<Texture> background = new AssetDescriptor<Texture>("background.jpg", Texture.class);
     
     public static void init() {
         manager = new AssetManager();
