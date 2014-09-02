@@ -33,6 +33,7 @@ public class ShuttleParticle implements IParticle {
 		ParticleEffectLoader.ParticleEffectLoadParameter loadParam = new ParticleEffectLoader.ParticleEffectLoadParameter(ParticleController.getInstance().getBatches());
 		Assets.manager.load(assetRef, ParticleEffect.class, loadParam);
 		Assets.manager.finishLoading();
+		Gdx.app.log("SpaceshipParticle", "Finished loading " + assetRef);
 	}
 	
 	/**

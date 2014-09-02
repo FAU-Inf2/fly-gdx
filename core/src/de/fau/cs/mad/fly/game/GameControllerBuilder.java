@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureDraw;
@@ -112,7 +113,7 @@ public class GameControllerBuilder {
         this.game = game;
         player = new Player();
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-        level = playerProfile.getLevel();
+        level = Loader.getInstance().getCurrentLevel();
         flightController = new FlightController(player, playerProfile);
         cameraController = new CameraController(player, playerProfile);
         
@@ -175,7 +176,7 @@ public class GameControllerBuilder {
             public void onGatePassed(GateGoal passed) {
                 GateCircuit gateCircuit = level.getGateCircuit();
                 
-                if (level.head.name.equals("Endless")) {
+                if (level.head.isEndless()) {
                     for (GateGoal g : generator.getGates())
                         g.unmark();
                 } else {
@@ -191,8 +192,8 @@ public class GameControllerBuilder {
         
         gateCircuit.addListener(scoreController);
         
-        if (level.head.name.equals("Endless")) {
-            generator = new EndlessLevelGenerator(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLevel());
+        if (level.head.isEndless()) {
+            generator = new EndlessLevelGenerator(Loader.getInstance().getCurrentLevel());
             
             gateCircuit.addListener(new GateCircuitAdapter() {
                 @Override

@@ -2,10 +2,11 @@ buildscript {
     repositories {
         mavenCentral()
         mavenLocal()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.12.+'
-        classpath 'com.github.jtakakura:gradle-robovm-plugin:0.0.10'
+        classpath 'org.robovm:robovm-gradle-plugin:1.0.0-alpha-01'
     }
 }
 

@@ -24,27 +24,26 @@ import de.fau.cs.mad.fly.ui.UI;
  */
 public class GateIndicator implements IFeatureInit, IFeatureDraw {
     
-    /**
-     * Vector that points from the midpoint of the near plane to the projected
-     * point on the near plane.
-     */
-    private Vector3 vectorToTarget;
-    /**
-     * Vector that points right, compared to the camera direction. It should
-     * always have the length 1.
-     */
-    private Vector3 cross;
-    /**
-     * Local copy of the camera direction to calculate with.
-     */
-    private Vector3 midPoint;
+    /** Local copy of the gate position to calculate with. */
+    private Vector3 gatePosition;
     
-    // the following 4 Vectors are made members, to avoid recreating them every
-    // frame
-    private static Vector3 x = new Vector3();
-    private static Vector3 y = new Vector3();
+    /** Projected target point on near plane of the camera. */
+    private Vector3 pointOnNearPlane;
+    
+    /** Points from camera.position to target */
+    private Vector3 toGate;
+    
+    /** Vector that points upwards in 2d screen space. */
+    private final static Vector3 screenUp = new Vector3(0, 1, 0);
+    
+    /** Vector that points right in 2d screen space. */
+    private final static Vector3 screenRight = new Vector3(1, 0, 0);
+    
+    /**
+     * Vector used for calculating the angle between two vectors. Made member to
+     * avoid recreation every frame
+     */
     private static Vector3 tmp1 = new Vector3();
-    private static Vector3 tmp2 = new Vector3();
     
     /** Local copy of the camera for performance reasons. */
     private Camera camera;
@@ -54,6 +53,12 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
     
     /** Factor to scale the arrow according to the resolution */
     private float scalingFactor;
+    
+    /** max Factor to scale the arrow according to the resolution */
+    private float maxScalingFactor;
+    
+    /** min Factor to scale the arrow according to the resolution */
+    private float minScalingFactor;
     
     /** Batch that is used for rendering the indicators */
     private final Batch batch;
@@ -108,35 +113,31 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
         this.arrow = arrow;
         this.arrowWidth = arrow.getRegionWidth();
         this.arrowHeigth = arrow.getRegionHeight();
-        
         this.originX = arrow.getRegionWidth() / 2;
         this.originY = -radius;
-        
         this.startPosX = horizontalCenter - arrow.getRegionWidth() / 2;
-        this.midPoint = new Vector3();
-        
         this.batch = new SpriteBatch();
-        this.scalingFactor = Gdx.graphics.getWidth() / UI.Window.REFERENCE_WIDTH * 2f;
+        this.scalingFactor = Gdx.graphics.getWidth() / UI.Window.REFERENCE_WIDTH;
+        this.maxScalingFactor = scalingFactor * 2f;
+        this.minScalingFactor = scalingFactor;
+        this.toGate = new Vector3();
     }
     
     @Override
     public void init(final GameController gameController) {
         this.level = gameController.getLevel();
         this.camera = gameController.getCamera();
-        this.vectorToTarget = new Vector3();
-        this.cross = new Vector3();
     }
     
     @Override
     public void draw(float delta) {
-        // vector orthogonal to up and cameraDirection
-        cross.set(camera.up).crs(camera.direction);
         GateCircuit gateCircuit = level.getGateCircuit();
         int numberOfGates = gateCircuit.currentGates().length;
         boolean drawIndicator = true;
+        int i = 0;
         
-        // only show gate indicator when no next gate is visible
-        for (int i = 0; i < numberOfGates; i++) {
+        // only show gate indicator when none of the next gates are visible
+        for (; i < numberOfGates; i++) {
             GameObject gate = gateCircuit.getGateGoalById(gateCircuit.currentGates()[i]);
             if (gate.isVisible(camera)) {
                 drawIndicator = false;
@@ -146,51 +147,36 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
         
         if (drawIndicator) {
             batch.begin();
-            for (int i = 0; i < numberOfGates; i++) {
-                GameObject gate = gateCircuit.getGateGoalById(gateCircuit.currentGates()[i]);
+            for (i = 0; i < numberOfGates; i++) {
+                gatePosition = gateCircuit.getGateGoalById(gateCircuit.currentGates()[i]).getPosition();
+                pointOnNearPlane = camera.project(gatePosition.cpy());
+                pointOnNearPlane.set(pointOnNearPlane.x - Gdx.graphics.getWidth() / 2, pointOnNearPlane.y - Gdx.graphics.getHeight() / 2, 0);
                 
-                // get the midpoint in the near plane to compute the vector
-                // to the projected point
-                midPoint.set(camera.direction).scl(camera.near).add(camera.position);
-                vectorToTarget.set(projectPointToPlane(gate.getPosition(), cross, camera.up));
-                vectorToTarget.sub(camera.position);
-                angle = angleBetweenTwoVectors(camera.up, vectorToTarget);
+                toGate.set(gatePosition).sub(camera.position);
+                // flip the pointOnNearPlane because for angles > 90 the vector
+                // is calculated wrong
+                if (angleBetweenTwoVectors(camera.direction, toGate) > 90) {
+                    pointOnNearPlane.scl(-1);
+                }
+                angle = angleBetweenTwoVectors(screenUp, pointOnNearPlane);
+                
                 // as the angle is only computed from 0 to 180°, it is
                 // necessary to flip the direction, if it has the other
                 // direction than the reference vector. Otherwise the indicator
                 // would only point left
-                if (vectorToTarget.hasOppositeDirection(cross)) {
+                if (pointOnNearPlane.hasSameDirection(screenRight)) {
                     angle = 360 - angle;
                 }
+                
+                // calculate the size of the arrow according to the distance of
+                // the target
+                scalingFactor = 10/toGate.len();
+                scalingFactor = Math.min(scalingFactor, maxScalingFactor);
+                scalingFactor = Math.max(scalingFactor, minScalingFactor);
                 batch.draw(arrow, startPosX, startPosY, originX, originY, arrowWidth, arrowHeigth, scalingFactor, scalingFactor, angle);
             }
             batch.end();
         }
-    }
-    
-    /**
-     * Projects a point onto a plane.
-     * <p>
-     * A plane is defined by the two plane-vectors. The point outside the plane
-     * is projected orthogonally to the plane on the plane. The result is a
-     * point the plane with the smallest distance to the given point outside the
-     * plane.
-     * <p>
-     * The order of the plane vectors does not matter.
-     * 
-     * @param planeX
-     *            one of the vectors defining the plane
-     * @param planeY
-     *            the other vector defining the plane
-     * @param pointOutsideThePlane
-     *            point that is projected onto the plane
-     */
-    public static Vector3 projectPointToPlane(Vector3 pointOutsideThePlane, Vector3 planeX, Vector3 planeY) {
-        x.set(planeX);
-        y.set(planeY);
-        y.scl(tmp1.set(pointOutsideThePlane).dot(y) / y.len2());
-        x.scl(tmp2.set(pointOutsideThePlane).dot(x) / x.len2());
-        return y.add(x);
     }
     
     /**

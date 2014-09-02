@@ -34,14 +34,14 @@ public class GameModelLoader extends AsynchronousAssetLoader<GameModel, GameMode
     
     private void getHitbox(String fileName) {
         if (hitboxName == null && hitboxExists) {
-            hitboxName = fileName.replace(".obj", ".hitbox.obj");
+            hitboxName = fileName.replace(".g3db", ".hitbox.g3db");
             hitboxExists = resolve(hitboxName).exists();
         }
     }
     
     @Override
     public void loadAsync(AssetManager manager, String fileName, FileHandle file, GameModelParameters parameter) {
-        fileName += ".obj";
+        fileName += ".g3db";
         object = null;
         getHitbox(fileName);
         Model display = manager.get(fileName, Model.class);
@@ -63,21 +63,21 @@ public class GameModelLoader extends AsynchronousAssetLoader<GameModel, GameMode
     
     @Override
     public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, GameModelParameters parameter) {
-        fileName += ".obj";
+        fileName += ".g3db";
         getHitbox(fileName);
         Array<AssetDescriptor> arr = new Array<AssetDescriptor>();
         
-        ObjLoaderParameters modelParameters = new ObjLoaderParameters();
-        
+//        ObjLoaderParameters modelParameters = new ObjLoaderParameters();
+
         // TODO: bad workaround for the spacesphere
-        if (!fileName.equals("spacesphere.obj")) {
-            modelParameters.textureParameter.genMipMaps = true;
-            // TODO: check if the mag and min filter parameter are correct.
-            modelParameters.textureParameter.magFilter = TextureFilter.MipMap;
-            modelParameters.textureParameter.minFilter = TextureFilter.Nearest;
-        }
+//        if (!fileName.equals("spacesphere.obj")) {
+//            modelParameters.textureParameter.genMipMaps = true;
+//            // TODO: check if the mag and min filter parameter are correct.
+//            modelParameters.textureParameter.magFilter = TextureFilter.MipMap;
+//            modelParameters.textureParameter.minFilter = TextureFilter.Nearest;
+//        }
         
-        arr.add(new AssetDescriptor<Model>(fileName, Model.class, modelParameters));
+        arr.add(new AssetDescriptor<Model>(fileName, Model.class));
         if (hitboxExists)
             arr.add(new AssetDescriptor<Model>(hitboxName, Model.class));
         return arr;

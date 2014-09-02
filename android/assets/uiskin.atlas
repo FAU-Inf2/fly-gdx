@@ -28,7 +28,7 @@ default-select
   index: -1
 default-round-large
   rotate: false
-  xy: 57, 29
+  xy: 58, 29
   size: 40, 20
   split: 5, 5, 5, 4
   orig: 40, 20
@@ -36,7 +36,7 @@ default-round-large
   index: -1
 default-scroll
   rotate: false
-  xy: 57, 8
+  xy: 58, 8
   size: 40, 20
   split: 2, 2, 2, 2
   orig: 40, 20
@@ -144,7 +144,7 @@ default-splitpane
 cursor
   rotate: false
   xy: 23, 1
-  size: 3, 3
+  size: 8, 3
   split: 1, 1, 1, 1
   orig: 3, 3
   offset: 0, 0
@@ -245,9 +245,9 @@ green-progress-bar
 grey-progress-bar
   rotate: false
   xy: 112, 310
-  size: 133, 133
-  split: 66, 66, 66, 66
-  orig: 133, 133
+  size: 131, 131
+  split: 65, 65, 65, 65
+  orig: 131, 131
   offset: 0, 0
   index: -1
 watch
@@ -259,7 +259,7 @@ watch
   index: -1
 star
   rotate: false
-  xy: 400, 300
+  xy: 401, 253
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
@@ -287,8 +287,40 @@ helpBackground
   index: -1
 questionmark
   rotate: false
-  xy: 402, 446
-  size: 120, 230
-  orig: 120, 230
+  xy: 403, 485
+  size: 118, 230
+  orig: 118, 230
+  offset: 0, 0
+  index: -1
+green-text-field
+  rotate: false
+  xy: 404,374
+  size: 107, 108
+  split: 52, 52, 52, 52
+  orig: 108, 108
+  offset: 0, 0
+  index: -1
+green-select-box
+  rotate: false
+  xy: 545,0
+  size: 164, 219
+  split: 52, 109, 52, 52
+  orig: 165, 219
+  offset: 0, 0
+  index: -1
+grey-select-drop-down
+  rotate: false
+  xy: 524, 531
+  size: 227, 176
+  split: 66, 160, 109, 66
+  orig: 227, 176
+  offset: 0, 0
+  index: -1
+dialog-background
+  rotate: false
+  xy: 524, 397
+  size: 131, 131
+  split: 65, 65, 65, 65
+  orig: 133, 133
   offset: 0, 0
   index: -1

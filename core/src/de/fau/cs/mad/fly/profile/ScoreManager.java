@@ -29,16 +29,16 @@ public class ScoreManager {
 		Score compareScore = getLevelBestScore(playerProfile, level);
 		if (compareScore != null && compareScore.getTotalScore() > score.getTotalScore())
 			return;
-		int levelgroupID = playerProfile.getChosenLevelGroup().id;
+		int levelgroupID = playerProfile.getCurrentLevelGroup().id;
 
 		String deleteDetail = "delete from score_detail where player_id=" + playerProfile.getId() + " and level_id=" + level.id + " and level_group_id=" + levelgroupID;
 
 		String deleteScore = "delete from score where player_id=" + playerProfile.getId() + " and level_id=" + level.id + " and level_group_id=" + levelgroupID;
 
-		String insertScore = "insert into score(player_id, level_id, score, compare_score,level_group_id) values (" 			
+		String insertScore = "insert into score(player_id, level_group_id, level_id, score, compare_score,is_uploaded) values (" 			
 				// todo+ ", " + FlyDBManager.SCORE_COLUMN_REACHEDDATE
-				+ playerProfile.getId() + ", " + level.id + ", " + score.getTotalScore()
-				+ ", '" + score.getCompareScore() + "'," + levelgroupID + ") ";
+				+ playerProfile.getId() + ", " + levelgroupID + ", " + level.id + "," + score.getTotalScore()
+				+ ", '" + score.getCompareScore() + "'," + (score.getIsUploaded()?"1":"0") + ") ";
 
 		// FlyDBManager.getInstance().openDatabase();
 		FlyDBManager.getInstance().execSQL(deleteDetail);
@@ -54,12 +54,12 @@ public class ScoreManager {
 	}
 
 	public void saveBestScore(PlayerProfile playerProfile, Score score) {
-		saveBestScore(playerProfile, playerProfile.getLevel().head, score);
+		saveBestScore(playerProfile, playerProfile.getCurrentLevelProfile(), score);
 	}
 
 	public void saveBestScore(Score score) {
 		saveBestScore(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), PlayerProfileManager.getInstance()
-				.getCurrentPlayerProfile().getLevel().head, score);
+				.getCurrentPlayerProfile().getCurrentLevelProfile(), score);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class ScoreManager {
 	 * @return
 	 */
 	public Map<String, Score> getPlayerBestScores(PlayerProfile playerProfile, LevelGroup levelGroup) {
-		String selectScore = "select level_id, score, compare_score, reached_date from score where player_id ="
+		String selectScore = "select level_id, score, compare_score, reached_date,is_uploaded from score where player_id ="
 				+ playerProfile.getId() + " and level_group_id=" + levelGroup.id;
 		Map<String, Score> map = new HashMap<String, Score>();
 
@@ -81,6 +81,7 @@ public class ScoreManager {
 				score.setTotalScore(cursor.getInt(1));
 				score.setCompareScore(cursor.getString(2));
 				// todo score.setReachedDate(cursor.getString(3));
+				score.setIsUploaded(cursor.getInt(4)>0);
 
 				String selectDetail = "select score_detail,_value from score_detail where player_id=" + playerProfile.getId()
 						+ " and level_id=" + levelId
@@ -107,7 +108,7 @@ public class ScoreManager {
 	}
 
 	public Map<String, Score> getPlayerBestScores(PlayerProfile playerProfile){
-		return getPlayerBestScores(playerProfile, playerProfile.getChosenLevelGroup());
+		return getPlayerBestScores(playerProfile, playerProfile.getCurrentLevelGroup());
 	}
 	
 	public Map<String, Score> getcurrentBestScores() {
@@ -115,8 +116,8 @@ public class ScoreManager {
 	}
 
 	public Score getLevelBestScore(PlayerProfile playerProfile, LevelProfile level) {
-		int levelgroupID = playerProfile.getChosenLevelGroup().id;
-		String selectScore = "select score, compare_score, reached_date from score where player_id =" + playerProfile.getId() + " and level_id=" + level.id 
+		int levelgroupID = playerProfile.getCurrentLevelGroup().id;
+		String selectScore = "select score, compare_score, reached_date, is_uploaded  from score where player_id =" + playerProfile.getId() + " and level_id=" + level.id 
 				+ " and level_group_id=" + levelgroupID;
 
 		String selectDetail = "select score_detail,_value from score_detail where player_id=" + playerProfile.getId() + " and level_id=" + level.id + " and level_group_id=" + levelgroupID;
@@ -129,6 +130,7 @@ public class ScoreManager {
 			score.setTotalScore(cursor.getInt(0));
 			score.setCompareScore(cursor.getString(1));
 			// todo score.setReachedDate(cursor.getString(2));
+			score.setIsUploaded(cursor.getInt(3)>0);
 			cursor.close();
 			List<ScoreDetail> details = new ArrayList<ScoreDetail>();
 			DatabaseCursor subCursor = FlyDBManager.getInstance().selectData(selectDetail);
@@ -150,11 +152,19 @@ public class ScoreManager {
 	}
 
 	public Score getLevelBestScore(PlayerProfile playerProfile) {
-		return getLevelBestScore(playerProfile, playerProfile.getLevel().head);
+		return getLevelBestScore(playerProfile, playerProfile.getCurrentLevelProfile());
 	}
 
 	public Score getCurrentLevelBestScore() {
 		return getLevelBestScore(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), PlayerProfileManager
-				.getInstance().getCurrentPlayerProfile().getLevel().head);
+				.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile());
+	}
+	
+	public void updateIsUploaded(Score score, int playerId, int groupId, int levelId){
+		String sql = "update score set is_uploaded = " + (score.getIsUploaded()?"1":"0") + " where player_id=" + playerId
+				+ " and level_id=" + levelId
+				+ " and level_group_id=" + groupId;
+		FlyDBManager.getInstance().execSQL(sql);
+		
 	}
 }

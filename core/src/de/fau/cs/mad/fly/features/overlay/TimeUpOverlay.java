@@ -15,10 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
+import de.fau.cs.mad.fly.Fly.Mode3d2dChangedEvent;
 import de.fau.cs.mad.fly.game.TimeIsUpListener;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
-import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.UI;
 
 public class TimeUpOverlay implements TimeIsUpListener {
@@ -33,9 +33,6 @@ public class TimeUpOverlay implements TimeIsUpListener {
     
     @Override
     public boolean timeIsUp() {
-    	LevelProfile lastLevel = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
-    	PlayerProfileManager.getInstance().getCurrentPlayerProfile().setLastLevel(lastLevel);
-    	
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         
@@ -54,11 +51,8 @@ public class TimeUpOverlay implements TimeIsUpListener {
         restartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	String levelPath = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLastLevel().file.path();
-            	Assets.unload(levelPath);
-            	
-                LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevel();
-                Loader.loadLevel(levelHead);
+                LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
+                Loader.getInstance().loadLevel(levelHead);
             }
         });
         
@@ -77,6 +71,8 @@ public class TimeUpOverlay implements TimeIsUpListener {
         outerTable.add(messageTable).center();
         
         stage.addActor(outerTable);
+        Fly game = (Fly) Gdx.app.getApplicationListener();
+        game.onMode3d2dChanged(Mode3d2dChangedEvent.MODE_2D);
         
         return false;
     }

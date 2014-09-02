@@ -24,6 +24,7 @@ public class PostHighscoreService {
 		public int Score;
 		public int LevelID;
 		public int FlyID;
+		public int LevelgroupID;
 	}
 
 	public PostHighscoreService(FlyHttpResponseListener listener, RequestData requestData) {
@@ -40,7 +41,7 @@ public class PostHighscoreService {
 		request.setHeader("Content-Type", "application/json");
 		request.setUrl(RemoteServices.getServerURL() + "/highscores");
 		String res = "{ \"highscore\": { \"points\": " + requestData.Score + ", \"user_id\": "
-				+ requestData.FlyID + ", \"level_id\": " + requestData.LevelID + " } }";
+				+ requestData.FlyID + ", \"level_group_id\": " + requestData.LevelgroupID + ", \"level_id\": " + requestData.LevelID + " } }";
 		request.setContent(res);
 		Gdx.app.log("PostHighscoreService", res);
 
@@ -65,13 +66,13 @@ public class PostHighscoreService {
 				} else {
 					listener.failed(String.valueOf(status.getStatusCode()));
 				}
-				Gdx.app.log("PostHighscoreService", String.valueOf(status.getStatusCode()));
+				Gdx.app.log("PostHighscoreService", "server return code: " + String.valueOf(status.getStatusCode()));
 			}
 
 			@Override
 			public void failed(Throwable t) {
 				listener.failed(t.getLocalizedMessage());
-				Gdx.app.log("PostHighscoreService", t.getMessage());
+				Gdx.app.log("PostHighscoreService", "server return msg:" + t.getMessage());
 			}
 
 			@Override

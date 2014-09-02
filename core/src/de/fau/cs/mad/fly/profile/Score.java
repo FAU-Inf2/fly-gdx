@@ -17,6 +17,22 @@ public class Score {
 	private int id;
 	private int playTimes;
 	private Date reachedDate;
+	
+	private boolean isUploaded;
+
+	/**
+	 * @return the isUploaded
+	 */
+	public boolean getIsUploaded() {
+		return isUploaded;
+	}
+
+	/**
+	 * @param isUploaded the isUploaded to set
+	 */
+	public void setIsUploaded(boolean isUploaded) {
+		this.isUploaded = isUploaded;
+	}
 
 	private List<ScoreDetail> scoreDetails = new ArrayList<ScoreDetail>();
 

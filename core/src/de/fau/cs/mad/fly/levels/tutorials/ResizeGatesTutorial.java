@@ -45,7 +45,7 @@ public class ResizeGatesTutorial implements ILevel, IFeatureInit, ICollisionList
 	    	g.getRigidBody().getCollisionShape().setLocalScaling(scaling);
 	    }
 		
-		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.resize"), 5);
+		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.resize"), 5);
 	}
 	
 

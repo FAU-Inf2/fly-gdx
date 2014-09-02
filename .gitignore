@@ -25,6 +25,8 @@ desktop/shaders/
 desktop/uiskin.atlas
 desktop/uiskin.json
 desktop/uiskin.png
+desktop/background.jpg
+desktop/faumadfly*.db
 ios/.classpath
 ios/.project
 ios/.settings/
@@ -33,3 +35,5 @@ ios/robovm.xml
 *.iml
 local.properties
 .idea/
+build/
+android/assets/*.db

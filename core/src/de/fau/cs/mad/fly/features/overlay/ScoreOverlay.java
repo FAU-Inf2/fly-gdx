@@ -36,7 +36,7 @@ public class ScoreOverlay implements ScoreChangeListener {
         innerTable.add(scoreCounter).pad(0, 50, 0, 0);
         innerTable.row().expand();
         stage.addActor(innerTable);
-        innerTable.setBounds(3350, 2050, 600, 300);
+        innerTable.setBounds(3150, 2050, 800, 300);
 	}
 
 	@Override
