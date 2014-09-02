@@ -85,7 +85,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 	private boolean touched, secondTouch;
 	private float xFactor = 0.f, yFactor = 0.f, touchDistance;
 	private int lastX = 0, lastY = 0;
-	private float scale = 1;
+	private float absScale = 1;
 	
 	private String name, speed, pitch, turnSpeed ,lives;
 
@@ -408,6 +408,15 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 			float newTouchDistance = (float) Math.sqrt(xDif * xDif + yDif * yDif);
 			
 			float scale = touchDistance / newTouchDistance;
+			absScale += scale;
+			
+			if(absScale < 0.5f) {
+				absScale = 0.5f;
+				scale = 1;
+			} else if(absScale > 2.f) {
+				absScale = 2.f;
+				scale = 1;
+			}
 			
 			touchDistance = newTouchDistance;
 			
@@ -425,7 +434,17 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		scale = amount * 0.1f;
+		float scale = amount * 0.1f;
+		absScale += scale;
+
+		if(absScale < 0.5f) {
+			absScale = 0.5f;
+			scale = 0;
+		} else if(absScale > 2.f) {
+			absScale = 2.f;
+			scale = 0;
+		}
+		
 		camera.translate(camVec.cpy().scl(scale));
 		camera.update();
 		return false;
