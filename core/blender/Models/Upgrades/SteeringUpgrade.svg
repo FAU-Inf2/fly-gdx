@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800"
+   height="800"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="SteeringUpgrade.svg"
+   inkscape:export-filename="C:\Users\Tobi\MAD\Upgrades\SteeringUpgrade.png"
+   inkscape:export-xdpi="115.2"
+   inkscape:export-ydpi="115.2">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="79.178102"
+     inkscape:cy="406.86291"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:snap-page="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1030"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2985"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-252.36218)">
+    <rect
+       style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3100"
+       width="800"
+       height="800"
+       x="0"
+       y="252.36218" />
+    <g
+       id="g3102"
+       style="fill:#550000">
+      <rect
+         ry="0"
+         rx="0"
+         y="252.36218"
+         x="0"
+         height="800"
+         width="60"
+         id="rect3037"
+         style="fill-opacity:1;fill-rule:nonzero;stroke:none;fill:#550000" />
+      <rect
+         ry="0"
+         rx="0"
+         y="252.36218"
+         x="740"
+         height="800"
+         width="60"
+         id="rect3037-4"
+         style="fill-opacity:1;fill-rule:nonzero;stroke:none;fill:#550000" />
+      <rect
+         ry="0"
+         rx="0"
+         y="992.36218"
+         x="0"
+         height="60"
+         width="800"
+         id="rect3037-0"
+         style="fill-opacity:1;fill-rule:nonzero;stroke:none;fill:#550000" />
+      <rect
+         ry="0"
+         rx="0"
+         y="252.36218"
+         x="0"
+         height="60"
+         width="800"
+         id="rect3037-0-9"
+         style="fill-opacity:1;fill-rule:nonzero;stroke:none;fill:#550000" />
+    </g>
+    <path
+       style="fill:#550000;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="m 400.5,371.86218 c 40,20 60,60 60,100 0,73.33333 0,166.66667 0,240 l 200,120 0,60 -260,-40 -260,40 0,-60 200,-120 0,-240 c 0,-40 20,-80 60,-100 z"
+       id="path2995"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cscccccccsc" />
+  </g>
+</svg>

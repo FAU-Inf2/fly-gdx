@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800"
+   height="800"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="PointUpgrade.svg"
+   inkscape:export-filename="C:\Users\Tobi\MAD\PointUpgrade.png"
+   inkscape:export-xdpi="115.2"
+   inkscape:export-ydpi="115.2">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="79.178102"
+     inkscape:cy="406.86291"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:snap-page="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1030"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2985"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-252.36218)">
+    <rect
+       style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3100"
+       width="800"
+       height="800"
+       x="0"
+       y="252.36218" />
+    <g
+       id="g3102"
+       style="fill:#550000">
+      <rect
+         ry="0"
+         rx="0"
+         y="252.36218"
+         x="0"
+         height="800"
+         width="60"
+         id="rect3037"
+         style="fill-opacity:1;fill-rule:nonzero;stroke:none;fill:#550000" />
+      <rect
+         ry="0"
+         rx="0"
+         y="252.36218"
+         x="740"
+         height="800"
+         width="60"
+         id="rect3037-4"
+         style="fill-opacity:1;fill-rule:nonzero;stroke:none;fill:#550000" />
+      <rect
+         ry="0"
+         rx="0"
+         y="992.36218"
+         x="0"
+         height="60"
+         width="800"
+         id="rect3037-0"
+         style="fill-opacity:1;fill-rule:nonzero;stroke:none;fill:#550000" />
+      <rect
+         ry="0"
+         rx="0"
+         y="252.36218"
+         x="0"
+         height="60"
+         width="800"
+         id="rect3037-0-9"
+         style="fill-opacity:1;fill-rule:nonzero;stroke:none;fill:#550000" />
+    </g>
+    <path
+       sodipodi:type="star"
+       style="fill:#550000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path2992"
+       sodipodi:sides="5"
+       sodipodi:cx="-740"
+       sodipodi:cy="60"
+       sodipodi:r1="172.04651"
+       sodipodi:r2="80"
+       sodipodi:arg1="0.95054684"
+       sodipodi:arg2="1.5707963"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="M -640,200 -740,140 -842.24621,198.36803 -816.08452,84.72136 -903.19164,5.5161451 -787.02282,-4.7213595 -738.61176,-112.04091 -692.97718,-4.7213595 -575.95039,8.1567264 -663.91548,84.72136 z"
+       transform="matrix(1.8335097,0,0,1.9228248,1756.0106,567.79722)"
+       inkscape:transform-center-x="-0.78656907"
+       inkscape:transform-center-y="-30.804521" />
+  </g>
+</svg>
