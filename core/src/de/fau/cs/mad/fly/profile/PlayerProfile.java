@@ -21,6 +21,11 @@ public class PlayerProfile {
 	 * default passed level id for a new user
 	 */
 	public static int DEFAULT_PASSED_LEVEL_ID = 1;
+
+    /**
+     * maximum length of the name
+     */
+    public static int MAX_NAME_LENGTH = 9;
 	
 	/**
 	 * The info. read from json of the current level the player is playing or just finished.
@@ -163,11 +168,12 @@ public class PlayerProfile {
 	}
 
 	/**
-	 * Setter for the name.
+	 * Setter for the name. Truncates the name if it is longer than MAX_NAME_LENGTH
 	 * @param name
 	 */
 	public void setName(String name) {
-		this.name = name;
+		if(name.length() <= MAX_NAME_LENGTH) this.name = name;
+        else this.name = name.substring(0, MAX_NAME_LENGTH-1);
 	}
 
 	/**
@@ -242,7 +248,7 @@ public class PlayerProfile {
 	
 	/**
 	 * Setter for the current chosen level 
-	 * @param currentLevel
+	 * @param levelID
 	 */
 	public void setCurrentLevelProfile(int levelID) {
 		this.currentLevelProfile = this.getCurrentLevelGroup().getLevelProfile(levelID);
