@@ -60,7 +60,6 @@ public class AddUserButtonListener extends ChangeListener {
         Stage stage = event.getStage();
         Dialog dialog = new Dialog("", skin, "dialog");
         boolean userExists = false;
-        
         if (!"".equals(name)) {
             List<PlayerProfile> allPlayerProfiles = PlayerProfileManager.getInstance().getAllPlayerProfiles();
             int numberOfAllPlayerProfiles = allPlayerProfiles.size();

@@ -27,6 +27,8 @@ public class BackProcessor extends InputAdapter {
 				game.setLevelGroupScreen();
 			} else if (game.getScreen() instanceof LevelsStatisScreen) {
 				game.setStatisticsScreen();
+			} else if (game.getScreen() instanceof PlaneUpgradeScreen) {
+				game.setPlaneChoosingScreen();
 			} else if (!(game.getScreen() instanceof MainMenuScreen)) {
 				game.setMainMenuScreen();
 			} else {
