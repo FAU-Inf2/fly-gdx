@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -13,7 +14,6 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstruct
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
-import de.fau.cs.mad.fly.game.object.EmptyMover;
 import de.fau.cs.mad.fly.game.object.IGameObjectMover;
 
 /**
@@ -24,17 +24,12 @@ import de.fau.cs.mad.fly.game.object.IGameObjectMover;
  *
  * @author Tobias Zangl
  */
-<<<<<<< HEAD
 public class GameObject extends ModelInstance implements Disposable {
     
-=======
-public class GameObject extends ModelInstance implements Disposable, Poolable {
-
->>>>>>> 690aa362efb3fa3faa37a948de28ae23781ab32a
     /**
      * The mover for the game object. Empty mover is no mover is defined.
      */
-    private IGameObjectMover mover = new EmptyMover();
+    private IGameObjectMover mover = null;
 
     /**
      * Position of the game object.
@@ -130,14 +125,6 @@ public class GameObject extends ModelInstance implements Disposable, Poolable {
         this.gmodel = model;
         this.userData = this;
         this.id = id;
-<<<<<<< HEAD
-        
-=======
-        // the other members have to be reseted. has to be done before bounding
-        // box is initialized
-        reset();
-
->>>>>>> 690aa362efb3fa3faa37a948de28ae23781ab32a
         initBoundingBox();
     }
 
@@ -269,9 +256,13 @@ public class GameObject extends ModelInstance implements Disposable, Poolable {
      * the transform matrix if the rigid body is updated by the dynamic world.
      */
     public void addMotionState() {
+        Gdx.app.log("GameObject.addMotionState", "ENTER");
         motionState = new GameObjectMotionState();
+        Gdx.app.log("GameObject.addMotionState", "created motionState");
         motionState.transform = transform;
         rigidBody.setMotionState(motionState);
+        Gdx.app.log("GameObject.addMotionState", "added motionState to rigidBody");
+        Gdx.app.log("GameObject.addMotionState", "EXIT");
     }
 
     /**
@@ -296,7 +287,9 @@ public class GameObject extends ModelInstance implements Disposable, Poolable {
      *            The delta since the last call.
      */
     public void move(float delta) {
-        mover.move(delta);
+    	if(mover != null) {
+    		mover.move(delta);
+    	}
     }
 
     /**
@@ -444,22 +437,4 @@ public class GameObject extends ModelInstance implements Disposable, Poolable {
     public void setModelId(String modelId) {
         this.modelId = modelId;
     }
-<<<<<<< HEAD
-=======
-
-    @Override
-    public void reset() {
-        if (mover == null || !(mover instanceof EmptyMover)) {
-            mover = new EmptyMover();
-        }
-        position.setZero();
-        center.setZero();
-        dimensions.setZero();
-        scaling.set(1.0f, 1.0f, 1.0f);
-        motionState = null;
-
-        visible = true;
-        dummy = false;
-    }
->>>>>>> 690aa362efb3fa3faa37a948de28ae23781ab32a
 }

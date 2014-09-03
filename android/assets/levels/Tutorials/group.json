@@ -1,4 +1,47 @@
 {
-	"id": 0,
-	"name": "Tutorial Levels/"
+	"id": -1,
+	"name": "Tutorial Levels",
+	"levels": [
+		{
+			"id": 1,
+			"name": "Roll Tutorial",
+			"file": "rollTutorial.json"
+		},
+		{
+			"id": 2,
+			"name": "Azimuth Tutorial",
+			"file": "azimuthTutorial.json"
+		},
+		{
+			"id": 3,
+			"name": "Gate Tutorial",
+			"file": "gateTutorial.json"
+		},
+		{
+			"id": 4,
+			"name": "Time Tutorial",
+			"file": "timeTutorial.json"
+		},
+		{
+			"id": 5,
+			"name": "Speed Tutorial",
+			"file": "speedTutorial.json"
+		},
+		{
+			"id": 6,
+			"name": "Resize Gate Tutorial",
+			"file": "resizeTutorial.json"
+		},
+		{
+			"id": 7,
+			"name": "Points Tutorial",
+			"file": "pointsTutorial.json"
+		},
+		{
+			"id": 8,
+			 "name": "Steering Level",
+			"file": "steeringTutorial.json"
+		}
+		
+	]
 }

@@ -13,6 +13,7 @@ import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
+import de.fau.cs.mad.fly.player.gravity.IGravity;
 
 /**
  * Interface that has to implemented by everything that a user can steer in Fly.
@@ -31,11 +32,13 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public int lives;
         public float rotationSpeed = 0.0f;
         public Vector3 rotation = null;
+        public Vector3 particleOffset = null;
         public FileHandle file;
         public int[] upgradeTypes;
         public List<String> upgrades;
         
         public Map<String, Integer> upgradesBought;
+        public Map<String, Integer> upgradesEquiped;
     }
 	
 	/**
@@ -64,6 +67,7 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 
 	/**
 	 * Setter for the speed of the plane.
+	 * @param speed
 	 */
 	public void setSpeed(float speed);
 	
@@ -72,6 +76,18 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	 * @return speed
 	 */
 	public float getSpeed();
+	
+	/**
+	 * Setter for the gravity of the plane.
+	 * @param gravity
+	 */
+	public void setGravity(IGravity gravity);
+	
+	/**
+	 * Getter for the gravity of the plane.
+	 * @return gravity
+	 */
+	public IGravity getGravity();
 	
 	/**
 	 * Getter for the azimuth speed of the plane.

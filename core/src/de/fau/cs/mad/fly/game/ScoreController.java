@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.res.GateCircuitAdapter;
@@ -50,14 +52,11 @@ public class ScoreController extends GateCircuitAdapter {
 	 * @return the score of the player with score details.
 	 */
     public Score getEndScore(GameController gameController) {
-        if (gameController.getLevel().isGameOver()) {
+        if (gameController.isVictory()) {
             Score newScore = new Score();
             newScore.setReachedDate(new Date());
             
             int score = gatePassedScore;
-            /*for (Gate gate : gateCircuit.allGates()) {
-                score += gate.score * gate.passedTimes;
-            }*/
             newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + ""));
             
             int leftTimeScore = gameController.getTimeController().getIntegerTime() * 20;
@@ -73,8 +72,24 @@ public class ScoreController extends GateCircuitAdapter {
 
             newScore.setTotalScore(score);
             return newScore;
+        } else if (gameController.getLevel().head.isEndless()){
+        	  Score newScore = new Score();
+              newScore.setReachedDate(new Date());
+              
+              int score = gatePassedScore;
+              newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + ""));
+              Gdx.app.log("fantest", "init" + gameController.getTimeController().getIntegerTimeSinceStart() + " left:" + gameController.getTimeController().getIntegerTime() );
+              int leftTimeScore = gameController.getTimeController().getIntegerTimeSinceStart() * 10;
+              newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), leftTimeScore + ""));
+              score += leftTimeScore;
+              
+              newScore.getScoreDetails().add(new ScoreDetail(("bonusPoints"), bonusPoints + ""));
+              score += bonusPoints;
+              newScore.setTotalScore(score);
+              return newScore;
+        	
         } else {
-            return new Score();// todo
+            return new Score();
         }
     }
     

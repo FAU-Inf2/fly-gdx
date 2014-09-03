@@ -1,6 +1,4 @@
 package de.fau.cs.mad.fly.profile;
-
-import com.badlogic.gdx.files.FileHandle;
 /**
  * Level properties for read level from json file
  * 
@@ -10,5 +8,9 @@ import com.badlogic.gdx.files.FileHandle;
 public class LevelProfile {
     public String name;
     public int id;
-    public FileHandle file;
+    public String file;
+    
+    public boolean isEndless() {
+    	return name.equals("Endless");
+    }
 }

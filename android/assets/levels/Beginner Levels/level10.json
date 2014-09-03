@@ -34,6 +34,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 70,
             "successors": [
                 2
             ]
@@ -53,6 +54,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 70,
             "successors": [
                 2
             ]
@@ -72,6 +74,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 60,
             "successors": [
                 3,
                 4
@@ -92,6 +95,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 1,
             "successors": [
                 5
             ]
@@ -111,6 +115,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 1,
             "successors": [
                 5
             ]
@@ -130,6 +135,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 1,
             "successors": []
         }
     ],

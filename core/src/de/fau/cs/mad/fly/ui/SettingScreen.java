@@ -2,9 +2,9 @@ package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -39,8 +39,7 @@ public class SettingScreen extends BasicScreen implements WithHelpOverlay {
         stage.addActor(table);
         
         // setup help overlay
-        TextButtonStyle textButtonStyle = skin.get(UI.Buttons.BIG_FONT_SIZE_STYLE, TextButtonStyle.class);
-        final Button helpButton = new TextButton("?", textButtonStyle);
+        final Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
         helpButton.setBounds(UI.Window.BORDER_SPACE, viewport.getWorldHeight() - UI.Window.BORDER_SPACE - UI.Buttons.MAIN_BUTTON_HEIGHT, UI.Buttons.MAIN_BUTTON_HEIGHT, UI.Buttons.MAIN_BUTTON_HEIGHT);
         
         this.helpOverlay = new HelpOverlay(this);

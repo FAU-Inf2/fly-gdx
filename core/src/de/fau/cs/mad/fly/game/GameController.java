@@ -51,7 +51,7 @@ import de.fau.cs.mad.fly.res.Level;
  */
 public class GameController implements TimeIsUpListener {
     public enum GameState {
-        RUNNING, PAUSED, FINISHED
+        RUNNING, PAUSED, VICTORY, GAMEOVER
     }
     
     protected static GameController instance = null;
@@ -71,8 +71,12 @@ public class GameController implements TimeIsUpListener {
     protected Level level;
     protected Player player;
     protected ScoreController scoreController;
+    
     private GameState gameState;
+    
+    
     private TimeController timeController;
+    
     private InputMultiplexer inputProcessor;
     
     /** Use Builder to initiate GameController */
@@ -157,6 +161,7 @@ public class GameController implements TimeIsUpListener {
      */
     public void loadGame() {
     	camera = cameraController.getCamera();
+        ParticleController.getInstance().load(camera, batch);
     	
         // load features
         for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
@@ -175,10 +180,6 @@ public class GameController implements TimeIsUpListener {
         for (IFeatureInit optionalFeature : optionalFeaturesToInit) {
             optionalFeature.init(this);
         }
-        
-        //player.resetLives();
-        // Debug.setOverlay(0,
-        // PlayerManager.getInstance().getCurrentPlayer().getLives());
         
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(inputProcessor);
@@ -204,9 +205,16 @@ public class GameController implements TimeIsUpListener {
     
     /**
      * Sets the game state to finished and ends the game.
+     * 
+     * @param victory		True, if the player was victorious, false if the time is over or he is dead.
      */
-    public void finishGame() {
-        gameState = GameState.FINISHED;
+    public void finishGame(boolean victory) {
+    	if(victory) {
+    		gameState = GameState.VICTORY;
+    	} else {
+    		gameState = GameState.GAMEOVER;
+    	}
+
         endGame();
     }
     
@@ -226,6 +234,7 @@ public class GameController implements TimeIsUpListener {
     public GameState getGameState() {
         return gameState;
     }
+
     
     /**
      * Checks if the game is running.
@@ -246,6 +255,15 @@ public class GameController implements TimeIsUpListener {
     }
     
     /**
+     * Checks if the game is over and the player was victorious.
+     * 
+     * @return true if the game is over and the player was victorious, otherwise false.
+     */
+    public boolean isVictory() {
+        return gameState == GameState.VICTORY;
+    }
+    
+    /**
      * This method is called every frame. Furthermore all optional features in
      * {@link #optionalFeaturesToRender} are updated and rendered.
      * 
@@ -263,11 +281,15 @@ public class GameController implements TimeIsUpListener {
             camera = cameraController.updateCamera();
             level.update(delta, camera);
             
+            if ((int) level.getLeftTime() <= 0) {
+                finishGame(false);
+            }
+            
             len = optionalFeaturesToUpdate.size();
             for (i = 0; i < len; i++) {
                 optionalFeaturesToUpdate.get(i).update(delta);
             }
-            
+
             CollisionDetector.getInstance().perform(delta);
             timeController.checkTime();
         }
@@ -281,6 +303,7 @@ public class GameController implements TimeIsUpListener {
         for (i = 0; i < len; i++) {
             optionalFeaturesToRender.get(i).render(delta);
         }
+        ParticleController.getInstance().render();
         batch.end();
         
         // draw features
@@ -296,7 +319,7 @@ public class GameController implements TimeIsUpListener {
      * features in {@link #optionalFeaturesToFinish} are finished.
      */
     public void endGame() {
-        pauseGame();
+    	timeController.pause();
         for (IFeatureFinish optionalFeature : optionalFeaturesToFinish) {
             optionalFeature.finish();
         }

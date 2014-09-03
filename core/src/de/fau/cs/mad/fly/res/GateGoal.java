@@ -28,10 +28,10 @@ public class GateGoal extends GameObject implements Disposable {
      * @param model			The model of the goal. It is usually not visible.
      * @param display		The displayed part of the goal.
      */
-    public GateGoal(int gateId, GameModel model, GateDisplay display) {
+    public GateGoal(int gateId, GameModel model, int gateScore, GateDisplay display) {
     	super(model, "GateGoal " + gateId);
         this.gateId = gateId;
-        this.score = 50;
+        this.score = gateScore;
         this.display = display;
         dummy = true;
     }
@@ -41,15 +41,13 @@ public class GateGoal extends GameObject implements Disposable {
      * @param collisionDetector
      */
     public void createRigidBody(CollisionDetector collisionDetector) {        
-        if (rigidBody == null) {
-			btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(super.getModelId() + ".goal", new Vector3(0.8f, 0.1f, 0.8f));
-			super.createRigidBody(super.getModelId() + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-			rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-			
-			// different scaling for the gates is buggy
-			/*transform.scl(scaling);
-			rigidBody.getCollisionShape().setLocalScaling(scaling);*/
-        }
+		btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(super.getModelId() + ".goal", new Vector3(0.8f, 0.1f, 0.8f));
+		super.createRigidBody(super.getModelId() + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+		rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+		
+		// different scaling for the gates is buggy
+		/*transform.scl(scaling);
+		rigidBody.getCollisionShape().setLocalScaling(scaling);*/
         collisionDetector.addRigidBody(this);
     }
     

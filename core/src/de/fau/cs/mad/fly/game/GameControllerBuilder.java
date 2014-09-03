@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureDispose;
 import de.fau.cs.mad.fly.features.IFeatureDraw;
@@ -24,9 +26,9 @@ import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
-import de.fau.cs.mad.fly.features.game.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
+import de.fau.cs.mad.fly.features.overlay.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.InfoButtonOverlay;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
@@ -111,7 +113,7 @@ public class GameControllerBuilder {
         this.game = game;
         player = new Player();
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-        level = playerProfile.getLevel();
+        level = Loader.getInstance().getCurrentLevel();
         flightController = new FlightController(player, playerProfile);
         cameraController = new CameraController(player, playerProfile);
         
@@ -140,25 +142,25 @@ public class GameControllerBuilder {
         collisionDetector.getCollisionContactListener().addListener(new ICollisionListener() {
             @Override
             public void onCollision(GameObject g1, GameObject g2) {
-            	GameObject g;
-            	if(g1 instanceof Spaceship) {
-            		g = g2;
-            	} else if(g2 instanceof Spaceship) {
-            		g = g1;
-            	} else {
-            		return;
-            	}
-            	
+                GameObject g;
+                if (g1 instanceof Spaceship) {
+                    g = g2;
+                } else if (g2 instanceof Spaceship) {
+                    g = g1;
+                } else {
+                    return;
+                }
+                
                 if (g.isDummy()) {
                     return;
                 }
                 Player player = GameController.getInstance().getPlayer();
-
+                
                 if (!player.decreaseLives()) {
-                    //Debug.setOverlay(0, "DEAD");
-                    game.getGameController().finishGame();
+                    // Debug.setOverlay(0, "DEAD");
+                    game.getGameController().finishGame(false);
                 } else {
-                    //Debug.setOverlay(0, player.getLives());
+                    // Debug.setOverlay(0, player.getLives());
                 }
             }
         });
@@ -168,13 +170,13 @@ public class GameControllerBuilder {
         createDecoRigidBodies(collisionDetector, level);
         
         Gdx.app.log("Builder.init", "Registering EventListeners for level.");
-
+        
         gateCircuit.addListener(new GateCircuitAdapter() {
             @Override
             public void onGatePassed(GateGoal passed) {
-            	GateCircuit gateCircuit = level.getGateCircuit();
-            	
-                if (level.head.name.equals("Endless")) {
+                GateCircuit gateCircuit = level.getGateCircuit();
+                
+                if (level.head.isEndless()) {
                     for (GateGoal g : generator.getGates())
                         g.unmark();
                 } else {
@@ -183,15 +185,15 @@ public class GameControllerBuilder {
                 }
                 int len = passed.successors.length;
                 for (int i = 0; i < len; i++) {
-                	gateCircuit.getGateGoalById(passed.successors[i]).mark();
+                    gateCircuit.getGateGoalById(passed.successors[i]).mark();
                 }
             }
         });
         
         gateCircuit.addListener(scoreController);
         
-        if (level.head.name.equals("Endless")) {
-            generator = new EndlessLevelGenerator(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getLevel());
+        if (level.head.isEndless()) {
+            generator = new EndlessLevelGenerator(Loader.getInstance().getCurrentLevel());
             
             gateCircuit.addListener(new GateCircuitAdapter() {
                 @Override
@@ -217,24 +219,26 @@ public class GameControllerBuilder {
     /**
      * Creates the rigid bodies for the static decoration in the level.
      * 
-     * @param collisionDetector			The collision detector.
-     * @param level						The level with the list of decorations.
+     * @param collisionDetector
+     *            The collision detector.
+     * @param level
+     *            The level with the list of decorations.
      */
-    private void createDecoRigidBodies(CollisionDetector collisionDetector, Level level) {        
+    private void createDecoRigidBodies(CollisionDetector collisionDetector, Level level) {
         Gdx.app.log("GameControllerBuilder.createDecoRigidBodies", "Setting up collision for decoration.");
         
         for (GameObject o : level.components) {
-			if (o.getRigidBody() == null && !o.getId().equals("space")) {
-			    btCollisionShape displayShape = collisionDetector.getShapeManager().createConvexShape(o.getModelId(), o);
-			    o.createRigidBody(o.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
-			    collisionDetector.addRigidBody(o);
-			}
+            if (!o.getId().equals("space")) {
+                btCollisionShape displayShape = collisionDetector.getShapeManager().createConvexShape(o.getModelId(), o);
+                o.createRigidBody(o.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
+                collisionDetector.addRigidBody(o);
+            }
         }
     }
     
     /**
-     * Checks the preferences if the standard features should be used and adds them to
-     * the game controller if necessary.
+     * Checks the preferences if the standard features should be used and adds
+     * them to the game controller if necessary.
      */
     private void checkAndAddSettingFeatures() {
         // if needed for debugging: Debug.init(game.getSkin(), stage, 1);
@@ -263,15 +267,15 @@ public class GameControllerBuilder {
             CollisionDetector.getInstance().getCollisionContactListener().addListener(new ICollisionListener() {
                 @Override
                 public void onCollision(GameObject g1, GameObject g2) {
-                	GameObject g;
-                	if(g1 instanceof Spaceship) {
-                		g = g2;
-                	} else if(g2 instanceof Spaceship) {
-                		g = g1;
-                	} else {
-                		return;
-                	}
-                	
+                    GameObject g;
+                    if (g1 instanceof Spaceship) {
+                        g = g2;
+                    } else if (g2 instanceof Spaceship) {
+                        g = g1;
+                    } else {
+                        return;
+                    }
+                    
                     if (g.isDummy()) {
                         return;
                     }
@@ -283,79 +287,85 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Checks the level upgrades and adds the corresponding handler to the game controller.
+     * Checks the level upgrades and adds the corresponding handler to the game
+     * controller.
      */
     private void checkAndAddUpgradeHandler() {
-    	if(checkUpgrade("InstantSpeedUpgrade")) {
-    		addFeatureToLists(new InstantSpeedUpgradeHandler());
-    	}
-    	if(checkUpgrade("ChangeTimeUpgrade")) {
-    		addFeatureToLists(new ChangeTimeUpgradeHandler());
-    	}
-    	if(checkUpgrade("ChangePointsUpgrade")) {
-    		addFeatureToLists(new ChangePointsUpgradeHandler());
-    	}
-    	if(checkUpgrade("ResizeGatesUpgrade")) {
-    		addFeatureToLists(new ResizeGatesUpgradeHandler());
-    	}
-    	if(checkUpgrade("ChangeSteeringUpgrade")) {
-    		addFeatureToLists(new ChangeSteeringUpgradeHandler());
-    	}
-    	if(checkUpgrade("LinearSpeedUpgrade")) {
-    		addFeatureToLists(new LinearSpeedUpgradeHandler());
-    	}
+        if (checkUpgrade("InstantSpeedUpgrade")) {
+            addFeatureToLists(new InstantSpeedUpgradeHandler());
+        }
+        if (checkUpgrade("ChangeTimeUpgrade")) {
+            addFeatureToLists(new ChangeTimeUpgradeHandler());
+        }
+        if (checkUpgrade("ChangePointsUpgrade")) {
+            addFeatureToLists(new ChangePointsUpgradeHandler());
+        }
+        if (checkUpgrade("ResizeGatesUpgrade")) {
+            addFeatureToLists(new ResizeGatesUpgradeHandler());
+        }
+        if (checkUpgrade("ChangeSteeringUpgrade")) {
+            addFeatureToLists(new ChangeSteeringUpgradeHandler());
+        }
+        if (checkUpgrade("LinearSpeedUpgrade")) {
+            addFeatureToLists(new LinearSpeedUpgradeHandler());
+        }
     }
     
     /**
-     * Checks in the upgrade list if it contains an upgrade with the specified type.
+     * Checks in the upgrade list if it contains an upgrade with the specified
+     * type.
      * 
-     * @param type			The type to check for.
+     * @param type
+     *            The type to check for.
      * @return true, if it contains an upgrade, false otherwise.
      */
     private boolean checkUpgrade(String type) {
-    	int size = level.getUpgrades().size();
-    	for(int i = 0; i < size; i++) {
-    		if(level.getUpgrades().get(i).getType().equals(type)) {
-    			return true;
-    		}
-    	}
-    	return false;
+        int size = level.getCollectibleManager().getCollectibles().size();
+        for (int i = 0; i < size; i++) {
+            if (level.getCollectibleManager().getCollectibles().get(i).getType().equals(type)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
-     * Checks the {@link Level.levelClass} value and uses the default class features or the features of a given class if found and invoked correctly.
+     * Checks the {@link Level.levelClass} value and uses the default class
+     * features or the features of a given class if found and invoked correctly.
      * 
-     * @param level			The currently used level with a specific level class if stored in the json.
+     * @param level
+     *            The currently used level with a specific level class if stored
+     *            in the json.
      */
     private void addLevelFeatures(Level level) {
-    	if(level.levelClass == null || level.levelClass.equals("") || level.levelClass.equals("DefaultClass")) {
-    		addDefaultLevel();
-    	} else {    		
-    		try {
-				Class<?> c = Class.forName("de.fau.cs.mad.fly.levels." + level.levelClass);
-				Object obj = c.newInstance();
-				
-				@SuppressWarnings("rawtypes")
-				Class[] parameterTypes = new Class[1];	
-				parameterTypes[0] = GameControllerBuilder.class;
-				
-				Method method = c.getDeclaredMethod("create", parameterTypes);
-				method.invoke(obj, this);
-				
-				Gdx.app.log("Builder", level.levelClass + " used.");
-			} catch (Exception e) {
-				addDefaultLevel();
-			}
-    	}
+        if (level.levelClass == null || level.levelClass.equals("") || level.levelClass.equals("DefaultClass")) {
+            addDefaultLevel();
+        } else {
+            try {
+                Class<?> c = Class.forName("de.fau.cs.mad.fly.levels." + level.levelClass);
+                Object obj = c.newInstance();
+                
+                @SuppressWarnings("rawtypes")
+                Class[] parameterTypes = new Class[1];
+                parameterTypes[0] = GameControllerBuilder.class;
+                
+                Method method = c.getDeclaredMethod("create", parameterTypes);
+                method.invoke(obj, this);
+                
+                Gdx.app.log("Builder", level.levelClass + " used.");
+            } catch (Exception e) {
+                addDefaultLevel();
+            }
+        }
     }
     
     /**
      * Adds the default level features.
      */
     private void addDefaultLevel() {
-    	ILevel defaultLevel = new DefaultLevel();
-		defaultLevel.create(this);
-		Gdx.app.log("Builder", "DefaultLevel used.");
+        ILevel defaultLevel = new DefaultLevel();
+        defaultLevel.create(this);
+        Gdx.app.log("Builder", "DefaultLevel used.");
     }
     
     /**
@@ -394,17 +404,17 @@ public class GameControllerBuilder {
             optionalFeaturesToDispose.add((IFeatureDispose) feature);
         }
         
-    	if (feature instanceof ICollisionListener) {
-    		CollisionDetector.getInstance().getCollisionContactListener().addListener((ICollisionListener) feature);
-    	}
-    	
-    	if (feature instanceof IntegerTimeListener) {
-    		timeController.registerIntegerTimeListener((IntegerTimeListener) feature);
-    	}
-    	
-    	if (feature instanceof GateCircuitListener) {
-    		level.getGateCircuit().addListener((GateCircuitListener) feature);
-    	}
+        if (feature instanceof ICollisionListener) {
+            CollisionDetector.getInstance().getCollisionContactListener().addListener((ICollisionListener) feature);
+        }
+        
+        if (feature instanceof IntegerTimeListener) {
+            timeController.registerIntegerTimeListener((IntegerTimeListener) feature);
+        }
+        
+        if (feature instanceof GateCircuitListener) {
+            level.getGateCircuit().addListener((GateCircuitListener) feature);
+        }
     }
     
     /**
@@ -414,7 +424,9 @@ public class GameControllerBuilder {
      * @return Builder instance with GateIndicator
      */
     private GameControllerBuilder addGateIndicator() {
-        GateIndicator gateIndicator = new GateIndicator(game.getSkin());
+        TextureRegion region = game.getSkin().getRegion("arrow");
+        region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        GateIndicator gateIndicator = new GateIndicator(region);
         addFeatureToLists(gateIndicator);
         return this;
     }
@@ -442,14 +454,15 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Adds a {@link InfoOverlay} and a {@link InfoButtonOverlay} to the GameController.
+     * Adds a {@link InfoOverlay} and a {@link InfoButtonOverlay} to the
+     * GameController.
      * 
      * @return Builder instance with InfoOverlay and InfoButtonOverlay
      */
     private GameControllerBuilder addInfoOverlays() {
-    	InfoOverlay.createInfoOverlay(game.getSkin(), stage);
-    	addFeatureToLists(InfoOverlay.getInstance());
-    	InfoButtonOverlay.createInfoButtonOverlay(game.getSkin(), stage);
+        InfoOverlay.createInfoOverlay(game.getSkin(), stage);
+        addFeatureToLists(InfoOverlay.getInstance());
+        InfoButtonOverlay.createInfoButtonOverlay(game.getSkin(), stage);
         return this;
     }
     
@@ -544,7 +557,7 @@ public class GameControllerBuilder {
      * @return new GameController
      */
     public GameController build() {
-    	GameController.instance = gc;
+        GameController.instance = gc;
         gc.stage = stage;
         gc.optionalFeaturesToLoad = optionalFeaturesToLoad;
         gc.optionalFeaturesToInit = optionalFeaturesToInit;
@@ -557,7 +570,7 @@ public class GameControllerBuilder {
         gc.player = player;
         gc.flightController = flightController;
         gc.cameraController = cameraController;
-//        gc.batch = new ModelBatch();
+        // gc.batch = new ModelBatch();
         gc.batch = new ModelBatch(null, new FlyShaderProvider(), null);
         gc.setTimeController(timeController);
         gc.scoreController = scoreController;
@@ -566,7 +579,7 @@ public class GameControllerBuilder {
         level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override
             public void onFinished() {
-                gc.finishGame();
+                gc.finishGame(true);
             }
         });
         return gc;

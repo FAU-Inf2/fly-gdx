@@ -52,6 +52,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 60,
             "successors": [
                 2
             ]
@@ -71,6 +72,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 70,
             "successors": [
                 3
             ]
@@ -90,6 +92,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 70,
             "successors": [
                 4
             ]
@@ -109,6 +112,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 55,
             "successors": [
                 5
             ]
@@ -207,6 +211,6 @@
             "z": 0.0
         }
     },
-    "time": 50,
+    "time": 44,
     "upgrades": []
 }

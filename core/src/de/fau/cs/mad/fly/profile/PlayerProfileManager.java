@@ -62,10 +62,7 @@ public class PlayerProfileManager {
 	}
 
 	public PlayerProfile getPlayerfromDB(int userID) {
-		final String selectSQL = "select " + FlyDBManager.PLAYER_COLUMN_ID + ", "
-				+ FlyDBManager.PLAYER_COLUMN_FLY_ID + ", " + FlyDBManager.PLAYER_COLUMN_NAME
-				+ " from " + FlyDBManager.TABLE_PLAYER + " where " + FlyDBManager.PLAYER_COLUMN_ID
-				+ "=" + userID;
+		final String selectSQL = "select player_id, fly_id,name from player where player_id =" + userID;
 		PlayerProfile playerProfile = null;
 
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
@@ -90,9 +87,7 @@ public class PlayerProfileManager {
 	
 	private void setPlayers() {
 		playerProfiles = new ArrayList<PlayerProfile>();
-		final String selectSQL = "select " + FlyDBManager.PLAYER_COLUMN_ID + ", "
-				+ FlyDBManager.PLAYER_COLUMN_FLY_ID + ", " + FlyDBManager.PLAYER_COLUMN_NAME
-				+ " from " + FlyDBManager.TABLE_PLAYER;
+		final String selectSQL = "select player_id,fly_id,name,total_score,total_geld,current_levelgroup_id,current_level_id,passed_levelgroup_id,passed_level_id from player";
 
 		// FlyDBManager.getInstance().openDatabase();
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
@@ -103,6 +98,12 @@ public class PlayerProfileManager {
 				playerProfile.setId(cursor.getInt(0));
 				playerProfile.setFlyID(cursor.getInt(1));
 				playerProfile.setName(cursor.getString(2));
+				playerProfile.setMoney(cursor.getInt(3));
+				playerProfile.setCurrentLevelGroup(LevelGroupManager.getInstance().getLevelGroup(cursor.getInt(5)));
+				playerProfile.setCurrentLevelProfile(cursor.getInt(6));
+				playerProfile.setPassedLevelgroupID(cursor.getInt(7));
+				playerProfile.setPassedLevelID(cursor.getInt(8));
+				
 				playerProfiles.add(playerProfile);
 			}
 			cursor.close();
@@ -113,9 +114,7 @@ public class PlayerProfileManager {
 
 		int newID = getMaxPlayerID() + 1;
 		playerProfile.setId(newID);
-		final String insertSQL = "insert into " + FlyDBManager.TABLE_PLAYER + " ( "
-				+ FlyDBManager.PLAYER_COLUMN_ID + " , " + FlyDBManager.PLAYER_COLUMN_NAME
-				+ " ) values (" + playerProfile.getId() + " , '" + playerProfile.getName() + "')";
+		final String insertSQL = "insert into player (player_id, name) values (" + playerProfile.getId() + " , '" + playerProfile.getName() + "')";
 
 		FlyDBManager.getInstance().execSQL(insertSQL);
 		
@@ -124,8 +123,7 @@ public class PlayerProfileManager {
 	}
 
 	private int getMaxPlayerID() {
-		final String selectSQL = "select max(" + FlyDBManager.PLAYER_COLUMN_ID + ") from "
-				+ FlyDBManager.TABLE_PLAYER;
+		final String selectSQL = "select max(player_id) from player";
 
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
 		if (cursor != null && cursor.getCount() > 0) {
@@ -139,10 +137,13 @@ public class PlayerProfileManager {
 
 	public void saveFlyID(PlayerProfile playerProfile) {
 
-		final String sql = "update " + FlyDBManager.TABLE_PLAYER + " set "
-				+ FlyDBManager.PLAYER_COLUMN_FLY_ID + "=" + playerProfile.getFlyID() + " where "
-				+ FlyDBManager.PLAYER_COLUMN_ID + "=" + playerProfile.getId();
+		final String sql = "update player set fly_id=" + playerProfile.getFlyID() + " where player_id=" + playerProfile.getId();
 
+		FlyDBManager.getInstance().execSQL(sql);
+	}
+	
+	public void updateIntColumn(PlayerProfile playerProfile, String colname, int newValue) {
+		final String sql = "update player set " + colname + "=" + newValue + " where player_id=" + playerProfile.getId();
 		FlyDBManager.getInstance().execSQL(sql);
 	}
 

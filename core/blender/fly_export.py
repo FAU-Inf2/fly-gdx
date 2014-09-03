@@ -159,6 +159,9 @@ class LevelExporter:
 				gate = { }
 				gate['gateId'] = ConvertHelper.convert_id(item.name)
 				gate['refHole'] = item['HoleModel']
+				
+				if "score" in item:
+					gate['score']=item['score']
 
 				successors = [ ]
 				for constraint in item.constraints:

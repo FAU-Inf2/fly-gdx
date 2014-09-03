@@ -202,7 +202,6 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
      * Calls the gate circuit listeners for the finished gate circuit.
      */
     protected void circuitFinished() {
-    	level.finishLevel();
         for (GateCircuitListener s : gateCircuitListeners) {
             s.onFinished();
         }

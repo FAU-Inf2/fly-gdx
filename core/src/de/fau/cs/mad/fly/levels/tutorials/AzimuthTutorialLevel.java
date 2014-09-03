@@ -33,9 +33,9 @@ public class AzimuthTutorialLevel implements ILevel, IFeatureInit, GateCircuitLi
 		
         Preferences preferences = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences();
         if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
-        	InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.azimuth.touch"), 5);
+        	InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.azimuth.touch"), 5);
         } else {
-        	InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.azimuth.sensor"), 5);
+        	InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.azimuth.sensor"), 5);
         }
 	}
 	
@@ -47,6 +47,6 @@ public class AzimuthTutorialLevel implements ILevel, IFeatureInit, GateCircuitLi
 
 	@Override
 	public void onGatePassed(GateGoal gate) {
-		InfoOverlay.getInstance().setOverlay(I18n.t("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
+		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
 	}
 }

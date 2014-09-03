@@ -60,19 +60,17 @@ public final class UI {
         private Buttons() {
         }
         
-        public static final int MAIN_BUTTON_WIDTH = 1600;
+        public static final int MAIN_BUTTON_WIDTH = 1550;
         
-        public static final int MAIN_BUTTON_HEIGHT = 380;
+        public static final int MAIN_BUTTON_HEIGHT = 320;
         
         /** This is the default font size for all Buttons */
         public static final int DEFAULT_FONT_SIZE = 150;
         
-        /** This is the default font size for all Buttons */
-        public static final int HELP_BUTTON_FONT_SIZE = 270;
+        /** This is the default font size for small Buttons */
+        public static final int SMALL_FONT_SIZE = 100;
         
         public static final String DEFAULT_STYLE = "rounded";
-        
-        public static final String BIG_FONT_SIZE_STYLE = "roundedBigSize";
         
         /** Max. number of buttons for level to show in a row */
         public static final int BUTTONS_IN_A_ROW = 2;
@@ -82,5 +80,16 @@ public final class UI {
         
         /** Style used for settings button in main menu */
         public static final String SETTING_BUTTON_STYLE = "settings";
+        public static final String HELP_BUTTON_STYLE = "help";
+    }
+    
+    /** This class contains all parameters related to labels. */
+    public static final class Labels {
+        
+        /** This class should not be instantiated */
+        private Labels() {
+        }
+        
+        public static final int MAIN_LABEL_VERSION_WIDTH = 400;
     }
 }

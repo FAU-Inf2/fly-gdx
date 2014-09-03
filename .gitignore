@@ -16,6 +16,17 @@ desktop/.classpath
 desktop/.project
 desktop/.settings/
 desktop/bin/
+desktop/background.png
+desktop/config/
+desktop/fonts/
+desktop/models/
+desktop/scripts/
+desktop/shaders/
+desktop/uiskin.atlas
+desktop/uiskin.json
+desktop/uiskin.png
+desktop/background.jpg
+desktop/faumadfly*.db
 ios/.classpath
 ios/.project
 ios/.settings/
@@ -24,3 +35,5 @@ ios/robovm.xml
 *.iml
 local.properties
 .idea/
+build/
+android/assets/*.db

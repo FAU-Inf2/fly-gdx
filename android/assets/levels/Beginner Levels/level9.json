@@ -52,6 +52,7 @@
             ],
             "ref": "torus",
             "refHole": "hole",
+            "score": 1,
             "successors": [
                 2
             ]
@@ -169,6 +170,6 @@
             "z": 0.0
         }
     },
-    "time": 70,
+    "time": 55,
     "upgrades": []
 }

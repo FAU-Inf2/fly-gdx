@@ -1,6 +1,6 @@
 package de.fau.cs.mad.fly.player;
 
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -14,6 +14,9 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.player.gravity.IGravity;
+import de.fau.cs.mad.fly.player.particle.EmptyParticle;
+import de.fau.cs.mad.fly.player.particle.IParticle;
+import de.fau.cs.mad.fly.player.particle.ShuttleParticle;
 import de.fau.cs.mad.fly.res.Perspective;
 
 public class Spaceship extends GameObject implements IPlane {
@@ -26,10 +29,10 @@ public class Spaceship extends GameObject implements IPlane {
 	private float[] transformValues;
 	private Matrix4 startTransform;
 	
-	private Vector3 particleOffset = new Vector3(0.0f, 0.03f, -0.7f);
+	private Vector3 particleOffset = null;
 	private Matrix4 particleTransform;
 	
-	private SpaceshipParticle particle;
+	private IParticle particle;
 
 	private float i = 0.0f;
     private float rotationSpeed = 0.0f;
@@ -59,21 +62,27 @@ public class Spaceship extends GameObject implements IPlane {
 	public Spaceship(GameModel model, IPlane.Head head) {
 		super(model, "Spaceship");
 		this.head = head;
-		this.modelRef = head.modelRef;
-		particle = new SpaceshipParticle();
 		
+		// TODO: adjust the speed, currently just divided by 5 because it was too fast
+		this.speed = head.speed / 5;
+		this.azimuthSpeed = head.azimuthSpeed;
+		this.rollingSpeed = head.rollingSpeed;
+		
+		this.modelRef = head.modelRef;
+
 		if(head.rotation != null) {
 			rotationSpeed = head.rotationSpeed;
 			rotation = head.rotation;
 		}
+		
+		if(head.particleOffset != null) {
+			particleOffset = head.particleOffset;
+			particle = new ShuttleParticle();
+		} else {
+			particleOffset = new Vector3();
+			particle = new EmptyParticle();
+		}
 	}
-	
-	// needed anymore?
-	/*public Spaceship(GameModel model, String modelRef) {
-		super(model, "spaceship");
-		this.modelRef = modelRef;
-		particle = new SpaceshipParticle();
-	}*/
 	
 	@Override
 	public void load(final GameController game) {
@@ -85,23 +94,29 @@ public class Spaceship extends GameObject implements IPlane {
 		
 		gravity = game.getLevel().getGravity();
 		
-		//particle.load(camera, batch, modelRef);
-		//particle.init();
-		
-		resetSpeed();
+		particle.load(modelRef);
+		Gdx.app.log("Spaceship.load", "Initializing particle...");
+		particle.init();
+		Gdx.app.log("Spaceship.load", "Initializing particle: Done!");
+		//resetSpeed();
 
 		transform.setToTranslation(game.getLevel().start.position);
 		
+		Gdx.app.log("Spaceship.load", "Creating collision shape...");
 		btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(modelRef, this);
 
+		Gdx.app.log("Spaceship.load", "Scaling bounding box...");
 		scaleBoundingBox();
 		createRigidBody(modelRef, shape, 1.0f, CollisionDetector.PLAYER_FLAG, CollisionDetector.ALL_FLAG);
-		
-		addMotionState();		
+		Gdx.app.log("Spaceship.load", "Adding motion state...");
+		addMotionState();
 		getRigidBody().setDamping(0.0f, 0.5f);
+		Gdx.app.log("Spaceship.load", "Adjusting scaling...");
 		getRigidBody().getCollisionShape().setLocalScaling(new Vector3(0.7f, 0.7f, 0.7f));
+		Gdx.app.log("Spaceship.load", "Adding rigid body to collision detector...");
 
 		CollisionDetector.getInstance().addRigidBody(this);
+		Gdx.app.log("Spaceship.load", "EXIT");
 	}
 
 	@Override
@@ -122,9 +137,9 @@ public class Spaceship extends GameObject implements IPlane {
 
 		render(batch, environment, camera);
 		
-		//particleTransform = transform.cpy();
-		//particleTransform.translate(particleOffset);
-		//particle.render(particleTransform);
+		particleTransform = transform.cpy();
+		particleTransform.translate(particleOffset);
+		particle.render(particleTransform);
 		
 		transform = storedTransform;
 		
@@ -231,7 +246,18 @@ public class Spaceship extends GameObject implements IPlane {
 	}
 	
 	public void dispose() {
-		//particle.stop();
+		particle.stop();
+		particle.dispose();
 		super.dispose();
+	}
+
+	@Override
+	public void setGravity(IGravity gravity) {
+		this.gravity = gravity;
+	}
+
+	@Override
+	public IGravity getGravity() {
+		return gravity;
 	}
 }

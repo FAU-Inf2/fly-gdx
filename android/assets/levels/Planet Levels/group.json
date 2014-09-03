@@ -1,4 +1,11 @@
 {
 	"id": 3,
-	"name": "Planet Levels/"
+	"name": "Planet Levels",
+	"levels": [
+		{
+			"id": 1,
+			"name": "Grass Planet",
+			"file": "GrassPlane.json"
+		}
+	]
 }

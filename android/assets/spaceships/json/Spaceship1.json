@@ -1,12 +1,15 @@
 {
 	"id": 1,
-	"name": "Spaceship",
-	"modelRef": "spaceship",
+	"name": "Shuttle",
+	"modelRef": "shuttle",
 	"speed": 10,
 	"rollingSpeed": 9,
 	"azimuthSpeed": 9,
 	"lives": 1,
 	"upgrades": [
 		0
+	],
+	"particleOffset": [
+		0, 0.03, -0.5
 	]
 }

@@ -12,6 +12,7 @@ import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.res.CollectibleManager;
 
 /**
  * Used do display and handle any sort of collectible objects in the game.
@@ -19,6 +20,11 @@ import de.fau.cs.mad.fly.game.GameObject;
  * @author Tobi
  */
 public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispose, ICollisionListener {
+	
+	/**
+	 * The collectible manager.
+	 */
+	private CollectibleManager collectibleManager;
 
 	/**
 	 * The type of the collectible objects.
@@ -41,10 +47,12 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispos
 	
 	@Override
 	public void load(GameController game) {
+		collectibleManager = game.getLevel().getCollectibleManager();
+		
 		collectibleObjects = new ArrayList<Collectible>();
 		CollisionDetector collisionDetector = CollisionDetector.getInstance();
 		
-		for(Collectible c : game.getLevel().getUpgrades()) {
+		for(Collectible c : collectibleManager.getCollectibles()) {
 			if(c.getType().equals(type)) {
 				c.createRigidBody(collisionDetector, type);
 				collectibleObjects.add(c);
@@ -81,8 +89,10 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispos
 		
 		c.hide();
 		collectibleObjects.remove(c);
-		//c.removeRigidBody();
-		
+
 		handleCollecting(c);
+		
+		c.removeRigidBody();
+		collectibleManager.removeCollectible(c);
 	}
 }

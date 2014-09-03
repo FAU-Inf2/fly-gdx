@@ -152,7 +152,11 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 
 public class FlyShader extends FlyBaseShader {
 
+    private String VERTEX_SHADER = "shaders/vertex.glsl";
+    private String FRAGMENT_SHADER = "shaders/fragment.glsl";
     private int u_diffuseColor;
+
+    public FlyShader() {};
 
     public FlyShader(Renderable renderable) {
         super(renderable);
@@ -161,7 +165,7 @@ public class FlyShader extends FlyBaseShader {
     @Override
     public void init() {
         //Prepare and compile the ShaderProgram
-        super.createShaderProgram(Gdx.files.internal("shaders/vertex.glsl").readString(), Gdx.files.internal("shaders/fragment.glsl").readString());
+        createShaderProgram(VERTEX_SHADER, FRAGMENT_SHADER);
         super.init();
 
         u_diffuseColor = program.getUniformLocation("u_diffuseColor");
@@ -174,8 +178,7 @@ public class FlyShader extends FlyBaseShader {
 
     @Override
     public boolean canRender(Renderable instance) {
-        if (instance.environment.equals(environment) && !instance.material.has(TextureAttribute.Diffuse)) return true;
-        return false;
+        return (instance.environment.equals(environment) && !instance.material.has(TextureAttribute.Diffuse) && !instance.material.has(TextureAttribute.Normal));
     }
 
     @Override

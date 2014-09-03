@@ -4,11 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Disposable;
 
-import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 
@@ -36,16 +33,14 @@ public class Level implements Disposable {
     public String levelClass = "DefaultLevel";
     
     public List<GameObject> components;
-    private List<Collectible> upgrades;
     public final Perspective start;
     private final Environment environment, ambientEnvironment;
     private final Map<String, GameModel> dependencies;
     
     private GameObject borderObject = null;
-    private int CollisionTime = 0;
-    private int leftCollisionTime = 0;
     
     private GateCircuit gateCircuit = null;
+    private CollectibleManager collectibleManager = null;
     
     private IGravity gravity = new EmptyGravity();
     
@@ -58,17 +53,6 @@ public class Level implements Disposable {
     public void setLeftTime(float leftTime) {
         this.leftTime = leftTime;
     }
-    
-    protected void InitCollisionTime() {
-        CollisionTime = 3;
-        leftCollisionTime = CollisionTime;
-    }
-    
-    private boolean gameOver = false;
-    
-    public boolean isGameOver() {
-        return gameOver;
-    }
 
     public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies, Map<String, Environment> environments) {
         this.head = new LevelProfile();
@@ -78,8 +62,6 @@ public class Level implements Disposable {
         this.dependencies = Collections.unmodifiableMap(dependencies);
         this.environment = environments.get("lighting");
         this.ambientEnvironment = environments.get("ambient");
-        InitCollisionTime();
-        gameOver = false;
         
         for (GameObject c : components) {
             if (c.getId().equals("space")) {
@@ -115,20 +97,22 @@ public class Level implements Disposable {
         return dependencies.get(id);
     }
     
-    public Map<String, GameModel> getDependencies() {
-        return dependencies;
+    /**
+     * Getter for the collectible manager.
+     * 
+     * @return collectibleManager
+     */
+    public CollectibleManager getCollectibleManager() {
+        return collectibleManager;
     }
     
-    public void setUpgrades(List<Collectible> upgrades) {
-        this.upgrades = upgrades;
-    }
-    
-    public List<Collectible> getUpgrades() {
-        return upgrades;
-    }
-    
-    public void finishLevel() {
-        gameOver = true;
+    /**
+     * Adds the collectible manager to the level.
+     * 
+     * @param collectibleManager
+     */
+    public void addCollectibleManager(CollectibleManager collectibleManager) {
+        this.collectibleManager = collectibleManager;
     }
     
     /**
@@ -174,15 +158,7 @@ public class Level implements Disposable {
         
         gateCircuit.moveGates(delta);
         
-        int i;
-        final int numberOfUpgrades = upgrades.size();
-        for (i = 0; i < numberOfUpgrades; i++) {
-            upgrades.get(i).move(delta);
-        }
-        
-        if (gameOver == false && ((int) leftTime <= 0 || leftCollisionTime <= 0)) {
-            gateCircuit.circuitFinished();
-        }
+        collectibleManager.moveCollectibles(delta);
     }
     
     /**
@@ -205,10 +181,7 @@ public class Level implements Disposable {
         
         gateCircuit.render(batch, environment, camera);
         
-        final int numberOfUpgrades = upgrades.size();
-        for (i = 0; i < numberOfUpgrades; i++) {
-            upgrades.get(i).render(batch, environment, camera);
-        }
+        collectibleManager.render(batch, environment, camera);
     }
     
     @Override

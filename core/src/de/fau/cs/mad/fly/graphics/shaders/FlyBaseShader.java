@@ -46,8 +46,8 @@ public abstract class FlyBaseShader implements Shader{
         String prefix = "";
         if(numDirLights > 0) prefix += "#define numDirLights " + this.numDirLights + "\n";
         if(numPointLights > 0) prefix += "#define numPointLights " + this.numPointLights + "\n";
-        String vert = prefix + vertexShader;
-        String frag = prefix + fragmentShader;
+        String vert = prefix + Gdx.files.internal(vertexShader).readString();
+        String frag = prefix + Gdx.files.internal(fragmentShader).readString();
         program = new ShaderProgram(vert, frag);
         if (!program.isCompiled()) {
             throw new GdxRuntimeException(program.getLog());

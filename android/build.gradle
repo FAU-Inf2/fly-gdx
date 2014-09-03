@@ -1,3 +1,5 @@
+import java.util.regex.Pattern
+
 android {
     buildToolsVersion '20.0.0'
     compileSdkVersion 20
@@ -77,7 +79,32 @@ task copyAndroidNatives() {
         }
     }
 }
+
+def updateAndroidVersion() {
+    def commitCount = 0
+    def process = "git rev-list HEAD --count".execute()
+	def commitText = process.text
+	
+	if (commitText) {
+		commitCount = commitText.toInteger()
+
+		def manifestFile = file("AndroidManifest.xml")
+		def pattern = Pattern.compile("versionName=\"(\\d+)\\.(\\d+)\\.(\\d+)\"")
+		def manifestText = manifestFile.getText()
+		def matcher = pattern.matcher(manifestText)
+		matcher.find()
+		def majorVersion = Integer.parseInt(matcher.group(1))
+		def minorVersion = Integer.parseInt(matcher.group(2))
+		def buildVersion = Integer.parseInt(matcher.group(3))
+		def nextVersionName = majorVersion + "." + minorVersion + "." + commitCount
+		def manifestContent = matcher.replaceAll("versionName=\"" + nextVersionName + "\"")
+		manifestFile.write(manifestContent)
+		println 'Android Manifest updated with ' + commitCount
+	}
+}
+
 task run(type: Exec) {
+	updateAndroidVersion()
     def adb = "$System.env.ANDROID_HOME/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'de.fau.cs.mad.fly.android/de.fau.cs.mad.fly.android.AndroidLauncher'
 }

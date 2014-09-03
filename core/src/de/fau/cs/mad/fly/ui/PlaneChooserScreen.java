@@ -1,15 +1,12 @@
 package de.fau.cs.mad.fly.ui;
 
-import java.util.List;
 import java.util.Map;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.features.overlay.PlaneUpgradesOverlay;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.player.IPlane;
-import de.fau.cs.mad.fly.player.IPlane.Head;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.res.Assets;
 
@@ -39,11 +36,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -66,12 +61,12 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 	protected final Color backgroundColor;
 	
     private Stage stage;
+	private Viewport viewport;
     private ModelBatch batch;
 	private Batch backgroundBatch;
 	private Sprite background;
 	
 	private Label nameLabel, speedLabel, rollingSpeedLabel, azimuthSpeedLabel, livesLabel;
-	private PlaneUpgradesOverlay upgradeOverlay;
 	
     private InputMultiplexer inputProcessor;
 
@@ -79,18 +74,18 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     private Vector3 yAxis = new Vector3(0.f, 1.f, 0.f);
     private Vector3 xRotationAxis = new Vector3(1.f, 0.f, 0.f);
     private Vector3 yRotationAxis = new Vector3(0.f, 1.f, 0.f);
+    private Vector3 camVec;
     
     private Environment environment;
     private PerspectiveCamera camera;
 	private float screenHeight = Gdx.graphics.getHeight();
 	private float screenWidth = Gdx.graphics.getWidth();
 	
-	private Viewport viewport;
-	
 	private int xDif, yDif;
-	private boolean touched;
-	private float xFactor = 0.f, yFactor = 0.f;
+	private boolean touched, secondTouch;
+	private float xFactor = 0.f, yFactor = 0.f, touchDistance;
 	private int lastX = 0, lastY = 0;
+	private float absScale = 1;
 	
 	private String name, speed, pitch, turnSpeed ,lives;
 
@@ -181,9 +176,22 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		}
 		background.setPosition(deltaX, deltaY);
 		
-		// initialize the upgradeOverlay
-		upgradeOverlay = new PlaneUpgradesOverlay(skin, stage, this);
-		upgradeOverlay.init();
+		// adding the button that opens the UpgradeScreen
+		ImageButton openButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+		
+		Table table = new Table(skin);
+		table.setFillParent(true);
+		table.top().right();
+		table.add(openButton);
+		
+		stage.addActor(table);
+		
+		openButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				((Fly) Gdx.app.getApplicationListener()).setPlaneUpgradeScreen();
+			}
+		});
 		
 		// initialize the InputProcessor
 		//inputProcessor = new InputMultiplexer(this, stage, new BackProcessor());
@@ -251,8 +259,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		instance = new GameObject(model, "spaceship");
 		
 		updateOverlay();
-		
-		upgradeOverlay.show();
 	}
 	
 	/**
@@ -331,6 +337,8 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		camera.near = 0.1f;
 		camera.far = 100.f;
 		camera.update();
+		
+		camVec = camera.position.cpy();
 	}
 
 	@Override
@@ -350,38 +358,71 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		touched = true;
-		lastX = screenX;
-		lastY = screenY;
-		
+		if(pointer == 0) {
+			touched = true;
+			lastX = screenX;
+			lastY = screenY;
+		} else if(pointer == 1) {
+			secondTouch = true;
+			float xDif = lastX - screenX;
+			float yDif = lastY - screenY;
+			touchDistance = (float) Math.sqrt(xDif * xDif + yDif * yDif);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		touched = false;
-		xFactor = 0;
-		yFactor = 0;
+		if(pointer == 0) {
+			touched = false;
+			xFactor = 0;
+			yFactor = 0;
+		}else if(pointer == 1) {
+			secondTouch = false;
+			touchDistance = 0;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		xDif = lastX - screenX;
-		yDif = lastY - screenY;
-		
-		xFactor = -xDif / screenWidth;
-		yFactor = yDif / screenHeight;
-		
-		instance.transform.rotate(yRotationAxis, xFactor * 360);
-		instance.transform.rotate(xRotationAxis, yFactor * 360);
-		yAxis = yRotationAxis;
-		xAxis = xRotationAxis;
-		xRotationAxis.rotate(yAxis, -xFactor * 360);
-		yRotationAxis.rotate(xAxis, -yFactor * 360);
-		
-		lastX = screenX;
-		lastY = screenY;
+		if(pointer == 0) {
+			xDif = lastX - screenX;
+			yDif = lastY - screenY;
+			
+			xFactor = -xDif / screenWidth;
+			yFactor = yDif / screenHeight;
+			
+			instance.transform.rotate(yRotationAxis, xFactor * 360);
+			instance.transform.rotate(xRotationAxis, yFactor * 360);
+			yAxis = yRotationAxis;
+			xAxis = xRotationAxis;
+			xRotationAxis.rotate(yAxis, -xFactor * 360);
+			yRotationAxis.rotate(xAxis, -yFactor * 360);
+			
+			lastX = screenX;
+			lastY = screenY;
+		} if(pointer == 1 && touched) {
+			float xDif = lastX - screenX;
+			float yDif = lastY - screenY;
+			float newTouchDistance = (float) Math.sqrt(xDif * xDif + yDif * yDif);
+			
+			float scale = touchDistance / newTouchDistance;
+			absScale += scale;
+			
+			if(absScale < 0.5f) {
+				absScale = 0.5f;
+				scale = 1;
+			} else if(absScale > 2.f) {
+				absScale = 2.f;
+				scale = 1;
+			}
+			
+			touchDistance = newTouchDistance;
+			
+			camera.translate(camVec.cpy().scl(scale - 1));
+			camera.update();
+		}
 		return false;
 	}
 
@@ -393,7 +434,19 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
+		float scale = amount * 0.1f;
+		absScale += scale;
+
+		if(absScale < 0.5f) {
+			absScale = 0.5f;
+			scale = 0;
+		} else if(absScale > 2.f) {
+			absScale = 2.f;
+			scale = 0;
+		}
+		
+		camera.translate(camVec.cpy().scl(scale));
+		camera.update();
 		return false;
 	}
 }
