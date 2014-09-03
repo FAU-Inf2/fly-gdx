@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.graphics.shaders;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -38,5 +39,10 @@ public class FlyNormalShader extends FlyBaseShader {
         program.setUniformi(normalMap, 1);
 
         renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize);
+    }
+
+    @Override
+    public boolean canRender(Renderable renderable) {
+        return(renderable.environment.equals(environment) && !renderable.material.has(TextureAttribute.Diffuse) && renderable.material.has(TextureAttribute.Normal));
     }
 }

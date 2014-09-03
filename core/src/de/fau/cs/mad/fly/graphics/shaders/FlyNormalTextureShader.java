@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 public class FlyNormalTextureShader extends FlyBaseShader {
 
     private String VERTEX_SHADER = "shaders/vertex.glsl";
-    private String FRAGMENT_SHADER = "shaders/normalmap.fragment.glsl";
+    private String FRAGMENT_SHADER = "shaders/normalmap.texture.fragment.glsl";
     private int texture1, normalMap;
 
     @Override
@@ -40,6 +40,11 @@ public class FlyNormalTextureShader extends FlyBaseShader {
         program.setUniformi(normalMap, 1);
 
         renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize);
+    }
+
+    @Override
+    public boolean canRender(Renderable renderable) {
+        return(renderable.environment.equals(environment) && renderable.material.has(TextureAttribute.Diffuse) && renderable.material.has(TextureAttribute.Normal));
     }
 
 }
