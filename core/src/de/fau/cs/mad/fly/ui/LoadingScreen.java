@@ -95,6 +95,9 @@ public class LoadingScreen extends BasicScreen {
 				}
 			});
 			table.add(button).top();
+			
+			inputProcessor.addProcessor(stage);
+			Gdx.input.setInputProcessor(inputProcessor);
 		}
 		add = false;
 	}
