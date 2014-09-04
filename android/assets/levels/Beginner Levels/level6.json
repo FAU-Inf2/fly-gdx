@@ -3,7 +3,8 @@
     "components": [
         {
             "id": "space",
-            "ref": "space"
+            "ref": "space",
+			"environment": "ambient"
         }
     ],
     "dependencies": {
