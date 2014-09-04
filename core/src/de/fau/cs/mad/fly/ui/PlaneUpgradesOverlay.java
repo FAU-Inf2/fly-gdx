@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.features.overlay;
+package de.fau.cs.mad.fly.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,9 +28,6 @@ import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.profile.PlaneUpgradeManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.PlaneUpgrade;
-import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
-import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
-import de.fau.cs.mad.fly.ui.UI;
 
 public class PlaneUpgradesOverlay {
 	private final Skin skin;
@@ -48,7 +45,7 @@ public class PlaneUpgradesOverlay {
     
     final List<TextButton> upgradeButtons;
     
-    private PlaneUpgrade currentUpgrade;
+    private PlaneUpgrade currentUpgrade = null;
     
     final String[] names = {"speed", "pitch", "turnSpeed" ,"lives"};
 	
@@ -71,6 +68,15 @@ public class PlaneUpgradesOverlay {
 		upgradeCostLabel = new Label("", labelStyle);
 		currentMoneyLabel = new Label("", labelStyle);
 		upgradeStateLabel = new Label("", labelStyle);
+	}
+	
+	
+	public void resetCurrentUpgrade() {
+		currentUpgrade = null;
+	}
+	
+	public PlaneUpgrade getCurrentUpgrade() {
+		return currentUpgrade;
 	}
 	
 	public void init() {

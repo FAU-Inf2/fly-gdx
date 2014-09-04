@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.features.overlay.PlaneUpgradesOverlay;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.res.Assets;
@@ -79,6 +78,10 @@ public class PlaneUpgradeScreen implements Screen {
 		
 		// initialize the InputProcessor
 		inputProcessor = new InputMultiplexer(stage, new BackProcessor());
+	}
+	
+	public PlaneUpgradesOverlay getOverlay() {
+		return upgradeOverlay;
 	}
 	
 	/**
