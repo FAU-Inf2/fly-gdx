@@ -152,7 +152,7 @@ public class PlaneUpgradesOverlay {
 					int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
 					//nameLabel.setText("current money: " + money);
 					
-					upgradeButton.setText(I18n.t(I18n.t("equip")));
+					upgradeButton.setText(I18n.t("equip"));
 					upgradeButton.setColor(Color.WHITE);
 					
 					if(!PlaneManager.getInstance().upgradeCanBeBought(currentUpgrade)) {
