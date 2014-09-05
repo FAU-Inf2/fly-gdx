@@ -3,9 +3,11 @@ package de.fau.cs.mad.fly.ui;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
@@ -13,7 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
@@ -71,7 +75,14 @@ public class StatisticsScreen extends BasicScreen {
         
         // add user field and button
         newUserField = new TextField("", skin, "rounded");
-        newUserField.setTextFieldFilter(new UserNameTextFieldFilter());
+        newUserField.setTextFieldListener(new TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char key) {
+                if ((key == '\r' || key == '\n')) {
+                    addNewUser();
+                }
+            }
+        });
         newUserField.setMessageText(I18n.t("TipsUserName"));
         userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH);
         userTable.add(addUserButton).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
@@ -117,7 +128,12 @@ public class StatisticsScreen extends BasicScreen {
         userTable = new Table();
         generateUserTable();
         
-        addUserButton.addListener(new AddUserButtonListener(skin, newUserField, this));
+        addUserButton.addListener(new ChangeListener(){
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                addNewUser();
+            }
+        });
         infoTable.add(userTable);
         infoTable.row();
         
@@ -162,6 +178,60 @@ public class StatisticsScreen extends BasicScreen {
             }
             levelgroupTable.row().expand();
         }
+    }
+    
+    /**
+     * Method that is called when the button is pressed to create a new user or
+     * the enter button is pressed.
+     * <p>
+     * Before a new user can be created, two things have to be checked:
+     * <p>
+     * 1) Does the name contains any characters? - Otherwise display a
+     * corresponding {@link Dialog}.
+     * <p>
+     * 2) Does the player already exists? - If so, display a corresponding
+     * {@link Dialog}.
+     * <p>
+     * Other checks are done in {@link UserNameTextFieldFilter}
+     * <p>
+     * If a new player is created, display a corresponding {@link Dialog}.
+     */
+    public void addNewUser() {
+        String name = newUserField.getText();
+        Dialog dialog = new Dialog("", skin, "dialog");
+        boolean userExists = false;
+        if (!"".equals(name)) {
+            List<PlayerProfile> allPlayerProfiles = PlayerProfileManager.getInstance().getAllPlayerProfiles();
+            int numberOfAllPlayerProfiles = allPlayerProfiles.size();
+            PlayerProfile playerProfile;
+            for (int i = 0; i < numberOfAllPlayerProfiles; i++) {
+                playerProfile = allPlayerProfiles.get(i);
+                if (playerProfile.getName().equals(name)) {
+                    userExists = true;
+                    i = numberOfAllPlayerProfiles;
+                }
+            }
+            if (userExists) {
+                dialog.text(I18n.t("UserExists"));
+            } else {
+                // update player profile
+                playerProfile = new PlayerProfile();
+                playerProfile.setName(name);
+                PlayerProfileManager.getInstance().savePlayer(playerProfile);
+                updateUserTable();
+                // reset user input field
+                newUserField.setText("");
+                newUserField.setMessageText(I18n.t("TipsUserName"));
+                // set dialog text
+                dialog.text(I18n.t("UserAdded"));
+            }
+        } else {
+            dialog.text(I18n.t("NullUserName"));
+        }
+        Gdx.input.setOnscreenKeyboardVisible(false);
+        TextButton button = new TextButton(I18n.t("ok"), skin, "rounded");
+        dialog.button(button);
+        dialog.show(stage);
     }
     
 }
