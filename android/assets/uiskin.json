@@ -5,6 +5,7 @@ com.badlogic.gdx.graphics.Color: {
 	red: { a: 1, b: 0, g: 0, r: 1 },
 	black: { a: 1, b: 0, g: 0, r: 0 },
 	lightGrey: { a: 1, b: 0.809, g: 0.808, r: 0.807 },
+	darkGrey: { a: 1, b: 0.4, g: 0.4, r: 0.4 },
 	transparent: { a: 0, b: 0, g: 0, r: 0 }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
@@ -60,6 +61,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: black },
 	small: { font: small-font, fontColor: black },
 	red: { font: default-font, fontColor: red },
+	darkGrey: { font: default-font, fontColor: darkGrey },
 	black: { font: default-font, fontColor: black }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
