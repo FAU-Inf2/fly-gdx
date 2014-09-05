@@ -253,8 +253,8 @@ grey-progress-bar
 watch
   rotate: false
   xy: 245, 289
-  size: 155, 155
-  orig: 155, 155
+  size: 155, 154
+  orig: 155, 154
   offset: 0, 0
   index: -1
 star
