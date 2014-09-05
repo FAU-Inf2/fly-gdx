@@ -437,7 +437,7 @@ public class GameControllerBuilder {
      * @return Builder instance with TimeLeftOverlay
      */
     private GameControllerBuilder addTimeLeftOverlay() {
-        TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game.getSkin(), stage);
+        TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game.getSkin(), stage, level.getLeftTime());
         timeController.registerIntegerTimeListener(timeLeftOverlay);
         return this;
     }

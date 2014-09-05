@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService;
 import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.ResponseItem;
@@ -23,6 +24,9 @@ import de.fau.cs.mad.fly.profile.LevelProfile;
 public class GlobalHighScoreScreen extends BasicScreen {
     
     private Table infoTable;
+    
+    /** space between the columns */
+    private final float padding = 320;
     
     private LevelGroup levelGroup;
     
@@ -44,22 +48,30 @@ public class GlobalHighScoreScreen extends BasicScreen {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
+                    infoTable.row();
+                    infoTable.add(new Label(I18n.t("level"), skin)).left();
+                    infoTable.add(new Label(I18n.t("player"), skin)).left();
+                    infoTable.add(new Label(I18n.t("score"), skin)).left();
+                    infoTable.row();
                     if (results != null && results.size() > 0) {
-                        infoTable.row().expand();
-                        infoTable.add(new Label(level.name, skin)).pad(6f).uniform();
+                        infoTable.row();
+                        infoTable.add(new Label(level.name, skin, "darkGrey")).pad(0, 0, 0, padding).left();
                         
                         for (ResponseItem item : results) {
-                            infoTable.row().expand();
-                            infoTable.add(new Label(item.FlyID + "", skin)).pad(6f).uniform();
-                            infoTable.add(new Label(item.Username, skin)).pad(6f).uniform();
-                            infoTable.add(new Label(item.Score + "", skin)).pad(6f).uniform();
+                            infoTable.row();
+                            infoTable.add(new Label(item.FlyID + "", skin, "darkGrey")).pad(0, 0, 0, padding);
+                            infoTable.add(new Label(item.Username, skin, "darkGrey")).pad(0, 0, 0, padding).left();
+                            infoTable.add(new Label(item.Score + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
                         }
                     } else {
-                        infoTable.row().expand();
-                        infoTable.add(new Label(level.name, skin)).pad(6f).uniform();
-                        infoTable.row().expand();
-                        infoTable.add(new Label("No record yet!", skin)).pad(8f).uniform();
+                        infoTable.row();
+                        infoTable.add(new Label(level.name, skin, "darkGrey")).pad(0, 0, 0, padding).left();
+                        infoTable.row();
+                        infoTable.add(new Label(I18n.t("noScore"), skin, "darkGrey"));
                     }
+                    infoTable.row();
+                    infoTable.add(new Label(" ", skin));
+                    infoTable.row();
                 }
             });
             
@@ -86,7 +98,7 @@ public class GlobalHighScoreScreen extends BasicScreen {
     protected void generateContent() {
         stage.clear();
         final Table table = new Table();
-        table.pad(Gdx.graphics.getWidth() * 0.1f);
+        table.pad(UI.Window.BORDER_SPACE);
         table.setFillParent(true);
         stage.addActor(table);
         infoTable = new Table();

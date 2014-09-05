@@ -408,7 +408,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 			float newTouchDistance = (float) Math.sqrt(xDif * xDif + yDif * yDif);
 			
 			float scale = touchDistance / newTouchDistance;
-			absScale += scale;
+			absScale += scale - 1;
 			
 			if(absScale < 0.5f) {
 				absScale = 0.5f;

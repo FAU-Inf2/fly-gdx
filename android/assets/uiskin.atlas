@@ -29,24 +29,24 @@ default-select
 default-round-large
   rotate: false
   xy: 58, 29
-  size: 40, 20
+  size: 39, 19
   split: 5, 5, 5, 4
-  orig: 40, 20
+  orig: 39, 19
   offset: 0, 0
   index: -1
 default-scroll
   rotate: false
   xy: 58, 8
-  size: 40, 20
+  size: 39, 19
   split: 2, 2, 2, 2
-  orig: 40, 20
+  orig: 39, 19
   offset: 0, 0
   index: -1
 default-slider-knob
   rotate: false
   xy: 202, 1
-  size: 11, 28
-  orig: 11, 28
+  size: 10, 28
+  orig: 10, 28
   offset: 0, 0
   index: -1
 default-round-down
@@ -213,10 +213,10 @@ white
   index: -1
 green-rounded-button-9patch
   rotate: false
-  xy: 1, 309
-  size: 109, 109
-  split: 54, 54, 54, 54
-  orig: 109, 109
+  xy: 1, 310
+  size: 109, 108
+  split: 53, 53, 53, 53
+  orig: 109, 108
   offset: 0, 0
   index: -1
 dark-green-rounded-button-9patch
@@ -253,8 +253,8 @@ grey-progress-bar
 watch
   rotate: false
   xy: 245, 289
-  size: 155, 155
-  orig: 155, 155
+  size: 155, 154
+  orig: 155, 154
   offset: 0, 0
   index: -1
 star

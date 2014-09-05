@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.game.ScoreChangeListener;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Optional Feature to display the current score.
@@ -17,31 +18,35 @@ import de.fau.cs.mad.fly.game.ScoreChangeListener;
  * @author Tobias Zangl
  */
 public class ScoreOverlay implements ScoreChangeListener {
-
-	private final Label scoreCounter;
-
-	public ScoreOverlay(final Skin skin, final Stage stage) {	    
-        
+    
+    private final Label scoreCounter;
+    
+    public ScoreOverlay(final Skin skin, final Stage stage) {
+        // offers the visible background, contains icon and points
         final Table innerTable = new Table();
-        final NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
-        innerTable.setBackground(background);
+        // necessary for adjusting the innerTable on the screen
+        final Table outerTable = new Table();
         
-        final TextureRegion textureRegion = new TextureRegion(skin.getRegion("star"));
-        final Image scoreIcon = new Image(textureRegion);
+        final NinePatchDrawable backgroundOfInnerTable = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
+        innerTable.setBackground(backgroundOfInnerTable);
         
-        scoreCounter = new Label("", skin);
+        final TextureRegion textureRegionOfScoreIcon = new TextureRegion(skin.getRegion("star"));
+        final Image scoreIcon = new Image(textureRegionOfScoreIcon);
         
-        innerTable.row().expand();
-        innerTable.add(scoreIcon);
-        innerTable.add(scoreCounter).pad(0, 50, 0, 0);
-        innerTable.row().expand();
-        stage.addActor(innerTable);
-        innerTable.setBounds(3150, 2050, 800, 300);
-	}
-
-	@Override
-	public void scoreChanged(int newScore) {
-		scoreCounter.setText(String.valueOf(newScore));
-	}
-
+        scoreCounter = new Label(String.valueOf(0), skin);
+        
+        // add icon with some padding to the text right of it
+        innerTable.add(scoreIcon).pad(0, 0, 0, 20);
+        innerTable.add(scoreCounter);
+        
+        outerTable.setFillParent(true);
+        outerTable.add(innerTable).pad(UI.Window.BORDER_SPACE).expand().top().right();
+        stage.addActor(outerTable);
+    }
+    
+    @Override
+    public void scoreChanged(int newScore) {
+        scoreCounter.setText(String.valueOf(newScore));
+    }
+    
 }

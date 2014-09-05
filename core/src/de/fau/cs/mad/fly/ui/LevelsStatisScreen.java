@@ -68,7 +68,6 @@ public class LevelsStatisScreen extends BasicScreen {
         final Table table = new Table();
         table.pad(UI.Window.BORDER_SPACE);
         table.setFillParent(true);
-        table.debug();
         stage.addActor(table);
         
         infoTable = new Table();
@@ -165,6 +164,8 @@ public class LevelsStatisScreen extends BasicScreen {
                             scoreTable.add(uploadScoreButton).pad(6f).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
                             scoreTable.row().expand();
                         }
+                        scoreTable.add(new Label("", skin)).pad(6f).uniform();
+                        scoreTable.row().expand();
                     }
                     
                     // if no score at all
@@ -173,10 +174,7 @@ public class LevelsStatisScreen extends BasicScreen {
                         scoreTable.add(new Label(I18n.t("noScore"), skin)).pad(6f).uniform();
                     }
                     
-                    // global high score button
-                    scoreTable.row().expand();
-                    scoreTable.add(new Label("", skin)).pad(6f).uniform();
-                    scoreTable.row().expand();
+                    // global high score button          
                     
                     scoreTable.add(globalHighScoreButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
                     
