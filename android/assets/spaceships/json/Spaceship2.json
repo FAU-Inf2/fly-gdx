@@ -2,6 +2,7 @@
 	"id": 2,
 	"name": "Saucer",
 	"modelRef": "ufo",
+	"levelGroupDependency": 1,
 	"speed": 10,
 	"rollingSpeed": 5,
 	"azimuthSpeed": 5,

@@ -46,6 +46,7 @@ public class PlaneManager {
 				planeHead.id = id;
 				planeHead.name = json.getString("name");
 				planeHead.modelRef = json.getString("modelRef");
+				planeHead.levelGroupDependency = json.getInt("levelGroupDependency");
 				planeHead.speed = json.getFloat("speed");
 				planeHead.rollingSpeed = json.getFloat("rollingSpeed");
 				planeHead.azimuthSpeed = json.getFloat("azimuthSpeed");

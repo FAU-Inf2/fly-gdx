@@ -8,6 +8,7 @@ import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlaneManager;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 
 import com.badlogic.gdx.Gdx;
@@ -130,7 +131,10 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		
 		int size = allPlanes.size();
 		for(int i = 1; i <= size; i++) {
-			
+			if(!Fly.DEBUG_MODE && allPlanes.get(i).levelGroupDependency > PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID()) {
+				continue;
+			}
+
 			Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(i).modelRef + ".png"));
 			TextureRegion image = new TextureRegion(texture1);
 			ImageButtonStyle style = new ImageButtonStyle(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
