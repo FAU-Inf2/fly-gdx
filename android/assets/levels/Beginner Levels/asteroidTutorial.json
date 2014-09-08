@@ -18,7 +18,12 @@
                 20.0,
                 0.0
             ],
-            "ref": "asteroid"
+            "ref": "asteroid",
+            "scale": [
+                1.786,
+                1.786,
+                1.786
+            ]
         },
         {
             "euler": [
