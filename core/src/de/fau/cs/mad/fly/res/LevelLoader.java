@@ -133,7 +133,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         Map<Integer, GateGoal> gateMap = new HashMap<Integer, GateGoal>();
         
         JsonValue gates = json.get("gates");
-        if (gates == null) {
+        if (gates == null) {    
             return null;
         }
         
