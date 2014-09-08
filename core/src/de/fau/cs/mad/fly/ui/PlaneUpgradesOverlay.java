@@ -167,8 +167,8 @@ public class PlaneUpgradesOverlay {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				String name = currentUpgrade.name;
-				int equiped = PlaneManager.getInstance().getChosenPlane().upgradesEquiped.get(name);
-				int bought = PlaneManager.getInstance().getChosenPlane().upgradesBought.get(name);
+				int equiped = PlaneManager.getInstance().getChosenPlane().getUpgradesEquiped().get(name);
+				int bought = PlaneManager.getInstance().getChosenPlane().getUpgradesBought().get(name);
 				if(equiped != bought) {
 					if(equiped == 0) {
 						downgradeButton.setText(I18n.t("unequip"));
@@ -190,7 +190,7 @@ public class PlaneUpgradesOverlay {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				String name = currentUpgrade.name;
-				int equiped = PlaneManager.getInstance().getChosenPlane().upgradesEquiped.get(name);
+				int equiped = PlaneManager.getInstance().getChosenPlane().getUpgradesEquiped().get(name);
 				
 				if(equiped != 0) {
 					if(equiped == currentUpgrade.timesAvailable) {
@@ -234,8 +234,8 @@ public class PlaneUpgradesOverlay {
 	 * adds all Buttons and Labels needed after selecting an Upgrade to buy/equip
 	 */
 	private void addButtons() {
-		int equiped = PlaneManager.getInstance().getChosenPlane().upgradesEquiped.get(currentUpgrade.name);
-		int bought = PlaneManager.getInstance().getChosenPlane().upgradesBought.get(currentUpgrade.name);
+		int equiped = PlaneManager.getInstance().getChosenPlane().getUpgradesEquiped().get(currentUpgrade.name);
+		int bought = PlaneManager.getInstance().getChosenPlane().getUpgradesBought().get(currentUpgrade.name);
 		int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
 		
 		// setting up the Lables and Buttons according to current Upgrade

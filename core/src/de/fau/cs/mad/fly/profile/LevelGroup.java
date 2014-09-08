@@ -83,7 +83,6 @@ public class LevelGroup {
 			}
 		}	
 		
-		Gdx.app.log("timing", "read levels " + path + (System.currentTimeMillis()-time));
 		Collections.sort(levels, levelComparator);
 	}
 

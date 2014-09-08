@@ -221,6 +221,7 @@ public class PlayerProfile {
 		}
 		
 		this.money = newMoney;
+		PlayerProfileManager.getInstance().updateIntColumn(this, "total_score", newMoney);
 		return true;
 	}
 

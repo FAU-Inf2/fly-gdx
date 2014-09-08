@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.player;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +38,22 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public int[] upgradeTypes;
         public List<String> upgrades;
         
-        public Map<String, Integer> upgradesBought;
-        public Map<String, Integer> upgradesEquiped;
+        private Map<String, Integer> upgradesBought = new  HashMap<String, Integer>();
+        /**
+		 * @return the upgradesBought
+		 */
+		public Map<String, Integer> getUpgradesBought() {
+			return upgradesBought;
+		}
+		private Map<String, Integer> upgradesEquiped = new  HashMap<String, Integer>();
+		/**
+		 * @return the upgradesEquiped
+		 */
+		public Map<String, Integer> getUpgradesEquiped() {
+			return upgradesEquiped;
+		}
+        
+       
     }
 	
 	/**

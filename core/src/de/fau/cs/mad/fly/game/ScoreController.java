@@ -78,7 +78,6 @@ public class ScoreController extends GateCircuitAdapter {
               
               int score = gatePassedScore;
               newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + ""));
-              Gdx.app.log("fantest", "init" + gameController.getTimeController().getIntegerTimeSinceStart() + " left:" + gameController.getTimeController().getIntegerTime() );
               int leftTimeScore = gameController.getTimeController().getIntegerTimeSinceStart() * 10;
               newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), leftTimeScore + ""));
               score += leftTimeScore;

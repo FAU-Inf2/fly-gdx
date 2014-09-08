@@ -1,18 +1,16 @@
 package de.fau.cs.mad.fly.profile;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.sql.DatabaseCursor;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.TimeUtils;
-
+import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.res.PlaneUpgrade;
 
@@ -69,21 +67,26 @@ public class PlaneManager {
 				planeHead.upgradeTypes = upgradeTypes;
 				
 				Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
-				Map<String, Integer> upgradeMap = new HashMap<String, Integer>();
-				Map<String, Integer> equipedMap = new HashMap<String, Integer>();
+				planeHead.getUpgradesBought().clear();
+				planeHead.getUpgradesEquiped().clear();
+				//Map<String, Integer> upgradeMap = new HashMap<String, Integer>();
+				//Map<String, Integer> equipedMap = new HashMap<String, Integer>();
+				
+				Map<Integer, Integer> upgradeDB =getUpgradesFromDB( id);
+				Map<Integer, Integer> equipedDB = getEquipedsFromDB(id);
 				
 				int size = upgradeTypes.length;
 				for(PlaneUpgrade upgrade : upgrades) {
 					for(int i = 0; i < size; i++) {
 						if(upgrade.type == upgradeTypes[i]) {
-							upgradeMap.put(upgrade.name, 0);
-							equipedMap.put(upgrade.name, 0);
+							planeHead.getUpgradesBought().put(upgrade.name, upgradeDB.get(upgrade.type));
+							planeHead.getUpgradesEquiped().put(upgrade.name, equipedDB.get(upgrade.type));
 						}
 					}
 				}
 				
-				planeHead.upgradesBought = upgradeMap;
-				planeHead.upgradesEquiped = equipedMap;
+				//planeHead.upgradesBought = upgradeMap;
+				//planeHead.upgradesEquiped = equipedMap;
 				
 				//planes.add(spaceshipHead);
 				planes.put(id, planeHead);
@@ -91,7 +94,55 @@ public class PlaneManager {
 		}
 		return planes;
 	}
+	
+	public Map<Integer, Integer> getUpgradesFromDB(int planeID){
+		Map<Integer, Integer> result = new HashMap<Integer, Integer>();
+		String sql = "select equiped_type, count from fly_plane_Equiped where player_id=" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId()
+				+ " and plane_id=" + planeID;
+		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(sql);
+		if (cursor != null && cursor.getCount() > 0) {
+			result.put(cursor.getInt(0), cursor.getInt(1));
+		}
+		return result;
+	}
+	
+	public Map<Integer, Integer> getEquipedsFromDB(int planeID){
+		Map<Integer, Integer> result = new HashMap<Integer, Integer>();
+		String sql = "select update_type, count from fly_plane_upgrade where player_id=" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId()
+				+ " and plane_id=" + planeID;
+		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(sql);
+		if (cursor != null && cursor.getCount() > 0) {
+			result.put(cursor.getInt(0), cursor.getInt(1));
+		}
+		return result;
+	}
+	
+	public void updateEquiped( int planeID, int type, int newValue){
+		int playerId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId();
+		String sql = "delte from fly_plane_Equiped where player_id=" + playerId + " and equiped_type=" + type + " and plane_id=" + planeID;
+		String insert = "insert into fly_plane_Equiped(player_id, plane_id, equiped_type, count ) values (" + playerId + ", " + planeID + "," + type + "," + newValue + ")";
+		FlyDBManager.getInstance().execSQL(sql);
+		FlyDBManager.getInstance().execSQL(insert);	
+	}
+	
+	public void updateUpdate( int planeID, int type, int newValue){
+		int playerId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId();
+		String sql = "delte from fly_plane_upgrade where player_id=" + playerId + " and update_type=" + type + " and plane_id=" + planeID;
+		String insert = "insert into fly_plane_upgrade(player_id, plane_id, update_type, count ) values (" + playerId  + ", " + planeID + "," + type + "," + newValue + ")";
+		FlyDBManager.getInstance().execSQL(sql);
+		FlyDBManager.getInstance().execSQL(insert);	
+	}
 
+	public int getUpgradeType( String name){
+		Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
+		for(PlaneUpgrade upgrade : upgrades) {
+			if(upgrade.name.equals(name)){
+				return upgrade.type;
+			}
+		}
+		return 0;
+	}
+	
 	public IPlane.Head getChosenPlane() {
 		if (chosenPlane == null) {
 			chosenPlane = getSpaceshipList().get(1);
@@ -139,8 +190,9 @@ public class PlaneManager {
 		chosenPlane.azimuthSpeed += values[2] * signum;
 		chosenPlane.lives += values[3] * signum;
 		
-		int oldValue = chosenPlane.upgradesEquiped.get(upgradeName);
-		chosenPlane.upgradesEquiped.put(upgradeName, oldValue + signum);
+		int oldValue = chosenPlane.getUpgradesEquiped().get(upgradeName);
+		chosenPlane.getUpgradesEquiped().put(upgradeName, oldValue + signum);
+		this.updateEquiped(chosenPlane.id, this.getUpgradeType(upgradeName),  oldValue + signum);
 		
 		planes.put(chosenPlane.id, chosenPlane);
 		
@@ -148,21 +200,22 @@ public class PlaneManager {
 	}
 	
 	public void buyUpgradeForPlane(String upgradeName) {
-		int currentUpgradeBought = chosenPlane.upgradesBought.get(upgradeName);
+		int currentUpgradeBought = chosenPlane.getUpgradesBought().get(upgradeName);
 		
 		PlaneUpgrade upgrade = PlaneUpgradeManager.getInstance().getUpgrade(upgradeName);
 		int maxUpgrade = upgrade.timesAvailable;
 		
 		if(currentUpgradeBought < maxUpgrade) {
 			if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(-upgrade.price)) {
-				chosenPlane.upgradesBought.put(upgradeName, currentUpgradeBought + 1);
+				chosenPlane.getUpgradesBought().put(upgradeName, currentUpgradeBought + 1);
+				this.updateUpdate(chosenPlane.id, this.getUpgradeType(upgradeName), currentUpgradeBought + 1);
 			}
 		}
 	}
 	
 	public boolean upgradeCanBeBought(PlaneUpgrade upgrade) {
 		int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
-		int currentlyBought = chosenPlane.upgradesBought.get(upgrade.name);
+		int currentlyBought = chosenPlane.getUpgradesBought().get(upgrade.name);
 		if(currentlyBought < upgrade.timesAvailable && upgrade.price <= money) {
 			return true;
 		}
