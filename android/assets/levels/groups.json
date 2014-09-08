@@ -2,14 +2,14 @@
 	"groups": [
 		{
 			"id": 0,
-			"name": "Endless Levels",
-			"path": "Endless/"
+			"name": "Beginner Levels",
+			"path": "Beginner Levels/"
 		},
 		{
 			"id": 1,
-			"name": "Beginner Levels",
-			"path": "Beginner Levels/"
-		},	
+			"name": "Endless Levels",
+			"path": "Endless/"
+		},
 		{
 			"id": 2,
 			"name": "Medium Levels",
@@ -19,6 +19,6 @@
 			"id": 3,
 			"name": "Planet Levels",
 			"path": "Planet Levels/"
-		}		
+		}
 	]
 }
