@@ -39,16 +39,16 @@
         },
         {
             "euler": [
-                10.0,
+                0.0,
                 -0.0,
-                0.0
+                45.0
             ],
             "gateId": 1,
             "id": "Gate.001",
             "position": [
-                0.0,
-                25.0,
-                2.5
+                -6.0,
+                20.0,
+                0.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -58,62 +58,24 @@
         },
         {
             "euler": [
-                20.0,
+                0.0,
                 -0.0,
-                0.0
+                90.0
             ],
             "gateId": 2,
             "id": "Gate.002",
             "position": [
-                0.0,
-                40.0,
-                7.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                3
-            ]
-        },
-        {
-            "euler": [
-                30.0,
-                -0.0,
+                -16.0,
+                25.0,
                 0.0
-            ],
-            "gateId": 3,
-            "id": "Gate.003",
-            "position": [
-                0.0,
-                52.0,
-                15.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                4
-            ]
-        },
-        {
-            "euler": [
-                40.0,
-                -0.0,
-                0.0
-            ],
-            "gateId": 4,
-            "id": "Gate.004",
-            "position": [
-                0.0,
-                64.0,
-                24.0
             ],
             "ref": "torus",
             "refHole": "hole",
             "successors": []
         }
     ],
-    "id": 5,
-    "name": "Level 2",
+    "id": 4,
+    "name": "Level 1",
     "start": {
         "position": {
             "x": 0.0,
@@ -131,6 +93,6 @@
             "z": 0.0
         }
     },
-    "time": 42,
+    "time": 18,
     "upgrades": []
 }

@@ -19,63 +19,63 @@
 		},
 		{
 			"id": 4,
+			"name": "Level 1",
+			"file": "level1.json"
+		},
+		{
+			"id": 5,
 			"name": "Level 2",
 			"file": "level2.json"
 		},
 		{
-			"id": 5,
+			"id": 6,
 			"name": "Level 3",
 			"file": "level3.json"
 		},
 		{
-			"id": 6,
+			"id": 7,
 			"name": "Level 4",
 			"file": "level4.json"
 		},
 		{
-			"id": 7,
+			"id": 8,
 			"name": "Level 5",
 			"file": "level5.json"
 		},
 		{
-			"id": 8,
+			"id": 9,
+			"name": "Tutorial 4",
+			"file": "selectGateTutorial.json"
+		},
+		{
+			"id": 10,
 			"name": "Level 6",
 			"file": "level6.json"
 		},
 		{
-			"id": 9,
+			"id": 11,
 			"name": "Level 7",
 			"file": "level7.json"
 		},
 		{
-			"id": 10,
+			"id": 12,
 			"name": "Level 8",
 			"file": "level8.json"
 		},
 		{
-			"id": 11,
+			"id": 13,
 			"name": "Level 9",
 			"file": "level9.json"
 		},
 		{
-			"id": 12,
+			"id": 14,
 			"name": "Level 10",
 			"file": "level10.json"
 		},
 		{
-			"id": 13,
-			"name": "Level 11",
-			"file": "level11.json"
-		},
-		{
-			"id": 14,
-			"name": "Level 12",
-			"file": "level12.json"
-		},
-		{
 			"id": 15,
-			"name": "Level 13",
-			"file": "level13.json"
+			"name": "Tutorial 5",
+			"file": "asteroidTutorial.json"
 		},
 		{
 			"id": 16,

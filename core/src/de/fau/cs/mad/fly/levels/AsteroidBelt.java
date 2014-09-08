@@ -11,7 +11,7 @@ import de.fau.cs.mad.fly.game.GameControllerBuilder;
  * @author Tobi
  *
  */
-public class AsteroidLevel implements ILevel {
+public class AsteroidBelt implements ILevel {
 
 	@Override
 	public void create(GameControllerBuilder builder) {

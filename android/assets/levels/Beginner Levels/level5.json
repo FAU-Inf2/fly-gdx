@@ -8,7 +8,6 @@
         }
     ],
     "dependencies": {
-        "asteroid": "asteroid",
         "hole": "torusHoleBox",
         "space": "spacesphere",
         "torus": "torus"
@@ -22,7 +21,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 0,
@@ -40,16 +39,16 @@
         },
         {
             "euler": [
+                10.0,
                 0.0,
-                -0.0,
-                -10.0
+                10.0
             ],
             "gateId": 1,
             "id": "Gate.001",
             "position": [
-                2.5,
+                -2.5,
                 25.0,
-                0.0
+                2.5
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -59,16 +58,16 @@
         },
         {
             "euler": [
+                20.0,
                 0.0,
-                -0.0,
-                -20.0
+                20.0
             ],
             "gateId": 2,
             "id": "Gate.002",
             "position": [
-                7.0,
+                -7.0,
                 40.0,
-                0.0
+                7.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -78,16 +77,16 @@
         },
         {
             "euler": [
+                30.0,
                 0.0,
-                -0.0,
-                -30.0
+                30.0
             ],
             "gateId": 3,
             "id": "Gate.003",
             "position": [
-                15.0,
+                -15.0,
                 52.0,
-                0.0
+                15.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -97,16 +96,16 @@
         },
         {
             "euler": [
+                20.0,
                 0.0,
-                -0.0,
-                -40.0
+                20.0
             ],
             "gateId": 4,
             "id": "Gate.004",
             "position": [
-                24.0,
+                -24.0,
                 64.0,
-                0.0
+                24.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -117,15 +116,15 @@
         {
             "euler": [
                 0.0,
-                -0.0,
-                -50.0
+                0.0,
+                0.0
             ],
             "gateId": 5,
             "id": "Gate.005",
             "position": [
-                36.0,
+                -24.0,
                 72.0,
-                0.0
+                24.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -136,23 +135,22 @@
         {
             "euler": [
                 0.0,
-                -0.0,
-                -60.0
+                0.0,
+                0.0
             ],
             "gateId": 6,
             "id": "Gate.006",
             "position": [
-                50.0,
+                -24.0,
                 80.0,
-                0.0
+                24.0
             ],
             "ref": "torus",
             "refHole": "hole",
-            "score": 60,
             "successors": []
         }
     ],
-    "id": 5,
+    "id": 8,
     "name": "Level 5",
     "start": {
         "position": {
@@ -162,7 +160,7 @@
         },
         "upDirection": {
             "x": 0.0,
-            "y": -0.0,
+            "y": 0.0,
             "z": 1.0
         },
         "viewDirection": {
@@ -171,6 +169,6 @@
             "z": 0.0
         }
     },
-    "time": 52,
+    "time": 50,
     "upgrades": []
 }

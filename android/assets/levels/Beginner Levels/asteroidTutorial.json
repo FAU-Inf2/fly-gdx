@@ -1,13 +1,56 @@
 {
-    "class": "",
+    "class": "beginner.AsteroidLevel",
     "components": [
         {
             "id": "space",
             "ref": "space",
 			"environment": "ambient"
+        },
+        {
+            "euler": [
+                10.0,
+                56.0,
+                23.0
+            ],
+            "id": "asteroid1",
+            "position": [
+                2.0,
+                20.0,
+                0.0
+            ],
+            "ref": "asteroid"
+        },
+        {
+            "euler": [
+                -80.0,
+                2.0,
+                -42.0
+            ],
+            "id": "asteroid2",
+            "position": [
+                0.0,
+                42.0,
+                0.0
+            ],
+            "ref": "asteroid"
+        },
+        {
+            "euler": [
+                -18.0,
+                170.0,
+                -2.0
+            ],
+            "id": "asteroid3",
+            "position": [
+                -2.0,
+                20.0,
+                0.0
+            ],
+            "ref": "asteroid"
         }
     ],
     "dependencies": {
+        "asteroid": "asteroid",
         "hole": "torusHoleBox",
         "space": "spacesphere",
         "torus": "torus"
@@ -28,7 +71,7 @@
             "id": "Gate.000",
             "position": [
                 0.0,
-                10.0,
+                15.0,
                 0.0
             ],
             "ref": "torus",
@@ -41,13 +84,13 @@
             "euler": [
                 0.0,
                 0.0,
-                -10.0
+                0.0
             ],
             "gateId": 1,
             "id": "Gate.001",
             "position": [
-                2.5,
-                25.0,
+                3.0,
+                30.0,
                 0.0
             ],
             "ref": "torus",
@@ -60,13 +103,13 @@
             "euler": [
                 0.0,
                 0.0,
-                -20.0
+                0.0
             ],
             "gateId": 2,
             "id": "Gate.002",
             "position": [
-                7.0,
-                40.0,
+                0.0,
+                45.0,
                 0.0
             ],
             "ref": "torus",
@@ -79,80 +122,22 @@
             "euler": [
                 0.0,
                 0.0,
-                -30.0
+                0.0
             ],
             "gateId": 3,
             "id": "Gate.003",
             "position": [
-                15.0,
-                52.0,
+                0.0,
+                60.0,
                 0.0
             ],
             "ref": "torus",
             "refHole": "hole",
-            "successors": [
-                4
-            ]
-        },
-        {
-            "euler": [
-                0.0,
-                0.0,
-                -40.0
-            ],
-            "gateId": 4,
-            "id": "Gate.004",
-            "position": [
-                24.0,
-                64.0,
-                0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                5
-            ]
-        },
-        {
-            "euler": [
-                0.0,
-                0.0,
-                -50.0
-            ],
-            "gateId": 5,
-            "id": "Gate.005",
-            "position": [
-                36.0,
-                72.0,
-                0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                6
-            ]
-        },
-        {
-            "euler": [
-                0.0,
-                0.0,
-                -60.0
-            ],
-            "gateId": 6,
-            "id": "Gate.006",
-            "position": [
-                50.0,
-                80.0,
-                0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "score": 60,
             "successors": []
         }
     ],
-    "id": 7,
-    "name": "Level 4",
+    "id": 2,
+    "name": "Azimuth Tutorial",
     "start": {
         "position": {
             "x": 0.0,
@@ -170,6 +155,6 @@
             "z": 0.0
         }
     },
-    "time": 52,
+    "time": 40,
     "upgrades": []
 }

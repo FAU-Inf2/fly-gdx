@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 
 import de.fau.cs.mad.fly.profile.LevelProfile;
-import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
@@ -60,6 +59,10 @@ public class Loader {
 	
     public void setTarget(AssetDescriptor<Level> target) {
         this.target = target;
+    }
+    
+    public AssetDescriptor<Level> getTarget() {
+        return target;
     }
     
     public void addProgressListener(ProgressListener<Level> listener) {

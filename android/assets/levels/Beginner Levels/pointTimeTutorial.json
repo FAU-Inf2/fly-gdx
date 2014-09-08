@@ -8,7 +8,6 @@
         }
     ],
     "dependencies": {
-        "asteroid": "asteroid",
         "hole": "torusHoleBox",
         "space": "spacesphere",
         "torus": "torus"
@@ -92,7 +91,7 @@
             "successors": []
         }
     ],
-    "id": 1,
+    "id": 3,
     "name": "Level 1",
     "start": {
         "position": {

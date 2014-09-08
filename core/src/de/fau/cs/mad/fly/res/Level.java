@@ -34,7 +34,7 @@ public class Level implements Disposable {
     
     public List<GameObject> components;
     public final Perspective start;
-    private final Environment environment, ambientEnvironment;
+    private final Environment environment;
     private final Map<String, GameModel> dependencies;
     
     private GameObject borderObject = null;
@@ -61,7 +61,7 @@ public class Level implements Disposable {
         this.start = start;
         this.dependencies = Collections.unmodifiableMap(dependencies);
         this.environment = environments.get("lighting");
-        this.ambientEnvironment = environments.get("ambient");
+        environments.get("ambient");
         
         for (GameObject c : components) {
             if (c.getId().equals("space")) {
