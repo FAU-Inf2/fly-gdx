@@ -36,7 +36,7 @@ public class ScoreOverlay implements ScoreChangeListener {
         scoreCounter = new Label(String.valueOf(0), skin);
         
         // add icon with some padding to the text right of it
-        innerTable.add(scoreIcon).pad(0, 0, 0, 20);
+        innerTable.add(scoreIcon).pad(0, 0, 0, 40);
         innerTable.add(scoreCounter);
         
         outerTable.setFillParent(true);

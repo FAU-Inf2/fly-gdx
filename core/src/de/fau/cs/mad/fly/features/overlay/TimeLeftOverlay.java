@@ -38,7 +38,7 @@ public class TimeLeftOverlay implements IntegerTimeListener {
         timeCounter = new Label(String.valueOf(Math.round(timeLeft)), skin);
         
         // add icon with some padding to the text right of it
-        innerTable.add(watchIcon).pad(0, 0, 0, 20);
+        innerTable.add(watchIcon).pad(0, 0, 0, 40);
         innerTable.add(timeCounter);
         
         outerTable.setFillParent(true);

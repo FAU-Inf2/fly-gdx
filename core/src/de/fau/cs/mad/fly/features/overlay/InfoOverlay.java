@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * 
@@ -37,20 +38,22 @@ public class InfoOverlay implements IFeatureUpdate {
 	
 	private final Label infoLabel;
 	private final Table innerTable;
+	private final Table outerTable;
 
 	private float duration = 0.0f;
 
 	protected InfoOverlay(final Skin skin, final Stage stage) {
-		innerTable = new Table();
+	    outerTable = new Table();
+	    outerTable.setFillParent(true);
+	    innerTable = new Table();
 		final NinePatchDrawable background = new NinePatchDrawable(skin.get("green-progress-bar", NinePatch.class));
 		innerTable.setBackground(background);
 		
 		infoLabel = new Label("", skin);
 		
-		innerTable.row().expand();
 		innerTable.add(infoLabel);
-		innerTable.row().expand();
-		stage.addActor(innerTable);
+		outerTable.add(innerTable).top().pad(UI.Window.BORDER_SPACE).expand();
+		stage.addActor(outerTable);
 		
 		setVisible(false);
 	}
@@ -86,12 +89,6 @@ public class InfoOverlay implements IFeatureUpdate {
 	 */
 	public void setOverlay(String text, int duration) {
 		this.duration = (float) duration;
-		
-		if(text.contains("\n")) {
-			innerTable.setBounds(750, 1950, 2300, 400);
-		} else {		
-			innerTable.setBounds(750, 2050, 2300, 200);
-		}
 		infoLabel.setText(text);
 		setVisible(true);
 	}

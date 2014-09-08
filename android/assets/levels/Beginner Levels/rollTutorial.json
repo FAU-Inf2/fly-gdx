@@ -1,5 +1,5 @@
 {
-    "class": "",
+    "class": "tutorials.RollTutorialLevel",
     "components": [
         {
             "id": "space",
@@ -8,7 +8,6 @@
         }
     ],
     "dependencies": {
-        "asteroid": "asteroid",
         "hole": "torusHoleBox",
         "space": "spacesphere",
         "torus": "torus"
@@ -29,7 +28,7 @@
             "id": "Gate.000",
             "position": [
                 0.0,
-                10.0,
+                15.0,
                 0.0
             ],
             "ref": "torus",
@@ -48,8 +47,8 @@
             "id": "Gate.001",
             "position": [
                 0.0,
-                18.0,
-                0.0
+                30.0,
+                3.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -67,8 +66,27 @@
             "id": "Gate.002",
             "position": [
                 0.0,
-                25.0,
-                3.0
+                45.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                3
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                -0.0,
+                0.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                0.0,
+                60.0,
+                0.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -76,7 +94,7 @@
         }
     ],
     "id": 1,
-    "name": "Level 1",
+    "name": "Roll Tutorial",
     "start": {
         "position": {
             "x": 0.0,
@@ -94,6 +112,6 @@
             "z": 0.0
         }
     },
-    "time": 15,
+    "time": 80,
     "upgrades": []
 }
