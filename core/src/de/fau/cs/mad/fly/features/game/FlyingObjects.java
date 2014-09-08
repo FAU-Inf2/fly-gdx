@@ -63,6 +63,7 @@ public class FlyingObjects implements IFeatureLoad, IFeatureInit, IFeatureUpdate
 		GameModel model = gameController.getLevel().getDependency(modelRef);
 		if(model == null) {
 			Gdx.app.log("FlyingObjects.load", "Flying objects model " + modelRef + " not found in the level!");
+			count = 0;
 			return;
 		}
 		

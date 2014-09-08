@@ -27,6 +27,7 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public int id;
         public String name;
         public String modelRef;
+        public int levelGroupDependency;
         public float speed;
         public float rollingSpeed;
         public float azimuthSpeed;
@@ -63,8 +64,8 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	public void setRolling(boolean rolling);
 	
 	/**
-	 * Getter for the head
-	 * @return the head of the plane
+	 * Getter for the head.
+	 * @return the head of the plane.
 	 */
 	public IPlane.Head getHead();
 	
@@ -73,7 +74,7 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 	 * @return Model
 	 */
 	public Model getModel();
-	
+
 	/**
 	 * Getter for the maximum health of the spaceship.
 	 * @return maximum health of the spaceship.

@@ -2,6 +2,7 @@
 	"id": 1,
 	"name": "Shuttle",
 	"modelRef": "shuttle",
+	"levelGroupDependency": 0,
 	"speed": 10,
 	"rollingSpeed": 9,
 	"azimuthSpeed": 9,
