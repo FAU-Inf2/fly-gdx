@@ -98,6 +98,7 @@ public class LoadingScreen extends BasicScreen {
             table.add(button).top().expand();
             if(Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
                 final TextButton button2 = new TextButton("Compass available: " + Boolean.toString(Gdx.input.isPeripheralAvailable(Input.Peripheral.Compass)), skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
+                table.add(button2).bottom().expand();
             }
             inputProcessor.addProcessor(stage);
             Gdx.input.setInputProcessor(inputProcessor);
