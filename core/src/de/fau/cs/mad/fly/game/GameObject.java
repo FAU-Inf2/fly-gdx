@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -12,7 +11,6 @@ import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.Pool.Poolable;
 
 import de.fau.cs.mad.fly.game.object.IGameObjectMover;
 
@@ -39,27 +37,22 @@ public class GameObject extends ModelInstance implements Disposable {
     /**
      * Center of the bounding box of the game object.
      */
-    private final Vector3 center = new Vector3();
+    private final Vector3 frustumBBoxCenter = new Vector3();
 
     /**
      * Dimensions of the bounding box of the game object.
      */
-    private final Vector3 dimensions = new Vector3();
+    private final Vector3 frustumBBoxDimensions = new Vector3();
 
     /**
      * Bounding box of the game object used for frustum culling.
      */
-    private final static BoundingBox bounds = new BoundingBox();
+    private final static BoundingBox frustumBBox = new BoundingBox();
 
     /**
      * Rigid body of the game object.
      */
     protected btRigidBody rigidBody;
-
-    /**
-     * Scaling stored in the level file.
-     */
-    private final Vector3 scaling = new Vector3(1.0f, 1.0f, 1.0f);
 
     /**
      * Motion state for the rigid body.
@@ -109,23 +102,22 @@ public class GameObject extends ModelInstance implements Disposable {
     private String modelId;
 
     /**
+     * The environment this GameObject is rendered with.
+     */
+    public Environment environment;
+
+    /**
      * Constructs a new game object without any collision detection.
      *
      * @param model
      * @param id
      */
-
-    /**
-     * The environment this GameObject is rendered with
-     */
-    public Environment environment;
-
     public GameObject(GameModel model, String id) {
         super(model.display);
         this.gmodel = model;
         this.userData = this;
         this.id = id;
-        initBoundingBox();
+        initFrustumBoundingBox();
     }
 
     /**
@@ -149,19 +141,19 @@ public class GameObject extends ModelInstance implements Disposable {
      * Size of the bounding box is doubled to make sure the object is always
      * displayed when it should be.
      */
-    private void initBoundingBox() {
-        calculateBoundingBox(bounds);
-        center.set(bounds.getCenter());
-        dimensions.set(bounds.getDimensions().cpy().scl(2.0f));
+    private void initFrustumBoundingBox() {
+        calculateBoundingBox(frustumBBox);
+        frustumBBoxCenter.set(frustumBBox.getCenter());
+        frustumBBoxDimensions.set(frustumBBox.getDimensions().cpy().scl(2.0f));
     }
 
     /**
      * Updates the scale of the bounding box if the transform matrix was scaled.
      */
-    public void scaleBoundingBox() {
+    public void scaleFrustumBoundingBox() {
         Vector3 dummy = new Vector3();
-        center.scl(transform.getScale(dummy));
-        dimensions.scl(transform.getScale(dummy));
+        frustumBBoxCenter.scl(transform.getScale(dummy));
+        frustumBBoxDimensions.scl(transform.getScale(dummy));
     }
 
     /**
@@ -199,10 +191,10 @@ public class GameObject extends ModelInstance implements Disposable {
      *            the Camera for the frustum culling.
      * @return true, if the object is visible, otherwise false.
      */
-    public boolean isVisible(final Camera camera) {
+    public boolean isVisibleInFrustum(final Camera camera) {
         transform.getTranslation(position);
-        position.add(center);
-        return camera.frustum.boundsInFrustum(position, dimensions);
+        position.add(frustumBBoxCenter);
+        return camera.frustum.boundsInFrustum(position, frustumBBoxDimensions);
     }
 
     /**
@@ -229,7 +221,6 @@ public class GameObject extends ModelInstance implements Disposable {
     public void setCollisionTarget(Object object) {
         if (rigidBody == null)
             return;
-
         rigidBody.userData = object;
     }
 
@@ -256,13 +247,9 @@ public class GameObject extends ModelInstance implements Disposable {
      * the transform matrix if the rigid body is updated by the dynamic world.
      */
     public void addMotionState() {
-        Gdx.app.log("GameObject.addMotionState", "ENTER");
         motionState = new GameObjectMotionState();
-        Gdx.app.log("GameObject.addMotionState", "created motionState");
         motionState.transform = transform;
         rigidBody.setMotionState(motionState);
-        Gdx.app.log("GameObject.addMotionState", "added motionState to rigidBody");
-        Gdx.app.log("GameObject.addMotionState", "EXIT");
     }
 
     /**
@@ -315,7 +302,7 @@ public class GameObject extends ModelInstance implements Disposable {
      *            The camera used to display the world.
      */
     public void render(ModelBatch batch, Environment environment, PerspectiveCamera cam) {
-        if (visible && isVisible(cam)) {
+        if (visible && isVisibleInFrustum(cam)) {
             if (environment == null) {
                 batch.render(this);
             } else {
@@ -394,16 +381,8 @@ public class GameObject extends ModelInstance implements Disposable {
         removeRigidBody();
     }
 
-    public void setScaling(float x, float y, float z) {
-        scaling.set(x, y, z);
-    }
-
     public Object getUserData() {
         return userData;
-    }
-
-    public void setUserData(Object userData) {
-        this.userData = userData;
     }
 
     public short getFilterGroup() {

@@ -29,7 +29,7 @@ public class Collectible extends GameObject {
 	 * @param collisionDetector			The collision detector.
 	 * @param type						The collectible type for the shape.
 	 */
-    public void createRigidBody(CollisionDetector collisionDetector, String type) {
+    public void createShapeAndRigidBody(CollisionDetector collisionDetector, String type) {
     	btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(type, this);
     	createRigidBody(type, shape, 1.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
     	getRigidBody().setCollisionFlags(getRigidBody().getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
