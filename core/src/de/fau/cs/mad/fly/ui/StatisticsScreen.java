@@ -217,6 +217,7 @@ public class StatisticsScreen extends BasicScreen {
                 // update player profile
                 playerProfile = new PlayerProfile();
                 playerProfile.setName(name);
+                PlayerProfileManager.getInstance().setCurrentPlayer(playerProfile);
                 PlayerProfileManager.getInstance().savePlayer(playerProfile);
                 updateUserTable();
                 // reset user input field
