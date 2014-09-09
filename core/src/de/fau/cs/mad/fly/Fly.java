@@ -53,7 +53,7 @@ public class Fly extends Game {
 	 * <p>
 	 * Currently debug mode only disables the level dependencies.
 	 */
-	public static boolean DEBUG_MODE = false;
+	public static boolean DEBUG_MODE = true;
 
     private SplashScreen splashScreen;
     private LevelGroupScreen levelGroupScreen;
