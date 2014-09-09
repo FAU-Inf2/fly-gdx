@@ -112,6 +112,7 @@ public class PlaneManager {
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(sql);
 		if (cursor != null && cursor.getCount() > 0) {
 			result.put(cursor.getInt(0), cursor.getInt(1));
+			cursor.close();
 		}
 		return result;
 	}
@@ -123,6 +124,7 @@ public class PlaneManager {
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(sql);
 		if (cursor != null && cursor.getCount() > 0) {
 			result.put(cursor.getInt(0), cursor.getInt(1));
+			cursor.close();
 		}
 		return result;
 	}
