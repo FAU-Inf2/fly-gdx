@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -116,7 +115,7 @@ public class StatisticsScreen extends BasicScreen {
      */
     @Override
     protected void generateContent() {
-        addUserButton = new TextButton(I18n.t("addUserButtonText"), skin, UI.Buttons.DEFAULT_STYLE);
+        addUserButton = new TextButton(I18n.t("addUserButtonText"), skin);
         stage.clear();
         final Table table = new Table();
         table.pad(UI.Window.BORDER_SPACE);
@@ -167,7 +166,7 @@ public class StatisticsScreen extends BasicScreen {
             // fill a row with buttons
             for (int column = 0; column < maxColumns; column++) {
                 final LevelGroup group = levelGroups.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
-                final TextButton button = new TextButton(group.name, skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
+                final TextButton button = new TextButton(group.name, skin);
                 button.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {

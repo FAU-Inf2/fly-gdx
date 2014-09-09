@@ -51,11 +51,11 @@ public class PlaneUpgradesOverlay {
 		this.stage = stage;
 		this.screen = screen;
 		
-		buyButton = new TextButton(I18n.t("buy"), skin, UI.Buttons.DEFAULT_STYLE);
-		upgradeButton = new TextButton(I18n.t("equip"), skin, UI.Buttons.DEFAULT_STYLE);
-		downgradeButton = new TextButton(I18n.t("unequip"), skin, UI.Buttons.DEFAULT_STYLE);
-		backButton = new TextButton(I18n.t("back"), skin, UI.Buttons.DEFAULT_STYLE);
-		cancelButton = new TextButton(I18n.t("cancel"), skin, UI.Buttons.DEFAULT_STYLE);
+		buyButton = new TextButton(I18n.t("buy"), skin);
+		upgradeButton = new TextButton(I18n.t("equip"), skin);
+		downgradeButton = new TextButton(I18n.t("unequip"), skin);
+		backButton = new TextButton(I18n.t("back"), skin);
+		cancelButton = new TextButton(I18n.t("cancel"), skin);
 		
 		upgradeButtons = new ArrayList<TextButton>();
 		
@@ -102,7 +102,7 @@ public class PlaneUpgradesOverlay {
 				if(upgrade.type == upgradeTypes[i]) {
 					
 					final String name = I18n.t(upgrade.name);
-					final TextButton button = new TextButton(name, skin, UI.Buttons.DEFAULT_STYLE);
+					final TextButton button = new TextButton(name, skin);
 					button.pad(10);
 					
 					button.addListener(new ClickListener() {

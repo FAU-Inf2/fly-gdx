@@ -70,8 +70,6 @@ public final class UI {
         /** This is the default font size for small Buttons */
         public static final int SMALL_FONT_SIZE = 100;
         
-        public static final String DEFAULT_STYLE = "rounded";
-        
         /** Max. number of buttons for level to show in a row */
         public static final int BUTTONS_IN_A_ROW = 2;
         

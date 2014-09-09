@@ -12,12 +12,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch },
-	rounded: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch }
+	default: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-font, fontColor: white, disabled: grey-progress-bar, disabledFontColor: lightGrey },
-	rounded: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-font, fontColor: white, disabled: grey-progress-bar, disabledFontColor: lightGrey}
+	default: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-font, fontColor: white, disabled: grey-progress-bar, disabledFontColor: lightGrey }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	settings: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: gear, imageDown: gear },

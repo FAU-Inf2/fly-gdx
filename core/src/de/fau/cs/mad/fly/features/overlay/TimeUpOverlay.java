@@ -8,14 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.Fly.Mode3d2dChangedEvent;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
-import de.fau.cs.mad.fly.Fly.Mode3d2dChangedEvent;
 import de.fau.cs.mad.fly.game.TimeIsUpListener;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -36,8 +35,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         
-        TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
-        TextButton backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), textButtonStyle);
+        TextButton backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), skin);
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -47,7 +45,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
             }
         });
         
-        TextButton restartButton = new TextButton(I18n.t("restart"), textButtonStyle);
+        TextButton restartButton = new TextButton(I18n.t("restart"), skin);
         restartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

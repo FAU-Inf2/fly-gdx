@@ -53,7 +53,7 @@ public class LevelChooserScreen extends BasicScreen {
             // fill a row with buttons
             for (int column = 0; column < maxColumns; column++) {
                 final LevelProfile level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
-                final TextButton button = new TextButton(level.name, skin, UI.Buttons.DEFAULT_STYLE);
+                final TextButton button = new TextButton(level.name, skin);
                 
                 if (!Fly.DEBUG_MODE && levelGroup.id > currentProfile.getPassedLevelgroupID() || (levelGroup.id == currentProfile.getPassedLevelgroupID() && level.id > currentProfile.getPassedLevelID())) {
                     button.setDisabled(true);

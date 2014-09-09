@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * 
@@ -53,7 +52,7 @@ public class InfoButtonOverlay {
 		innerTable.row().expand();
 		innerTable.add(infoLabel);
 		innerTable.row().expand();
-		button = new TextButton(I18n.t("ok"), skin, UI.Buttons.DEFAULT_STYLE);
+		button = new TextButton(I18n.t("ok"), skin);
 		innerTable.add(button);
 		innerTable.row().expand();
 		stage.addActor(innerTable);

@@ -43,7 +43,7 @@ public class LevelsStatisScreen extends BasicScreen {
      * init buttons, which don't need to be created dynamically
      */
     private void initButtons() {
-        globalHighScoreButton = new TextButton(I18n.t("GlobalHighscores"), skin, UI.Buttons.DEFAULT_STYLE);
+        globalHighScoreButton = new TextButton(I18n.t("GlobalHighscores"), skin);
         globalHighScoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -155,7 +155,7 @@ public class LevelsStatisScreen extends BasicScreen {
                             }
                             
                             Gdx.app.log("timing", " UI one score record UI builded " + (end - begin));
-                            uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin, UI.Buttons.DEFAULT_STYLE);
+                            uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin);
                             if(score.getIsUploaded()) {
                             	uploadScoreButton.setDisabled(true);
                             }
