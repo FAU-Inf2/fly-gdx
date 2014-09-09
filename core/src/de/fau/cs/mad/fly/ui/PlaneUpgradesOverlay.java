@@ -81,6 +81,7 @@ public class PlaneUpgradesOverlay {
 		scrollableTable.top().left();
 		scrollPane = new ScrollPane(scrollableTable, skin);
 		scrollPane.setFillParent(true);
+		scrollPane.setFadeScrollBars(false);
 		scrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
 		
 		createButtons(PlaneManager.getInstance().getChosenPlane());
@@ -151,7 +152,12 @@ public class PlaneUpgradesOverlay {
 					upgradeButton.setColor(Color.WHITE);
 					
 					if(!PlaneManager.getInstance().upgradeCanBeBought(currentUpgrade)) {
-						buyButton.setText(I18n.t("can't") + " " +I18n.t("buy"));
+						int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
+						if(money < currentUpgrade.price) {
+							buyButton.setText(I18n.t("tooExpensive"));
+						} else {
+							buyButton.setText(I18n.t("allreadyMaximal"));
+						}
 						buyButton.setColor(Color.GRAY);
 					}
 				}
@@ -174,7 +180,7 @@ public class PlaneUpgradesOverlay {
 					screen.update();
 					
 					if(equiped + 1 == bought) {
-						upgradeButton.setText(I18n.t("can't") + " " + I18n.t("equip"));
+						upgradeButton.setText(I18n.t("allreadyMaximal"));
 						upgradeButton.setColor(Color.GRAY);
 					}
 				}
@@ -197,7 +203,7 @@ public class PlaneUpgradesOverlay {
 					screen.update();
 					
 					if(equiped - 1 == 0) {
-						downgradeButton.setText(I18n.t("can't") + " " + I18n.t("unequip"));
+						downgradeButton.setText(I18n.t("allreadyMinimal"));
 						downgradeButton.setColor(Color.GRAY);
 					}
 				}
@@ -242,16 +248,20 @@ public class PlaneUpgradesOverlay {
 									"\n" + I18n.t("equiped") + ": " + equiped);
 		
 		if(!PlaneManager.getInstance().upgradeCanBeBought(currentUpgrade)) {
-			buyButton.setText(I18n.t("can't") + " " + I18n.t("buy"));
+			if(money < currentUpgrade.price) {
+				buyButton.setText(I18n.t("tooExpensive"));
+			} else {
+				buyButton.setText(I18n.t("maximum"));
+			}
 			buyButton.setColor(Color.GRAY);
 		}
 		
 		if(equiped == bought) {
-			upgradeButton.setText(I18n.t("can't") + " " + I18n.t("equip"));
+			upgradeButton.setText(I18n.t("allreadyMaximal"));
 			upgradeButton.setColor(Color.GRAY);
 		}
 		if(equiped == 0) {
-			downgradeButton.setText(I18n.t("can't") + " " + I18n.t("unequip"));
+			downgradeButton.setText(I18n.t("allreadyMinimal"));
 			downgradeButton.setColor(Color.GRAY);
 		}
 		
