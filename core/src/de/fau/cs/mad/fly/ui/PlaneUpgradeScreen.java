@@ -23,6 +23,11 @@ import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.res.Assets;
 
+/**
+ * The Screen in which the Player can upgrade his Planes
+ * @author Sebastian
+ *
+ */
 public class PlaneUpgradeScreen implements Screen {
 	private PlaneUpgradesOverlay upgradeOverlay;
 	
@@ -80,19 +85,23 @@ public class PlaneUpgradeScreen implements Screen {
 		inputProcessor = new InputMultiplexer(stage, new BackProcessor());
 	}
 	
+	/**
+	 * Getter for the UpgradesOverlay
+	 * @return The Overlay that contains the Buttons and Labels for the Upgrades
+	 */
 	public PlaneUpgradesOverlay getOverlay() {
 		return upgradeOverlay;
 	}
 	
 	/**
-	 * updates the overlay to the current status of the current plane
+	 * Updates the overlay to the current status of the current plane
 	 */
 	public void update() {
 		updateOverlay();
 	}
 	
 	/**
-	 * initiates the background of the screen
+	 * Initiates the background of the screen
 	 */
 	private void initBackground() {
 		Assets.load(new AssetDescriptor<Texture>("spaceships/previews/" + currentPlane.modelRef + ".png", Texture.class));
@@ -115,9 +124,10 @@ public class PlaneUpgradeScreen implements Screen {
 	}
 	
 	/**
-	 * initializes the overlay which contains the details of the current spaceship
+	 * Initializes the overlay which contains the details of the current spaceship
 	 */
 	public void initOverlay() {
+		// Calculates the Position to put the Overlay, so that it doesn't overlap with the Buttons
 		float xPos = upgradeOverlay.getButtonWidth() * 1.1f;
 		
 		LabelStyle labelStyle = skin.get("red", LabelStyle.class);
@@ -143,7 +153,7 @@ public class PlaneUpgradeScreen implements Screen {
 	}
 	
 	/**
-	 * updates the overlay with the details of the current plane
+	 * Updates the overlay with the details of the current plane
 	 */
 	private void updateOverlay() {
 		nameLabel.setText(name + ": " + currentPlane.name);
@@ -154,7 +164,7 @@ public class PlaneUpgradeScreen implements Screen {
 	}
 	
 	/**
-	 * adds the Overlay with information about the current plane to the screen
+	 * Adds the Overlay with information about the current plane to the screen
 	 */
 	public void addOverlay() {
 		stage.addActor(nameLabel);
@@ -190,8 +200,6 @@ public class PlaneUpgradeScreen implements Screen {
 		
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(inputProcessor);
-		
-		//updateOverlay();
 		
 		addOverlay();
 		update();

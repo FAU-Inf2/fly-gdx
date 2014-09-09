@@ -8,7 +8,7 @@ import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 
 /**
- * controls the camera following the player
+ * Controls the camera following the player
  * @author Sebastian
  *
  */
@@ -35,7 +35,7 @@ public class CameraController {
 	}
 	
 	/**
-	 * getter for the camera
+	 * Getter for the camera
 	 * @return	the camera following the player
 	 */
 	public PerspectiveCamera getCamera() {
@@ -43,8 +43,8 @@ public class CameraController {
 	}
 	
 	/**
-	 * computes new Position for the camera in 3rd person view
-	 * @return		the PersectiveCamera on the new position
+	 * Computes new Position for the camera in 3rd person view
+	 * @return		The PersectiveCamera on the new position
 	 */
 	public PerspectiveCamera updateCamera() {
 		
