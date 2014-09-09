@@ -215,7 +215,8 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		instance = new GameObject(model, "spaceship");
 		
 		instance.transform.rotate(yRotationAxis, 180.f);
-		instance.transform.rotate(xRotationAxis, 20.f);
+		xRotationAxis.rotate(yRotationAxis, -180.f);
+		instance.transform.rotate(xRotationAxis, -20.f);
 	}
 	
 	@Override
@@ -267,7 +268,8 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		instance = new GameObject(model, "spaceship");
 		
 		instance.transform.rotate(yRotationAxis, 180.f);
-		instance.transform.rotate(xRotationAxis, 20.f);
+		xRotationAxis.rotate(yRotationAxis, -180.f);
+		instance.transform.rotate(xRotationAxis, -20.f);
 		
 		updateOverlay();
 	}
