@@ -26,6 +26,11 @@ import de.fau.cs.mad.fly.profile.PlaneUpgradeManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.PlaneUpgrade;
 
+/**
+ * Overlay that contains all Buttons and Labels shown in the PlaneUpgradeScreen that are used to upgrade the Planes
+ * @author Sebastian
+ *
+ */
 public class PlaneUpgradesOverlay {
 	private final Skin skin;
     private final Stage stage;
@@ -67,15 +72,24 @@ public class PlaneUpgradesOverlay {
 		upgradeStateLabel = new Label("", labelStyle);
 	}
 	
-	
+	/**
+	 * Sets the current Upgrade to null
+	 */
 	public void resetCurrentUpgrade() {
 		currentUpgrade = null;
 	}
 	
+	/**
+	 * Getter for the current Upgrade
+	 * @return   the current Upgrade
+	 */
 	public PlaneUpgrade getCurrentUpgrade() {
 		return currentUpgrade;
 	}
 	
+	/**
+	 * Initiates the ScrollTable, ScrollPane and Buttons for the Overlay
+	 */
 	public void init() {
 		scrollableTable = new Table(skin);
 		scrollableTable.top().left();
@@ -89,6 +103,10 @@ public class PlaneUpgradesOverlay {
 		stage.addActor(scrollPane);
 	}
 	
+	/**
+	 * Creates the Buttons for the Upgrades
+	 * @param plane the current Plane the Player has chosen and should be upgraded
+	 */
 	public void createButtons(IPlane.Head plane) {
 		int[] upgradeTypes = plane.upgradeTypes;
 		int size = upgradeTypes.length;
@@ -97,6 +115,7 @@ public class PlaneUpgradesOverlay {
 		scrollableTable.add().space(300);
 		scrollableTable.row();
 		
+		// Creates one Button for each Upgrade
 		for(final PlaneUpgrade upgrade : upgrades) {
 			for(int i = 0; i < size; i++) {
 				if(upgrade.type == upgradeTypes[i]) {
@@ -124,7 +143,7 @@ public class PlaneUpgradesOverlay {
 			}
 		}
 		
-		
+		// Creates a Button to get back to the PlaneChooserScreen
 		cancelButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -137,7 +156,7 @@ public class PlaneUpgradesOverlay {
 		
 		setButtonSize();
 		
-		// creating the buttons to buy, up-/downgrade etc. the Upgrades
+		// Creating the button to buy the Upgrades
 		buyButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -164,6 +183,7 @@ public class PlaneUpgradesOverlay {
 			}
 		});
 		
+		// Creating the button to equip the Upgrades
 		upgradeButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -187,6 +207,7 @@ public class PlaneUpgradesOverlay {
 			}
 		});
 		
+		// Creating the button to unequip the Upgrades
 		downgradeButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -210,6 +231,7 @@ public class PlaneUpgradesOverlay {
 			}
 		});
 		
+		// Creating a Buttons to get back to the Upgrade Selection
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -232,7 +254,7 @@ public class PlaneUpgradesOverlay {
 	}
 	
 	/**
-	 * adds all Buttons and Labels needed after selecting an Upgrade to buy/equip
+	 * Adds all Buttons and Labels needed after selecting an Upgrade to buy/equip
 	 */
 	private void addButtons() {
 		int equiped = PlaneManager.getInstance().getChosenPlane().getUpgradesEquiped().get(currentUpgrade.name);
@@ -247,6 +269,7 @@ public class PlaneUpgradesOverlay {
 									"\n" + I18n.t("bought") + ": " + bought + 
 									"\n" + I18n.t("equiped") + ": " + equiped);
 		
+		// checking if the Upgrade can be bought, equipped, unequipped
 		if(!PlaneManager.getInstance().upgradeCanBeBought(currentUpgrade)) {
 			if(money < currentUpgrade.price) {
 				buyButton.setText(I18n.t("tooExpensive"));
@@ -283,7 +306,7 @@ public class PlaneUpgradesOverlay {
 	}
 	
 	/**
-	 * adds all the Buttons to the Overlay with which you can choose an Upgrade to buy/equip
+	 * Adds all the Buttons to the Overlay with which you can choose an Upgrade to buy/equip
 	 */
 	private void addUpgradeButtons() {
 		scrollableTable.clear();
@@ -300,7 +323,7 @@ public class PlaneUpgradesOverlay {
 	}
 	
 	/**
-	 * sets the size of all Buttons to the size of the biggest one
+	 * Sets the size of all Buttons to the size of the biggest one
 	 */
 	private void setButtonSize() {
 		float width = 0;
@@ -321,9 +344,7 @@ public class PlaneUpgradesOverlay {
 			}
 		}
 		
-		/*for(TextButton button : upgradeButtons) {
-			button.setSize(width, height);
-		}*/
+		// Adjusts the size of each Cell of the Table to make the Buttons uniform
 		Array<Cell> cells = scrollableTable.getCells();
 		for(Cell cell : cells) {
 			cell.width(width);
@@ -332,10 +353,18 @@ public class PlaneUpgradesOverlay {
 		buttonWidth = width;
 	}
 	
+	/**
+	 * Returns the size of the biggest Button
+	 * @return The size of the biggest Button
+	 */
 	public float getButtonWidth() {
 		return buttonWidth;
 	}
 	
+	/**
+	 * Returns a String that describes the changes by the current Upgrade
+	 * @return The String that describes the changes by the current Upgrade
+	 */
 	private String getChanges() {
 		String changes = "";
 		int[] values = currentUpgrade.upgradeValues;

@@ -50,9 +50,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class PlaneChooserScreen implements Screen, InputProcessor {
 	
-	//private List<IPlane.Head> allPlanes;
 	private Map<Integer, IPlane.Head> allPlanes;
-	//private PlayerProfile profile;
 	
 	private GameObject instance;
 	
@@ -83,14 +81,14 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 	private float screenWidth = Gdx.graphics.getWidth();
 	
 	private int xDif, yDif;
-	private boolean touched, secondTouch;
+	private boolean touched;
 	private float xFactor = 0.f, yFactor = 0.f, touchDistance;
 	private int lastX = 0, lastY = 0;
 	private float absScale = 1;
 	
 	private String name, speed, pitch, turnSpeed ,lives;
 
-	public PlaneChooserScreen(/*PlayerProfile profile*/) {
+	public PlaneChooserScreen() {
 		
 		environment = new Environment();
 		
@@ -198,7 +196,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		});
 		
 		// initialize the InputProcessor
-		//inputProcessor = new InputMultiplexer(this, stage, new BackProcessor());
 		inputProcessor = new InputMultiplexer(stage, this, new BackProcessor());
 	}
 	
@@ -216,6 +213,9 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		GameModel model = Assets.manager.get(ref, GameModel.class);
 		
 		instance = new GameObject(model, "spaceship");
+		
+		instance.transform.rotate(yRotationAxis, 180.f);
+		instance.transform.rotate(xRotationAxis, 20.f);
 	}
 	
 	@Override
@@ -223,6 +223,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
+		// Steady rotation if the Player doesn't touch the Touchscreen
 		if(!touched) {
 			instance.transform.rotate(yRotationAxis, 0.2f);
 			xRotationAxis.rotate(yRotationAxis, -0.2f);
@@ -239,6 +240,9 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		stage.draw();
 	}
 	
+	/**
+	 * Updates the Overlay of the Screen
+	 */
 	public void update() {
 		updateOverlay();
 	}
@@ -262,11 +266,14 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		
 		instance = new GameObject(model, "spaceship");
 		
+		instance.transform.rotate(yRotationAxis, 180.f);
+		instance.transform.rotate(xRotationAxis, 20.f);
+		
 		updateOverlay();
 	}
 	
 	/**
-	 * initializes the overlay which contains the details of the current spaceship
+	 * Initializes the overlay which contains the details of the current spaceship
 	 */
 	private void initOverlay() {
 		LabelStyle labelStyle = skin.get("red", LabelStyle.class);
@@ -292,7 +299,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 	}
 	
 	/**
-	 * updates the overlay with the details of the current plane
+	 * Updates the overlay with the details of the current plane
 	 */
 	private void updateOverlay() {
 		nameLabel.setText(name + ": " + currentPlane.name);
@@ -367,7 +374,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 			lastX = screenX;
 			lastY = screenY;
 		} else if(pointer == 1) {
-			secondTouch = true;
 			float xDif = lastX - screenX;
 			float yDif = lastY - screenY;
 			touchDistance = (float) Math.sqrt(xDif * xDif + yDif * yDif);
@@ -382,7 +388,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 			xFactor = 0;
 			yFactor = 0;
 		}else if(pointer == 1) {
-			secondTouch = false;
 			touchDistance = 0;
 		}
 		return false;

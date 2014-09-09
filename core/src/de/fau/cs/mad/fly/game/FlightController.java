@@ -14,7 +14,7 @@ import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
- * controls the flight of the player regarding to user-input 
+ * Controls the flight of the player regarding to user-input 
  * @author Sebastian
  *
  */
@@ -69,16 +69,16 @@ public class FlightController implements InputProcessor {
     }
     
     /**
-     * sets the parameter that indicates whether the player wants to control the game by sensor or touch-screen
-     * @param useSensorData	      true if sensor-values should be used, false if touch-screen should be used
+     * Sets the parameter that indicates whether the player wants to control the game by sensor or touch-screen
+     * @param useSensorData	      True if sensor-values should be used, false if touch-screen should be used
      */
     public void setUseSensorData(boolean useSensorData) {
         this.useSensorData = useSensorData;
     }
     
     /**
-     * sets the parameter that indicates whether the player should roll or fly curves
-     * @param useRolling	true if player should roll instead of flying curves
+     * Sets the parameter that indicates whether the player should roll or fly curves
+     * @param useRolling	True if player should roll instead of flying curves
      */
     public void setUseRolling(boolean useRolling) {
         this.useRolling = useRolling;
@@ -86,8 +86,8 @@ public class FlightController implements InputProcessor {
     }
     
     /**
-     * setter for the size of buffers used for averaging the sensorvalues
-     * @param bufferSize
+     * Setter for the size of buffers used for averaging the sensorvalues
+     * @param bufferSize - The size of the buffers used for averaging
      */
     public void setBufferSize(int bufferSize) {
         resetBuffers();
@@ -97,36 +97,38 @@ public class FlightController implements InputProcessor {
     }
     
     /**
-     * getter for the factor by which the player rotate up/down
-     * @return
+     * Getter for the factor by which the player rotate up/down
+     * @return The rollFactor
      */
     public float getRollFactor() {
         return rollFactor;
     }
     
     /**
-     * getter for the factor by which the player should fly curves
+     * Getter for the factor by which the player should fly curves
      * @return
      */
     public float getAzimuthFactor() {
         return azimuthFactor;
     }
     
+    /**
+     * Resets the Steering with Sensors to the current Smartphone position
+     */
     public void resetSteering() {
         float roll = Gdx.input.getRoll();
         float pitch = Gdx.input.getPitch();
         float azimuth = Gdx.input.getAzimuth();
         
         Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
-        //startAzimuth = computeAzimuth(roll, pitch, azimuth);
         startPitch = pitch;
         Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
         startRoll = Gdx.input.getRoll();
     }
     
     /**
-	 * computes the new position to fly to regarding to the userinput
-	 * @param delta		time since last frame
+	 * Computes the new position to fly to regarding to the user input
+	 * @param delta		Time since last frame
 	 */
     public void update(float delta) {
         // rotating the camera according to UserInput
@@ -147,9 +149,6 @@ public class FlightController implements InputProcessor {
     private void interpretSensorInput() {
         roll = Gdx.input.getRoll();
         pitch = Gdx.input.getPitch();
-        
-        // Gdx.app.log("myApp", "roll: " + roll + "; pitch: " + pitch +
-        // "; azimuth: " + azimuth);
         
         // removing oldest element in buffers
         if (rollInput.size() >= bufferSize) {

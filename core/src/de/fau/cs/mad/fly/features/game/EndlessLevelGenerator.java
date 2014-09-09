@@ -26,7 +26,7 @@ import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
 
 /**
- * generates an endless random level
+ * Generates an endless random Level
  * 
  * @author Sebastian
  * 
@@ -62,9 +62,9 @@ public class EndlessLevelGenerator {
 	
 	/**
 	 * 
-     * @param level
-     *            - the level that was initially loaded and is now expanded on
+	 * @param level - The level that was initially loaded and is now expanded on
      *            the fly
+	 * @param builder - The Builder of the GameController
 	 */
 	public EndlessLevelGenerator(Level level, GameControllerBuilder builder) {
 		this.manager = Assets.manager;
@@ -72,6 +72,7 @@ public class EndlessLevelGenerator {
 		manager.load(new AssetDescriptor<GameModel>("models/timeUpgrade/timeUpgrade", GameModel.class));
 		manager.load(new AssetDescriptor<GameModel>("models/speedUpgrade/speedUpgrade", GameModel.class));
 		
+		// Adds the necessary Handlers for the Upgrades to the Builder
 		this.linearSpeedHandler = new LinearSpeedUpgradeHandler();
 		this.instantSpeedHandler = new InstantSpeedUpgradeHandler();
 		this.changeTimeHandler = new ChangeTimeUpgradeHandler();
@@ -106,19 +107,27 @@ public class EndlessLevelGenerator {
 		predecessors.add(lastGate);
 	}
 	
+	/**
+	 * Getter for the GateList
+	 * @return List of all Gates that are currently in the EndlessLevel
+	 */
 	public List<GateGoal> getGates() {
 		return gateGoals;
 	}
 	
+	/**
+	 * Returns extra time for passing a Gate
+	 * @return A Random Time that is granted for passing a Gate
+	 */
 	public int getExtraTime() {
 		return (int) (lastDistance / difficulty) + 2;
 	}
 	
 	/**
-	 * adds a randomly generated gate to the level
+	 * Adds a randomly generated gate to the level
 	 * 
      * @param passed
-     *            - the gate that was passed and now should be removed from the
+     *            - The gate that was passed and now should be removed from the
      *            level
 	 */
 	public void addRandomGate(GateGoal passed) {
@@ -136,15 +145,6 @@ public class EndlessLevelGenerator {
 				gateGoals.add(newGate);
 				predecessors.add(newGate);
 			}
-			
-			// for restart (not needed now)
-            /*
-             * for(Gate g : passed.successors) { level.setStartGate(g);
-             * level.start.viewDirection = g.display.getPosition().cpy(); break;
-             * } level.start.position =
-             * passed.display.getPosition().cpy().sub(lastDirection
-             * .cpy().scl(5));
-             */
 			
             lastGateId = passed.getGateId();
 			
@@ -166,12 +166,12 @@ public class EndlessLevelGenerator {
 	}
 	
 	/**
-     * generates a random number of Gates depending on the positions and
-     * directions of the previous gates
+     * Generates a random number of Gates depending on the positions and
+     * directions of the previous Gates
 	 * 
-     * @param predecessor
-     *            - the previous Gate
-	 * @return - the randomly generated Gate
+     * @param predecessors
+     *            - The previous Gates
+	 * @return - The randomly generated Gates
 	 */
 	private List<GateGoal> generateRandomGates(List<GateGoal> predecessors) {
 		CollisionDetector collisionDetector = CollisionDetector.getInstance();
@@ -188,6 +188,8 @@ public class EndlessLevelGenerator {
 			t[i] = predecessors.get(i).transform.cpy();
 		}
         
+        Matrix4 matrix = new Matrix4().avg(t);
+        
         while (rand > min) {
 			float distance = (MathUtils.random(5) + 6.f);
 			
@@ -199,7 +201,6 @@ public class EndlessLevelGenerator {
 				shortestDistance = distance;
 			}
 			
-            // Gdx.app.log("myApp", "generateRandomGate");
 			GateDisplay newDisplay = new GateDisplay(level.getDependency("torus"));
 			GateGoal newGoal = new GateGoal(currGate, level.getDependency("hole"), defaultGateScore, newDisplay);
 			newDisplay.setGoal(newGoal);
@@ -217,9 +218,7 @@ public class EndlessLevelGenerator {
                 newDirection.rotate(new Vector3(1, 0, 0), randomAngle());
 				newDirection.nor();
 				
-                // display.transform =
-                // predecessors.get(0).display.transform.cpy();
-				newDisplay.transform.avg(t);
+				newDisplay.transform.set(matrix);
 				
 				newDisplay.transform.rotate(lastDirection, newDirection);
                 newDisplay.transform.translate(new Vector3(0, 1, 0).scl(distance));
@@ -231,6 +230,7 @@ public class EndlessLevelGenerator {
 				
             } while (checkForSpawnCollision(newDisplay.getPosition(), newGates, 5.0f));
 			
+			// Gate is discarded if the RandomAlgorithm can't find a position that is far enough from the other Gates
             if (!use) {
 				rand = MathUtils.random();
 				continue;
@@ -242,7 +242,6 @@ public class EndlessLevelGenerator {
 			newGoal.createShapeAndRigidBody(collisionDetector);
 			newDisplay.createShapeAndRigidBody(collisionDetector);
 			
-            // lastDirection = newDirection.cpy();
 			newLastDirection.add(newDirection.cpy());
 			
 			newGates.add(newGoal);
@@ -254,11 +253,9 @@ public class EndlessLevelGenerator {
 		newLastDirection.scl(1.f / newGates.size());
 		lastDirection = newLastDirection.cpy();
         
-        //TODO: find nice value
+        //TODO: find nice a value for the minimum distance to add an Upgrade
         if(shortestDistance > 10.f) {
-        	Gdx.app.log("addUpgrade", "adding");
-        	addRandomUpgrade(t, shortestDistance);
-        	Gdx.app.log("addUpgrade", "after adding");
+        	addRandomUpgrade(matrix, shortestDistance);
         }
 		
 		int size = newGates.size();
@@ -274,7 +271,6 @@ public class EndlessLevelGenerator {
 		}
 		
         if (increasingDifficulty && (difficulty < 10.f)) {
-            // difficulty = 10.f + (float) currGate;
 			difficulty = (float) MathUtils.log(5, currGate);
 			maxAngle = 45.f + 4.5f * difficulty;
 			minAngle = 0.1f + difficulty;
@@ -283,7 +279,12 @@ public class EndlessLevelGenerator {
 		return newGates;
 	}
 	
-	private void addRandomUpgrade(Matrix4[] matrices, float distance) {
+	/**
+	 * Adds a random Upgrade to the Level
+	 * @param matrix - The average of the transformation matrices of the predecessor Gates
+	 * @param distance - The distance from the latest generated Gate to its predecessors
+	 */
+	private void addRandomUpgrade(Matrix4 matrix, float distance) {
 		int random = MathUtils.random(2);
 		
 		Collectible c = null;
@@ -306,7 +307,7 @@ public class EndlessLevelGenerator {
 		}
 		
 		if(c != null) {
-			c.transform.avg(matrices).translate(lastDirection.cpy().scl(distance / 2.f));
+			c.transform.set(matrix).translate(lastDirection.cpy().scl(distance / 2.f));
 			
 			CollisionDetector collisionDetector = CollisionDetector.getInstance();
 			c.createShapeAndRigidBody(collisionDetector, c.getType());
@@ -318,7 +319,7 @@ public class EndlessLevelGenerator {
 	/**
 	 * Calculates a random angle.
      * 
-	 * @return angle
+	 * @return A random angle
 	 */
 	private float randomAngle() {
 		float angle = MathUtils.random(maxAngle * 2) - maxAngle;
@@ -340,7 +341,7 @@ public class EndlessLevelGenerator {
      * @param distance
      *            The minimum distance between the new goal and the existing
      *            goals.
-	 * @return true if too close, false otherwise.
+	 * @return True if too close, false otherwise.
 	 */
 	private boolean checkForSpawnCollision(Vector3 position, List<GateGoal> gates, float distance) {
 		int size = gates.size();
