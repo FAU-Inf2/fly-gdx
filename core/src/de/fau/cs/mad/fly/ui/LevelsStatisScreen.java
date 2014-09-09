@@ -272,7 +272,7 @@ public class LevelsStatisScreen extends BasicScreen {
                     } else {
                     	dialog.text(I18n.t("ConnectServerError") + msgg);
                     }
-                    TextButton button = new TextButton(I18n.t("ok"), skin, "rounded");
+                    TextButton button = new TextButton(I18n.t("ok"), skin);
                     dialog.button(button);
                     dialog.show(stage);
                 }
@@ -304,7 +304,7 @@ public class LevelsStatisScreen extends BasicScreen {
                 	button.setDisabled(true);
                     Dialog dialog = new Dialog("", skin, "dialog");
                     dialog.text(I18n.t("ScoreUploaded"));
-                    TextButton button = new TextButton(I18n.t("ok"), skin, "rounded");
+                    TextButton button = new TextButton(I18n.t("ok"), skin);
                     dialog.button(button);
                     dialog.show(stage);
                 }
@@ -323,7 +323,7 @@ public class LevelsStatisScreen extends BasicScreen {
                     } else {
                     	dialog.text(I18n.t("ConnectServerError") + msgg);
                     }
-                    TextButton button = new TextButton(I18n.t("ok"), skin, "rounded");
+                    TextButton button = new TextButton(I18n.t("ok"), skin);
                     dialog.button(button);
                     dialog.show(stage);
                 }

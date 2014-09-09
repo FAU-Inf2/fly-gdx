@@ -53,7 +53,7 @@ public class StatisticsScreen extends BasicScreen {
         userTable.clear();
         userTable.add(new Label(I18n.t("usernameLableText"), skin)).pad(6f);
         // add all user to userList and set the current user to display value
-        userList = new SelectBox<String>(skin, "rounded");
+        userList = new SelectBox<String>(skin);
         updateUserTable();
         
         // handle event when another user was selected
@@ -73,7 +73,7 @@ public class StatisticsScreen extends BasicScreen {
         userTable.row().expand();
         
         // add user field and button
-        newUserField = new TextField("", skin, "rounded");
+        newUserField = new TextField("", skin);
         newUserField.setTextFieldListener(new TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char key) {
@@ -229,7 +229,7 @@ public class StatisticsScreen extends BasicScreen {
             dialog.text(I18n.t("NullUserName"));
         }
         Gdx.input.setOnscreenKeyboardVisible(false);
-        TextButton button = new TextButton(I18n.t("ok"), skin, "rounded");
+        TextButton button = new TextButton(I18n.t("ok"), skin);
         dialog.button(button);
         dialog.show(stage);
     }
