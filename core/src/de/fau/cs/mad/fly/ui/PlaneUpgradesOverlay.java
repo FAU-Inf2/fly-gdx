@@ -8,15 +8,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -84,6 +81,7 @@ public class PlaneUpgradesOverlay {
 		scrollableTable.top().left();
 		scrollPane = new ScrollPane(scrollableTable, skin);
 		scrollPane.setFillParent(true);
+		scrollPane.setFadeScrollBars(false);
 		scrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
 		
 		createButtons(PlaneManager.getInstance().getChosenPlane());
@@ -149,14 +147,17 @@ public class PlaneUpgradesOverlay {
 					//Gdx.app.log("upgrades", currentUpgrade.name + PlaneManager.getInstance().getChosenPlane().upgradesBought.get(currentUpgrade.name));
 					
 					PlaneManager.getInstance().buyUpgradeForPlane(currentUpgrade.name);
-					int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
-					//nameLabel.setText("current money: " + money);
 					
 					upgradeButton.setText(I18n.t("equip"));
 					upgradeButton.setColor(Color.WHITE);
 					
 					if(!PlaneManager.getInstance().upgradeCanBeBought(currentUpgrade)) {
-						buyButton.setText(I18n.t("can't") + " " +I18n.t("buy"));
+						int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
+						if(money < currentUpgrade.price) {
+							buyButton.setText(I18n.t("tooExpensive"));
+						} else {
+							buyButton.setText(I18n.t("allreadyMaximal"));
+						}
 						buyButton.setColor(Color.GRAY);
 					}
 				}
@@ -179,7 +180,7 @@ public class PlaneUpgradesOverlay {
 					screen.update();
 					
 					if(equiped + 1 == bought) {
-						upgradeButton.setText(I18n.t("can't") + " " + I18n.t("equip"));
+						upgradeButton.setText(I18n.t("allreadyMaximal"));
 						upgradeButton.setColor(Color.GRAY);
 					}
 				}
@@ -202,7 +203,7 @@ public class PlaneUpgradesOverlay {
 					screen.update();
 					
 					if(equiped - 1 == 0) {
-						downgradeButton.setText(I18n.t("can't") + " " + I18n.t("unequip"));
+						downgradeButton.setText(I18n.t("allreadyMinimal"));
 						downgradeButton.setColor(Color.GRAY);
 					}
 				}
@@ -247,16 +248,20 @@ public class PlaneUpgradesOverlay {
 									"\n" + I18n.t("equiped") + ": " + equiped);
 		
 		if(!PlaneManager.getInstance().upgradeCanBeBought(currentUpgrade)) {
-			buyButton.setText(I18n.t("can't") + " " + I18n.t("buy"));
+			if(money < currentUpgrade.price) {
+				buyButton.setText(I18n.t("tooExpensive"));
+			} else {
+				buyButton.setText(I18n.t("maximum"));
+			}
 			buyButton.setColor(Color.GRAY);
 		}
 		
 		if(equiped == bought) {
-			upgradeButton.setText(I18n.t("can't") + " " + I18n.t("equip"));
+			upgradeButton.setText(I18n.t("allreadyMaximal"));
 			upgradeButton.setColor(Color.GRAY);
 		}
 		if(equiped == 0) {
-			downgradeButton.setText(I18n.t("can't") + " " + I18n.t("unequip"));
+			downgradeButton.setText(I18n.t("allreadyMinimal"));
 			downgradeButton.setColor(Color.GRAY);
 		}
 		

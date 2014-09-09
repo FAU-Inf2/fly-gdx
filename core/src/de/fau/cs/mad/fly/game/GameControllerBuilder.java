@@ -193,7 +193,7 @@ public class GameControllerBuilder {
         gateCircuit.addListener(scoreController);
         
         if (level.head.isEndless()) {
-            generator = new EndlessLevelGenerator(Loader.getInstance().getCurrentLevel());
+            generator = new EndlessLevelGenerator(Loader.getInstance().getCurrentLevel(), this);
             
             gateCircuit.addListener(new GateCircuitAdapter() {
                 @Override

@@ -95,4 +95,8 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispos
 		c.removeRigidBody();
 		collectibleManager.removeCollectible(c);
 	}
+	
+	public void addObject(Collectible c) {
+		collectibleObjects.add(c);
+	}
 }
