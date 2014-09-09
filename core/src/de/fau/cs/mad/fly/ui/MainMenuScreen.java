@@ -120,7 +120,6 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             }
         });
         
-        long time = System.currentTimeMillis();
         this.helpOverlay = new HelpOverlay(this);
         helpOverlay.addHelpFrame(new HelpFrameText(skin, "welcome"));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlay", continueButton));
@@ -131,7 +130,6 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         Actor dummyActorForBackButton = new Actor();
         dummyActorForBackButton.setBounds(UI.Window.REFERENCE_WIDTH + 100, 500, 0, 100);
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpEnd", dummyActorForBackButton));
-        Gdx.app.log("help", String.valueOf(System.currentTimeMillis()-time));
         
         helpButton.addListener(helpOverlay);
         showHelpScreen = false;
