@@ -217,6 +217,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		instance.transform.rotate(yRotationAxis, 180.f);
 		xRotationAxis.rotate(yRotationAxis, -180.f);
 		instance.transform.rotate(xRotationAxis, -20.f);
+		yRotationAxis.rotate(xRotationAxis, 20.f);
 	}
 	
 	@Override
@@ -270,6 +271,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		instance.transform.rotate(yRotationAxis, 180.f);
 		xRotationAxis.rotate(yRotationAxis, -180.f);
 		instance.transform.rotate(xRotationAxis, -20.f);
+		yRotationAxis.rotate(xRotationAxis, 20.f);
 		
 		updateOverlay();
 	}
