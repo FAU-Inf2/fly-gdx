@@ -1,9 +1,9 @@
 {
-	"id": 0,
+	"id": 1,
 	"name": "Endless Levels",
 	"levels": [
 		{
-			"id": 1,
+			"id": 100,
 			"name": "Endless",
 			"file": "randomEndlessLevel.json"
 		}

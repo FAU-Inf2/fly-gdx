@@ -1,10 +1,10 @@
 {
-    "class": "",
+    "class": "AsteroidBelt",
     "components": [
         {
             "id": "space",
             "ref": "space",
-			"environment": "ambient"
+            "environment": "ambient"
         }
     ],
     "dependencies": {
@@ -478,7 +478,7 @@
             ]
         }
     ],
-    "id": 12,
+    "id": 17,
     "name": "Level 12",
     "start": {
         "position": {

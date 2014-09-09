@@ -196,8 +196,8 @@ public class EndlessLevelGenerator {
 			newGoal.transform = newDisplay.transform.cpy();
 			newGoal.successors = new int[0];
 			
-			newGoal.createRigidBody(collisionDetector);
-			newDisplay.createRigidBody(collisionDetector);
+			newGoal.createShapeAndRigidBody(collisionDetector);
+			newDisplay.createShapeAndRigidBody(collisionDetector);
 			
             // lastDirection = newDirection.cpy();
 			newLastDirection.add(newDirection.cpy());

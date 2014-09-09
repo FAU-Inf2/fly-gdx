@@ -54,7 +54,7 @@ public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispos
 		
 		for(Collectible c : collectibleManager.getCollectibles()) {
 			if(c.getType().equals(type)) {
-				c.createRigidBody(collisionDetector, type);
+				c.createShapeAndRigidBody(collisionDetector, type);
 				collectibleObjects.add(c);
 			}
 		}

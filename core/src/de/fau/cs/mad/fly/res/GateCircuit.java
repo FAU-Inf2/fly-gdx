@@ -249,11 +249,11 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
         Gdx.app.log("GateCircuit.createGateRigidBodies", "Setting up collision for level gates.");
         
         for (GateGoal g : allGateGoals()) {
-        	g.createRigidBody(collisionDetector);
+        	g.createShapeAndRigidBody(collisionDetector);
         }
         
         for (GateDisplay d : allGateDisplays()) {
-        	d.createRigidBody(collisionDetector);
+        	d.createShapeAndRigidBody(collisionDetector);
         }
     }
     

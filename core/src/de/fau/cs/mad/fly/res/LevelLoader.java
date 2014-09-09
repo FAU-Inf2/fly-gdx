@@ -133,7 +133,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         Map<Integer, GateGoal> gateMap = new HashMap<Integer, GateGoal>();
         
         JsonValue gates = json.get("gates");
-        if (gates == null) {
+        if (gates == null) {    
             return null;
         }
         
@@ -222,10 +222,6 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             Vector3 pos = new Vector3(position.asFloatArray());
             // Gdx.app.log("LevelLoader.getComponents", "Position: " +
             // pos.toString());
-            JsonValue scale = e.get("scale");
-            if (scale != null) {
-                o.setScaling(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
-            }
             
             JsonValue euler = e.get("euler");
             JsonValue quaternion = e.get("quaternion");
@@ -246,6 +242,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             } else {
                 o.transform.idt();
                 o.transform.trn(pos);
+            }
+            
+            JsonValue scale = e.get("scale");
+            if (scale != null) {
+                o.transform.scale(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2)); 
             }
         } else {
             o.transform.idt();

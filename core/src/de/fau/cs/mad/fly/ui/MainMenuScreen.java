@@ -48,7 +48,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         Table table = new Table();
         table.defaults().width(viewport.getWorldWidth() / 3);
         table.setFillParent(true);
-        table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
+        table.pad(UI.Window.BORDER_SPACE);
         stage.addActor(table);
         
         TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
@@ -120,6 +120,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             }
         });
         
+        long time = System.currentTimeMillis();
         this.helpOverlay = new HelpOverlay(this);
         helpOverlay.addHelpFrame(new HelpFrameText(skin, "welcome"));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlay", continueButton));
@@ -130,6 +131,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         Actor dummyActorForBackButton = new Actor();
         dummyActorForBackButton.setBounds(UI.Window.REFERENCE_WIDTH + 100, 500, 0, 100);
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpEnd", dummyActorForBackButton));
+        Gdx.app.log("help", String.valueOf(System.currentTimeMillis()-time));
         
         helpButton.addListener(helpOverlay);
         showHelpScreen = false;

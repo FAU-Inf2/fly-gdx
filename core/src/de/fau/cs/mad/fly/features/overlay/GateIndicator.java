@@ -139,7 +139,7 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
         // only show gate indicator when none of the next gates are visible
         for (; i < numberOfGates; i++) {
             GameObject gate = gateCircuit.getGateGoalById(gateCircuit.currentGates()[i]);
-            if (gate.isVisible(camera)) {
+            if (gate.isVisibleInFrustum(camera)) {
                 drawIndicator = false;
                 i = numberOfGates;
             }

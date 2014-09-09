@@ -52,7 +52,7 @@ public class HelpFrameTextWithArrow extends HelpFrame {
      * arrow that points to the actor that is described by this
      * {@link HelpFrame}
      */
-    private final TextureRegion arrow;
+    private TextureRegion arrow;
     
     /**
      * X-Position of the arrow. It has to be scaled, because it is used in
@@ -111,13 +111,23 @@ public class HelpFrameTextWithArrow extends HelpFrame {
      * Table that contains the {@link #label}. It is used because to put a
      * background behind the label.
      */
-    private final Table helpingTextTable;
+    private Table helpingTextTable;
     
     /** Label that describes the actor. */
-    private final Label label;
+    private Label label;
+    
+    /** Skin that is used for the arrow, the text and the background */
+    private final Skin skin;
+    
+    /** Local copy of the label text */
+    private final String labelText;
     
     /**
-     * Initialize most of the members, load the describing text and the arrow.
+     * Initialize only the necessary members.
+     * <p>
+     * The actual initialization is done in {@link #initialize()} to reduce the
+     * loading time when creating a
+     * {@link #HelpFrameTextWithArrow(Skin, String, Actor)}.
      * 
      * @param skin
      *            is used to get the label style and the background of the label
@@ -127,8 +137,17 @@ public class HelpFrameTextWithArrow extends HelpFrame {
      *            actor that is described by this help frame
      */
     public HelpFrameTextWithArrow(Skin skin, String labelText, Actor actorToBeDescribed) {
-        super.setupBatchAndStage();
+        this.skin = skin;
+        this.labelText = labelText;
         this.actor = actorToBeDescribed;
+    }
+    
+    /**
+     * Setup batch and stage, create label and table with background, update the
+     * viewport.
+     */
+    private void initialize() {
+        super.setupBatchAndStage();
         
         LabelStyle labelStyle = skin.get("black", LabelStyle.class);
         label = new Label(I18n.t(labelText), labelStyle);
@@ -152,7 +171,7 @@ public class HelpFrameTextWithArrow extends HelpFrame {
      * The coordinate system starts on bottom left corner of the display with 0x0. The label position can be defined unscaled because the stage scales it afterwards. In contrast to that the position of the arrow has to be scaled because the coordinates calculated here are used in the render method.
      */
     public void generateContent() {
-        
+        initialize();
         float labelXPos;
         float labelYPos;
         

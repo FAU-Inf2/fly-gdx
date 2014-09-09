@@ -11,12 +11,18 @@ class ConvertHelper:
 	@staticmethod
 	def convert_pos(pos):
 		"""Converts the position to floating point and cuts too many decimal places"""
-		return float('%.4f' % pos)
+		val = float('%.1f' % pos)
+		if val == -0.0:
+			return 0.0
+		return val
 
 	@staticmethod
 	def convert_angle(angle):
 		"""Converts the angle to degree and cuts too many decimal places"""
-		return float('%.4f' % math.degrees(angle))
+		val = float('%.1f' % math.degrees(angle))
+		if val == -0.0:
+			return 0.0
+		return val
 
 	@staticmethod
 	def convert_id(id):
@@ -71,6 +77,7 @@ class LevelExporter:
 				self.data['gravity'] = gravity
 
 	def setupEnvironments(self):
+		"""Sets up the environment with the different light sources"""
 		environments = { }
 		lighting = { }
 		pointLights = [ ]
@@ -140,9 +147,21 @@ class LevelExporter:
 		deps = { }
 		for model in bpy.data.objects["Player"].keys():
 			if model not in '_RNA_UI':
-				deps[model] = bpy.data.objects["Player"][model]
+				if self.checkIfDependencyIsUsed(model):
+					deps[model] = bpy.data.objects["Player"][model]
 
 		return deps
+	
+	def checkIfDependencyIsUsed(self, model):
+		"""Checks if the dependency is used and has to be exported"""
+		if model == "hole" or model == "space":
+			return True
+		
+		for item in bpy.data.objects:
+			if 'Model' in item and model in item['Model']:
+				return True
+		
+		return False
 		
 	def setupGates(self):
 		"""Creates the gate information"""
@@ -161,7 +180,7 @@ class LevelExporter:
 				gate['refHole'] = item['HoleModel']
 				
 				if "score" in item:
-					gate['score']=item['score']
+					gate['score'] = item['score']
 
 				successors = [ ]
 				for constraint in item.constraints:
@@ -222,7 +241,11 @@ class LevelExporter:
 		"""Adds the 3D component info"""
 		
 		component['id'] = item.name
+		
+		if item['Model'] not in bpy.data.objects["Player"]:
+			raise TypeError('Model is not specified in the dependencies. Check your Player custom properties!')
 		component['ref'] = item['Model']
+		
 		component['position'] = [ ConvertHelper.convert_pos(item.location.x), ConvertHelper.convert_pos(item.location.y), ConvertHelper.convert_pos(item.location.z) ]
 		component['euler'] = [ ConvertHelper.convert_angle(item.rotation_euler.x) - 90.0, ConvertHelper.convert_angle(item.rotation_euler.y), ConvertHelper.convert_angle(item.rotation_euler.z) ]
 		if item.scale.x != 1.0 or item.scale.y != 1.0 or item.scale.z != 1.0:
@@ -247,6 +270,7 @@ class LevelExporter:
 		return component
 		
 	def addIfNotZero(self, component, id, value):
+		"""Adds a vector if not all parts of it are zero"""
 		if value.x != 0.0 or value.y != 0.0 or value.z != 0.0:
 			component[id] = [ value.x, value.y, value.z ]
 		

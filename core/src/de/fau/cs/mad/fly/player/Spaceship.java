@@ -106,7 +106,7 @@ public class Spaceship extends GameObject implements IPlane {
 		btCollisionShape shape = CollisionDetector.getInstance().getShapeManager().createConvexShape(modelRef, this);
 
 		Gdx.app.log("Spaceship.load", "Scaling bounding box...");
-		scaleBoundingBox();
+		scaleFrustumBoundingBox();
 		createRigidBody(modelRef, shape, 1.0f, CollisionDetector.PLAYER_FLAG, CollisionDetector.ALL_FLAG);
 		Gdx.app.log("Spaceship.load", "Adding motion state...");
 		addMotionState();
