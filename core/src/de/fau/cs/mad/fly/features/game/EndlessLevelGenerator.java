@@ -4,11 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
+import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.LinearSpeedUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
+import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
 import de.fau.cs.mad.fly.game.CollisionDetector;
+import de.fau.cs.mad.fly.game.GameControllerBuilder;
+import de.fau.cs.mad.fly.game.GameModel;
+import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.GateDisplay;
 import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
@@ -20,6 +32,12 @@ import de.fau.cs.mad.fly.res.Level;
  * 
  */
 public class EndlessLevelGenerator {
+	
+	private AssetManager manager;
+	
+	private LinearSpeedUpgradeHandler linearSpeedHandler;
+	private InstantSpeedUpgradeHandler instantSpeedHandler;
+	private ChangeTimeUpgradeHandler changeTimeHandler;
 	
 	private Level level;
 	private Vector3 lastDirection;
@@ -35,7 +53,8 @@ public class EndlessLevelGenerator {
 	private float maxAngle = 45;
 	private float minAngle = 0.1f;
 	private int lastGateId = -1;
-	
+
+	private float lastDistance = 0.f;
 	private float difficulty;
 	private boolean increasingDifficulty;
 	
@@ -47,7 +66,20 @@ public class EndlessLevelGenerator {
      *            - the level that was initially loaded and is now expanded on
      *            the fly
 	 */
-	public EndlessLevelGenerator(Level level) {
+	public EndlessLevelGenerator(Level level, GameControllerBuilder builder) {
+		this.manager = Assets.manager;
+    	
+		manager.load(new AssetDescriptor<GameModel>("models/timeUpgrade/timeUpgrade", GameModel.class));
+		manager.load(new AssetDescriptor<GameModel>("models/speedUpgrade/speedUpgrade", GameModel.class));
+		
+		this.linearSpeedHandler = new LinearSpeedUpgradeHandler();
+		this.instantSpeedHandler = new InstantSpeedUpgradeHandler();
+		this.changeTimeHandler = new ChangeTimeUpgradeHandler();
+		
+		builder.addFeatureToLists(linearSpeedHandler);
+		builder.addFeatureToLists(instantSpeedHandler);
+		builder.addFeatureToLists(changeTimeHandler);
+		
 		this.level = level;
 		
 		this.difficulty = 0.f;
@@ -79,7 +111,7 @@ public class EndlessLevelGenerator {
 	}
 	
 	public int getExtraTime() {
-        return (100 / currGate) + 5;
+		return (int) (lastDistance / difficulty) + 2;
 	}
 	
 	/**
@@ -92,6 +124,8 @@ public class EndlessLevelGenerator {
 	public void addRandomGate(GateGoal passed) {
 		Gdx.app.log("myApp", "addRandomGate");
         if (passed.getGateId() != lastGateId) {
+        	lastDistance = lastGatePassed.getPosition().cpy().dst(passed.getPosition());
+        	
 			List<GateGoal> newGates = generateRandomGates(predecessors);
 			
 			predecessors.clear();
@@ -147,9 +181,23 @@ public class EndlessLevelGenerator {
 		float min = 0.8f;
         Vector3 newLastDirection = new Vector3(0, 0, 0);
 		
+        float shortestDistance = 1000.f;
+        
+        Matrix4[] t = new Matrix4[predecessors.size()];
+        for (int i = 0; i < predecessors.size(); i++) {
+			t[i] = predecessors.get(i).transform.cpy();
+		}
+        
         while (rand > min) {
 			float distance = (MathUtils.random(5) + 6.f);
-			distance -= difficulty / 2.f;
+			
+			int random = MathUtils.random(-1, 1);
+			
+			distance -= difficulty * random / 2.f;
+			
+			if(distance < shortestDistance) {
+				shortestDistance = distance;
+			}
 			
             // Gdx.app.log("myApp", "generateRandomGate");
 			GateDisplay newDisplay = new GateDisplay(level.getDependency("torus"));
@@ -168,11 +216,6 @@ public class EndlessLevelGenerator {
                 newDirection.rotate(new Vector3(0, 1, 0), randomAngle());
                 newDirection.rotate(new Vector3(1, 0, 0), randomAngle());
 				newDirection.nor();
-				
-				Matrix4[] t = new Matrix4[predecessors.size()];
-                for (int i = 0; i < predecessors.size(); i++) {
-					t[i] = predecessors.get(i).transform.cpy();
-				}
 				
                 // display.transform =
                 // predecessors.get(0).display.transform.cpy();
@@ -210,6 +253,13 @@ public class EndlessLevelGenerator {
 		
 		newLastDirection.scl(1.f / newGates.size());
 		lastDirection = newLastDirection.cpy();
+        
+        //TODO: find nice value
+        if(shortestDistance > 10.f) {
+        	Gdx.app.log("addUpgrade", "adding");
+        	addRandomUpgrade(t, shortestDistance);
+        	Gdx.app.log("addUpgrade", "after adding");
+        }
 		
 		int size = newGates.size();
 		int[] newGateIds = new int[size];
@@ -225,12 +275,44 @@ public class EndlessLevelGenerator {
 		
         if (increasingDifficulty && (difficulty < 10.f)) {
             // difficulty = 10.f + (float) currGate;
-			difficulty = (float) Math.log10(currGate);
+			difficulty = (float) MathUtils.log(5, currGate);
 			maxAngle = 45.f + 4.5f * difficulty;
 			minAngle = 0.1f + difficulty;
 		}
 		
 		return newGates;
+	}
+	
+	private void addRandomUpgrade(Matrix4[] matrices, float distance) {
+		int random = MathUtils.random(2);
+		
+		Collectible c = null;
+		
+		switch(random){
+		case 0:
+			c = new ChangeTimeUpgrade(manager.get("models/timeUpgrade/timeUpgrade", GameModel.class), 10);
+			changeTimeHandler.addObject(c);
+			break;
+		case 1:
+			c = new InstantSpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), 2.f, 5.f);
+			instantSpeedHandler.addObject(c);
+			break;
+		case 2:
+            c = new LinearSpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), 1.f, 10.f, 1.f);
+            linearSpeedHandler.addObject(c);
+			break;
+		default:
+			break;
+		}
+		
+		if(c != null) {
+			c.transform.avg(matrices).translate(lastDirection.cpy().scl(distance / 2.f));
+			
+			CollisionDetector collisionDetector = CollisionDetector.getInstance();
+			c.createShapeAndRigidBody(collisionDetector, c.getType());
+			
+			level.getCollectibleManager().addCollectible(c);
+		}
 	}
 	
 	/**
