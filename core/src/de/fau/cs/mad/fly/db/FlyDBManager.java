@@ -30,8 +30,8 @@ public class FlyDBManager {
 				+ "passed_levelgroup_id integer not null default 1, passed_level_id integer not null default 1)";
 		String createTableScore = "create table if not exists score(player_id integer not null, level_group_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date, is_uploaded integer not null default 0, server_score_id integer)";
 		String createTableScoreDetail = "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, level_group_id integer not null, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
-		String createTavlePlaneEquiped = "create table if not exists fly_plane_Equiped(player_id integer not null, plane_id integer, equiped_type integer, count integer not null default 0)";
-		String createTavlePlaneUpdates = "create table if not exists fly_plane_upgrade(player_id integer not null, plane_id integer, update_type integer, count integer not null default 0)";
+		String createTavlePlaneEquiped = "create table if not exists fly_plane_Equiped(player_id integer not null, plane_id integer, equiped_name text not null, _count integer not null default 0)";
+		String createTavlePlaneUpdates = "create table if not exists fly_plane_upgrade(player_id integer not null, plane_id integer, update_name text not null, _count integer not null default 0)";
 		String createTavleVersion = "create table if not exists fly_db_version(_version interger not null)";
 		String insertDBVersion = "insert into fly_db_version values(1)";
 

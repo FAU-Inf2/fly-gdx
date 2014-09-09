@@ -28,7 +28,7 @@ public class SteeringResetOverlay implements IFeatureInit {
 		this.stage = stage;
 		table = new Table();
 		table.setFillParent(true);
-		resetButton = new TextButton(I18n.t("reset.Steering"), skin, UI.Buttons.DEFAULT_STYLE);
+		resetButton = new TextButton(I18n.t("reset.Steering"), skin);
 		
 		table.row().expand();
 		table.add(resetButton).right().bottom().pad(UI.Window.BORDER_SPACE);

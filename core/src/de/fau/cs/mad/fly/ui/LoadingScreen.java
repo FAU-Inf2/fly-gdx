@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Fly;
@@ -84,7 +83,7 @@ public class LoadingScreen extends BasicScreen {
         if (add) {
             progressBar.setVisible(false);
             
-            final TextButton button = new TextButton(I18n.t("button.start"), skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
+            final TextButton button = new TextButton(I18n.t("button.start"), skin);
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -97,7 +96,7 @@ public class LoadingScreen extends BasicScreen {
             });
             table.add(button).top().expand();
             if(Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
-                final TextButton button2 = new TextButton("Compass available: " + Boolean.toString(Gdx.input.isPeripheralAvailable(Input.Peripheral.Compass)), skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class));
+                final TextButton button2 = new TextButton("Compass available: " + Boolean.toString(Gdx.input.isPeripheralAvailable(Input.Peripheral.Compass)), skin);
                 table.add(button2).bottom().expand();
             }
             inputProcessor.addProcessor(stage);

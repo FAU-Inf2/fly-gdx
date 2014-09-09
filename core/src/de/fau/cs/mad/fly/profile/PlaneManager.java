@@ -74,20 +74,20 @@ public class PlaneManager {
 				//Map<String, Integer> upgradeMap = new HashMap<String, Integer>();
 				//Map<String, Integer> equipedMap = new HashMap<String, Integer>();
 				
-				Map<Integer, Integer> upgradeDB =getUpgradesFromDB( id);
-				Map<Integer, Integer> equipedDB = getEquipedsFromDB(id);
+				Map<String, Integer> upgradeDB =getUpgradesFromDB( id);
+				Map<String, Integer> equipedDB = getEquipedsFromDB(id);
 				
 				int size = upgradeTypes.length;
 				for(PlaneUpgrade upgrade : upgrades) {
 					for(int i = 0; i < size; i++) {
 						if(upgrade.type == upgradeTypes[i]) {
-							if(upgradeDB.get(upgrade.type) != null) {
-								planeHead.getUpgradesBought().put(upgrade.name, upgradeDB.get(upgrade.type));
+							if(upgradeDB.get(upgrade.name) != null) {
+								planeHead.getUpgradesBought().put(upgrade.name, upgradeDB.get(upgrade.name));
 							} else {
 								planeHead.addUpgradeBought(upgrade.name, 0);
 							}
-							if(equipedDB.get(upgrade.type) != null) {
-								planeHead.getUpgradesBought().put(upgrade.name, equipedDB.get(upgrade.type));
+							if(equipedDB.get(upgrade.name) != null) {
+								planeHead.getUpgradesBought().put(upgrade.name, equipedDB.get(upgrade.name));
 							} else {
 								planeHead.addUpgradeEquiped(upgrade.name, 0);
 							}
@@ -105,42 +105,44 @@ public class PlaneManager {
 		return planes;
 	}
 	
-	public Map<Integer, Integer> getUpgradesFromDB(int planeID){
-		Map<Integer, Integer> result = new HashMap<Integer, Integer>();
-		String sql = "select equiped_type, count from fly_plane_Equiped where player_id=" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId()
+	public Map<String, Integer> getEquipedsFromDB(int planeID){
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		String sql = "select equiped_name, _count from fly_plane_Equiped where player_id=" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId()
 				+ " and plane_id=" + planeID;
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(sql);
 		if (cursor != null && cursor.getCount() > 0) {
-			result.put(cursor.getInt(0), cursor.getInt(1));
+			cursor.next();
+			result.put(cursor.getString(0), cursor.getInt(1));
 			cursor.close();
 		}
 		return result;
 	}
 	
-	public Map<Integer, Integer> getEquipedsFromDB(int planeID){
-		Map<Integer, Integer> result = new HashMap<Integer, Integer>();
-		String sql = "select update_type, count from fly_plane_upgrade where player_id=" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId()
+	public Map<String, Integer> getUpgradesFromDB(int planeID){
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		String sql = "select update_name, _count from fly_plane_upgrade where player_id=" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId()
 				+ " and plane_id=" + planeID;
 		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(sql);
 		if (cursor != null && cursor.getCount() > 0) {
-			result.put(cursor.getInt(0), cursor.getInt(1));
+			cursor.next();
+			result.put(cursor.getString(0), cursor.getInt(1));
 			cursor.close();
 		}
 		return result;
 	}
 	
-	public void updateEquiped( int planeID, int type, int newValue){
+	public void updateEquiped( int planeID, String name, int newValue){
 		int playerId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId();
-		String sql = "delete from fly_plane_Equiped where player_id=" + playerId + " and equiped_type=" + type + " and plane_id=" + planeID;
-		String insert = "insert into fly_plane_Equiped(player_id, plane_id, equiped_type, count ) values (" + playerId + ", " + planeID + "," + type + "," + newValue + ")";
+		String sql = "delete from fly_plane_Equiped where player_id=" + playerId + " and equiped_name='" + name + "' and plane_id=" + planeID;
+		String insert = "insert into fly_plane_Equiped(player_id, plane_id, equiped_name, _count ) values (" + playerId + ", " + planeID + ",'" + name + "'," + newValue + ")";
 		FlyDBManager.getInstance().execSQL(sql);
 		FlyDBManager.getInstance().execSQL(insert);	
 	}
 	
-	public void updateUpdate( int planeID, int type, int newValue){
+	public void updateUpdate( int planeID, String name, int newValue){
 		int playerId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId();
-		String sql = "delete from fly_plane_upgrade where player_id=" + playerId + " and update_type=" + type + " and plane_id=" + planeID;
-		String insert = "insert into fly_plane_upgrade(player_id, plane_id, update_type, count ) values (" + playerId  + ", " + planeID + "," + type + "," + newValue + ")";
+		String sql = "delete from fly_plane_upgrade where player_id=" + playerId + " and update_name='" + name + "' and plane_id=" + planeID;
+		String insert = "insert into fly_plane_upgrade(player_id, plane_id, update_name, _count ) values (" + playerId  + ", " + planeID + ",'" + name + "'," + newValue + ")";
 		FlyDBManager.getInstance().execSQL(sql);
 		FlyDBManager.getInstance().execSQL(insert);	
 	}
@@ -204,7 +206,7 @@ public class PlaneManager {
 		
 		int oldValue = chosenPlane.getUpgradesEquiped().get(upgradeName);
 		chosenPlane.getUpgradesEquiped().put(upgradeName, oldValue + signum);
-		this.updateEquiped(chosenPlane.id, this.getUpgradeType(upgradeName),  oldValue + signum);
+		this.updateEquiped(chosenPlane.id, upgradeName,  oldValue + signum);
 		
 		planes.put(chosenPlane.id, chosenPlane);
 		
@@ -220,7 +222,7 @@ public class PlaneManager {
 		if(currentUpgradeBought < maxUpgrade) {
 			if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(-upgrade.price)) {
 				chosenPlane.getUpgradesBought().put(upgradeName, currentUpgradeBought + 1);
-				this.updateUpdate(chosenPlane.id, this.getUpgradeType(upgradeName), currentUpgradeBought + 1);
+				this.updateUpdate(chosenPlane.id, upgradeName, currentUpgradeBought + 1);
 			}
 		}
 	}

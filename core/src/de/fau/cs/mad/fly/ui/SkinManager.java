@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Disposable;
 import de.fau.cs.mad.fly.res.Assets;
 
 /**
- * Manages the skin.
+ * Manages the skin and the fonts in the skin.
  * 
  * @author Tobi
  * 
@@ -36,12 +36,16 @@ public class SkinManager implements Disposable {
         
         Texture texture = new Texture(Gdx.files.internal("fonts/sans.png"), true);
         texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);
+
+        // standard font
         BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/sans.fnt"), new TextureRegion(texture), false);
         skin.add("default-font", font);
+
+        // font for version info
         font = new BitmapFont(Gdx.files.internal("fonts/sans.fnt"), new TextureRegion(texture), false);
         font.scale(-0.5f);
         skin.add("small-font", font);
-
+        
         skin.load(Gdx.files.internal(skinFile));
     }
     

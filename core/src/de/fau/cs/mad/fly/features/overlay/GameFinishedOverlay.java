@@ -8,14 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.Fly.Mode3d2dChangedEvent;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
-import de.fau.cs.mad.fly.Fly.Mode3d2dChangedEvent;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
@@ -69,8 +68,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 		Table outerTable = new Table();
 		outerTable.setFillParent(true);
 
-		TextButtonStyle textButtonStyle = skin.get(UI.Buttons.DEFAULT_STYLE, TextButtonStyle.class);
-		TextButton backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), textButtonStyle);
+		TextButton backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), skin);
 		backToMainMenuButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -110,7 +108,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 					
 					showScore(messageTable);
 					
-					TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), textButtonStyle);
+					TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), skin);
 					nextGroupButton.addListener(new ClickListener() {
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
@@ -136,7 +134,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 					
 				showInfoLabel(messageTable, "level.congratulations");
 				showScore(messageTable);
-				TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), textButtonStyle);
+				TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), skin);
 				nextLevelButton.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
@@ -158,7 +156,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 				showScore(messageTable);
 			}
 
-			TextButton restartButton = new TextButton(I18n.t("restart"), textButtonStyle);
+			TextButton restartButton = new TextButton(I18n.t("restart"), skin);
 			restartButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {

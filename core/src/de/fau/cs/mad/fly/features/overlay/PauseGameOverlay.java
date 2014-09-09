@@ -23,7 +23,7 @@ public class PauseGameOverlay implements IFeatureInit {
 		
 		table = new Table();
 		table.setFillParent(true);
-		pauseButton = new TextButton(I18n.t("pause"), skin, UI.Buttons.DEFAULT_STYLE);
+		pauseButton = new TextButton(I18n.t("pause"), skin);
 		table.row().expand();
 		table.add(pauseButton).right().pad(UI.Window.BORDER_SPACE);
 		table.row().expand();
