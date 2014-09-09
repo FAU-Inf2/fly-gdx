@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import de.fau.cs.mad.fly.res.PlaneUpgrade;
 
 /**
- * 
+ * Manages the Upgrades for the Planes
  * @author Sebastian
  *
  */
@@ -26,7 +26,11 @@ public class PlaneUpgradeManager {
 	public static PlaneUpgradeManager getInstance() {
 		return Instance;
 	}
-
+	
+	/**
+	 * Getter for the UpgradeList
+	 * @return A Map containing all Upgrades for the Planes
+	 */
 	public Map<String, PlaneUpgrade> getUpgradeList() {
 		if (upgrades == null) {
 			
@@ -54,6 +58,11 @@ public class PlaneUpgradeManager {
 		return upgrades;
 	}
 	
+	/**
+	 * Returns the Upgrade specified by the name
+	 * @param name - The name of the Upgrade
+	 * @return The Upgrade with the given name
+	 */
 	public PlaneUpgrade getUpgrade(String name) {
 		return getUpgradeList().get(name);
 	}
