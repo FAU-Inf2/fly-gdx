@@ -53,6 +53,14 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 		public Map<String, Integer> getUpgradesEquiped() {
 			return upgradesEquiped;
 		}
+		
+		public void addUpgradeBought(String name, int value) {
+			upgradesBought.put(name, value);
+		}
+		
+		public void addUpgradeEquiped(String name, int value) {
+			upgradesEquiped.put(name, value);
+		}
         
        
     }

@@ -8,15 +8,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -149,8 +146,6 @@ public class PlaneUpgradesOverlay {
 					//Gdx.app.log("upgrades", currentUpgrade.name + PlaneManager.getInstance().getChosenPlane().upgradesBought.get(currentUpgrade.name));
 					
 					PlaneManager.getInstance().buyUpgradeForPlane(currentUpgrade.name);
-					int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
-					//nameLabel.setText("current money: " + money);
 					
 					upgradeButton.setText(I18n.t("equip"));
 					upgradeButton.setColor(Color.WHITE);

@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.profile;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -80,8 +81,16 @@ public class PlaneManager {
 				for(PlaneUpgrade upgrade : upgrades) {
 					for(int i = 0; i < size; i++) {
 						if(upgrade.type == upgradeTypes[i]) {
-							planeHead.getUpgradesBought().put(upgrade.name, upgradeDB.get(upgrade.type));
-							planeHead.getUpgradesEquiped().put(upgrade.name, equipedDB.get(upgrade.type));
+							if(upgradeDB.get(upgrade.type) != null) {
+								planeHead.getUpgradesBought().put(upgrade.name, upgradeDB.get(upgrade.type));
+							} else {
+								planeHead.addUpgradeBought(upgrade.name, 0);
+							}
+							if(equipedDB.get(upgrade.type) != null) {
+								planeHead.getUpgradesBought().put(upgrade.name, equipedDB.get(upgrade.type));
+							} else {
+								planeHead.addUpgradeEquiped(upgrade.name, 0);
+							}
 						}
 					}
 				}
@@ -120,7 +129,7 @@ public class PlaneManager {
 	
 	public void updateEquiped( int planeID, int type, int newValue){
 		int playerId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId();
-		String sql = "delte from fly_plane_Equiped where player_id=" + playerId + " and equiped_type=" + type + " and plane_id=" + planeID;
+		String sql = "delete from fly_plane_Equiped where player_id=" + playerId + " and equiped_type=" + type + " and plane_id=" + planeID;
 		String insert = "insert into fly_plane_Equiped(player_id, plane_id, equiped_type, count ) values (" + playerId + ", " + planeID + "," + type + "," + newValue + ")";
 		FlyDBManager.getInstance().execSQL(sql);
 		FlyDBManager.getInstance().execSQL(insert);	
@@ -128,7 +137,7 @@ public class PlaneManager {
 	
 	public void updateUpdate( int planeID, int type, int newValue){
 		int playerId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId();
-		String sql = "delte from fly_plane_upgrade where player_id=" + playerId + " and update_type=" + type + " and plane_id=" + planeID;
+		String sql = "delete from fly_plane_upgrade where player_id=" + playerId + " and update_type=" + type + " and plane_id=" + planeID;
 		String insert = "insert into fly_plane_upgrade(player_id, plane_id, update_type, count ) values (" + playerId  + ", " + planeID + "," + type + "," + newValue + ")";
 		FlyDBManager.getInstance().execSQL(sql);
 		FlyDBManager.getInstance().execSQL(insert);	
