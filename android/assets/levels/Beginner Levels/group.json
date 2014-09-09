@@ -104,33 +104,28 @@
 		},
 		{
 			"id": 21,
+			"name": "Level 16",
+			"file": "level16.json"
+		},
+		{
+			"id": 22,
+			"name": "Level 17",
+			"file": "level17.json"
+		},
+		{
+			"id": 23,
+			"name": "Level 18",
+			"file": "level18.json"
+		},
+		{
+			"id": 24,
 			"name": "Level 19",
 			"file": "level19.json"
 		},
 		{
-			"id": 22,
+			"id": 25,
 			"name": "Level 20",
 			"file": "level20.json"
-		},
-		{
-			"id": 23,
-			"name": "Level 21",
-			"file": "level21.json"
-		},
-		{
-			"id": 24,
-			"name": "Level 22",
-			"file": "level22.json"
-		},
-		{
-			"id": 25,
-			"name": "Level 23",
-			"file": "level23.json"
-		},
-		{
-			"id": 26,
-			"name": "Level 24",
-			"file": "level24.json"
 		}		
 	]
 }

@@ -79,6 +79,9 @@ public class LevelChooserScreen extends BasicScreen {
         stage.addActor(levelScrollPane);
         super.stage.act();
         super.stage.draw();
+        if(rowToScrollTo < 0) {
+            rowToScrollTo = maxRows;
+        }
         levelScrollPane.setScrollY(rowToScrollTo * (UI.Buttons.MAIN_BUTTON_HEIGHT + UI.Buttons.SPACE_HEIGHT)-Gdx.graphics.getHeight());
     }
     

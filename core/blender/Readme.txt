@@ -47,6 +47,7 @@ Upgrades:
 Deco:
 - special custom property:
 	Type: deco
+	Model: <model>
 
 Lamps:
 - light always has to have the same name like the object
