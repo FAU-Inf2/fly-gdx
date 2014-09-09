@@ -40,7 +40,7 @@ public class GateGoal extends GameObject implements Disposable {
      * Creates the rigid body of the gate goal if its not already created.
      * @param collisionDetector
      */
-    public void createRigidBody(CollisionDetector collisionDetector) {        
+    public void createShapeAndRigidBody(CollisionDetector collisionDetector) {        
 		btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(super.getModelId() + ".goal", new Vector3(0.8f, 0.1f, 0.8f));
 		super.createRigidBody(super.getModelId() + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
 		rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);

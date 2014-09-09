@@ -35,7 +35,7 @@ public class GateDisplay extends GameObject implements Disposable {
      * 
      * @param collisionDetector
      */
-    public void createRigidBody(CollisionDetector collisionDetector) {
+    public void createShapeAndRigidBody(CollisionDetector collisionDetector) {
         btCollisionShape displayShape = collisionDetector.getShapeManager().createStaticMeshShape(super.getModelId(), this);
         super.createRigidBody(super.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
         
