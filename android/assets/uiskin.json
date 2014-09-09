@@ -12,11 +12,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: { down: default-round-down, up: default-round },
+	default: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch },
 	rounded: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { down: default-round-down, up: default-round, font: default-font, fontColor: black },
+	default: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-font, fontColor: white, disabled: grey-progress-bar, disabledFontColor: lightGrey },
 	rounded: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-font, fontColor: white, disabled: grey-progress-bar, disabledFontColor: lightGrey}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
@@ -24,16 +24,16 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	help: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: questionmark, imageDown: questionmark }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
-	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: default-rect, hScroll: default-scroll, vScrollKnob: default-round-large },
+	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: transparent-rect, hScroll: default-scroll, vScrollKnob: default-round-large },
 	transparent: { vScroll: default-scroll, hScrollKnob: default-round-large, background: transparent-rect, hScroll: default-scroll, vScrollKnob: default-round-large },
 	rounded: { vScroll: default-scroll, hScrollKnob: default-round-large, background: grey-progress-bar, hScroll: default-scroll, vScrollKnob: default-round-large },
 	rounded-with-edge: { vScroll: default-scroll, hScrollKnob: default-round-large, background: grey-select-drop-down, hScroll: default-scroll, vScrollKnob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
-		font: default-font, fontColor: black, background: default-select,
+		font: default-font, fontColor: black, background: green-select-box,
 		scrollStyle: default,
-		listStyle: { font: default-font, selection: default-select-selection }
+		listStyle: { font: default-font, selection: green-progress-bar }
 	},
 	rounded: {
         font: default-font, fontColor: white, background: green-select-box,
@@ -41,16 +41,12 @@ com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
         listStyle: { font: default-font, selection: green-progress-bar }
     }
 },
-com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
-	default-vertical: { handle: default-splitpane-vertical },
-	default-horizontal: { handle: default-splitpane }
-},
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
-	default: { titleFont: default-font, background: default-window, titleFontColor: white },
+	default: { titleFont: default-font, background: dialog-background, titleFontColor: white },
 	dialog: { titleFont: default-font, background: dialog-background, titleFontColor: green, stageBackground: dialogDim }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
-	default-horizontal: { background: default-slider, knob: default-slider-knob, knobBefore: default-slider-before },
+	default-horizontal: { background: default-slider, knob: default-slider-knob },
 	default-vertical: { background: default-slider, knob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
@@ -65,20 +61,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	black: { font: default-font, fontColor: black }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
-	default: { selection: selection, background: textfield, font: default-font, fontColor: black, cursor: cursor },
+	default: { selection: selection, background: green-text-field, font: default-font, fontColor: black, cursor: cursor },
 	rounded: { selection: selection, background: green-text-field, font: default-font, fontColor: black, cursor: cursor }
 },
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }
-},
-com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
-	default: { fontColorUnselected: white, selection: selection, fontColorSelected: white, font: default-font }
-},
-com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
-	default: { background: default-pane, knob: default-round-large }
-},
-com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
-	default: { minus: tree-minus, plus: tree-plus, selection: default-select-selection }
 },
 de.fau.cs.mad.fly.ui.ScalableProgressBar$ScalableProgressBarStyle: {
 	default: { background: grey-progress-bar, foreground: green-progress-bar }
