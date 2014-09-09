@@ -3,34 +3,29 @@
 	"name": "Medium Levels",
 	"levels": [
 		{
-			"id": 1,
+			"id": 201,
 			"name": "Level 1",
 			"file": "level1.json"
 		},
 		{
-			"id": 2,
+			"id": 202,
 			"name": "Level 2",
 			"file": "level2.json"
 		},
 		{
-			"id": 3,
+			"id": 203,
 			"name": "Level 3",
 			"file": "level3.json"
 		},
 		{
-			"id": 4,
+			"id": 204,
 			"name": "Level 4",
 			"file": "level4.json"
 		},
 		{
-			"id": 5,
+			"id": 205,
 			"name": "Level 5",
 			"file": "level5.json"
-		},
-		{
-			"id": 6,
-			"name": "Level 6",
-			"file": "level6.json"
 		}
 	]
 }

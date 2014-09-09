@@ -4,11 +4,10 @@
         {
             "id": "space",
             "ref": "space",
-			"environment": "ambient"
+            "environment": "ambient"
         }
     ],
     "dependencies": {
-        "asteroid": "asteroid",
         "hole": "torusHoleBox",
         "space": "spacesphere",
         "torus": "torus"
@@ -210,7 +209,7 @@
             "successors": []
         }
     ],
-    "id": 2,
+    "id": 202,
     "name": "Level 2",
     "start": {
         "position": {
