@@ -169,12 +169,12 @@ public class LevelsStatisScreen extends BasicScreen {
                     
                     // if no score at all
                     if (!haveScore) {
-                        scoreTable.row().expand();
+                        scoreTable.row();
                         scoreTable.add(new Label(I18n.t("noScore"), skin)).pad(6f).uniform();
                     }
                     
                     // global high score button          
-                    
+                    scoreTable.row();
                     scoreTable.add(globalHighScoreButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
                     
                     end = System.currentTimeMillis();
