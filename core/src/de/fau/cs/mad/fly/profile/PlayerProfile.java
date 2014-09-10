@@ -2,6 +2,8 @@ package de.fau.cs.mad.fly.profile;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
@@ -21,6 +23,16 @@ public class PlayerProfile {
 	 * default passed level id for a new user
 	 */
 	public static int DEFAULT_PASSED_LEVEL_ID = 1;
+	
+	/**
+	 * default chosen level group id for a new user
+	 */
+	public static int DEFAULT_CHOSEN_LEVELGROUP_ID = 1;
+	
+	/**
+	 * default chosen level id for a new user
+	 */
+	public static int DEFAULT_CHOSEN_LEVEL_ID = 1;
 
     /**
      * maximum length of the name
@@ -232,7 +244,8 @@ public class PlayerProfile {
 	 */
 	public LevelProfile getCurrentLevelProfile() {
 		if (currentLevelProfile == null) {
-			currentLevelProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelGroup().getFirstLevel();
+			LevelGroup group = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelGroup();
+			currentLevelProfile = group.getLevelProfile(DEFAULT_CHOSEN_LEVEL_ID);
 		}
 		return currentLevelProfile;
 	}
@@ -268,7 +281,14 @@ public class PlayerProfile {
 	 */
 	public LevelGroup getCurrentLevelGroup() {
 		if( currentLevelGroup == null ){
-			setCurrentLevelGroup(LevelGroupManager.getInstance().getLevelGroups().get(0));
+			for(LevelGroup group : LevelGroupManager.getInstance().getLevelGroups()){
+				if( group.id == DEFAULT_CHOSEN_LEVELGROUP_ID){
+					setCurrentLevelGroup(group);
+				}
+			}
+			if( currentLevelGroup == null ){
+				setCurrentLevelGroup(LevelGroupManager.getInstance().getLevelGroups().get(0));
+			}
 		}
 		return currentLevelGroup;
 	}

@@ -1,12 +1,12 @@
 {
 	"groups": [
 		{
-			"id": 0,
+			"id": 1,
 			"name": "Beginner Levels",
 			"path": "Beginner Levels/"
 		},
 		{
-			"id": 1,
+			"id": 0,
 			"name": "Endless Levels",
 			"path": "Endless/"
 		},
