@@ -12,16 +12,25 @@ import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+import de.fau.cs.mad.fly.profile.Score;
+
 public class PostHighscoreService {
 
+	public class ResponseData{
+		public int scoreID;
+		public int rank;
+		public List<ResponseItem> above = new ArrayList<ResponseItem>();
+		public List<ResponseItem> below = new ArrayList<ResponseItem>();
+	}
 	public class ResponseItem {
 		public int Score;
 		public String Username;
 		public int FlyID;
+		public int rank;
 	}
 
 	public static class RequestData {
-		public int Score;
+		public Score Score;
 		public int LevelID;
 		public int FlyID;
 		public int LevelgroupID;
@@ -40,8 +49,8 @@ public class PostHighscoreService {
 		request.setTimeOut(RemoteServices.TIME_OUT);
 		request.setHeader("Content-Type", "application/json");
 		request.setUrl(RemoteServices.getServerURL() + "/highscores");
-		String res = "{ \"highscore\": { \"points\": " + requestData.Score + ", \"user_id\": "
-				+ requestData.FlyID + ", \"level_group_id\": " + requestData.LevelgroupID + ", \"level_id\": " + requestData.LevelID + " } }";
+		String res = "{ \"highscore\": { \"points\": " + requestData.Score.getTotalScore() + ", \"user_id\": "
+				+ requestData.FlyID + ", \"level_id\": " + requestData.LevelID + " } }";
 		request.setContent(res);
 		Gdx.app.log("PostHighscoreService", res);
 
@@ -52,17 +61,31 @@ public class PostHighscoreService {
 				if (status.getStatusCode() == HttpStatus.SC_CREATED) {
 					JsonReader reader = new JsonReader();
 					JsonValue json = reader.parse(httpResponse.getResultAsStream());
-					List<ResponseItem> results = new ArrayList<ResponseItem>();
-					for (JsonValue item : json.get("surroundings")) {
+					ResponseData response = new ResponseData();
+					//List<ResponseItem> results = new ArrayList<ResponseItem>();
+					JsonValue scoreJS = json.get("highscore");
+					response.scoreID = scoreJS.getInt("id");
+					response.rank = scoreJS.getInt("rank");					
+					
+					for (JsonValue item : json.get("above")) {
 						ResponseItem res = new ResponseItem();
 						res.Score = item.getInt("points");
 						res.FlyID = item.get("user").getInt("id");
 						res.Username = item.get("user").getString("name");
-						results.add(res);
+						response.above.add(res);
+						Gdx.app.log("PostHighscoreService", "" + res.Score);
+					}
+					
+					for (JsonValue item : json.get("below")) {
+						ResponseItem res = new ResponseItem();
+						res.Score = item.getInt("points");
+						res.FlyID = item.get("user").getInt("id");
+						res.Username = item.get("user").getString("name");
+						response.below.add(res);
 						Gdx.app.log("PostHighscoreService", "" + res.Score);
 					}
 
-					listener.successful(results);
+					listener.successful(response);
 				} else {
 					listener.failed(String.valueOf(status.getStatusCode()));
 				}

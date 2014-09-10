@@ -29,7 +29,7 @@ public class FlyDBManager {
 		String createTablePlayer = "create table if not exists player(player_id integer primary key autoincrement, fly_id text, name text not null, total_score integer not null default 0, total_geld integer not null default 0, current_levelgroup_id integer not null default 1, current_level_id integer not null default 1,"
 				+ "passed_levelgroup_id integer not null default 1, passed_level_id integer not null default 1)";
 		String createTableScore = "create table if not exists score(player_id integer not null, level_group_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date, is_uploaded integer not null default 0, server_score_id integer)";
-		String createTableScoreDetail = "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, level_group_id integer not null, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
+		//String createTableScoreDetail = "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, level_group_id integer not null, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
 		String createTavlePlaneEquiped = "create table if not exists fly_plane_Equiped(player_id integer not null, plane_id integer, equiped_name text not null, _count integer not null default 0)";
 		String createTavlePlaneUpdates = "create table if not exists fly_plane_upgrade(player_id integer not null, plane_id integer, update_name text not null, _count integer not null default 0)";
 		String createTavleVersion = "create table if not exists fly_db_version(_version interger not null)";
@@ -38,7 +38,7 @@ public class FlyDBManager {
 		List<String> createSQLs = new ArrayList<String>();
 		createSQLs.add(createTablePlayer);
 		createSQLs.add(createTableScore);
-		createSQLs.add(createTableScoreDetail);
+		//createSQLs.add(createTableScoreDetail);
 		createSQLs.add(createTavlePlaneEquiped);
 		createSQLs.add(createTavlePlaneUpdates);
 		createSQLs.add(createTavleVersion);
