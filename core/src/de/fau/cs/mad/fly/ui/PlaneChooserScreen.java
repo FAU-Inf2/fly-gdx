@@ -146,9 +146,9 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 				public void clicked(InputEvent event, float x, float y) {
 					currentPlane = allPlanes.get(index);
 					PlaneManager.getInstance().setChosenPlane(currentPlane);
+					resetVectors();
 					loadCurrentPlane();
 					updateOverlay();
-					resetVectors();
 				}
 			});
 			
