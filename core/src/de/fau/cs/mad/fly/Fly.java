@@ -42,19 +42,19 @@ import de.fau.cs.mad.fly.ui.StatisticsScreen;
  * @author Tobias Zangl
  */
 public class Fly extends Game {
-	
-	/**
-	 * The version of the app. (works only on android)
-	 */
-	public static String VERSION = "1.0.0";
-	
-	/**
-	 * True if debug mode is enabled, false otherwise.
-	 * <p>
-	 * Currently debug mode only disables the level dependencies.
-	 */
-	public static boolean DEBUG_MODE = false;
-
+    
+    /**
+     * The version of the app. (works only on android)
+     */
+    public static String VERSION = "1.0.0";
+    
+    /**
+     * True if debug mode is enabled, false otherwise.
+     * <p>
+     * Currently debug mode only disables the level dependencies.
+     */
+    public static boolean DEBUG_MODE = false;
+    
     private SplashScreen splashScreen;
     private LevelGroupScreen levelGroupScreen;
     private LevelChooserScreen levelChooserScreen;
@@ -76,54 +76,48 @@ public class Fly extends Game {
         Gdx.app.log("timing", "Fly.create enter");
         
         long time = System.currentTimeMillis();
-        Assets.init(); //nex5: 10 ms
-        Gdx.app.log("timing", "Fly.create assets init: " + String.valueOf(System.currentTimeMillis()-time));
+        Assets.init(); // nex5: 10 ms
+        Gdx.app.log("timing", "Fly.create assets init: " + String.valueOf(System.currentTimeMillis() - time));
         
         time = System.currentTimeMillis();
         skinManager = new SkinManager("uiskin.json"); // nex5: 150 ms
-        Gdx.app.log("timing", "Fly.create creating skin manager: " + String.valueOf(System.currentTimeMillis()-time));
+        Gdx.app.log("timing", "Fly.create creating skin manager: " + String.valueOf(System.currentTimeMillis() - time));
         
         time = System.currentTimeMillis();
         new Thread(new Runnable() {
-			@Override
-			public void run() {
-				long time = System.currentTimeMillis();
-				PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-				 Gdx.app.log("timing", "Fly.create creating db and getCurrentPlayerProfile " + String.valueOf(System.currentTimeMillis()-time));
-			}
-		}).start(); //nex5: 1 ms
-        Gdx.app.log("timing", "Fly.create starting player profile thread: " + String.valueOf(System.currentTimeMillis()-time));
+            @Override
+            public void run() {
+                long time = System.currentTimeMillis();
+                PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                Gdx.app.log("timing", "Fly.create creating db and getCurrentPlayerProfile " + String.valueOf(System.currentTimeMillis() - time));
+            }
+        }).start(); // nex5: 1 ms
+        Gdx.app.log("timing", "Fly.create starting player profile thread: " + String.valueOf(System.currentTimeMillis() - time));
         
         time = System.currentTimeMillis();
+        LevelGroupManager.createLevelManager();
+        Gdx.app.log("timing", "Fly.create start level manager: " + String.valueOf(System.currentTimeMillis() - time));
         
-        new Thread(new Runnable() {
-			@Override
-			public void run() {
-				long time = System.currentTimeMillis();
-				LevelGroupManager.createLevelManager(); //nex5: 1500 ms
-				Gdx.app.log("timing", "Fly.create create level manager: " + String.valueOf(System.currentTimeMillis()-time));
-			}
-        }).start();
-        Gdx.app.log("timing", "Fly.create start level manager thread: " + String.valueOf(System.currentTimeMillis()-time));
-        
+        time = System.currentTimeMillis();
         ParticleController.createParticleController();
+        Gdx.app.log("timing", "Fly.create create particle controller: " + String.valueOf(System.currentTimeMillis() - time));
         
         time = System.currentTimeMillis();
         setMainMenuScreen(); // nex5: 125 ms
-        Gdx.app.log("timing", "Fly.create set main menu screen: " + String.valueOf(System.currentTimeMillis()-time));
-
+        Gdx.app.log("timing", "Fly.create set main menu screen: " + String.valueOf(System.currentTimeMillis() - time));
+        
         // disabled for debugging reasons
         // setSplashScreen();
     }
     
-	@Override
-	public void resume () {
-		super.resume();
-		
-		if(skinManager == null) {
-			skinManager = new SkinManager("uiskin.json");
-		}
-	}
+    @Override
+    public void resume() {
+        super.resume();
+        
+        if (skinManager == null) {
+            skinManager = new SkinManager("uiskin.json");
+        }
+    }
     
     @Override
     public void dispose() {
@@ -143,9 +137,10 @@ public class Fly extends Game {
         disposeScreen(gameScreen);
         disposeScreen(globalHighScoreScreen);
         
-        // TODO: enable after the bug with disappearing widgets after restarting the app is fixed
-        //skinManager.dispose();
-        //skinManager = null;
+        // TODO: enable after the bug with disappearing widgets after restarting
+        // the app is fixed
+        // skinManager.dispose();
+        // skinManager = null;
     }
     
     public void disposeScreen(Screen screen) {
@@ -192,7 +187,7 @@ public class Fly extends Game {
      */
     public void setPlaneChoosingScreen() {
         if (planeChooserScreen == null) {
-        	planeChooserScreen = new PlaneChooserScreen();
+            planeChooserScreen = new PlaneChooserScreen();
         }
         setScreen(planeChooserScreen);
     }
@@ -202,7 +197,7 @@ public class Fly extends Game {
      */
     public void setPlaneUpgradeScreen() {
         if (planeUpgradeScreen == null) {
-        	planeUpgradeScreen = new PlaneUpgradeScreen();
+            planeUpgradeScreen = new PlaneUpgradeScreen();
         }
         setScreen(planeUpgradeScreen);
     }
@@ -285,77 +280,80 @@ public class Fly extends Game {
      * Switches the current Screen to the level StatisticsScreen.
      */
     public void setLevelsStatisScreen(LevelGroup group) {
-    	LevelsStatisScreen levelsStatisScreen = new LevelsStatisScreen(group);        
+        LevelsStatisScreen levelsStatisScreen = new LevelsStatisScreen(group);
         setScreen(levelsStatisScreen);
     }
     
-	protected ArrayList<EventListener> mode3d2dChangedListeners = new ArrayList<EventListener>();
-	
-	protected int current3d2dMode = Mode3d2dChangedEvent.MODE_2D;
-
-	public void add3d2dChangedListeners(EventListener listener) {
-		if (listener != null) {
-			mode3d2dChangedListeners.add(listener);
-		}
-	}
-
-	public void remove3d2dChangedListeners(EventListener listener) {
-		mode3d2dChangedListeners.remove(listener);
-	}
-
-	/**
-	 * To be called when UI change between 2d and 3d
-	 * 
-	 * @param newMode
-	 */
-	public void onMode3d2dChanged(int newMode) {
-		if (mode3d2dChangedListeners != null) {
-			for (EventListener listener : mode3d2dChangedListeners) {
-				listener.handle(new Mode3d2dChangedEvent(newMode));
-			}
-		}
-		current3d2dMode = newMode;
-	}
+    protected ArrayList<EventListener> mode3d2dChangedListeners = new ArrayList<EventListener>();
     
+    protected int current3d2dMode = Mode3d2dChangedEvent.MODE_2D;
     
-    /** 
-     * set screen. Add new check if it is switching between 2d and 3d screen
-	 * @param screen may be {@code null} */
-    @Override
-	public void setScreen(Screen screen) {
-    	int newMode = getScreenMode(screen);
-		if (getScreenMode(screen) != current3d2dMode) {
-			onMode3d2dChanged(newMode);
-		}
-		super.setScreen(screen);
-	}
+    public void add3d2dChangedListeners(EventListener listener) {
+        if (listener != null) {
+            mode3d2dChangedListeners.add(listener);
+        }
+    }
+    
+    public void remove3d2dChangedListeners(EventListener listener) {
+        mode3d2dChangedListeners.remove(listener);
+    }
     
     /**
-     * if @param is instance of  GameScreen or LoadingScreen, then return turn.
+     * To be called when UI change between 2d and 3d
+     * 
+     * @param newMode
+     */
+    public void onMode3d2dChanged(int newMode) {
+        if (mode3d2dChangedListeners != null) {
+            for (EventListener listener : mode3d2dChangedListeners) {
+                listener.handle(new Mode3d2dChangedEvent(newMode));
+            }
+        }
+        current3d2dMode = newMode;
+    }
+    
+    /**
+     * set screen. Add new check if it is switching between 2d and 3d screen
+     * 
+     * @param screen
+     *            may be {@code null}
+     */
+    @Override
+    public void setScreen(Screen screen) {
+        int newMode = getScreenMode(screen);
+        if (getScreenMode(screen) != current3d2dMode) {
+            onMode3d2dChanged(newMode);
+        }
+        super.setScreen(screen);
+    }
+    
+    /**
+     * if @param is instance of GameScreen or LoadingScreen, then return turn.
+     * 
      * @param screen
      * @return
      */
     private int getScreenMode(Screen screen) {
-    	if(screen == null )
-    		return 0;
-    	if(screen instanceof GameScreen || screen instanceof LoadingScreen )
-    		return Mode3d2dChangedEvent.MODE_3D;
-    	return Mode3d2dChangedEvent.MODE_2D;
+        if (screen == null)
+            return 0;
+        if (screen instanceof GameScreen || screen instanceof LoadingScreen)
+            return Mode3d2dChangedEvent.MODE_3D;
+        return Mode3d2dChangedEvent.MODE_2D;
     }
     
     /**
      * Event happens when user switches between 2d UI and 3dUI
+     * 
      * @author Lenovo
-     *
+     * 
      */
     public class Mode3d2dChangedEvent extends Event {
-    	public static final int MODE_3D = 3;
-    	public static final int MODE_2D = 2;
-    	public int mode = 2;
-    	
-    	public Mode3d2dChangedEvent(int mode)
-    	{
-    		this.mode = mode;
-    	}    	
-    }    
+        public static final int MODE_3D = 3;
+        public static final int MODE_2D = 2;
+        public int mode = 2;
+        
+        public Mode3d2dChangedEvent(int mode) {
+            this.mode = mode;
+        }
+    }
 }
