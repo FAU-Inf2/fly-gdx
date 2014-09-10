@@ -106,7 +106,6 @@ public class GlobalHighScoreScreen extends BasicScreen {
         final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
-        statisticsPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
         table.row().expand();
         table.add(statisticsPane);
     }

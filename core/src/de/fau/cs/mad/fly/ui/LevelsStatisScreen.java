@@ -79,7 +79,6 @@ public class LevelsStatisScreen extends BasicScreen {
         final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
-        statisticsPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
         table.row().expand();
         table.add(statisticsPane);
         Gdx.app.log("timing", "LevelsStatisScreen generateContent " + (System.currentTimeMillis() - begin));
@@ -170,12 +169,12 @@ public class LevelsStatisScreen extends BasicScreen {
                     
                     // if no score at all
                     if (!haveScore) {
-                        scoreTable.row().expand();
+                        scoreTable.row();
                         scoreTable.add(new Label(I18n.t("noScore"), skin)).pad(6f).uniform();
                     }
                     
                     // global high score button          
-                    
+                    scoreTable.row();
                     scoreTable.add(globalHighScoreButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
                     
                     end = System.currentTimeMillis();

@@ -64,7 +64,7 @@ public class Level implements Disposable {
         environments.get("ambient");
         
         for (GameObject c : components) {
-            if (c.getId().equals("space")) {
+            if (c.getId().equals("border")) {
                 borderObject = c;
             }
         }

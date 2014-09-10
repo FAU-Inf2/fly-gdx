@@ -125,7 +125,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 		scrollPane.setScrollingDisabled(false, true);
 		scrollPane.setPosition(0, 0);
 		scrollPane.setBounds(0, 0, UI.Window.REFERENCE_WIDTH, UI.Window.REFERENCE_HEIGHT/3);
-		scrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
 		
 		int size = allPlanes.size();
 		for(int i = 1; i <= size; i++) {
@@ -147,9 +146,9 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
 				public void clicked(InputEvent event, float x, float y) {
 					currentPlane = allPlanes.get(index);
 					PlaneManager.getInstance().setChosenPlane(currentPlane);
+					resetVectors();
 					loadCurrentPlane();
 					updateOverlay();
-					resetVectors();
 				}
 			});
 			

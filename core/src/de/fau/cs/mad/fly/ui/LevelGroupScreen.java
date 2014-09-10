@@ -33,7 +33,6 @@ public class LevelGroupScreen extends BasicScreen {
 		ScrollPane levelScrollPane = new ScrollPane(scrollableTable, skin);
 		levelScrollPane.setScrollingDisabled(true, false);
 		levelScrollPane.setFadeScrollBars(false);
-		levelScrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
 		levelScrollPane.setFillParent(true);
 		
 		// create a button for each level group

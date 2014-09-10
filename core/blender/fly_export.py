@@ -111,8 +111,7 @@ class LevelExporter:
 				
 				dirLight = { }
 				dirLight['color'] = [ ConvertHelper.convert_pos(lamp.color.r), ConvertHelper.convert_pos(lamp.color.g), ConvertHelper.convert_pos(lamp.color.b), 1.0 ]
-				"""dirLight['direction'] = [ ConvertHelper.convert_pos(lightObject.location.x), ConvertHelper.convert_pos(lightObject.location.y), ConvertHelper.convert_pos(lightObject.location.z) ]"""
-				
+
 				dir = Vector((0.0, 0.0, -1.0))
 				dir.rotate(lightObject.rotation_euler)
 				dirLight['direction'] = [ ConvertHelper.convert_pos(dir.x), ConvertHelper.convert_pos(dir.y), ConvertHelper.convert_pos(dir.z),]
@@ -279,7 +278,7 @@ class LevelExporter:
 		components = [ ]
 		
 		component = { }
-		component['id'] = "space"
+		component['id'] = "border"
 		component['ref'] = bpy.data.objects['Level']['Border']
 		components.append(component)
 

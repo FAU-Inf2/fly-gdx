@@ -39,7 +39,6 @@ public class LevelChooserScreen extends BasicScreen {
         levelScrollPane = new ScrollPane(scrollableTable, skin);
         levelScrollPane.setScrollingDisabled(true, false);
         levelScrollPane.setFadeScrollBars(false);
-        levelScrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
         levelScrollPane.setFillParent(true);
         
         int rowToScrollTo = -1;
