@@ -140,7 +140,7 @@ public class StatisticsScreen extends BasicScreen {
         
         infoTable.add(levelgroupTable);
         
-        final ScrollPane statisticsPane = new ScrollPane(infoTable, skin, UI.Window.TRANSPARENT_SCROLL_PANE_STYLE);
+        final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
         table.row().expand();

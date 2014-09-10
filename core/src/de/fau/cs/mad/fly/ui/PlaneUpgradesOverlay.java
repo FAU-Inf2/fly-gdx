@@ -96,7 +96,6 @@ public class PlaneUpgradesOverlay {
 		scrollPane = new ScrollPane(scrollableTable, skin);
 		scrollPane.setFillParent(true);
 		scrollPane.setFadeScrollBars(false);
-		scrollPane.setStyle(skin.get(UI.Window.TRANSPARENT_SCROLL_PANE_STYLE, ScrollPane.ScrollPaneStyle.class));
 		
 		createButtons(PlaneManager.getInstance().getChosenPlane());
 		

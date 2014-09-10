@@ -1,6 +1,7 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -36,16 +37,19 @@ public class SkinManager implements Disposable {
         
         Texture texture = new Texture(Gdx.files.internal("fonts/sans.png"), true);
         texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);
-
-     // font for version info
-        BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/sans.fnt"), new TextureRegion(texture), false);
+        TextureRegion textureRegion = new TextureRegion(texture);
+        FileHandle fontFile = Gdx.files.internal("fonts/sans.fnt");
+        
+        // font for version info
+        BitmapFont font = new BitmapFont(fontFile, textureRegion, false);
         skin.add("small-font", font);
         
-        // standard font
-        font = new BitmapFont(Gdx.files.internal("fonts/sans.fnt"), new TextureRegion(texture), false);
+        // standard font, it has to be recreated, because adding it to the skin,
+        // does not make a copy
+        font = new BitmapFont(fontFile, textureRegion, false);
         font.scale(1.5f);
         skin.add("default-font", font);
-
+        
         skin.load(Gdx.files.internal(skinFile));
     }
     

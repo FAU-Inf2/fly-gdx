@@ -132,8 +132,8 @@ watch
 star
   rotate: false
   xy: 402, 253
-  size: 118, 120
-  orig: 118, 120
+  size: 118, 118
+  orig: 118, 118
   offset: 0, 0
   index: -1
 arrow
