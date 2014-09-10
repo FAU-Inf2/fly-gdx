@@ -69,11 +69,12 @@ public class StatisticsScreen extends BasicScreen {
                 return false;
             }
         });
-        userTable.add(userList).width(UI.Buttons.MAIN_BUTTON_WIDTH).pad(6f).uniform();
-        userTable.row().expand();
+        userTable.add(userList).width(UI.Buttons.MAIN_BUTTON_WIDTH).uniform();
+        userTable.row();
         
         // add user field and button
         newUserField = new TextField("", skin);
+        newUserField.setTextFieldFilter(new UserNameTextFieldFilter());
         newUserField.setTextFieldListener(new TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char key) {
