@@ -33,7 +33,7 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
  * the main menu screen.
  * 
  * 
- * @author Qufang Fan
+ * @author Qufang Fan, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
 public class StatisticsScreen extends BasicScreen {
     
@@ -84,9 +84,8 @@ public class StatisticsScreen extends BasicScreen {
             }
         });
         newUserField.setMessageText(I18n.t("TipsUserName"));
-        userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH);
-        userTable.add(addUserButton).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-        userTable.row().expand();
+        userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
+        userTable.add(addUserButton).pad(UI.Buttons.SPACE_HEIGHT).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         // TODO delete user and change user name
         userTable.layout();
     }
@@ -144,7 +143,6 @@ public class StatisticsScreen extends BasicScreen {
         final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
-        table.row().expand();
         table.add(statisticsPane);
     }
     
@@ -156,8 +154,8 @@ public class StatisticsScreen extends BasicScreen {
         levelgroupTable.pad(200, 0, 0, 0);
         Label selectLevelGroup = new Label(I18n.t("selectLevelGroup"), skin);
         selectLevelGroup.setAlignment(Align.center);
-        levelgroupTable.add(selectLevelGroup).pad(6f).colspan(2).center();
-        levelgroupTable.row().expand();
+        levelgroupTable.add(selectLevelGroup).colspan(2).center();
+        levelgroupTable.row();
         List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
         // create a button for each level group
         int maxRows = (int) Math.ceil((float) levelGroups.size() / (float) UI.Buttons.BUTTONS_IN_A_ROW);
@@ -174,9 +172,9 @@ public class StatisticsScreen extends BasicScreen {
                         ((Fly) Gdx.app.getApplicationListener()).setLevelsStatisScreen(group);
                     }
                 });
-                levelgroupTable.add(button).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
+                levelgroupTable.add(button).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
             }
-            levelgroupTable.row().expand();
+            levelgroupTable.row();
         }
     }
     
