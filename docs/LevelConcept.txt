@@ -1,0 +1,42 @@
+1. Tutorials:
+
+    one tutorial per specific feature / upgrade / etc.
+    with information overlays to explain it
+    with arrow indicators for important objects etc.
+    about 10-20
+
+2. Beginner Levels:
+
+    short levels with minimum amount of different features (max 1 per level)
+    no special features in the first 10 levels, only flying through gates
+    easy gate parcours
+    no need to collect upgrades etc. to win the level
+    about 20-30
+
+when finished, a new spaceship is available
+
+3. Medium Space Levels:
+
+    bigger levels with more difficulties
+    levels in space environment
+    more difficult gate parcours
+    sometimes upgrades needed to finish in time
+    about 30-50
+
+when finished, a new spaceship is available
+
+4. Hard Space Levels:
+
+    elite levels in space environment
+    everything is possible
+    "dirty" rotated gates etc.
+    about 30-50
+
+when finished, a new spaceship is available
+
+5. Medium Planet Levels:
+
+    plane with planet texture on bottom of the player
+    player should not crash with it
+    sky as skybox
+    perhaps small amount of gravity
