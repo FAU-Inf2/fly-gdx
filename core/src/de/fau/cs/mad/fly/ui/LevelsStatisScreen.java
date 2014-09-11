@@ -12,15 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.PostHighscoreService;
 import de.fau.cs.mad.fly.HttpClient.PostUserService;
+import de.fau.cs.mad.fly.HttpClient.PutHighscoreService;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
-import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
 
 /**
@@ -147,20 +148,20 @@ public class LevelsStatisScreen extends BasicScreen {
                             scoreTable.add(new Label(levelname, skin)).pad(6f).right();
                             
                             scoreTable.add(new Label(score.getTotalScore() + "", skin)).pad(6f).uniform();
-                            for (ScoreDetail detail : score.getScoreDetails()) {
-                                scoreTable.row().expand();
-                                scoreTable.add(new Label(I18n.t(detail.getDetailName()), skin)).pad(6f).right();
-                                scoreTable.add(new Label(detail.getValue(), skin)).pad(6f);
-                            }
+//                            for (ScoreDetail detail : score.getScoreDetails()) {
+//                                scoreTable.row().expand();
+//                                scoreTable.add(new Label(I18n.t(detail.getDetailName()), skin)).pad(6f).right();
+//                                scoreTable.add(new Label(detail.getValue(), skin)).pad(6f);
+//                            }
                             
                             Gdx.app.log("timing", " UI one score record UI builded " + (end - begin));
                             uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin);
                             if(score.getIsUploaded()) {
                             	uploadScoreButton.setDisabled(true);
                             }
-                            uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score.getTotalScore(),uploadScoreButton));
-                            scoreTable.row().expand();
-                            scoreTable.add(uploadScoreButton).pad(6f).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
+                            uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score,uploadScoreButton));
+                           // scoreTable.row().expand();
+                            scoreTable.add(uploadScoreButton).pad(6f).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                             scoreTable.row().expand();
                         }
                         scoreTable.add(new Label("", skin)).pad(6f).uniform();
@@ -171,6 +172,7 @@ public class LevelsStatisScreen extends BasicScreen {
                     if (!haveScore) {
                         scoreTable.row();
                         scoreTable.add(new Label(I18n.t("noScore"), skin)).pad(6f).uniform();
+                        scoreTable.row().expand();
                     }
                     
                     // global high score button          
@@ -201,10 +203,10 @@ public class LevelsStatisScreen extends BasicScreen {
         
         private int levelgroupId;
         private int levelId;
-        private int score;
+        private Score score;
         private TextButton button;
         
-        public UploadScoreClickListener(int levelgroup, int level, int score, TextButton button) {
+        public UploadScoreClickListener(int levelgroup, int level, Score score, TextButton button) {
             super();
             levelgroupId = levelgroup;
             levelId = level;
@@ -219,8 +221,9 @@ public class LevelsStatisScreen extends BasicScreen {
             requestData.LevelID = levelId;
             requestData.Score = score;
             requestData.LevelgroupID = levelgroupId;
-            final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener(button);
+            final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener( requestData, button);
             final PostHighscoreService postHighscoreService = new PostHighscoreService(postScoreListener, requestData);
+            final PutHighscoreService putHighscoreService = new PutHighscoreService(postScoreListener, requestData);
             // if the current user have to fly-id (user id got from server side)
             // in database,
             // then call another service PostUserService to get fly-id
@@ -229,8 +232,10 @@ public class LevelsStatisScreen extends BasicScreen {
                 PostUserService postUser = new PostUserService(listener);
                 
                 postUser.execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName());
+            } else if(score.getServerScoreId()>0){
+            	putHighscoreService.execute();
             } else {
-                postHighscoreService.execute();
+            	 postHighscoreService.execute();
             }
         }
     }
@@ -290,13 +295,31 @@ public class LevelsStatisScreen extends BasicScreen {
      * 
      */
     public class PostScoreHttpRespListener implements FlyHttpResponseListener {
-    	private TextButton button;
+		private TextButton button;
+		private PostHighscoreService.RequestData requestData;
     	
-    	public PostScoreHttpRespListener(TextButton button){
-    		this.button = button;
-    	}
+		public PostScoreHttpRespListener(PostHighscoreService.RequestData requestData, TextButton button) {
+			this.requestData = requestData;
+			this.button = button;
+		}
         @Override
         public void successful(Object obj) {
+        	if(requestData.Score.getServerScoreId()>0){
+        		requestData.Score.setIsUploaded(true);
+        		ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), 
+        				requestData.LevelgroupID, requestData.LevelID);
+        	} else {
+        		requestData.Score.setIsUploaded(true);
+        		ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), 
+        				requestData.LevelgroupID, requestData.LevelID);
+        		PostHighscoreService.ResponseData response = (PostHighscoreService.ResponseData)obj;
+        		if(response != null){
+        			requestData.Score.setServerScoreId(response.scoreID);
+        		}
+        		requestData.Score.setIsUploaded(true);
+        		ScoreManager.getInstance().updateServerScoreId(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), 
+        			requestData.LevelgroupID, requestData.LevelID);
+        	}
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
@@ -333,5 +356,5 @@ public class LevelsStatisScreen extends BasicScreen {
         public void cancelled() {
         }
     };
-    
+
 }

@@ -19,6 +19,21 @@ public class Score {
 	private Date reachedDate;
 	
 	private boolean isUploaded;
+	private int serverScoreId = -1;
+
+	/**
+	 * @return the serverScoreId
+	 */
+	public int getServerScoreId() {
+		return serverScoreId;
+	}
+
+	/**
+	 * @param serverScoreId the serverScoreId to set
+	 */
+	public void setServerScoreId(int serverScoreId) {
+		this.serverScoreId = serverScoreId;
+	}
 
 	/**
 	 * @return the isUploaded

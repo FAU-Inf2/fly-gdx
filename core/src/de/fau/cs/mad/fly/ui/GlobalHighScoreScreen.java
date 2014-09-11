@@ -1,7 +1,5 @@
 package de.fau.cs.mad.fly.ui;
 
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -10,10 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService;
-import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.ResponseItem;
+import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.LevelRecords;
+import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.RecordItem;
+import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.ResponseData;
 import de.fau.cs.mad.fly.profile.LevelGroup;
-import de.fau.cs.mad.fly.profile.LevelGroupManager;
-import de.fau.cs.mad.fly.profile.LevelProfile;
 
 /**
  * Screen to display the global highscores for a level group.
@@ -36,36 +34,43 @@ public class GlobalHighScoreScreen extends BasicScreen {
     
     public class GetLevelHighScoreListener implements FlyHttpResponseListener {
         
-        final LevelProfile level;
+        final LevelGroup levelGroup;
         
-        public GetLevelHighScoreListener(LevelProfile level) {
-            this.level = level;
+        public GetLevelHighScoreListener(LevelGroup levelGroup) {
+            this.levelGroup = levelGroup;
         }
         
         @Override
         public void successful(Object obj) {
-            final List<ResponseItem> results = (List<ResponseItem>) obj;
+            final ResponseData results = (ResponseData)obj;
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
+                	infoTable.clear();
                     infoTable.row();
-                    infoTable.add(new Label(I18n.t("level"), skin)).left();
-                    infoTable.add(new Label(I18n.t("player"), skin)).left();
-                    infoTable.add(new Label(I18n.t("score"), skin)).left();
-                    infoTable.row();
-                    if (results != null && results.size() > 0) {
-                        infoTable.row();
-                        infoTable.add(new Label(level.name, skin, "darkGrey")).pad(0, 0, 0, padding).left();
-                        
-                        for (ResponseItem item : results) {
+                    if (results != null && results.records.size() > 0) {                   	
+                        for (LevelRecords item : results.records) {                        	
+                        	String levelname = levelGroup.getLevelName(item.levelID);
+                        	infoTable.row();
+                        	infoTable.add(new Label(I18n.t("level"), skin)).left();
+                            infoTable.add(new Label(levelname, skin, "darkGrey")).pad(0, 0, 0, padding).left();
                             infoTable.row();
-                            infoTable.add(new Label(item.FlyID + "", skin, "darkGrey")).pad(0, 0, 0, padding);
-                            infoTable.add(new Label(item.Username, skin, "darkGrey")).pad(0, 0, 0, padding).left();
-                            infoTable.add(new Label(item.Score + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
+                            infoTable.add(new Label(I18n.t("flyID"), skin)).left();                           
+                            infoTable.add(new Label(I18n.t("player"), skin)).left();
+                            infoTable.add(new Label(I18n.t("score"), skin)).left();
+                            infoTable.add(new Label(I18n.t("rank"), skin)).left();
+                            
+                        	for (RecordItem item0 : item.records) {
+                            infoTable.row();
+                            infoTable.add(new Label(item0.flyID + "", skin, "darkGrey")).pad(0, 0, 0, padding);
+                            infoTable.add(new Label(item0.username, skin, "darkGrey")).pad(0, 0, 0, padding).left();
+                            infoTable.add(new Label(item0.score + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
+                            infoTable.add(new Label(item0.rank + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
+                        	}
                         }
                     } else {
                         infoTable.row();
-                        infoTable.add(new Label(level.name, skin, "darkGrey")).pad(0, 0, 0, padding).left();
+                        infoTable.add(new Label(levelGroup.name, skin, "darkGrey")).pad(0, 0, 0, padding).left();
                         infoTable.row();
                         infoTable.add(new Label(I18n.t("noScore"), skin, "darkGrey"));
                     }
@@ -102,7 +107,7 @@ public class GlobalHighScoreScreen extends BasicScreen {
         table.setFillParent(true);
         stage.addActor(table);
         infoTable = new Table();
-        
+        infoTable.add(new Label(I18n.t("StatusLoading"), skin));         
         final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
@@ -110,18 +115,11 @@ public class GlobalHighScoreScreen extends BasicScreen {
         table.add(statisticsPane);
     }
     
-    protected void generateContentDynamic() {
-        infoTable.clear();
-        
-        // todo
-        List<LevelProfile> allLevels = LevelGroupManager.getInstance().getLevelGroups().get(0).getLevels();
-        for (LevelProfile level : allLevels) {
-            final FlyHttpResponseListener listener = new GetLevelHighScoreListener(level);
-            GetLevelHighScoreService getLevelHighScoreService = new GetLevelHighScoreService(listener);
-            
-            getLevelHighScoreService.execute(level.id);
-        }
-    }
+	protected void generateContentDynamic() {
+		final FlyHttpResponseListener listener = new GetLevelHighScoreListener(levelGroup);
+		GetLevelHighScoreService getLevelHighScoreService = new GetLevelHighScoreService(listener);
+		getLevelHighScoreService.execute(2, levelGroup.id);
+	}
     
     @Override
     public void show() {
