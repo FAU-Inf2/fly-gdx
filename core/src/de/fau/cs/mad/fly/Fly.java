@@ -54,7 +54,7 @@ public class Fly extends Game implements Loadable<Fly> {
      * <p>
      * Currently debug mode only disables the level dependencies.
      */
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
     
     private LoadingScreen<Fly> splashScreen;
     private LevelGroupScreen levelGroupScreen;

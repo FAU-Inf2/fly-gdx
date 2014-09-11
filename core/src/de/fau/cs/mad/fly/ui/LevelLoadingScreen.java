@@ -42,7 +42,7 @@ public class LevelLoadingScreen extends LoadingScreen<Level> {
                     dispose();
                 }
             });
-            table.add(button).top().expand();
+            table.add(button).top().width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).expand();
             if(Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
                 final TextButton button2 = new TextButton("Compass available: " + Boolean.toString(Gdx.input.isPeripheralAvailable(Input.Peripheral.Compass)), skin);
                 table.add(button2).bottom().expand();
