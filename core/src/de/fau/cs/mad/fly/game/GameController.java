@@ -88,6 +88,9 @@ public class GameController implements TimeIsUpListener {
      * @return {@link #instance}
      */
     public static GameController getInstance() {
+        if(instance == null) {
+            instance = new GameController();
+        }
         return instance;
     }
     

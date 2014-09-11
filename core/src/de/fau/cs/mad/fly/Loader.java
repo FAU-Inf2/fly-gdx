@@ -129,13 +129,12 @@ public class Loader implements Loadable<Level> {
                 setCurrentLevel(level);
                 ((Fly) Gdx.app.getApplicationListener()).initGameController();
                 
-                loadingScreen.addButton();
+                loadingScreen.showButton();
             }
         });
     }
     
     public void dispose() {
-        
         instance = null;
         Gdx.app.log("Loader", "loader is disposed");
     }

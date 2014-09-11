@@ -70,19 +70,18 @@ import de.fau.cs.mad.fly.ui.UI;
  * 
  */
 public class GameControllerBuilder {
-    private GameController gc = new GameController();
     private Fly game;
     private Player player;
     private PlayerProfile playerProfile;
     private Stage stage;
     private Level level;
-    private ArrayList<IFeatureLoad> optionalFeaturesToLoad;
-    private ArrayList<IFeatureInit> optionalFeaturesToInit;
-    private ArrayList<IFeatureUpdate> optionalFeaturesToUpdate;
-    private ArrayList<IFeatureRender> optionalFeaturesToRender;
-    private ArrayList<IFeatureDraw> optionalFeaturesToDraw;
-    private ArrayList<IFeatureFinish> optionalFeaturesToFinish;
-    private ArrayList<IFeatureDispose> optionalFeaturesToDispose;
+    private List<IFeatureLoad> optionalFeaturesToLoad;
+    private List<IFeatureInit> optionalFeaturesToInit;
+    private List<IFeatureUpdate> optionalFeaturesToUpdate;
+    private List<IFeatureRender> optionalFeaturesToRender;
+    private List<IFeatureDraw> optionalFeaturesToDraw;
+    private List<IFeatureFinish> optionalFeaturesToFinish;
+    private List<IFeatureDispose> optionalFeaturesToDispose;
     private FlightController flightController;
     private CameraController cameraController;
     private TimeController timeController;
@@ -102,14 +101,7 @@ public class GameControllerBuilder {
      *         selected settings
      */
     public GameControllerBuilder init(final Fly game) {
-        // clear everything in the builder from a possible earlier call
-        optionalFeaturesToLoad = new ArrayList<IFeatureLoad>();
-        optionalFeaturesToInit = new ArrayList<IFeatureInit>();
-        optionalFeaturesToUpdate = new ArrayList<IFeatureUpdate>();
-        optionalFeaturesToRender = new ArrayList<IFeatureRender>();
-        optionalFeaturesToDraw = new ArrayList<IFeatureDraw>();
-        optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
-        optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
+        clearFeatureLists();
         
         this.game = game;
         player = new Player();
@@ -155,9 +147,9 @@ public class GameControllerBuilder {
                 if (g.isDummy()) {
                     return;
                 }
-                Player player = GameController.getInstance().getPlayer();
+                Player currentPlayer = GameController.getInstance().getPlayer();
                 
-                if (!player.decreaseLives()) {
+                if (!currentPlayer.decreaseLives()) {
                     // Debug.setOverlay(0, "DEAD");
                     game.getGameController().finishGame(false);
                 } else {
@@ -170,20 +162,22 @@ public class GameControllerBuilder {
         
         createDecoRigidBodies(collisionDetector, level);
         
-        Gdx.app.log("Builder.init", "Registering EventListeners for level.");
-        
         gateCircuit.addListener(new GateCircuitAdapter() {
             @Override
             public void onGatePassed(GateGoal passed) {
                 GateCircuit gateCircuit = level.getGateCircuit();
                 
+                List<GateGoal> gates;
                 if (level.head.isEndless()) {
-                    for (GateGoal g : generator.getGates())
-                        g.unmark();
+                    gates = generator.getGates();
                 } else {
-                    for (GateGoal g : gateCircuit.allGateGoals())
-                        g.unmark();
+                    gates = gateCircuit.allGateGoals();
                 }
+                int size = gates.size();
+                for (int i = 0; i < size; i++) {
+                    gates.get(i).unmark();
+                }
+                
                 int len = passed.successors.length;
                 for (int i = 0; i < len; i++) {
                     gateCircuit.getGateGoalById(passed.successors[i]).mark();
@@ -206,8 +200,6 @@ public class GameControllerBuilder {
             });
         }
         
-        Gdx.app.log("Builder.init", "Final work for level done.");
-        
         checkAndAddSettingFeatures();
         
         checkAndAddUpgradeHandler();
@@ -215,6 +207,31 @@ public class GameControllerBuilder {
         addLevelFeatures(level);
         
         return this;
+    }
+    
+    /**
+     * Clears all feature lists, when created, else they are new created.
+     * <p>
+     * As they are created together it is sufficient to check only one of them.
+     */
+    private void clearFeatureLists() {
+        if (optionalFeaturesToLoad == null) {
+            optionalFeaturesToLoad = new ArrayList<IFeatureLoad>();
+            optionalFeaturesToInit = new ArrayList<IFeatureInit>();
+            optionalFeaturesToUpdate = new ArrayList<IFeatureUpdate>();
+            optionalFeaturesToRender = new ArrayList<IFeatureRender>();
+            optionalFeaturesToDraw = new ArrayList<IFeatureDraw>();
+            optionalFeaturesToFinish = new ArrayList<IFeatureFinish>();
+            optionalFeaturesToDispose = new ArrayList<IFeatureDispose>();
+        } else {
+            optionalFeaturesToLoad.clear();
+            optionalFeaturesToInit.clear();
+            optionalFeaturesToUpdate.clear();
+            optionalFeaturesToRender.clear();
+            optionalFeaturesToDraw.clear();
+            optionalFeaturesToFinish.clear();
+            optionalFeaturesToDispose.clear();
+        }
     }
     
     /**
@@ -344,7 +361,7 @@ public class GameControllerBuilder {
      *            in the json.
      */
     private void addLevelFeatures(Level level) {
-        if (level.levelClass == null || level.levelClass.equals("") || level.levelClass.equals("DefaultClass")) {
+        if (level.levelClass == null || "".equals(level.levelClass) || level.levelClass.equals("DefaultClass")) {
             addDefaultLevel();
         } else {
             try {
@@ -360,6 +377,7 @@ public class GameControllerBuilder {
                 
                 Gdx.app.log("Builder", level.levelClass + " used.");
             } catch (Exception e) {
+                Gdx.app.log("GameController.addFeatures", "unknown level: " + level.levelClass);
                 addDefaultLevel();
             }
         }
@@ -563,7 +581,7 @@ public class GameControllerBuilder {
      * @return new GameController
      */
     public GameController build() {
-        GameController.instance = gc;
+        GameController gc = GameController.getInstance();
         gc.stage = stage;
         gc.optionalFeaturesToLoad = optionalFeaturesToLoad;
         gc.optionalFeaturesToInit = optionalFeaturesToInit;
@@ -585,7 +603,7 @@ public class GameControllerBuilder {
         level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override
             public void onFinished() {
-                gc.finishGame(true);
+                GameController.getInstance().finishGame(true);
             }
         });
         return gc;
