@@ -60,6 +60,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         TextureRegionDrawable drawableGear = new TextureRegionDrawable(gear);
         settingsButton.getImage().setDrawable(drawableGear);
         Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
+        Button playerButton = new ImageButton(skin, "player");
         
         Label versionLabel = new Label(createVersion(), skin, "small");
         
@@ -81,7 +82,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         table.row().expand();
         table.add();
         table.add(statsButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-        table.add();
+        table.add(playerButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).right();
         table.row();
         table.add();
         table.add();
@@ -115,6 +116,13 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ((Fly) Gdx.app.getApplicationListener()).setSettingScreen();
+            }
+        });
+        
+        playerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((Fly) Gdx.app.getApplicationListener()).setPlayerScreen();
             }
         });
         

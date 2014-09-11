@@ -19,7 +19,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	settings: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: gear, imageDown: gear },
-	help: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: questionmark, imageDown: questionmark }
+	help: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: questionmark, imageDown: questionmark },
+	player: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: guy, imageDown: guy }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: transparent-rect, hScroll: default-scroll, vScrollKnob: default-round-large },

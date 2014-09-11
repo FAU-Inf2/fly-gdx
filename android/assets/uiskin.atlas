@@ -190,9 +190,16 @@ grey-select-drop-down
   index: -1
 dialog-background
   rotate: false
-  xy: 524, 397
+  xy: 710, 0
   size: 131, 131
   split: 65, 65, 65, 65
   orig: 133, 133
+  offset: 0, 0
+  index: -1
+guy
+  rotate: false
+  xy: 524, 274
+  size: 225, 254
+  orig: 225, 254
   offset: 0, 0
   index: -1

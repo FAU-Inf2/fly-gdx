@@ -27,6 +27,7 @@ import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
 import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
+import de.fau.cs.mad.fly.ui.PlayerScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.StatisticsScreen;
@@ -66,6 +67,7 @@ public class Fly extends Game implements Loadable<Fly> {
     private StatisticsScreen statisticsScreen;
     private GameScreen gameScreen;
     private GlobalHighScoreScreen globalHighScoreScreen;
+    private PlayerScreen playerScreen;
     
     private GameController gameController;
     
@@ -200,7 +202,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * Lazy loading of screen to choose level group.
+     * Switches the current screen to the {@link LevelGroupScreen}.
      */
     public void setLevelGroupScreen() {
         if (levelGroupScreen == null) {
@@ -210,7 +212,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * Lazy loading of screen to choose level.
+     * Switches the current screen to the {@link LevelChooserScreen}.
      */
     public void setLevelChooserScreen(LevelGroup group) {
         if (levelChooserScreen == null) {
@@ -221,7 +223,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * Lazy loading of screen to choose plane.
+     * Switches the current screen to the {@link PlaneChooserScreen}.
      */
     public void setPlaneChoosingScreen() {
         if (planeChooserScreen == null) {
@@ -231,7 +233,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * Lazy loading of screen to upgrade the planes.
+     * Switches the current screen to the {@link PlaneUpgradeScreen}.
      */
     public void setPlaneUpgradeScreen() {
         if (planeUpgradeScreen == null) {
@@ -241,7 +243,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * Switches the current Screen to the SplashScreen.
+     * Switches the current screen to the {@link SplashScreen}.
      */
     public void setSplashScreen() {
         if (splashScreen == null) {
@@ -251,7 +253,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * set game screen as current screen.
+     * Switches the current screen to the {@link GameScreen}.
      */
     public void setGameScreen() {
         if (gameScreen == null) {
@@ -261,7 +263,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * Switches the current Screen to the MainMenuScreen.
+     * Switches the current screen to the {@link MainMenuScreen}.
      */
     public void setMainMenuScreen() {
         if (mainMenuScreen == null) {
@@ -271,7 +273,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * Switches the current Screen to the SettingScreen.
+     * Switches the current screen to the {@link SettingScreen}.
      * 
      * It is recreated when the player has switched.
      */
@@ -280,6 +282,59 @@ public class Fly extends Game implements Loadable<Fly> {
             settingScreen = new SettingScreen();
         }
         setScreen(settingScreen);
+    }
+    
+    /**
+     * Switches the current screen to the {@link StatisticsScreen}.
+     */
+    public void setStatisticsScreen() {
+        if (statisticsScreen == null) {
+            statisticsScreen = new StatisticsScreen();
+        }
+        setScreen(statisticsScreen);
+    }
+    
+    /**
+     * Switches the current screen to the {@link StatisticsScreen}.
+     */
+    public void setGlobalHighScoreScreen(LevelGroup levelGroup) {
+        if (globalHighScoreScreen == null) {
+            globalHighScoreScreen = new GlobalHighScoreScreen(levelGroup);
+        }
+        setScreen(globalHighScoreScreen);
+    }
+    
+    /**
+     * Switches the current screen to the {@link PlayerScreen}.
+     */
+    public void setPlayerScreen() {
+        if (playerScreen == null) {
+            playerScreen = new PlayerScreen();
+        }
+        setScreen(playerScreen);
+    }
+    
+    /**
+     * Switches the current Screen to the {@link LevelStatisticsScreen}.
+     */
+    public void setLevelsStatisScreen(LevelGroup group) {
+        LevelsStatisScreen levelsStatisScreen = new LevelsStatisScreen(group);
+        setScreen(levelsStatisScreen);
+    }
+    
+    /**
+     * set screen. Add new check if it is switching between 2d and 3d screen
+     * 
+     * @param screen
+     *            may be {@code null}
+     */
+    @Override
+    public void setScreen(Screen screen) {
+        int newMode = getScreenMode(screen);
+        if (getScreenMode(screen) != current3d2dMode) {
+            onMode3d2dChanged(newMode);
+        }
+        super.setScreen(screen);
     }
     
     /**
@@ -292,34 +347,6 @@ public class Fly extends Game implements Loadable<Fly> {
         gameController = builder.build();
         Gdx.app.log("Fly.initGameController", "Controller built.");
         gameController.loadGame();
-    }
-    
-    /**
-     * Switches the current Screen to the StatisticsScreen.
-     */
-    public void setStatisticsScreen() {
-        if (statisticsScreen == null) {
-            statisticsScreen = new StatisticsScreen();
-        }
-        setScreen(statisticsScreen);
-    }
-    
-    /**
-     * Switches the current Screen to the StatisticsScreen.
-     */
-    public void setGlobalHighScoreScreen(LevelGroup levelGroup) {
-        if (globalHighScoreScreen == null) {
-            globalHighScoreScreen = new GlobalHighScoreScreen(levelGroup);
-        }
-        setScreen(globalHighScoreScreen);
-    }
-    
-    /**
-     * Switches the current Screen to the level StatisticsScreen.
-     */
-    public void setLevelsStatisScreen(LevelGroup group) {
-        LevelsStatisScreen levelsStatisScreen = new LevelsStatisScreen(group);
-        setScreen(levelsStatisScreen);
     }
     
     protected ArrayList<EventListener> mode3d2dChangedListeners = new ArrayList<EventListener>();
@@ -348,21 +375,6 @@ public class Fly extends Game implements Loadable<Fly> {
             }
         }
         current3d2dMode = newMode;
-    }
-    
-    /**
-     * set screen. Add new check if it is switching between 2d and 3d screen
-     * 
-     * @param screen
-     *            may be {@code null}
-     */
-    @Override
-    public void setScreen(Screen screen) {
-        int newMode = getScreenMode(screen);
-        if (getScreenMode(screen) != current3d2dMode) {
-            onMode3d2dChanged(newMode);
-        }
-        super.setScreen(screen);
     }
     
     /**
