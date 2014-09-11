@@ -15,38 +15,43 @@ import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
- * Level script file for the gate tutorial level with only up and down movement allowed.
+ * Level script file for the gate tutorial level with only up and down movement
+ * allowed.
  * 
  * @author Tobi
- *
+ * 
  */
 public class RollTutorialLevel implements ILevel, IFeatureInit, GateCircuitListener {
-	
-	@Override
-	public void create(GameControllerBuilder builder) {
-		builder.addFeatureToLists(this);
-	}
-
-	@Override
-	public void init(GameController game) {
-		game.getFlightController().setAzimuthFactorChange(0.0f);
-		
+    
+    @Override
+    public void create(GameControllerBuilder builder) {
+        builder.addFeatureToLists(this);
+    }
+    
+    @Override
+    public void init(GameController game) {
+        game.getFlightController().setAzimuthFactorChange(0.0f);
+        
         Preferences preferences = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences();
         if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
-        	InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.roll.touch"), 5);
+            InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.roll.touch"), 5);
         } else {
-        	InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.roll.sensor"), 5);
+            InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.roll.sensor"), 5);
         }
-	}
-
-	@Override
-	public void onFinished() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onGatePassed(GateGoal gate) {
-		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
-	}
+    }
+    
+    @Override
+    public void onFinished() {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void onGatePassed(GateGoal gate) {
+        if (gate.getGateId() == 0) {
+            InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.red.gate"), 4);
+        } else if (gate.getGateId() < 3) {
+            InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
+        }
+    }
 }

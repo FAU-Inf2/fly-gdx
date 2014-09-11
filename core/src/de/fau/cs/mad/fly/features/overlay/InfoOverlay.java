@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
@@ -50,7 +51,7 @@ public class InfoOverlay implements IFeatureUpdate {
 		innerTable.setBackground(background);
 		
 		infoLabel = new Label("", skin);
-		
+		infoLabel.setAlignment(Align.center);
 		innerTable.add(infoLabel);
 		outerTable.add(innerTable).top().pad(UI.Window.BORDER_SPACE).expand();
 		stage.addActor(outerTable);
