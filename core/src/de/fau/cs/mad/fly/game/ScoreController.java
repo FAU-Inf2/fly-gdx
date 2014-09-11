@@ -15,42 +15,44 @@ import de.fau.cs.mad.fly.res.GateGoal;
  * Manages the score in the level while the level is playing.
  * 
  * @author Tobi
- *
+ * 
  */
-public class ScoreController extends GateCircuitAdapter {    
-	/**
-	 * The total score.
-	 */
-	private int totalScore = 0;
-	
-	/**
-	 * The score from the passed gates.
-	 */
-	private int gatePassedScore = 0;
-	
-	/**
-	 * The score from collected bonus points.
-	 */
-	private int bonusPoints = 0;
-	
-	/**
-	 * List of score change listeners which get notified if the score has changed.
-	 */
+public class ScoreController extends GateCircuitAdapter {
+    /**
+     * The total score.
+     */
+    private int totalScore = 0;
+    
+    /**
+     * The score from the passed gates.
+     */
+    private int gatePassedScore = 0;
+    
+    /**
+     * The score from collected bonus points.
+     */
+    private int bonusPoints = 0;
+    
+    /**
+     * List of score change listeners which get notified if the score has
+     * changed.
+     */
     private List<ScoreChangeListener> scoreChangeListeners;
-
-	/**
-	 * Creates a new score controller.
-	 */
-	public ScoreController() {
-		scoreChangeListeners = new ArrayList<ScoreChangeListener>();
-	}
-	
-	/**
-	 * Returns the end score with score details.
-	 * 
-	 * @param gameController		The game controller.
-	 * @return the score of the player with score details.
-	 */
+    
+    /**
+     * Creates a new score controller.
+     */
+    public ScoreController() {
+        scoreChangeListeners = new ArrayList<ScoreChangeListener>();
+    }
+    
+    /**
+     * Returns the end score with score details.
+     * 
+     * @param gameController
+     *            The game controller.
+     * @return the score of the player with score details.
+     */
     public Score getEndScore(GameController gameController) {
         if (gameController.isVictory()) {
             Score newScore = new Score();
@@ -63,30 +65,33 @@ public class ScoreController extends GateCircuitAdapter {
             newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), leftTimeScore + ""));
             score += leftTimeScore;
             
-            /*int leftCollisionTimeScore = leftCollisionTime * 30;
-            newScore.getScoreDetails().add(new ScoreDetail(("leftCollisionTime"), leftCollisionTimeScore + ""));
-            score += leftCollisionTimeScore;*/
-
+            /*
+             * int leftCollisionTimeScore = leftCollisionTime * 30;
+             * newScore.getScoreDetails().add(new
+             * ScoreDetail(("leftCollisionTime"), leftCollisionTimeScore + ""));
+             * score += leftCollisionTimeScore;
+             */
+            
             newScore.getScoreDetails().add(new ScoreDetail(("bonusPoints"), bonusPoints + ""));
             score += bonusPoints;
-
+            
             newScore.setTotalScore(score);
             return newScore;
-        } else if (gameController.getLevel().head.isEndless()){
-        	  Score newScore = new Score();
-              newScore.setReachedDate(new Date());
-              
-              int score = gatePassedScore;
-              newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + ""));
-              int leftTimeScore = gameController.getTimeController().getIntegerTimeSinceStart() * 10;
-              newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), leftTimeScore + ""));
-              score += leftTimeScore;
-              
-              newScore.getScoreDetails().add(new ScoreDetail(("bonusPoints"), bonusPoints + ""));
-              score += bonusPoints;
-              newScore.setTotalScore(score);
-              return newScore;
-        	
+        } else if (gameController.getLevel().head.isEndless()) {
+            Score newScore = new Score();
+            newScore.setReachedDate(new Date());
+            
+            int score = gatePassedScore;
+            newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + ""));
+            int leftTimeScore = gameController.getTimeController().getIntegerTimeSinceStart() * 10;
+            newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), leftTimeScore + ""));
+            score += leftTimeScore;
+            
+            newScore.getScoreDetails().add(new ScoreDetail(("bonusPoints"), bonusPoints + ""));
+            score += bonusPoints;
+            newScore.setTotalScore(score);
+            return newScore;
+            
         } else {
             return new Score();
         }
@@ -94,29 +99,32 @@ public class ScoreController extends GateCircuitAdapter {
     
     /**
      * Adds or subtracts bonus points.
-     * @param bonusPoints		The bonus points to add.
+     * 
+     * @param bonusPoints
+     *            The bonus points to add.
      */
     public void addBonusPoints(int bonusPoints) {
-    	this.bonusPoints += bonusPoints;
-    	this.totalScore += bonusPoints;
-    	scoreChanged();
+        this.bonusPoints += bonusPoints;
+        this.totalScore += bonusPoints;
+        scoreChanged();
     }
     
     /**
      * Returns the current total score.
+     * 
      * @return totalScore
      */
     public int getTotalScore() {
-    	return totalScore;
+        return totalScore;
     }
     
     /**
      * Notifies all {@link ScoreChangeListener}
      */
     private void scoreChanged() {
-    	int size = scoreChangeListeners.size();
+        int size = scoreChangeListeners.size();
         for (int i = 0; i < size; i++) {
-        	scoreChangeListeners.get(i).scoreChanged(totalScore);
+            scoreChangeListeners.get(i).scoreChanged(totalScore);
         }
     }
     
@@ -124,13 +132,13 @@ public class ScoreController extends GateCircuitAdapter {
      * Register a new {@link ScoreChangeListener}
      */
     public void registerScoreChangeListener(ScoreChangeListener listener) {
-    	scoreChangeListeners.add(listener);
+        scoreChangeListeners.add(listener);
     }
     
     @Override
     public void onGatePassed(GateGoal gate) {
-    	this.gatePassedScore += gate.getScore();
-    	this.totalScore += gate.getScore();
-    	scoreChanged();
+        this.gatePassedScore += gate.getScore();
+        this.totalScore += gate.getScore();
+        scoreChanged();
     }
 }

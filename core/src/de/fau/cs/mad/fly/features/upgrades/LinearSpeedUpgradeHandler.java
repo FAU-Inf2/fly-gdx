@@ -12,94 +12,95 @@ import de.fau.cs.mad.fly.player.IPlane;
  * Used to display and handle linear increasing and decreasing speed upgrades.
  * 
  * @author Tobi
- *
+ * 
  */
 public class LinearSpeedUpgradeHandler extends CollectibleObjects implements IFeatureInit, IFeatureUpdate {
-	
-	/**
-	 * The plane which speed should be changed after a speed upgrade was collected.
-	 */
-	private IPlane plane;
-	
-	/**
-	 * Determines if the speed upgrade was collected and has to be handled.
-	 */
-	private boolean isCollected = false;
-
-	/**
-	 * A backup of the old speed.
-	 */
-	private float oldSpeed;
-	
-	/**
-	 * A backup for the maximum speed.
-	 */
-	private float maxSpeed;
-	
-	/**
-	 * The speed factor of the speed upgrade increase.
-	 */
-	private float upgradeIncreaseFactor;
-	
-	/**
-	 * The duration of the speed upgrade increase.
-	 */
-	private float upgradeIncreaseDuration;
-	
-	/**
-	 * The speed factor of the speed upgrade decrease.
-	 */
-	private float upgradeDecreaseFactor;
-	
-	/**
-	 * The duration the speed upgrade was already used.
-	 */
-	private float duration;
-	
-	/**
-	 * Creates a new linear speed upgrade handler.
-	 */
-	public LinearSpeedUpgradeHandler() {
-		super("LinearSpeedUpgrade");
-	}
-	
-	@Override
-	public void init(GameController game) {
-		plane = game.getPlayer().getPlane();
-	}
-
-	@Override
-	protected void handleCollecting(Collectible c) {
-		LinearSpeedUpgrade upgrade = (LinearSpeedUpgrade) c;
-		
-		isCollected = true;
-		
-		oldSpeed = plane.getSpeed();
-		duration = 0.0f;
-		
-		upgradeIncreaseFactor = upgrade.getIncreaseFactor();
-		upgradeIncreaseDuration = upgrade.getIncreaseDuration();
-		upgradeDecreaseFactor = upgrade.getDecreaseFactor();
-	}
-
-	@Override
-	public void update(float delta) {
-		if(!isCollected) {
-			return;
-		}
-		
-		duration += delta;
-		
-		if(duration <= upgradeIncreaseDuration) {
-			maxSpeed = oldSpeed + duration * upgradeIncreaseFactor;
-			plane.setSpeed(maxSpeed);
-		} else if(duration > upgradeIncreaseDuration) {
-			if(plane.getSpeed() < oldSpeed) {
-				plane.setSpeed(oldSpeed);
-				isCollected = false;
-			} else {
-				plane.setSpeed(maxSpeed - (duration - upgradeIncreaseDuration) * upgradeDecreaseFactor);
-			}
-		}
-	}
+    
+    /**
+     * The plane which speed should be changed after a speed upgrade was
+     * collected.
+     */
+    private IPlane plane;
+    
+    /**
+     * Determines if the speed upgrade was collected and has to be handled.
+     */
+    private boolean isCollected = false;
+    
+    /**
+     * A backup of the old speed.
+     */
+    private float oldSpeed;
+    
+    /**
+     * A backup for the maximum speed.
+     */
+    private float maxSpeed;
+    
+    /**
+     * The speed factor of the speed upgrade increase.
+     */
+    private float upgradeIncreaseFactor;
+    
+    /**
+     * The duration of the speed upgrade increase.
+     */
+    private float upgradeIncreaseDuration;
+    
+    /**
+     * The speed factor of the speed upgrade decrease.
+     */
+    private float upgradeDecreaseFactor;
+    
+    /**
+     * The duration the speed upgrade was already used.
+     */
+    private float duration;
+    
+    /**
+     * Creates a new linear speed upgrade handler.
+     */
+    public LinearSpeedUpgradeHandler() {
+        super("LinearSpeedUpgrade");
+    }
+    
+    @Override
+    public void init(GameController game) {
+        plane = game.getPlayer().getPlane();
+    }
+    
+    @Override
+    protected void handleCollecting(Collectible c) {
+        LinearSpeedUpgrade upgrade = (LinearSpeedUpgrade) c;
+        
+        isCollected = true;
+        
+        oldSpeed = plane.getSpeed();
+        duration = 0.0f;
+        
+        upgradeIncreaseFactor = upgrade.getIncreaseFactor();
+        upgradeIncreaseDuration = upgrade.getIncreaseDuration();
+        upgradeDecreaseFactor = upgrade.getDecreaseFactor();
+    }
+    
+    @Override
+    public void update(float delta) {
+        if (!isCollected) {
+            return;
+        }
+        
+        duration += delta;
+        
+        if (duration <= upgradeIncreaseDuration) {
+            maxSpeed = oldSpeed + duration * upgradeIncreaseFactor;
+            plane.setSpeed(maxSpeed);
+        } else if (duration > upgradeIncreaseDuration) {
+            if (plane.getSpeed() < oldSpeed) {
+                plane.setSpeed(oldSpeed);
+                isCollected = false;
+            } else {
+                plane.setSpeed(maxSpeed - (duration - upgradeIncreaseDuration) * upgradeDecreaseFactor);
+            }
+        }
+    }
 }

@@ -35,10 +35,9 @@ public class TimePointTutorial implements ILevel, IFeatureInit, GateCircuitListe
     
     @Override
     public void onGatePassed(GateGoal gate) {
-        if(gate.getGateId() == 0) {
+        if (gate.getGateId() == 0) {
             InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.points"), 3);
-        }
-        else if (gate.getGateId() == 2) {
+        } else if (gate.getGateId() == 2) {
             InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.remaining.time"), 3);
         }
     }

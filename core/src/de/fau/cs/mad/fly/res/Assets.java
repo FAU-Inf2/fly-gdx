@@ -14,7 +14,7 @@ import de.fau.cs.mad.fly.game.GameModel;
  */
 public class Assets {
     public static AssetManager manager;
-
+    
     public static final AssetDescriptor<TextureAtlas> textureAtlas = new AssetDescriptor<TextureAtlas>("uiskin.atlas", TextureAtlas.class);
     public static final AssetDescriptor<Texture> background = new AssetDescriptor<Texture>("background.jpg", Texture.class);
     
@@ -35,10 +35,12 @@ public class Assets {
     }
     
     public static void unload(String assetName) {
-    	//TODO: manager.contains needs the assetName but manager.unload the fileName
-    	// currently assetName is actually the fileName so manager.contains is always false
-        //if (manager.containsAsset(assetName)) {
-            manager.unload(assetName);
-        //}
+        // TODO: manager.contains needs the assetName but manager.unload the
+        // fileName
+        // currently assetName is actually the fileName so manager.contains is
+        // always false
+        // if (manager.containsAsset(assetName)) {
+        manager.unload(assetName);
+        // }
     }
 }

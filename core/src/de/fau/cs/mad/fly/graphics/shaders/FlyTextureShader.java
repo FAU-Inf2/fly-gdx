@@ -127,43 +127,43 @@ import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 
 public class FlyTextureShader extends FlyBaseShader {
-
+    
     private String VERTEX_SHADER = "shaders/vertex.glsl";
     private String FRAGMENT_SHADER = "shaders/texture.fragment.glsl";
     private int texture1;
-
+    
     public FlyTextureShader(Renderable renderable) {
         super(renderable);
     }
-
+    
     @Override
     public void init() {
-        //Prepare and compile the ShaderProgram
+        // Prepare and compile the ShaderProgram
         super.createShaderProgram(VERTEX_SHADER, FRAGMENT_SHADER);
-
+        
         super.init();
-
+        
         texture1 = program.getUniformLocation("texture1");
     }
-
+    
     @Override
     public int compareTo(Shader other) {
         return 0;
     }
-
+    
     @Override
     public boolean canRender(Renderable instance) {
         return (instance.environment.equals(environment) && instance.material.has(TextureAttribute.Diffuse) && !instance.material.has(TextureAttribute.Normal));
     }
-
+    
     @Override
     public void render(Renderable renderable) {
-        //Set up uniforms
+        // Set up uniforms
         super.setUpBaseUniforms(renderable);
-
-        //Bind texture
-		((TextureAttribute) renderable.material.get(TextureAttribute.Diffuse)).textureDescription.texture.bind(0);
-		program.setUniformi(texture1, 0);
-		renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize);
+        
+        // Bind texture
+        ((TextureAttribute) renderable.material.get(TextureAttribute.Diffuse)).textureDescription.texture.bind(0);
+        program.setUniformi(texture1, 0);
+        renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize);
     }
 }

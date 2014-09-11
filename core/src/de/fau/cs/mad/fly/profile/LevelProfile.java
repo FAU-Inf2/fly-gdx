@@ -1,9 +1,10 @@
 package de.fau.cs.mad.fly.profile;
+
 /**
  * Level properties for read level from json file
  * 
  * @author Fan
- *
+ * 
  */
 public class LevelProfile {
     public String name;
@@ -11,6 +12,6 @@ public class LevelProfile {
     public String file;
     
     public boolean isEndless() {
-    	return name.equals("Endless");
+        return name.equals("Endless");
     }
 }

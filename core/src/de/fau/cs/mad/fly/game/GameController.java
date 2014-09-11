@@ -74,7 +74,6 @@ public class GameController implements TimeIsUpListener {
     
     private GameState gameState;
     
-    
     private TimeController timeController;
     
     private InputMultiplexer inputProcessor;
@@ -85,10 +84,11 @@ public class GameController implements TimeIsUpListener {
     
     /**
      * Getter for the singleton game controller.
+     * 
      * @return {@link #instance}
      */
     public static GameController getInstance() {
-    	return instance;
+        return instance;
     }
     
     /**
@@ -160,9 +160,9 @@ public class GameController implements TimeIsUpListener {
      * {@link #optionalFeaturesToLoad} are loaded.
      */
     public void loadGame() {
-    	camera = cameraController.getCamera();
+        camera = cameraController.getCamera();
         ParticleController.getInstance().load(camera, batch);
-    	
+        
         // load features
         for (IFeatureLoad optionalFeature : optionalFeaturesToLoad) {
             optionalFeature.load(this);
@@ -206,15 +206,17 @@ public class GameController implements TimeIsUpListener {
     /**
      * Sets the game state to finished and ends the game.
      * 
-     * @param victory		True, if the player was victorious, false if the time is over or he is dead.
+     * @param victory
+     *            True, if the player was victorious, false if the time is over
+     *            or he is dead.
      */
     public void finishGame(boolean victory) {
-    	if(victory) {
-    		gameState = GameState.VICTORY;
-    	} else {
-    		gameState = GameState.GAMEOVER;
-    	}
-
+        if (victory) {
+            gameState = GameState.VICTORY;
+        } else {
+            gameState = GameState.GAMEOVER;
+        }
+        
         endGame();
     }
     
@@ -234,7 +236,6 @@ public class GameController implements TimeIsUpListener {
     public GameState getGameState() {
         return gameState;
     }
-
     
     /**
      * Checks if the game is running.
@@ -257,7 +258,8 @@ public class GameController implements TimeIsUpListener {
     /**
      * Checks if the game is over and the player was victorious.
      * 
-     * @return true if the game is over and the player was victorious, otherwise false.
+     * @return true if the game is over and the player was victorious, otherwise
+     *         false.
      */
     public boolean isVictory() {
         return gameState == GameState.VICTORY;
@@ -273,7 +275,7 @@ public class GameController implements TimeIsUpListener {
     public void renderGame(float delta) {
         stage.act(delta);
         int len, i;
-
+        
         if (gameState == GameState.RUNNING) {
             // update features if the game is not paused
             
@@ -289,7 +291,7 @@ public class GameController implements TimeIsUpListener {
             for (i = 0; i < len; i++) {
                 optionalFeaturesToUpdate.get(i).update(delta);
             }
-
+            
             CollisionDetector.getInstance().perform(delta);
             timeController.checkTime();
         }
@@ -308,7 +310,7 @@ public class GameController implements TimeIsUpListener {
         
         // draw features
         len = optionalFeaturesToDraw.size();
-        for (i = 0; i< len; i++) {
+        for (i = 0; i < len; i++) {
             optionalFeaturesToDraw.get(i).draw(delta);
         }
         stage.draw();
@@ -319,7 +321,7 @@ public class GameController implements TimeIsUpListener {
      * features in {@link #optionalFeaturesToFinish} are finished.
      */
     public void endGame() {
-    	timeController.pause();
+        timeController.pause();
         for (IFeatureFinish optionalFeature : optionalFeaturesToFinish) {
             optionalFeature.finish();
         }

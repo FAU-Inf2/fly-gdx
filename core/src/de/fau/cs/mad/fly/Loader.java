@@ -16,7 +16,7 @@ import de.fau.cs.mad.fly.ui.LevelLoadingScreen;
  * 
  * Controller of the loading screen. Only used to load levels.
  */
-public class Loader implements Loadable<Level>{
+public class Loader implements Loadable<Level> {
     
     private Collection<ProgressListener<Level>> listeners = new ArrayList<ProgressListener<Level>>();
     private float progress = 0;
@@ -116,7 +116,6 @@ public class Loader implements Loadable<Level>{
             Assets.unload(levelPath);
             setCurrentLevel(null);
         }
-        
         
         Loader loader = Loader.create(levelProfile.file);
         final LevelLoadingScreen loadingScreen = new LevelLoadingScreen(loader);

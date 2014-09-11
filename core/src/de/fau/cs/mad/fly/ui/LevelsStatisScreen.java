@@ -148,19 +148,23 @@ public class LevelsStatisScreen extends BasicScreen {
                             scoreTable.add(new Label(levelname, skin)).pad(6f).right();
                             
                             scoreTable.add(new Label(score.getTotalScore() + "", skin)).pad(6f).uniform();
-//                            for (ScoreDetail detail : score.getScoreDetails()) {
-//                                scoreTable.row().expand();
-//                                scoreTable.add(new Label(I18n.t(detail.getDetailName()), skin)).pad(6f).right();
-//                                scoreTable.add(new Label(detail.getValue(), skin)).pad(6f);
-//                            }
+                            // for (ScoreDetail detail :
+                            // score.getScoreDetails()) {
+                            // scoreTable.row().expand();
+                            // scoreTable.add(new
+                            // Label(I18n.t(detail.getDetailName()),
+                            // skin)).pad(6f).right();
+                            // scoreTable.add(new Label(detail.getValue(),
+                            // skin)).pad(6f);
+                            // }
                             
                             Gdx.app.log("timing", " UI one score record UI builded " + (end - begin));
                             uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin);
-                            if(score.getIsUploaded()) {
-                            	uploadScoreButton.setDisabled(true);
+                            if (score.getIsUploaded()) {
+                                uploadScoreButton.setDisabled(true);
                             }
-                            uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score,uploadScoreButton));
-                           // scoreTable.row().expand();
+                            uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton));
+                            // scoreTable.row().expand();
                             scoreTable.add(uploadScoreButton).pad(6f).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                             scoreTable.row().expand();
                         }
@@ -175,7 +179,7 @@ public class LevelsStatisScreen extends BasicScreen {
                         scoreTable.row().expand();
                     }
                     
-                    // global high score button          
+                    // global high score button
                     scoreTable.row();
                     scoreTable.add(globalHighScoreButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
                     
@@ -221,7 +225,7 @@ public class LevelsStatisScreen extends BasicScreen {
             requestData.LevelID = levelId;
             requestData.Score = score;
             requestData.LevelgroupID = levelgroupId;
-            final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener( requestData, button);
+            final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener(requestData, button);
             final PostHighscoreService postHighscoreService = new PostHighscoreService(postScoreListener, requestData);
             final PutHighscoreService putHighscoreService = new PutHighscoreService(postScoreListener, requestData);
             // if the current user have to fly-id (user id got from server side)
@@ -232,10 +236,10 @@ public class LevelsStatisScreen extends BasicScreen {
                 PostUserService postUser = new PostUserService(listener);
                 
                 postUser.execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName());
-            } else if(score.getServerScoreId()>0){
-            	putHighscoreService.execute();
+            } else if (score.getServerScoreId() > 0) {
+                putHighscoreService.execute();
             } else {
-            	 postHighscoreService.execute();
+                postHighscoreService.execute();
             }
         }
     }
@@ -271,10 +275,10 @@ public class LevelsStatisScreen extends BasicScreen {
                 @Override
                 public void run() {
                     Dialog dialog = new Dialog("", skin, "dialog");
-                    if(msgg!=null && msgg.length()>21){
-                    	dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");
+                    if (msgg != null && msgg.length() > 21) {
+                        dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");
                     } else {
-                    	dialog.text(I18n.t("ConnectServerError") + msgg);
+                        dialog.text(I18n.t("ConnectServerError") + msgg);
                     }
                     TextButton button = new TextButton(I18n.t("ok"), skin);
                     dialog.button(button);
@@ -295,35 +299,33 @@ public class LevelsStatisScreen extends BasicScreen {
      * 
      */
     public class PostScoreHttpRespListener implements FlyHttpResponseListener {
-		private TextButton button;
-		private PostHighscoreService.RequestData requestData;
-    	
-		public PostScoreHttpRespListener(PostHighscoreService.RequestData requestData, TextButton button) {
-			this.requestData = requestData;
-			this.button = button;
-		}
+        private TextButton button;
+        private PostHighscoreService.RequestData requestData;
+        
+        public PostScoreHttpRespListener(PostHighscoreService.RequestData requestData, TextButton button) {
+            this.requestData = requestData;
+            this.button = button;
+        }
+        
         @Override
         public void successful(Object obj) {
-        	if(requestData.Score.getServerScoreId()>0){
-        		requestData.Score.setIsUploaded(true);
-        		ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), 
-        				requestData.LevelgroupID, requestData.LevelID);
-        	} else {
-        		requestData.Score.setIsUploaded(true);
-        		ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), 
-        				requestData.LevelgroupID, requestData.LevelID);
-        		PostHighscoreService.ResponseData response = (PostHighscoreService.ResponseData)obj;
-        		if(response != null){
-        			requestData.Score.setServerScoreId(response.scoreID);
-        		}
-        		requestData.Score.setIsUploaded(true);
-        		ScoreManager.getInstance().updateServerScoreId(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), 
-        			requestData.LevelgroupID, requestData.LevelID);
-        	}
+            if (requestData.Score.getServerScoreId() > 0) {
+                requestData.Score.setIsUploaded(true);
+                ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), requestData.LevelgroupID, requestData.LevelID);
+            } else {
+                requestData.Score.setIsUploaded(true);
+                ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), requestData.LevelgroupID, requestData.LevelID);
+                PostHighscoreService.ResponseData response = (PostHighscoreService.ResponseData) obj;
+                if (response != null) {
+                    requestData.Score.setServerScoreId(response.scoreID);
+                }
+                requestData.Score.setIsUploaded(true);
+                ScoreManager.getInstance().updateServerScoreId(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), requestData.LevelgroupID, requestData.LevelID);
+            }
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                	button.setDisabled(true);
+                    button.setDisabled(true);
                     Dialog dialog = new Dialog("", skin, "dialog");
                     dialog.text(I18n.t("ScoreUploaded"));
                     TextButton button = new TextButton(I18n.t("ok"), skin);
@@ -340,10 +342,10 @@ public class LevelsStatisScreen extends BasicScreen {
                 @Override
                 public void run() {
                     Dialog dialog = new Dialog("", skin, "dialog");
-                    if(msgg!=null && msgg.length()>21){
-                    	dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");
+                    if (msgg != null && msgg.length() > 21) {
+                        dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");
                     } else {
-                    	dialog.text(I18n.t("ConnectServerError") + msgg);
+                        dialog.text(I18n.t("ConnectServerError") + msgg);
                     }
                     TextButton button = new TextButton(I18n.t("ok"), skin);
                     dialog.button(button);
@@ -356,5 +358,5 @@ public class LevelsStatisScreen extends BasicScreen {
         public void cancelled() {
         }
     };
-
+    
 }

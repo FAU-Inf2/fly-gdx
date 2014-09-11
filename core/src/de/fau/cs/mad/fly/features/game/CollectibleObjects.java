@@ -20,83 +20,84 @@ import de.fau.cs.mad.fly.res.CollectibleManager;
  * @author Tobi
  */
 public abstract class CollectibleObjects implements IFeatureLoad, IFeatureDispose, ICollisionListener {
-	
-	/**
-	 * The collectible manager.
-	 */
-	private CollectibleManager collectibleManager;
-
-	/**
-	 * The type of the collectible objects.
-	 */
-	private String type;
-	
-	/**
-	 * List of the currently active collectible objects.
-	 */
-	private List<Collectible> collectibleObjects;
-	
-	/**
-	 * Creates a new collectible objects game feature.
-	 * 
-	 * @param collectibleType		The type of the collectible object in the level file.
-	 */
-	public CollectibleObjects(String type) {
-		this.type = type;
-	}
-	
-	@Override
-	public void load(GameController game) {
-		collectibleManager = game.getLevel().getCollectibleManager();
-		
-		collectibleObjects = new ArrayList<Collectible>();
-		CollisionDetector collisionDetector = CollisionDetector.getInstance();
-		
-		for(Collectible c : collectibleManager.getCollectibles()) {
-			if(c.getType().equals(type)) {
-				c.createShapeAndRigidBody(collisionDetector, type);
-				collectibleObjects.add(c);
-			}
-		}
-
-		Gdx.app.log("CollectibleObjects.load", "Collectible object rigid bodies created.");
-	}
-
-	@Override
-	public void dispose() {
-		// TODO: needed?
-	}
-	
-	/**
-	 * Starts the handling after the collectible object was collected.
-	 * <p>
-	 * Removes the collected object from the collision world and hides it in the rendered world.
-	 */
-	protected abstract void handleCollecting(Collectible c);
-
-	@Override
-	public void onCollision(GameObject g1, GameObject g2) {
-		if(!(g2 instanceof Collectible)) {
-			return;
-		}
-		
-		Collectible c = (Collectible) g2;
-			
-		
-		if(!collectibleObjects.contains(c)) {
-			return;
-		}
-		
-		c.hide();
-		collectibleObjects.remove(c);
-
-		handleCollecting(c);
-		
-		c.removeRigidBody();
-		collectibleManager.removeCollectible(c);
-	}
-	
-	public void addObject(Collectible c) {
-		collectibleObjects.add(c);
-	}
+    
+    /**
+     * The collectible manager.
+     */
+    private CollectibleManager collectibleManager;
+    
+    /**
+     * The type of the collectible objects.
+     */
+    private String type;
+    
+    /**
+     * List of the currently active collectible objects.
+     */
+    private List<Collectible> collectibleObjects;
+    
+    /**
+     * Creates a new collectible objects game feature.
+     * 
+     * @param collectibleType
+     *            The type of the collectible object in the level file.
+     */
+    public CollectibleObjects(String type) {
+        this.type = type;
+    }
+    
+    @Override
+    public void load(GameController game) {
+        collectibleManager = game.getLevel().getCollectibleManager();
+        
+        collectibleObjects = new ArrayList<Collectible>();
+        CollisionDetector collisionDetector = CollisionDetector.getInstance();
+        
+        for (Collectible c : collectibleManager.getCollectibles()) {
+            if (c.getType().equals(type)) {
+                c.createShapeAndRigidBody(collisionDetector, type);
+                collectibleObjects.add(c);
+            }
+        }
+        
+        Gdx.app.log("CollectibleObjects.load", "Collectible object rigid bodies created.");
+    }
+    
+    @Override
+    public void dispose() {
+        // TODO: needed?
+    }
+    
+    /**
+     * Starts the handling after the collectible object was collected.
+     * <p>
+     * Removes the collected object from the collision world and hides it in the
+     * rendered world.
+     */
+    protected abstract void handleCollecting(Collectible c);
+    
+    @Override
+    public void onCollision(GameObject g1, GameObject g2) {
+        if (!(g2 instanceof Collectible)) {
+            return;
+        }
+        
+        Collectible c = (Collectible) g2;
+        
+        if (!collectibleObjects.contains(c)) {
+            return;
+        }
+        
+        c.hide();
+        collectibleObjects.remove(c);
+        
+        handleCollecting(c);
+        
+        c.removeRigidBody();
+        collectibleManager.removeCollectible(c);
+    }
+    
+    public void addObject(Collectible c) {
+        collectibleObjects.add(c);
+    }
 }

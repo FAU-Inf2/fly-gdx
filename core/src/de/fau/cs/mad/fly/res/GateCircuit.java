@@ -19,28 +19,29 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
 
 /**
- * Manages the logic of the gates like storing the gate list and handling the gate passing.
+ * Manages the logic of the gates like storing the gate list and handling the
+ * gate passing.
  * 
  * @author Tobi
- *
+ * 
  */
 public class GateCircuit implements IFeatureLoad, ICollisionListener {
-	
-	/**
-	 * Comparator for the gate goals.
-	 */
-	private Comparator<GateGoal> goalComparator = new Comparator<GateGoal>() {
-		@Override
-		public int compare(GateGoal first, GateGoal second){
-		    if(first.getGateId() < second.getGateId()) {
-		    	return -1;
-		    } else if(first.getGateId() > second.getGateId()) {
-		    	return 1;
-		    }
-		    return 0;
-		}
+    
+    /**
+     * Comparator for the gate goals.
+     */
+    private Comparator<GateGoal> goalComparator = new Comparator<GateGoal>() {
+        @Override
+        public int compare(GateGoal first, GateGoal second) {
+            if (first.getGateId() < second.getGateId()) {
+                return -1;
+            } else if (first.getGateId() > second.getGateId()) {
+                return 1;
+            }
+            return 0;
+        }
     };
-
+    
     /**
      * The gate that has been passed recently, at the beginning the dummy gate.
      */
@@ -67,7 +68,8 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     private List<GateDisplay> allGateDisplays = new ArrayList<GateDisplay>();
     
     /**
-     * The list of the gate circuit listeners that want to be notified if a gate is passed or the gate circuit is finished.
+     * The list of the gate circuit listeners that want to be notified if a gate
+     * is passed or the gate circuit is finished.
      */
     private List<GateCircuitListener> gateCircuitListeners = new ArrayList<GateCircuitListener>();
     
@@ -80,26 +82,30 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
      * The level where the gate circuit is located.
      */
     protected Level level = null;
- 
+    
     /**
      * Creates a new gate circuit.
-     * @param startingGate		The starting gate of the gate circuit.
+     * 
+     * @param startingGate
+     *            The starting gate of the gate circuit.
      */
     public GateCircuit(GateGoal startingGate) {
         this.virtualGate = startingGate;
         this.startingGate = startingGate;
     }
-  
+    
     /**
      * Adds an gate circuit listener to the gate circuit.
+     * 
      * @param listener
      */
     public void addListener(GateCircuitListener listener) {
-    	gateCircuitListeners.add(listener);
+        gateCircuitListeners.add(listener);
     }
     
     /**
      * Returns the number of gates in the gate circuit.
+     * 
      * @return size of the gate circuit.
      */
     public int getGatesNumber() {
@@ -108,7 +114,9 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Returns a gate goal by a given id.
-     * @param id		The id of the gate.
+     * 
+     * @param id
+     *            The id of the gate.
      * @return the gate with the given id.
      */
     public GateGoal getGateGoalById(int id) {
@@ -117,7 +125,9 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Adds a gate to the gate circuit.
-     * @param gate		The gate goal to add.
+     * 
+     * @param gate
+     *            The gate goal to add.
      */
     public void addGate(GateGoal gate) {
         gates.put(gate.getGateId(), gate);
@@ -127,7 +137,9 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Removes a gate from the gate circuit.
-     * @param gate		The gate goal to remove.
+     * 
+     * @param gate
+     *            The gate goal to remove.
      */
     public void removeGate(GateGoal gate) {
         gates.remove(gate);
@@ -138,7 +150,9 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     /**
      * Fills the Map that maps id to the corresponding gate and the list of all
      * gates. Sorts the list by id.
-     * @param gates		The map with all the gates.
+     * 
+     * @param gates
+     *            The map with all the gates.
      */
     public void setGates(Map<Integer, GateGoal> gates) {
         this.gates = gates;
@@ -146,15 +160,16 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
         
         Collections.sort(allGateGoals, goalComparator);
         
-        for(GateGoal g : allGateGoals) {
-        	if(g.getDisplay() != null) {
-        		allGateDisplays.add(g.getDisplay());
-        	}
+        for (GateGoal g : allGateGoals) {
+            if (g.getDisplay() != null) {
+                allGateDisplays.add(g.getDisplay());
+            }
         }
     }
     
     /**
      * Returns if the last gate is already reached.
+     * 
      * @return true if the last gate is reached, false otherwise.
      */
     public boolean isReachedLastGate() {
@@ -163,6 +178,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Setter to tell if the last gate was reached.
+     * 
      * @param reachedLastGate
      */
     protected void setReachedLastGate(boolean reachedLastGate) {
@@ -171,7 +187,9 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Checks if the currently passed gate is one of the current active gates.
-     * @param gate		The gate to check.
+     * 
+     * @param gate
+     *            The gate to check.
      */
     public void gatePassed(GateGoal gate) {
         int numberOfSuccessorGates = virtualGate.successors.length;
@@ -185,8 +203,11 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     }
     
     /**
-     * Calls the gate circuit listeners for a passed gate and finishes the circuit if it was the last gate and it has no successors.
-     * @param gate		The gate that was passed.
+     * Calls the gate circuit listeners for a passed gate and finishes the
+     * circuit if it was the last gate and it has no successors.
+     * 
+     * @param gate
+     *            The gate that was passed.
      */
     public void activeGatePassed(GateGoal gate) {
         for (GateCircuitListener s : gateCircuitListeners)
@@ -209,7 +230,9 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Setter for the starting gate.
-     * @param startingGate		The starting gate.
+     * 
+     * @param startingGate
+     *            The starting gate.
      */
     public void setStartGate(GateGoal startingGate) {
         this.startingGate = startingGate;
@@ -217,6 +240,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Getter for the currently active gates.
+     * 
      * @return currently active gates.
      */
     public int[] currentGates() {
@@ -225,6 +249,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Getter for all the gate goals of the gate circuit.
+     * 
      * @return list of all the gates goals.
      */
     public List<GateGoal> allGateGoals() {
@@ -233,6 +258,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     
     /**
      * Getter for all the gate displays of the gate circuit.
+     * 
      * @return list of all the gates displays.
      */
     public List<GateDisplay> allGateDisplays() {
@@ -249,71 +275,76 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
         Gdx.app.log("GateCircuit.createGateRigidBodies", "Setting up collision for level gates.");
         
         for (GateGoal g : allGateGoals()) {
-        	g.createShapeAndRigidBody(collisionDetector);
+            g.createShapeAndRigidBody(collisionDetector);
         }
         
         for (GateDisplay d : allGateDisplays()) {
-        	d.createShapeAndRigidBody(collisionDetector);
+            d.createShapeAndRigidBody(collisionDetector);
         }
     }
     
     /**
      * Moves the gates.
      * 
-     * @param		The delta since the last call.
+     * @param The
+     *            delta since the last call.
      */
     public void moveGates(float delta) {
-    	GateDisplay display;
-    	
-        final int numberOfDisplays = allGateDisplays.size();        
+        GateDisplay display;
+        
+        final int numberOfDisplays = allGateDisplays.size();
         for (int i = 0; i < numberOfDisplays; i++) {
-        	display = allGateDisplays.get(i);
-        	display.move(delta);
-        	display.getGoal().move(delta);
+            display = allGateDisplays.get(i);
+            display.move(delta);
+            display.getGoal().move(delta);
         }
     }
     
-	/**
-	 * Renders the gates.
-	 * 
-	 * @param batch				The model batch for the rendering.
-	 * @param environment		The environment for the rendering.
-	 * @param camera			The camera for the rendering.
-	 */
+    /**
+     * Renders the gates.
+     * 
+     * @param batch
+     *            The model batch for the rendering.
+     * @param environment
+     *            The environment for the rendering.
+     * @param camera
+     *            The camera for the rendering.
+     */
     public void render(ModelBatch batch, Environment environment, PerspectiveCamera camera) {
-    	GateDisplay display;
-    	
+        GateDisplay display;
+        
         final int numberOfDisplays = allGateDisplays.size();
         
         for (int i = 0; i < numberOfDisplays; i++) {
-        	display = allGateDisplays.get(i);
-        	display.render(batch, environment, camera);
+            display = allGateDisplays.get(i);
+            display.render(batch, environment, camera);
         }
     }
     
     /**
      * Resets the gate circuit.
      * <p>
-     * Clears the gate circuit listeners and sets the virtual gate to the starting gate.
+     * Clears the gate circuit listeners and sets the virtual gate to the
+     * starting gate.
      */
     public void reset() {
-    	gateCircuitListeners.clear();
+        gateCircuitListeners.clear();
         virtualGate = startingGate;
     }
-	
-	@Override
-	public void load(GameController game) {
-		activeGatePassed(virtualGate);
-	}
-	
-	@Override
-	public void onCollision(GameObject g1, GameObject g2) {
-    	if(!(g2 instanceof GateGoal)) {
-    		return;
-    	}
-		
-    	GateGoal gate = (GateGoal) g2;
-		
-		gatePassed(gate);
-	}
+    
+    @Override
+    public void load(GameController game) {
+        activeGatePassed(virtualGate);
+    }
+    
+    @Override
+    public void onCollision(GameObject g1, GameObject g2) {
+        if (!(g2 instanceof GateGoal)) {
+            return;
+        }
+        
+        GateGoal gate = (GateGoal) g2;
+        
+        gatePassed(gate);
+    }
 }

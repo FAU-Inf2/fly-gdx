@@ -13,10 +13,10 @@ import de.fau.cs.mad.fly.game.GameObject;
  * Manages the invisible part of the gate.
  * 
  * @author Tobi
- *
+ * 
  */
 public class GateGoal extends GameObject implements Disposable {
-	private GateDisplay display = null;
+    private GateDisplay display = null;
     private final int gateId;
     private int score;
     public int passedTimes = 0;
@@ -24,12 +24,16 @@ public class GateGoal extends GameObject implements Disposable {
     
     /**
      * Creates a new gate goal.
-     * @param gateId		The gate id.
-     * @param model			The model of the goal. It is usually not visible.
-     * @param display		The displayed part of the goal.
+     * 
+     * @param gateId
+     *            The gate id.
+     * @param model
+     *            The model of the goal. It is usually not visible.
+     * @param display
+     *            The displayed part of the goal.
      */
     public GateGoal(int gateId, GameModel model, int gateScore, GateDisplay display) {
-    	super(model, "GateGoal " + gateId);
+        super(model, "GateGoal " + gateId);
         this.gateId = gateId;
         this.score = gateScore;
         this.display = display;
@@ -38,68 +42,76 @@ public class GateGoal extends GameObject implements Disposable {
     
     /**
      * Creates the rigid body of the gate goal if its not already created.
+     * 
      * @param collisionDetector
      */
-    public void createShapeAndRigidBody(CollisionDetector collisionDetector) {        
-		btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(super.getModelId() + ".goal", new Vector3(0.8f, 0.1f, 0.8f));
-		super.createRigidBody(super.getModelId() + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
-		rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-		
-		// different scaling for the gates is buggy
-		/*transform.scl(scaling);
-		rigidBody.getCollisionShape().setLocalScaling(scaling);*/
+    public void createShapeAndRigidBody(CollisionDetector collisionDetector) {
+        btCollisionShape goalShape = collisionDetector.getShapeManager().createBoxShape(super.getModelId() + ".goal", new Vector3(0.8f, 0.1f, 0.8f));
+        super.createRigidBody(super.getModelId() + ".goal", goalShape, 0.0f, CollisionDetector.DUMMY_FLAG, CollisionDetector.PLAYER_FLAG);
+        rigidBody.setCollisionFlags(rigidBody.getCollisionFlags() | btRigidBody.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+        
+        // different scaling for the gates is buggy
+        /*
+         * transform.scl(scaling);
+         * rigidBody.getCollisionShape().setLocalScaling(scaling);
+         */
         collisionDetector.addRigidBody(this);
     }
     
     /**
      * Setter for the gate display for this goal.
-     * @param display		The gate display.
+     * 
+     * @param display
+     *            The gate display.
      */
     public void setDisplay(GateDisplay display) {
-    	this.display = display;
+        this.display = display;
     }
     
     /**
      * Getter for the gate display for this goal.
+     * 
      * @return display
      */
     public GateDisplay getDisplay() {
-    	return display;
+        return display;
     }
     
     /**
      * Getter for the id of this gate.
+     * 
      * @return gateId
      */
     public int getGateId() {
-    	return gateId;
+        return gateId;
     }
     
     /**
      * Getter for the score of this gate.
+     * 
      * @return score
      */
     public int getScore() {
-    	return score;
+        return score;
     }
     
-	/**
-	 * Marks the display game object.
-	 */
-	public void mark() {
-		if(display != null) {
-			display.mark();
-		}
-	}
-
-	/**
-	 * Unmarks the display game object.
-	 */
-	public void unmark() {
-		if(display != null) {
-			display.unmark();
-		}
-	}
+    /**
+     * Marks the display game object.
+     */
+    public void mark() {
+        if (display != null) {
+            display.mark();
+        }
+    }
+    
+    /**
+     * Unmarks the display game object.
+     */
+    public void unmark() {
+        if (display != null) {
+            display.unmark();
+        }
+    }
     
     @Override
     public boolean equals(Object o) {

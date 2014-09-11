@@ -15,38 +15,39 @@ import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
- * Level script file for the gate tutorial level with only left and right movement allowed.
+ * Level script file for the gate tutorial level with only left and right
+ * movement allowed.
  * 
  * @author Tobi
- *
+ * 
  */
 public class AzimuthTutorialLevel implements ILevel, IFeatureInit, GateCircuitListener {
-	
-	@Override
-	public void create(GameControllerBuilder builder) {
-		builder.addFeatureToLists(this);
-	}
-
-	@Override
-	public void init(GameController game) {
-		game.getFlightController().setRollFactorChange(0.0f);
-		
+    
+    @Override
+    public void create(GameControllerBuilder builder) {
+        builder.addFeatureToLists(this);
+    }
+    
+    @Override
+    public void init(GameController game) {
+        game.getFlightController().setRollFactorChange(0.0f);
+        
         Preferences preferences = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences();
         if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
-        	InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.azimuth.touch"), 5);
+            InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.azimuth.touch"), 5);
         } else {
-        	InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.azimuth.sensor"), 5);
+            InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.azimuth.sensor"), 5);
         }
-	}
-	
-	@Override
-	public void onFinished() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onGatePassed(GateGoal gate) {
-		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
-	}
+    }
+    
+    @Override
+    public void onFinished() {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void onGatePassed(GateGoal gate) {
+        InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
+    }
 }

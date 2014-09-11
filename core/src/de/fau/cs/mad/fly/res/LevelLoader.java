@@ -133,7 +133,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         Map<Integer, GateGoal> gateMap = new HashMap<Integer, GateGoal>();
         
         JsonValue gates = json.get("gates");
-        if (gates == null) {    
+        if (gates == null) {
             return null;
         }
         
@@ -246,7 +246,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             
             JsonValue scale = e.get("scale");
             if (scale != null) {
-                o.transform.scale(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2)); 
+                o.transform.scale(scale.getFloat(0), scale.getFloat(1), scale.getFloat(2));
             }
         } else {
             o.transform.idt();

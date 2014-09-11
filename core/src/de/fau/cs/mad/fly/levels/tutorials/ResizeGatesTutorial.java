@@ -19,47 +19,46 @@ import de.fau.cs.mad.fly.res.GateGoal;
  * Level script file for the resize gates tutorial.
  * 
  * @author Tobi
- *
+ * 
  */
 public class ResizeGatesTutorial implements ILevel, IFeatureInit, ICollisionListener {
-	
-	@Override
-	public void create(GameControllerBuilder builder) {
-		builder.addFeatureToLists(this);
-	}
-
-	@Override
-	public void init(GameController game) {
-		game.getLevel();
-		
-		Vector3 scale = new Vector3(0.4f, 0.4f, 0.4f);
-		Vector3 scaling = new Vector3();
+    
+    @Override
+    public void create(GameControllerBuilder builder) {
+        builder.addFeatureToLists(this);
+    }
+    
+    @Override
+    public void init(GameController game) {
+        game.getLevel();
+        
+        Vector3 scale = new Vector3(0.4f, 0.4f, 0.4f);
+        Vector3 scaling = new Vector3();
         for (GateGoal g : game.getLevel().getGateCircuit().allGateGoals()) {
-        	if(g.getDisplay() != null) {
-        		g.getDisplay().transform.scl(scale);
-		    	g.getDisplay().transform.getScale(scaling);
-		    	g.getDisplay().getRigidBody().getCollisionShape().setLocalScaling(scaling);
-        	}
-	    	g.transform.scl(scale);
-	    	g.transform.getScale(scaling);
-	    	g.getRigidBody().getCollisionShape().setLocalScaling(scaling);
-	    }
-		
-		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.resize"), 5);
-	}
-	
-
-	@Override
-	public void onCollision(GameObject g1, GameObject g2) {
-		if(!(g2 instanceof Collectible)) {
-			return;
-		}
-		List<GameObject> objects = GameController.getInstance().getLevel().components;
-		for(GameObject object : objects) {
-			if(object.getId().equals("IndicatorArrow")) {
-				object.hide();
-				return;
-			}
-		}
-	}
+            if (g.getDisplay() != null) {
+                g.getDisplay().transform.scl(scale);
+                g.getDisplay().transform.getScale(scaling);
+                g.getDisplay().getRigidBody().getCollisionShape().setLocalScaling(scaling);
+            }
+            g.transform.scl(scale);
+            g.transform.getScale(scaling);
+            g.getRigidBody().getCollisionShape().setLocalScaling(scaling);
+        }
+        
+        InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.resize"), 5);
+    }
+    
+    @Override
+    public void onCollision(GameObject g1, GameObject g2) {
+        if (!(g2 instanceof Collectible)) {
+            return;
+        }
+        List<GameObject> objects = GameController.getInstance().getLevel().components;
+        for (GameObject object : objects) {
+            if (object.getId().equals("IndicatorArrow")) {
+                object.hide();
+                return;
+            }
+        }
+    }
 }

@@ -53,7 +53,8 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         Gdx.app.log("GameScreen.dispose", "dispose game screen");
-        // TODO: Assets should not be disposed here, because they also include UI stuff like the texture atlas for the buttons etc.
+        // TODO: Assets should not be disposed here, because they also include
+        // UI stuff like the texture atlas for the buttons etc.
         Assets.dispose();
     }
 }

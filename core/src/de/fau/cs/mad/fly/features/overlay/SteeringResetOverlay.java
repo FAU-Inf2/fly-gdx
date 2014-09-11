@@ -15,35 +15,35 @@ import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.ui.UI;
 
 public class SteeringResetOverlay implements IFeatureInit {
-
-	private final FlightController flightController;
-	
-	private final Stage stage;
-	private final Table table;
-	
-	private Button resetButton;
-
-	public SteeringResetOverlay(final Skin skin, final FlightController flightController, final Stage stage) {
-		this.flightController = flightController;
-		this.stage = stage;
-		table = new Table();
-		table.setFillParent(true);
-		resetButton = new TextButton(I18n.t("reset.Steering"), skin);
-		
-		table.row().expand();
-		table.add(resetButton).right().bottom().pad(UI.Window.BORDER_SPACE);
-	}
-
-	@Override
-	public void init(final GameController gameController) {
-		resetButton.addListener(new ClickListener() {
-			@Override 
-			public void clicked(InputEvent event, float x, float y) {
-				flightController.resetSteering();
-			}
-		});
-		
-		stage.addActor(table);
-	}
-
+    
+    private final FlightController flightController;
+    
+    private final Stage stage;
+    private final Table table;
+    
+    private Button resetButton;
+    
+    public SteeringResetOverlay(final Skin skin, final FlightController flightController, final Stage stage) {
+        this.flightController = flightController;
+        this.stage = stage;
+        table = new Table();
+        table.setFillParent(true);
+        resetButton = new TextButton(I18n.t("reset.Steering"), skin);
+        
+        table.row().expand();
+        table.add(resetButton).right().bottom().pad(UI.Window.BORDER_SPACE);
+    }
+    
+    @Override
+    public void init(final GameController gameController) {
+        resetButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                flightController.resetSteering();
+            }
+        });
+        
+        stage.addActor(table);
+    }
+    
 }

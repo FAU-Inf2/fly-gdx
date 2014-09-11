@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages the time in the game and calls listener if time in seconds has changed or the game time is over.
+ * Manages the time in the game and calls listener if time in seconds has
+ * changed or the game time is over.
  * 
- * @author Lukas Hahmann 
- *
+ * @author Lukas Hahmann
+ * 
  */
 public class TimeController {
     
@@ -80,10 +81,12 @@ public class TimeController {
     
     /**
      * Adds bonus time in seconds to the bonus time.
-     * @param bonusTime		The bonus time in seconds to add.
+     * 
+     * @param bonusTime
+     *            The bonus time in seconds to add.
      */
     public void addBonusTime(float bonusTime) {
-    	this.bonusTime += bonusTime;
+        this.bonusTime += bonusTime;
     }
     
     /**
@@ -114,43 +117,45 @@ public class TimeController {
     
     /**
      * Getter for the current integer time in seconds.
+     * 
      * @return Current integer time in seconds.
      */
     public int getIntegerTime() {
-    	return (int) Math.ceil(currentTimeInSeconds);
+        return (int) Math.ceil(currentTimeInSeconds);
     }
     
     /**
      * Getter for the integer time since the start in seconds.
+     * 
      * @return Integer time since the start in seconds.
      */
     public int getIntegerTimeSinceStart() {
-    	return (int) Math.ceil(timeSinceStartInSeconds);
+        return (int) Math.ceil(timeSinceStartInSeconds);
     }
     
     /** Notifies all {@link TimeIsUpListener}s. */
     private void timeIsUp() {
-    	size = timeIsUpListeners.size();
+        size = timeIsUpListeners.size();
         for (int i = 0; i < size; i++) {
-            if(timeIsUpListeners.get(i).timeIsUp()) {
-            	removeTimeIsUpListener(timeIsUpListeners.get(i));
-            	size--;
-            	i--;
+            if (timeIsUpListeners.get(i).timeIsUp()) {
+                removeTimeIsUpListener(timeIsUpListeners.get(i));
+                size--;
+                i--;
             }
         }
     }
     
     /** Notifies all {@link IntegerTimeListener} */
     private void integerTimeChanged() {
-    	size = integerTimeListeners.size();
-    	int integerTime = getIntegerTime();
-    	int integerTimeSinceStart = getIntegerTimeSinceStart();
-    	
+        size = integerTimeListeners.size();
+        int integerTime = getIntegerTime();
+        int integerTimeSinceStart = getIntegerTimeSinceStart();
+        
         for (int i = 0; i < size; i++) {
-            if(integerTimeListeners.get(i).integerTimeChanged(integerTime, integerTimeSinceStart)) {
-            	removeIntegerTimeListener(integerTimeListeners.get(i));
-            	size--;
-            	i--;
+            if (integerTimeListeners.get(i).integerTimeChanged(integerTime, integerTimeSinceStart)) {
+                removeIntegerTimeListener(integerTimeListeners.get(i));
+                size--;
+                i--;
             }
         }
     }

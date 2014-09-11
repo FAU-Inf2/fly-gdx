@@ -56,7 +56,7 @@ public class LevelChooserScreen extends BasicScreen {
                 
                 if (!Fly.DEBUG_MODE && levelGroup.id > currentProfile.getPassedLevelgroupID() || (levelGroup.id == currentProfile.getPassedLevelgroupID() && level.id > currentProfile.getPassedLevelID())) {
                     button.setDisabled(true);
-                    if(rowToScrollTo < 0) {
+                    if (rowToScrollTo < 0) {
                         rowToScrollTo = row;
                     }
                 }
@@ -78,10 +78,10 @@ public class LevelChooserScreen extends BasicScreen {
         stage.addActor(levelScrollPane);
         super.stage.act();
         super.stage.draw();
-        if(rowToScrollTo < 0) {
+        if (rowToScrollTo < 0) {
             rowToScrollTo = maxRows;
         }
-        levelScrollPane.setScrollY(rowToScrollTo * (UI.Buttons.MAIN_BUTTON_HEIGHT + UI.Buttons.SPACE_HEIGHT)-Gdx.graphics.getHeight());
+        levelScrollPane.setScrollY(rowToScrollTo * (UI.Buttons.MAIN_BUTTON_HEIGHT + UI.Buttons.SPACE_HEIGHT) - Gdx.graphics.getHeight());
     }
     
     /**
@@ -103,6 +103,6 @@ public class LevelChooserScreen extends BasicScreen {
     
     @Override
     protected void generateContent() {
-        //is done in .generateDynamicContent
+        // is done in .generateDynamicContent
     }
 }

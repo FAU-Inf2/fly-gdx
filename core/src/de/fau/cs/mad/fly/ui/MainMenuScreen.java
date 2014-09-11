@@ -107,7 +107,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-                LevelProfile currentLevelProfile = playerProfile.getCurrentLevelProfile();               
+                LevelProfile currentLevelProfile = playerProfile.getCurrentLevelProfile();
                 Loader.getInstance().loadLevel(currentLevelProfile);
             }
         });
@@ -156,8 +156,9 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
      * @return version text
      */
     private String createVersion() {
-        //return I18n.t("version") + ": " + Fly.VERSION_MAJOR + "." + Fly.VERSION_MINOR + "." + Fly.VERSION_PATCH;
-    	return I18n.t("version") + ": " + Fly.VERSION;
+        // return I18n.t("version") + ": " + Fly.VERSION_MAJOR + "." +
+        // Fly.VERSION_MINOR + "." + Fly.VERSION_PATCH;
+        return I18n.t("version") + ": " + Fly.VERSION;
     }
     
     @Override

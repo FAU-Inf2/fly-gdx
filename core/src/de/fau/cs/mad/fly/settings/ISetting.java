@@ -12,12 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
  * 
  */
 public interface ISetting {
-	public Label getLabel();
-
-	public Actor getActor();
-	
-	/**
-     * Returns the string that identifies the helping text for this Setting in the I18N
+    public Label getLabel();
+    
+    public Actor getActor();
+    
+    /**
+     * Returns the string that identifies the helping text for this Setting in
+     * the I18N
      */
     public String getHelpingText();
 }

@@ -170,7 +170,7 @@ public class GateIndicator implements IFeatureInit, IFeatureDraw {
                 
                 // calculate the size of the arrow according to the distance of
                 // the target
-                scalingFactor = 10/toGate.len();
+                scalingFactor = 10 / toGate.len();
                 scalingFactor = Math.min(scalingFactor, maxScalingFactor);
                 scalingFactor = Math.max(scalingFactor, minScalingFactor);
                 batch.draw(arrow, startPosX, startPosY, originX, originY, arrowWidth, arrowHeigth, scalingFactor, scalingFactor, angle);

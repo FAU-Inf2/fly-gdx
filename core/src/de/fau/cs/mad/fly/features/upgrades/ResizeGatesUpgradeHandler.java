@@ -16,45 +16,47 @@ import de.fau.cs.mad.fly.res.GateGoal;
  * Used to display and handle gate resize upgrades.
  * 
  * @author Tobi
- *
+ * 
  */
 public class ResizeGatesUpgradeHandler extends CollectibleObjects implements IFeatureInit {
-	private GateCircuit gateCircuit;
-	
-	/**
-	 * Creates an resize gates upgrade handler.
-	 */
-	public ResizeGatesUpgradeHandler() {
-		super("ResizeGatesUpgrade");
-	}
-
-	@Override
-	public void init(GameController game) {
-		gateCircuit = game.getLevel().getGateCircuit();
-	}
-
-	@Override
-	protected void handleCollecting(Collectible c) {
-		ResizeGatesUpgrade upgrade = (ResizeGatesUpgrade) c;
-		resizeGates(upgrade.getScale());
-		InfoOverlay.getInstance().setOverlay(I18n.t("resizeGatesUpgradeCollected"), 3);
-	}
-	
-	/**
-	 * Resizes the gates and the gate holes with the scaling vector.
-	 * @param scale		The scaling vector of the resizing of the gates.
-	 */
-	private void resizeGates(Vector3 scale) {
-		Vector3 scaling = new Vector3();
+    private GateCircuit gateCircuit;
+    
+    /**
+     * Creates an resize gates upgrade handler.
+     */
+    public ResizeGatesUpgradeHandler() {
+        super("ResizeGatesUpgrade");
+    }
+    
+    @Override
+    public void init(GameController game) {
+        gateCircuit = game.getLevel().getGateCircuit();
+    }
+    
+    @Override
+    protected void handleCollecting(Collectible c) {
+        ResizeGatesUpgrade upgrade = (ResizeGatesUpgrade) c;
+        resizeGates(upgrade.getScale());
+        InfoOverlay.getInstance().setOverlay(I18n.t("resizeGatesUpgradeCollected"), 3);
+    }
+    
+    /**
+     * Resizes the gates and the gate holes with the scaling vector.
+     * 
+     * @param scale
+     *            The scaling vector of the resizing of the gates.
+     */
+    private void resizeGates(Vector3 scale) {
+        Vector3 scaling = new Vector3();
         for (GateGoal g : gateCircuit.allGateGoals()) {
-        	if(g.getDisplay() != null) {
-		    	g.getDisplay().transform.scl(scale);
-		    	g.getDisplay().transform.getScale(scaling);
-		    	g.getDisplay().getRigidBody().getCollisionShape().setLocalScaling(scaling);
-        	}
-	    	g.transform.scl(scale);
-	    	g.transform.getScale(scaling);
-	    	g.getRigidBody().getCollisionShape().setLocalScaling(scaling);
-	    }
-	}
+            if (g.getDisplay() != null) {
+                g.getDisplay().transform.scl(scale);
+                g.getDisplay().transform.getScale(scaling);
+                g.getDisplay().getRigidBody().getCollisionShape().setLocalScaling(scaling);
+            }
+            g.transform.scl(scale);
+            g.transform.getScale(scaling);
+            g.getRigidBody().getCollisionShape().setLocalScaling(scaling);
+        }
+    }
 }

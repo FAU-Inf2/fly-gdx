@@ -14,9 +14,10 @@ import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
- * Controls the flight of the player regarding to user-input 
+ * Controls the flight of the player regarding to user-input
+ * 
  * @author Sebastian
- *
+ * 
  */
 public class FlightController implements InputProcessor {
     
@@ -69,16 +70,23 @@ public class FlightController implements InputProcessor {
     }
     
     /**
-     * Sets the parameter that indicates whether the player wants to control the game by sensor or touch-screen
-     * @param useSensorData	      True if sensor-values should be used, false if touch-screen should be used
+     * Sets the parameter that indicates whether the player wants to control the
+     * game by sensor or touch-screen
+     * 
+     * @param useSensorData
+     *            True if sensor-values should be used, false if touch-screen
+     *            should be used
      */
     public void setUseSensorData(boolean useSensorData) {
         this.useSensorData = useSensorData;
     }
     
     /**
-     * Sets the parameter that indicates whether the player should roll or fly curves
-     * @param useRolling	True if player should roll instead of flying curves
+     * Sets the parameter that indicates whether the player should roll or fly
+     * curves
+     * 
+     * @param useRolling
+     *            True if player should roll instead of flying curves
      */
     public void setUseRolling(boolean useRolling) {
         this.useRolling = useRolling;
@@ -87,7 +95,9 @@ public class FlightController implements InputProcessor {
     
     /**
      * Setter for the size of buffers used for averaging the sensorvalues
-     * @param bufferSize - The size of the buffers used for averaging
+     * 
+     * @param bufferSize
+     *            - The size of the buffers used for averaging
      */
     public void setBufferSize(int bufferSize) {
         resetBuffers();
@@ -98,6 +108,7 @@ public class FlightController implements InputProcessor {
     
     /**
      * Getter for the factor by which the player rotate up/down
+     * 
      * @return The rollFactor
      */
     public float getRollFactor() {
@@ -106,6 +117,7 @@ public class FlightController implements InputProcessor {
     
     /**
      * Getter for the factor by which the player should fly curves
+     * 
      * @return
      */
     public float getAzimuthFactor() {
@@ -127,9 +139,11 @@ public class FlightController implements InputProcessor {
     }
     
     /**
-	 * Computes the new position to fly to regarding to the user input
-	 * @param delta		Time since last frame
-	 */
+     * Computes the new position to fly to regarding to the user input
+     * 
+     * @param delta
+     *            Time since last frame
+     */
     public void update(float delta) {
         // rotating the camera according to UserInput
         if (useSensorData) {
@@ -163,7 +177,7 @@ public class FlightController implements InputProcessor {
         roll = average(rollInput);
         pitch = average(pitchInput);
         
-        //azimuth = computeAzimuth(roll, pitch, azimuth);
+        // azimuth = computeAzimuth(roll, pitch, azimuth);
         
         float difRoll = roll - startRoll;
         if (Math.abs(difRoll) > 180) {
@@ -172,7 +186,7 @@ public class FlightController implements InputProcessor {
         
         float difPitch = pitch - startPitch;
         if (Math.abs(difPitch) > 180) {
-        	difPitch -= Math.signum(difPitch) * 360;
+            difPitch -= Math.signum(difPitch) * 360;
         }
         
         // capping the rotation to a maximum of 90 degrees
@@ -181,7 +195,7 @@ public class FlightController implements InputProcessor {
         }
         
         if (Math.abs(difPitch) > maxRotate) {
-        	difPitch = maxRotate * Math.signum(difPitch);
+            difPitch = maxRotate * Math.signum(difPitch);
         }
         
         rollFactor = 0.0f;
@@ -194,26 +208,28 @@ public class FlightController implements InputProcessor {
     
     /**
      * Setter for the roll factor change.
+     * 
      * @param rollFactorChange
      */
     public void setRollFactorChange(float rollFactorChange) {
-    	this.rollFactorChange = rollFactorChange;
+        this.rollFactorChange = rollFactorChange;
     }
     
     /**
      * Setter for the azimuth factor change.
+     * 
      * @param azimuthFactorChange
      */
     public void setAzimuthFactorChange(float azimuthFactorChange) {
-    	this.azimuthFactorChange = azimuthFactorChange;
+        this.azimuthFactorChange = azimuthFactorChange;
     }
     
     /**
      * Resets the roll and azimuth factor changes to 1.0f.
      */
     public void resetFactorChange() {
-    	rollFactorChange = 1.0f;
-    	azimuthFactorChange = 1.0f;
+        rollFactorChange = 1.0f;
+        azimuthFactorChange = 1.0f;
     }
     
     /**
@@ -279,7 +295,7 @@ public class FlightController implements InputProcessor {
                 setRollFactor(-yDif / radius);
                 inTouch = true;
             } else {
-            	inTouch = false;
+                inTouch = false;
             }
             
             currentEvent = pointer;
@@ -311,11 +327,11 @@ public class FlightController implements InputProcessor {
             float length = (float) Math.sqrt(xDif * xDif + yDif * yDif);
             
             if (length <= radius) {
-            	setAzimuthFactor(-xDif / radius);
-            	setRollFactor(-yDif / radius);
-            } else if(inTouch) {
-            	setAzimuthFactor(-xDif / length);
-            	setRollFactor(-yDif / length);
+                setAzimuthFactor(-xDif / radius);
+                setRollFactor(-yDif / radius);
+            } else if (inTouch) {
+                setAzimuthFactor(-xDif / length);
+                setRollFactor(-yDif / length);
             }
             
         }

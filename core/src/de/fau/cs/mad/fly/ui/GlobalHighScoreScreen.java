@@ -42,31 +42,31 @@ public class GlobalHighScoreScreen extends BasicScreen {
         
         @Override
         public void successful(Object obj) {
-            final ResponseData results = (ResponseData)obj;
+            final ResponseData results = (ResponseData) obj;
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                	infoTable.clear();
+                    infoTable.clear();
                     infoTable.row();
-                    if (results != null && results.records.size() > 0) {                   	
-                        for (LevelRecords item : results.records) {                        	
-                        	String levelname = levelGroup.getLevelName(item.levelID);
-                        	infoTable.row();
-                        	infoTable.add(new Label(I18n.t("level"), skin)).left();
+                    if (results != null && results.records.size() > 0) {
+                        for (LevelRecords item : results.records) {
+                            String levelname = levelGroup.getLevelName(item.levelID);
+                            infoTable.row();
+                            infoTable.add(new Label(I18n.t("level"), skin)).left();
                             infoTable.add(new Label(levelname, skin, "darkGrey")).pad(0, 0, 0, padding).left();
                             infoTable.row();
-                            infoTable.add(new Label(I18n.t("flyID"), skin)).left();                           
+                            infoTable.add(new Label(I18n.t("flyID"), skin)).left();
                             infoTable.add(new Label(I18n.t("player"), skin)).left();
                             infoTable.add(new Label(I18n.t("score"), skin)).left();
                             infoTable.add(new Label(I18n.t("rank"), skin)).left();
                             
-                        	for (RecordItem item0 : item.records) {
-                            infoTable.row();
-                            infoTable.add(new Label(item0.flyID + "", skin, "darkGrey")).pad(0, 0, 0, padding);
-                            infoTable.add(new Label(item0.username, skin, "darkGrey")).pad(0, 0, 0, padding).left();
-                            infoTable.add(new Label(item0.score + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
-                            infoTable.add(new Label(item0.rank + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
-                        	}
+                            for (RecordItem item0 : item.records) {
+                                infoTable.row();
+                                infoTable.add(new Label(item0.flyID + "", skin, "darkGrey")).pad(0, 0, 0, padding);
+                                infoTable.add(new Label(item0.username, skin, "darkGrey")).pad(0, 0, 0, padding).left();
+                                infoTable.add(new Label(item0.score + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
+                                infoTable.add(new Label(item0.rank + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
+                            }
                         }
                     } else {
                         infoTable.row();
@@ -107,7 +107,7 @@ public class GlobalHighScoreScreen extends BasicScreen {
         table.setFillParent(true);
         stage.addActor(table);
         infoTable = new Table();
-        infoTable.add(new Label(I18n.t("StatusLoading"), skin));         
+        infoTable.add(new Label(I18n.t("StatusLoading"), skin));
         final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
@@ -115,11 +115,11 @@ public class GlobalHighScoreScreen extends BasicScreen {
         table.add(statisticsPane);
     }
     
-	protected void generateContentDynamic() {
-		final FlyHttpResponseListener listener = new GetLevelHighScoreListener(levelGroup);
-		GetLevelHighScoreService getLevelHighScoreService = new GetLevelHighScoreService(listener);
-		getLevelHighScoreService.execute(2, levelGroup.id);
-	}
+    protected void generateContentDynamic() {
+        final FlyHttpResponseListener listener = new GetLevelHighScoreListener(levelGroup);
+        GetLevelHighScoreService getLevelHighScoreService = new GetLevelHighScoreService(listener);
+        getLevelHighScoreService.execute(2, levelGroup.id);
+    }
     
     @Override
     public void show() {

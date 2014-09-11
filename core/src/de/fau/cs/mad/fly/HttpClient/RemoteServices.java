@@ -8,10 +8,10 @@ package de.fau.cs.mad.fly.HttpClient;
  * 
  */
 public class RemoteServices {
-
-	public static String getServerURL() {
-		return "http://fly-devel.cloudapp.net";
-	}
-
-	public static int TIME_OUT = 1500;
+    
+    public static String getServerURL() {
+        return "http://fly-devel.cloudapp.net";
+    }
+    
+    public static int TIME_OUT = 1500;
 }

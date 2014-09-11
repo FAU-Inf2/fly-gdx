@@ -16,68 +16,69 @@ import de.fau.cs.mad.fly.Fly;
  * 
  */
 public class BooleanSetting extends ChangeListener implements ISetting {
-
-	private String id;
-	private boolean value;
-	private SettingManager settingManager;
-	private CheckBox checkBox;
-	private Label label;
-	private String helpingText;
-	
-	/**
-	 * Initializes the class with the {@link #id}. Also a {@link CheckBox} object and a {@link Label} is created. 
-	 * @param settingManager
-	 * @param id
-	 * @param description
-	 * @param value
-	 */
-	public BooleanSetting(SettingManager settingManager, String id, String description, boolean value, String helpingText) {
-		this.settingManager = settingManager;
-		this.id = id;
-		
-		Skin skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
-		this.label = new Label(description, skin);
-		
-		this.value = value;
-		this.checkBox = new CheckBox("", skin);
-		this.checkBox.setChecked(value);
-		this.checkBox.addListener(this);
-		this.helpingText = helpingText;
-	}
-	
-	/**
-	 * Saves the current state in the {@link Preferences} object of {@link #settingManager}. 
-	 * Also calls .flush() method to save the state permanently.
-	 */
-	private void save() {
-		settingManager.getPreferences().putBoolean(id, value);
-		settingManager.getPreferences().flush();
-	}
-	
-	
-	/**
-	 * Returns the string that identifies the helping text for this Setting in the I18N
-	 */
-	public String getHelpingText() {
-	    return helpingText;
-	}
-
-
-	@Override
-	public void changed(ChangeEvent event, Actor actor) {
-		value = checkBox.isChecked();
-		save();
-	}
-
-
-	@Override
-	public Label getLabel() {
-		return label;
-	}
-
-	@Override
-	public Actor getActor() {
-		return checkBox;
-	}
-
+    
+    private String id;
+    private boolean value;
+    private SettingManager settingManager;
+    private CheckBox checkBox;
+    private Label label;
+    private String helpingText;
+    
+    /**
+     * Initializes the class with the {@link #id}. Also a {@link CheckBox}
+     * object and a {@link Label} is created.
+     * 
+     * @param settingManager
+     * @param id
+     * @param description
+     * @param value
+     */
+    public BooleanSetting(SettingManager settingManager, String id, String description, boolean value, String helpingText) {
+        this.settingManager = settingManager;
+        this.id = id;
+        
+        Skin skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
+        this.label = new Label(description, skin);
+        
+        this.value = value;
+        this.checkBox = new CheckBox("", skin);
+        this.checkBox.setChecked(value);
+        this.checkBox.addListener(this);
+        this.helpingText = helpingText;
+    }
+    
+    /**
+     * Saves the current state in the {@link Preferences} object of
+     * {@link #settingManager}. Also calls .flush() method to save the state
+     * permanently.
+     */
+    private void save() {
+        settingManager.getPreferences().putBoolean(id, value);
+        settingManager.getPreferences().flush();
+    }
+    
+    /**
+     * Returns the string that identifies the helping text for this Setting in
+     * the I18N
+     */
+    public String getHelpingText() {
+        return helpingText;
+    }
+    
+    @Override
+    public void changed(ChangeEvent event, Actor actor) {
+        value = checkBox.isChecked();
+        save();
+    }
+    
+    @Override
+    public Label getLabel() {
+        return label;
+    }
+    
+    @Override
+    public Actor getActor() {
+        return checkBox;
+    }
+    
 }

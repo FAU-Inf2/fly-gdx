@@ -16,32 +16,31 @@ import de.fau.cs.mad.fly.levels.ILevel;
  * Level script file for the time tutorial level.
  * 
  * @author Tobi
- *
+ * 
  */
 public class TimeTutorialLevel implements ILevel, IFeatureInit, ICollisionListener {
-	
-	@Override
-	public void create(GameControllerBuilder builder) {
-		builder.addFeatureToLists(this);
-	}
-
-	@Override
-	public void init(GameController game) {
-		InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.time"), 5);
-	}
-	
-
-	@Override
-	public void onCollision(GameObject g1, GameObject g2) {
-		if(!(g2 instanceof Collectible)) {
-			return;
-		}
-		List<GameObject> objects = GameController.getInstance().getLevel().components;
-		for(GameObject object : objects) {
-			if(object.getId().equals("IndicatorArrow")) {
-				object.hide();
-				return;
-			}
-		}
-	}
+    
+    @Override
+    public void create(GameControllerBuilder builder) {
+        builder.addFeatureToLists(this);
+    }
+    
+    @Override
+    public void init(GameController game) {
+        InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.time"), 5);
+    }
+    
+    @Override
+    public void onCollision(GameObject g1, GameObject g2) {
+        if (!(g2 instanceof Collectible)) {
+            return;
+        }
+        List<GameObject> objects = GameController.getInstance().getLevel().components;
+        for (GameObject object : objects) {
+            if (object.getId().equals("IndicatorArrow")) {
+                object.hide();
+                return;
+            }
+        }
+    }
 }

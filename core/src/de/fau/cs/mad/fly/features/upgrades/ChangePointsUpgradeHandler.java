@@ -11,20 +11,20 @@ import de.fau.cs.mad.fly.game.GameController;
  * Used to display and handle change points upgrades.
  * 
  * @author Tobi
- *
+ * 
  */
 public class ChangePointsUpgradeHandler extends CollectibleObjects {
-	/**
-	 * Creates a new change points upgrade handler.
-	 */
-	public ChangePointsUpgradeHandler() {
-		super("ChangePointsUpgrade");
-	}
-
-	@Override
-	protected void handleCollecting(Collectible c) {
-		ChangePointsUpgrade upgrade = (ChangePointsUpgrade) c;
-		GameController.getInstance().getScoreController().addBonusPoints(upgrade.getPointsChange());
-		InfoOverlay.getInstance().setOverlay(I18n.t("pointUpgradeCollected") + "\n" + I18n.t("bonus") + " " + upgrade.getPointsChange() + "", 3);
-	}
+    /**
+     * Creates a new change points upgrade handler.
+     */
+    public ChangePointsUpgradeHandler() {
+        super("ChangePointsUpgrade");
+    }
+    
+    @Override
+    protected void handleCollecting(Collectible c) {
+        ChangePointsUpgrade upgrade = (ChangePointsUpgrade) c;
+        GameController.getInstance().getScoreController().addBonusPoints(upgrade.getPointsChange());
+        InfoOverlay.getInstance().setOverlay(I18n.t("pointUpgradeCollected") + "\n" + I18n.t("bonus") + " " + upgrade.getPointsChange() + "", 3);
+    }
 }

@@ -7,13 +7,13 @@ import com.badlogic.gdx.math.Vector3;
  * Applies no gravity to an object.
  * 
  * @author Tobi
- *
+ * 
  */
-public class EmptyGravity implements IGravity {	
-	public EmptyGravity() {
-	}
-
-	@Override
-	public void applyGravity(Matrix4 transform, Vector3 movement) {
-	}
+public class EmptyGravity implements IGravity {
+    public EmptyGravity() {
+    }
+    
+    @Override
+    public void applyGravity(Matrix4 transform, Vector3 movement) {
+    }
 }
