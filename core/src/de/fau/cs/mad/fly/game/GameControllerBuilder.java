@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.game;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -227,9 +228,14 @@ public class GameControllerBuilder {
     private void createDecoRigidBodies(CollisionDetector collisionDetector, Level level) {
         Gdx.app.log("GameControllerBuilder.createDecoRigidBodies", "Setting up collision for decoration.");
         
-        for (GameObject o : level.components) {
-            if (!o.getId().equals("space")) {
-                btCollisionShape displayShape = collisionDetector.getShapeManager().createConvexShape(o.getModelId(), o);
+        GameObject o;
+        List<GameObject> gameObjects = level.components;
+        int size = gameObjects.size();
+        btCollisionShape displayShape;
+        for (int i = 0; i < size; i++) {
+            o = gameObjects.get(i);
+            if (!o.getId().equals(Level.BORDER_NAME)) {
+                displayShape = collisionDetector.getShapeManager().createConvexShape(o.getModelId(), o);
                 o.createRigidBody(o.getModelId(), displayShape, 0.0f, CollisionDetector.OBJECT_FLAG, CollisionDetector.ALL_FLAG);
                 collisionDetector.addRigidBody(o);
             }

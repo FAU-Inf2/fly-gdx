@@ -1,6 +1,7 @@
 package de.fau.cs.mad.fly;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -20,6 +21,7 @@ import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
 import de.fau.cs.mad.fly.ui.LevelChooserScreen;
 import de.fau.cs.mad.fly.ui.LevelGroupScreen;
+import de.fau.cs.mad.fly.ui.LevelLoadingScreen;
 import de.fau.cs.mad.fly.ui.LevelsStatisScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -27,7 +29,6 @@ import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
 import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
-import de.fau.cs.mad.fly.ui.SplashScreen;
 import de.fau.cs.mad.fly.ui.StatisticsScreen;
 
 /**
@@ -41,7 +42,7 @@ import de.fau.cs.mad.fly.ui.StatisticsScreen;
  * 
  * @author Tobias Zangl
  */
-public class Fly extends Game {
+public class Fly extends Game implements Loadable<Fly> {
     
     /**
      * The version of the app. (works only on android)
@@ -53,9 +54,9 @@ public class Fly extends Game {
      * <p>
      * Currently debug mode only disables the level dependencies.
      */
-    public static boolean DEBUG_MODE = false;
+    public static boolean DEBUG_MODE = true;
     
-    private SplashScreen splashScreen;
+    private LoadingScreen<Fly> splashScreen;
     private LevelGroupScreen levelGroupScreen;
     private LevelChooserScreen levelChooserScreen;
     private PlaneChooserScreen planeChooserScreen;
@@ -70,44 +71,86 @@ public class Fly extends Game {
     
     private SkinManager skinManager;
     
+    private List<ProgressListener<Fly>> listeners = new ArrayList<ProgressListener<Fly>>();
+    
+    private int progress = 0;
+    
     @Override
     public void create() {
-        // for nex5 this message comes directly after pressing the icon
-        Gdx.app.log("timing", "Fly.create enter");
         
+        // init Assets, has to be done in the main Tread because it needs the
+        // OpenGl context that is only offered by the main Thread.
         long time = System.currentTimeMillis();
-        Assets.init(); // nex5: 10 ms
+        Assets.init();
         Gdx.app.log("timing", "Fly.create assets init: " + String.valueOf(System.currentTimeMillis() - time));
         
+        // load SkinManager, has to be done in the main Tread because it needs
+        // the OpenGl context that is only offered by the main Thread.
         time = System.currentTimeMillis();
-        skinManager = new SkinManager("uiskin.json"); // nex5: 150 ms
+        skinManager = new SkinManager("uiskin.json");
         Gdx.app.log("timing", "Fly.create creating skin manager: " + String.valueOf(System.currentTimeMillis() - time));
         
-        time = System.currentTimeMillis();
-        new Thread(new Runnable() {
+        addProgressListener(new ProgressListener.ProgressAdapter<Fly>() {
+            @Override
+            public void progressFinished(Fly fly) {
+                fly.setMainMenuScreen();
+            }
+        });
+        
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                long time = System.currentTimeMillis();
-                PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-                Gdx.app.log("timing", "Fly.create creating db and getCurrentPlayerProfile " + String.valueOf(System.currentTimeMillis() - time));
+                init();
             }
-        }).start(); // nex5: 1 ms
-        Gdx.app.log("timing", "Fly.create starting player profile thread: " + String.valueOf(System.currentTimeMillis() - time));
+        };
         
-        time = System.currentTimeMillis();
+        Thread loadingThread = new Thread(runnable);
+        loadingThread.start();
+        
+        setSplashScreen();
+    }
+    
+    protected void init() {
+        long time = System.currentTimeMillis();
         LevelGroupManager.createLevelManager();
         Gdx.app.log("timing", "Fly.create start level manager: " + String.valueOf(System.currentTimeMillis() - time));
+        progress = 10;
+        
+        time = System.currentTimeMillis();
+        PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+        Gdx.app.log("timing", "Fly.create creating db and getCurrentPlayerProfile " + String.valueOf(System.currentTimeMillis() - time));
+        progress = 90;
         
         time = System.currentTimeMillis();
         ParticleController.createParticleController();
         Gdx.app.log("timing", "Fly.create create particle controller: " + String.valueOf(System.currentTimeMillis() - time));
         
-        time = System.currentTimeMillis();
-        setMainMenuScreen(); // nex5: 125 ms
-        Gdx.app.log("timing", "Fly.create set main menu screen: " + String.valueOf(System.currentTimeMillis() - time));
-        
-        // disabled for debugging reasons
-        // setSplashScreen();
+        progress = 100;
+    }
+    
+    /**
+     * Allows to add a listener, to listen for the loading progress of the app.
+     */
+    public void addProgressListener(ProgressListener<Fly> listener) {
+        this.listeners.add(listener);
+    }
+    
+    /**
+     * Method that is called by by the {@link LoadingScreen} during the loading
+     * progress to get the current loading progress.
+     */
+    public void update() {
+        int size = listeners.size();
+        int i;
+        for (i = 0; i < size; i++) {
+            listeners.get(i).progressUpdated(progress);
+        }
+        if (progress >= 100) {
+            for (i = 0; i < size; i++) {
+                listeners.get(i).progressFinished(this);
+            }
+            progress = 0;
+        }
     }
     
     @Override
@@ -136,11 +179,6 @@ public class Fly extends Game {
         disposeScreen(statisticsScreen);
         disposeScreen(gameScreen);
         disposeScreen(globalHighScoreScreen);
-        
-        // TODO: enable after the bug with disappearing widgets after restarting
-        // the app is fixed
-        // skinManager.dispose();
-        // skinManager = null;
     }
     
     public void disposeScreen(Screen screen) {
@@ -207,7 +245,7 @@ public class Fly extends Game {
      */
     public void setSplashScreen() {
         if (splashScreen == null) {
-            splashScreen = new SplashScreen();
+            splashScreen = new LoadingScreen<Fly>(this);
         }
         setScreen(splashScreen);
     }
@@ -336,7 +374,7 @@ public class Fly extends Game {
     private int getScreenMode(Screen screen) {
         if (screen == null)
             return 0;
-        if (screen instanceof GameScreen || screen instanceof LoadingScreen)
+        if (screen instanceof GameScreen || screen instanceof LevelLoadingScreen)
             return Mode3d2dChangedEvent.MODE_3D;
         return Mode3d2dChangedEvent.MODE_2D;
     }

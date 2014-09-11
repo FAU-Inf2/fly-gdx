@@ -153,7 +153,7 @@ class LevelExporter:
 	
 	def checkIfDependencyIsUsed(self, model):
 		"""Checks if the dependency is used and has to be exported"""
-		if model == "hole" or model == "space":
+		if model == "hole" or model == "border":
 			return True
 		
 		for item in bpy.data.objects:

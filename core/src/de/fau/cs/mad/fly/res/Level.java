@@ -17,7 +17,7 @@ import java.util.*;
 
 /**
  * 
- * @author Lukas Hahmann
+ * @author Lukas Hahmann <lukas.hahmann@gmail.com>
  * 
  */
 public class Level implements Disposable {
@@ -28,7 +28,10 @@ public class Level implements Disposable {
      * radius 100.
      */
     public final float radius = 100.0f;
+    public final static String AMBIENT_ENVIRONMENT = "ambient";
     public final LevelProfile head;
+    /** ID of the border object */
+    public final static String BORDER_NAME = "border";
     
     public String levelClass = "DefaultLevel";
     
@@ -53,7 +56,7 @@ public class Level implements Disposable {
     public void setLeftTime(float leftTime) {
         this.leftTime = leftTime;
     }
-
+    
     public Level(String name, Perspective start, List<GameObject> components, Map<String, GameModel> dependencies, Map<String, Environment> environments) {
         this.head = new LevelProfile();
         this.head.name = name;
@@ -61,11 +64,16 @@ public class Level implements Disposable {
         this.start = start;
         this.dependencies = Collections.unmodifiableMap(dependencies);
         this.environment = environments.get("lighting");
-        environments.get("ambient");
+        environments.get(AMBIENT_ENVIRONMENT);
         
-        for (GameObject c : components) {
-            if (c.getId().equals("border")) {
+        int size = components.size();
+        GameObject c;
+        for (int i = 0; i < size; i++) {
+            c = components.get(i);
+            if (c.getId().equals(BORDER_NAME)) {
                 borderObject = c;
+                borderObject.environment = environments.get(AMBIENT_ENVIRONMENT);
+                i = size; // break
             }
         }
         
@@ -175,8 +183,10 @@ public class Level implements Disposable {
         int i;
         final int numberOfComponents = components.size();
         for (i = 0; i < numberOfComponents; i++) {
-            if(components.get(i).environment != null) components.get(i).render(batch, camera);
-            else components.get(i).render(batch, environment, camera);
+            if (components.get(i).environment != null)
+                components.get(i).render(batch, camera);
+            else
+                components.get(i).render(batch, environment, camera);
         }
         
         gateCircuit.render(batch, environment, camera);

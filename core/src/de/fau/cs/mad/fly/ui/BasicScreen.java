@@ -39,7 +39,7 @@ public abstract class BasicScreen implements Screen {
 	}
 
 	/** You have to overwrite this method to create your custom content */
-	abstract protected void generateContent();
+	protected void generateContent() {};
 	
 	@Override
 	public void render(float delta) {

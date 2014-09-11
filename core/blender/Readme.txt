@@ -19,7 +19,7 @@ Every Level needs:
 2. Object (can be a box etc.) called Level:
 	- position does not matter at all
 	- custom properties (with example values):
-		Border: space
+		Border: border
 		Class: tutorials.xxx		(can be empty)
 		ID: 1
 		Name: Level 1

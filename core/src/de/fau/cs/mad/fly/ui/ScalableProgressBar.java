@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class ScalableProgressBar extends Actor {
 
@@ -11,7 +12,8 @@ public class ScalableProgressBar extends Actor {
 	public NinePatch foreground;
 	float progress = 0f;
 
-	public ScalableProgressBar(ScalableProgressBarStyle style) {
+	public ScalableProgressBar(Skin skin) {
+	    ScalableProgressBarStyle style = skin.get("default", ScalableProgressBarStyle.class);
 		background = style.background;
 		foreground = style.foreground;
 		super.setHeight(133f);

@@ -2,9 +2,8 @@
     "class": "",
     "components": [
         {
-            "id": "space",
-            "ref": "space",
-			"environment": "ambient"
+            "id": "border",
+            "ref": "space"
         }
     ],
     "dependencies": {

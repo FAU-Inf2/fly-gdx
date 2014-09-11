@@ -34,7 +34,7 @@ public class BackProcessor extends InputAdapter {
 					game.setPlaneUpgradeScreen();
 				}
 			} else if (!(game.getScreen() instanceof MainMenuScreen)) {
-				if (game.getScreen() instanceof LoadingScreen) {
+				if (game.getScreen() instanceof LevelLoadingScreen) {
 					game.getGameController().disposeGame();
 				}
 				game.setMainMenuScreen();

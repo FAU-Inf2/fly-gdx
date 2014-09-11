@@ -1,44 +1,32 @@
 package de.fau.cs.mad.fly.ui;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.Loader;
+import de.fau.cs.mad.fly.Loadable;
 import de.fau.cs.mad.fly.ProgressListener;
 import de.fau.cs.mad.fly.res.Assets;
-import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.ui.ScalableProgressBar.ScalableProgressBarStyle;
 
 /**
- * Displays the loading screen with a progress bar.
- * <p>
- * If the value of the progress bar reaches 100f the game screen is loaded.
+ * Displays the splash screen.
  * 
  * @author Tobias Zangl, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class LoadingScreen extends BasicScreen {
+public class LoadingScreen<T> extends BasicScreen {
+    protected final SpriteBatch batch;
+    protected Sprite background;
+    protected ScalableProgressBar progressBar;
+    protected float progressBarWidth = 2000f;
     
-    private Sprite background;
+    protected Table table;
     
-    private ScalableProgressBar progressBar;
-    private Loader loader;
-    private Batch batch;
-    private float progressBarWidth = 2000f;
+    protected Loadable<T> listenable;
     
-    private Table table;
-    
-    public void initiate(Loader loader) {
+    public LoadingScreen(Loadable<T> listenable) {
+        this.listenable = listenable;
         batch = new SpriteBatch();
         Assets.load(Assets.background);
         background = new Sprite(Assets.manager.get(Assets.background));
@@ -58,8 +46,7 @@ public class LoadingScreen extends BasicScreen {
         }
         background.setPosition(deltaX, deltaY);
         
-        ScalableProgressBarStyle style = skin.get("default", ScalableProgressBarStyle.class);
-        progressBar = new ScalableProgressBar(style);
+        progressBar = new ScalableProgressBar(skin);
         progressBar.setWidth(progressBarWidth);
         
         table = new Table();
@@ -67,9 +54,7 @@ public class LoadingScreen extends BasicScreen {
         stage.addActor(table);
         
         table.add(progressBar).bottom().expand();
-        
-        this.loader = loader;
-        loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
+        listenable.addProgressListener(new ProgressListener.ProgressAdapter<T>() {
             @Override
             public void progressUpdated(float percent) {
                 progressBar.setProgress(percent / 100f);
@@ -77,38 +62,12 @@ public class LoadingScreen extends BasicScreen {
         });
     }
     
-    private boolean add = true;
-    
-    public void addButton() {
-        if (add) {
-            progressBar.setVisible(false);
-            
-            final TextButton button = new TextButton(I18n.t("button.start"), skin);
-            button.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    Fly app = ((Fly) Gdx.app.getApplicationListener());
-                    app.setGameScreen();
-                    app.getGameController().initGame();
-                    app.getGameController().getFlightController().resetSteering();
-                    dispose();
-                }
-            });
-            table.add(button).top().expand();
-            if(Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
-                final TextButton button2 = new TextButton("Compass available: " + Boolean.toString(Gdx.input.isPeripheralAvailable(Input.Peripheral.Compass)), skin);
-                table.add(button2).bottom().expand();
-            }
-            inputProcessor.addProcessor(stage);
-            Gdx.input.setInputProcessor(inputProcessor);
-        }
-        add = false;
-    }
-    
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
+        listenable.update();
         
         batch.begin();
         background.draw(batch);
@@ -116,27 +75,15 @@ public class LoadingScreen extends BasicScreen {
         
         stage.act(delta);
         stage.draw();
-        
-        loader.update();
     }
     
     @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+    public void dispose() {
+        batch.dispose();
     }
     
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-    }
-    
-    @Override
-    public void dispose() {
-        stage.dispose();
-    }
-    
-    @Override
-    protected void generateContent() {
-        // done in initiate
     }
 }

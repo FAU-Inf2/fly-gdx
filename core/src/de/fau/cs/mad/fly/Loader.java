@@ -9,14 +9,14 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.ui.LoadingScreen;
+import de.fau.cs.mad.fly.ui.LevelLoadingScreen;
 
 /**
  * Created by Jakob Falke on 18.06.14.
  * 
  * Controller of the loading screen. Only used to load levels.
  */
-public class Loader {
+public class Loader implements Loadable<Level>{
     
     private Collection<ProgressListener<Level>> listeners = new ArrayList<ProgressListener<Level>>();
     private float progress = 0;
@@ -24,39 +24,39 @@ public class Loader {
     private static Loader instance;
     
     /**
-	 * The 3D info of the current level the player is playing or just finished.
-	 */
-	private Level currentLevel;
-	
-    /**
-	 * Setter for the current level the player is playing.
-	 * @param l
-	 */
-    public void setCurrentLevel(Level level) {
-		this.currentLevel = level;
-	}
-    /**
-	 * Getter for the current level the player is playing.
-	 * @return level
-	 */
-	public Level getCurrentLevel() {
-		return currentLevel;
-	}
+     * The 3D info of the current level the player is playing or just finished.
+     */
+    private Level currentLevel;
     
-	private Loader(){
-		
-	}
-	
-	public static Loader getInstance()
-	{
-		 if(instance == null) {
-	            instance = new Loader();
-	        }
-		 return instance;
-	}
-	
-
-	
+    /**
+     * Setter for the current level the player is playing.
+     * 
+     * @param l
+     */
+    public void setCurrentLevel(Level level) {
+        this.currentLevel = level;
+    }
+    
+    /**
+     * Getter for the current level the player is playing.
+     * 
+     * @return level
+     */
+    public Level getCurrentLevel() {
+        return currentLevel;
+    }
+    
+    private Loader() {
+        
+    }
+    
+    public static Loader getInstance() {
+        if (instance == null) {
+            instance = new Loader();
+        }
+        return instance;
+    }
+    
     public void setTarget(AssetDescriptor<Level> target) {
         this.target = target;
     }
@@ -95,7 +95,7 @@ public class Loader {
     }
     
     public static Loader create(String target) {
-       
+        
         Gdx.app.log("Loader.create", target);
         instance.setTarget(new AssetDescriptor<Level>(target, Level.class));
         return instance;
@@ -109,36 +109,35 @@ public class Loader {
      * player.
      */
     public void loadLevel(final LevelProfile levelProfile) {
-		if (getCurrentLevel() != null
-				&& (!getCurrentLevel().head.file.equals(levelProfile.file))) {
-
-			String levelPath = getCurrentLevel().head.file;
-			Gdx.app.log("Gamescreen.hide", "dispose level: " + levelPath);
-			Assets.unload(levelPath);
-			setCurrentLevel(null);
-		}
-			
-        final LoadingScreen loadingScreen = new LoadingScreen();
+        if (getCurrentLevel() != null && (!getCurrentLevel().head.file.equals(levelProfile.file))) {
+            
+            String levelPath = getCurrentLevel().head.file;
+            Gdx.app.log("Gamescreen.hide", "dispose level: " + levelPath);
+            Assets.unload(levelPath);
+            setCurrentLevel(null);
+        }
+        
+        
         Loader loader = Loader.create(levelProfile.file);
-        loadingScreen.initiate(loader);
+        final LevelLoadingScreen loadingScreen = new LevelLoadingScreen(loader);
         loader.initiate();
         ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
             public void progressFinished(Level level) {
-				level.getGateCircuit().reset();
-				level.head.file = levelProfile.file;
-				setCurrentLevel(level);
-				((Fly) Gdx.app.getApplicationListener()).initGameController();
-				
-				loadingScreen.addButton();
+                level.getGateCircuit().reset();
+                level.head.file = levelProfile.file;
+                setCurrentLevel(level);
+                ((Fly) Gdx.app.getApplicationListener()).initGameController();
+                
+                loadingScreen.addButton();
             }
         });
     }
     
     public void dispose() {
-		
-		instance=null;
-		Gdx.app.log("Loader", "loader is disposed");
-	}
+        
+        instance = null;
+        Gdx.app.log("Loader", "loader is disposed");
+    }
 }
