@@ -48,7 +48,7 @@ public class Fly extends Game implements Loadable<Fly> {
     /**
      * The version of the app. (works only on android)
      */
-    public static String VERSION = "1.0.0";
+    public static String VERSION = "1.1.0";
     
     /**
      * True if debug mode is enabled, false otherwise.
