@@ -26,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -122,17 +121,12 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         
         // adding the table containing the buttons with preview of every plane
         Table scrollableTable = new Table(skin);
-        scrollableTable.bottom();
-        ScrollPane scrollPane = new ScrollPane(scrollableTable, skin);
-        scrollPane.setScrollingDisabled(false, true);
-        scrollPane.setPosition(0, 0);
-        scrollPane.setBounds(0, 0, UI.Window.REFERENCE_WIDTH, UI.Window.REFERENCE_HEIGHT / 3);
+        scrollableTable.setFillParent(true);
+        scrollableTable.pad(UI.Window.BORDER_SPACE);
         
         int size = allPlanes.size();
+        int passedLevelGroupId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
         for (int i = 1; i <= size; i++) {
-            if (!Fly.DEBUG_MODE && allPlanes.get(i).levelGroupDependency > PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID()) {
-                continue;
-            }
             
             Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(i).modelRef + ".png"));
             TextureRegion image = new TextureRegion(texture1);
@@ -141,23 +135,27 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
             style.imageDown = new TextureRegionDrawable(image);
             
             ImageButton button = new ImageButton(style);
-            final int index = i;
+            if (!Fly.DEBUG_MODE && allPlanes.get(i).levelGroupDependency > passedLevelGroupId) {
+                button.setDisabled(true);
+                Gdx.app.log("PlaneChooserScreen", "disabled");
+            } else {
+                final int index = i;
+                
+                button.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        currentPlane = allPlanes.get(index);
+                        PlaneManager.getInstance().setChosenPlane(currentPlane);
+                        resetVectors();
+                        loadCurrentPlane();
+                        updateOverlay();
+                    }
+                });
+            }
             
-            button.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    currentPlane = allPlanes.get(index);
-                    PlaneManager.getInstance().setChosenPlane(currentPlane);
-                    resetVectors();
-                    loadCurrentPlane();
-                    updateOverlay();
-                }
-            });
-            
-            scrollableTable.add(button);
+            scrollableTable.add(button).bottom().expand();
         }
-        
-        stage.addActor(scrollPane);
+        stage.addActor(scrollableTable);
         
         // initializing the overlay which contains the details of the current
         // spaceship
@@ -184,7 +182,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         
         Table table = new Table(skin);
         table.setFillParent(true);
-        table.top().right();
+        table.top().right().pad(UI.Window.BORDER_SPACE);
         table.add(openButton);
         
         stage.addActor(table);
