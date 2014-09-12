@@ -100,7 +100,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     }
                     
                     showScore(messageTable);
-                    messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).colspan(2);
+                    messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).colspan(2).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                 } else {
                     if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id) {
                         currentPlayer.setPassedLevelgroupID(currentPlayer.getnextLevelGroup().id);
@@ -115,21 +115,22 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     showScore(messageTable);
                     
                     TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), skin);
+                    
+                    final PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                    playerProfile.setToNextLevelGroup();
+                    playerProfile.saveCurrentLevelGroup();
+                    playerProfile.saveCurrentLevelProfile();
                     nextGroupButton.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             // set and load new level
-                            PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-                            playerProfile.setToNextLevelGroup();
-                            playerProfile.saveCurrentLevelGroup();
-                            playerProfile.saveCurrentLevelProfile();
                             Loader.getInstance().loadLevel(playerProfile.getCurrentLevelProfile());
                         }
                     });
                     
-                    messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH);
+                    messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                     messageTable.add();
-                    messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
+                    messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                 }
                 
             } else {
@@ -141,19 +142,20 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 showInfoLabel(messageTable, "level.congratulations");
                 showScore(messageTable);
                 TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), skin);
+                
+                final PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                playerProfile.setToNextLevel();
+                playerProfile.saveCurrentLevelProfile();
                 nextLevelButton.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevel();
-                        PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelProfile();
-                        // set and load new level
-                        LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
-                        Loader.getInstance().loadLevel(levelHead);
+                        // load new level
+                        Loader.getInstance().loadLevel(playerProfile.getCurrentLevelProfile());
                     }
                 });
-                messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH);
+                messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                 messageTable.add();
-                messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
+                messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
             }
             
         } else if (gameController.getPlayer().isDead()) {
@@ -173,8 +175,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 }
             });
             
-            messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH);
-            messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
+            messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
             messageTable.row().expand();
         }
         

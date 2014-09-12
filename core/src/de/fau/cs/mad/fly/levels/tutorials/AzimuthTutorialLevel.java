@@ -48,6 +48,8 @@ public class AzimuthTutorialLevel implements ILevel, IFeatureInit, GateCircuitLi
     
     @Override
     public void onGatePassed(GateGoal gate) {
-        InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
+        if (gate.getGateId() < 3) {
+            InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
+        }
     }
 }
