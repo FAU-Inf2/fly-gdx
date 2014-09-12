@@ -37,17 +37,20 @@ public class GameScreen implements Screen {
     
     @Override
     public void hide() {
+        Gdx.app.log("GameScreen", "hide");
         gameController.disposeGame();
     }
     
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
+        Gdx.app.log("GameScreen", "pause");
+        gameController.pauseGame();
     }
     
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
+        Gdx.app.log("GameScreen", "resume");
+        gameController.resumeGame();
     }
     
     @Override
