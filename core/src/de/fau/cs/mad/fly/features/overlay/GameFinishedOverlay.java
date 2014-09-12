@@ -118,16 +118,17 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     nextGroupButton.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevelGroup();
-                            PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelGroup();
-                            PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelProfile();
                             // set and load new level
-                            LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
-                            Loader.getInstance().loadLevel(levelHead);
+                            PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                            playerProfile.setToNextLevelGroup();
+                            playerProfile.saveCurrentLevelGroup();
+                            playerProfile.saveCurrentLevelProfile();
+                            Loader.getInstance().loadLevel(playerProfile.getCurrentLevelProfile());
                         }
                     });
                     
                     messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH);
+                    messageTable.add();
                     messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
                 }
                 
@@ -151,6 +152,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     }
                 });
                 messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH);
+                messageTable.add();
                 messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH);
             }
             
@@ -184,7 +186,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     
     private void showInfoLabel(final Table messageTable, String info) {
         Label infoLabel = new Label(I18n.t(info), skin);
-        messageTable.add(infoLabel).colspan(2);
+        messageTable.add(infoLabel).colspan(3);
         messageTable.row().expand();
     }
     
@@ -199,15 +201,45 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         // he got in this level
         PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(newScore.getTotalScore());
         
-        messageTable.add(new Label(I18n.t("newScore"), skin)).pad(6f).uniform();
-        messageTable.add(new Label(newScore.getTotalScore() + "", skin)).pad(6f).uniform();
+        Label scoreName = new Label(I18n.t("newScore"), skin);
+        messageTable.columnDefaults(1).width(50f);
+        messageTable.add(scoreName).right();
+        messageTable.add();
+        messageTable.add(new Label(newScore.getTotalScore() + "", skin)).left();
         messageTable.row().expand();
         
-        for (ScoreDetail detail : newScore.getScoreDetails()) {
-            messageTable.row().expand();
-            messageTable.add(new Label(I18n.t(detail.getDetailName()), skin)).pad(6f).uniform();
-            messageTable.add(new Label(detail.getValue(), skin)).pad(6f).uniform();
-        }
+        
+        // gates
+        ScoreDetail detail = newScore.getScoreDetails().get(0);
+        messageTable.add(new Label(I18n.t(detail.getDetailName()), skin, "medium-font")).right();
+        messageTable.add();
+        StringBuilder gatesBuilder = new StringBuilder();
+        gatesBuilder.append(GameController.getInstance().getScoreController().getGatesPassed());
+        gatesBuilder.append(" (");
+        gatesBuilder.append(detail.getValue());
+        gatesBuilder.append(")");
+        
+        messageTable.add(new Label(gatesBuilder, skin, "medium-font")).left();
+        
+        // time
+        messageTable.row().expand();
+        detail = newScore.getScoreDetails().get(1);
+        messageTable.add(new Label(I18n.t(detail.getDetailName()), skin, "medium-font")).right();
+        messageTable.add();
+        StringBuilder timeBuilder = new StringBuilder();
+        timeBuilder.append(gameController.getTimeController().getIntegerTime());
+        timeBuilder.append(" s (");
+        timeBuilder.append(detail.getValue());
+        timeBuilder.append(")");
+        messageTable.add(new Label(timeBuilder, skin, "medium-font")).left();
+        
+        // bonus points
+        messageTable.row().expand();
+        detail = newScore.getScoreDetails().get(2);
+        messageTable.add(new Label(I18n.t(detail.getDetailName()), skin, "medium-font")).right();
+        messageTable.add();
+        messageTable.add(new Label(detail.getValue(), skin, "medium-font")).left();
+        
         Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
         if ((tmpScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > tmpScore.getTotalScore()) {
             new Thread(new Runnable() {
@@ -217,8 +249,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 }
             }).start();
             
-            messageTable.row().expand();
-            messageTable.add(new Label(I18n.t("newRecord"), skin)).pad(6f).uniform().colspan(2);
+            messageTable.row();
+            messageTable.add(new Label(I18n.t("newRecord"), skin)).colspan(3);
         }
         messageTable.row().expand();
     }

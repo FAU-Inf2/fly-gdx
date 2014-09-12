@@ -7,7 +7,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -58,7 +57,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     private IPlane.Head currentPlane;
     
     private Skin skin;
-    protected final Color backgroundColor;
     
     private Stage stage;
     private Viewport viewport;
@@ -105,7 +103,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         allPlanes = PlaneManager.getInstance().getSpaceshipList();
         
         skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
-        backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
         
         // initialize the stage
         stage = new Stage();
@@ -177,22 +174,23 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         }
         background.setPosition(deltaX, deltaY);
         
+        //removed for release
         // adding the button that opens the UpgradeScreen
-        ImageButton openButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
-        
-        Table table = new Table(skin);
-        table.setFillParent(true);
-        table.top().right().pad(UI.Window.BORDER_SPACE);
-        table.add(openButton);
-        
-        stage.addActor(table);
-        
-        openButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setPlaneUpgradeScreen();
-            }
-        });
+//        ImageButton openButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+//        
+//        Table table = new Table(skin);
+//        table.setFillParent(true);
+//        table.top().right().pad(UI.Window.BORDER_SPACE);
+//        table.add(openButton);
+//        
+//        stage.addActor(table);
+//        
+//        openButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                ((Fly) Gdx.app.getApplicationListener()).setPlaneUpgradeScreen();
+//            }
+//        });
         
         // initialize the InputProcessor
         inputProcessor = new InputMultiplexer(stage, this, new BackProcessor());
@@ -221,7 +219,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         
         // Steady rotation if the Player doesn't touch the Touchscreen

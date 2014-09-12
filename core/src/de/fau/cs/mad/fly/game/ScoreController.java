@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
-
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.res.GateCircuitAdapter;
@@ -27,6 +25,11 @@ public class ScoreController extends GateCircuitAdapter {
      * The score from the passed gates.
      */
     private int gatePassedScore = 0;
+    
+    /**
+     * Number of gates that has been passed.
+     */
+    private int gatesPassed = 0;
     
     /**
      * The score from collected bonus points.
@@ -137,8 +140,21 @@ public class ScoreController extends GateCircuitAdapter {
     
     @Override
     public void onGatePassed(GateGoal gate) {
+        // only cout real gates, not the default gate at the beginning
+        if (gate.getGateId() >= 0) {
+            this.gatesPassed++;
+        }
         this.gatePassedScore += gate.getScore();
         this.totalScore += gate.getScore();
         scoreChanged();
+    }
+    
+    /**
+     * Returns the number of passed gates in this level
+     * 
+     * @return
+     */
+    public int getGatesPassed() {
+        return gatesPassed;
     }
 }

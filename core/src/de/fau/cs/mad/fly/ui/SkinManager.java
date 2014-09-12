@@ -44,10 +44,16 @@ public class SkinManager implements Disposable {
         BitmapFont font = new BitmapFont(fontFile, textureRegion, false);
         skin.add("small-font", font);
         
+        // medium font, it has to be recreated, because adding it to the skin,
+        // does not make a copy
+        font = new BitmapFont(fontFile, textureRegion, false);
+        font.scale(1.03f);
+        skin.add("medium-font", font);
+        
         // standard font, it has to be recreated, because adding it to the skin,
         // does not make a copy
         font = new BitmapFont(fontFile, textureRegion, false);
-        font.scale(1.5f);
+        font.scale(1.3f);
         skin.add("default-font", font);
         
         skin.load(Gdx.files.internal(skinFile));

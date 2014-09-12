@@ -1,15 +1,14 @@
 package de.fau.cs.mad.fly.profile;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.sql.DatabaseCursor;
+
 import de.fau.cs.mad.fly.db.FlyDBManager;
 
 /**
- * Manage scores of all player. todo: save and get scores from Database
+ * Manage scores of all player.
  * 
  * @ Qufang Fan
  */
