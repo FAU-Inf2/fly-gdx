@@ -299,17 +299,19 @@ public class EndlessLevelGenerator {
         
         Collectible c = null;
         
+        float speedFactor = MathUtils.random(0.1f, 0.5f);
+        
         switch (random) {
         case 0:
             c = new ChangeTimeUpgrade(manager.get("models/timeUpgrade/timeUpgrade", GameModel.class), 10);
             changeTimeHandler.addObject(c);
             break;
         case 1:
-            c = new InstantSpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), 2.f, 5.f);
+            c = new InstantSpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), speedFactor + 1.f, 10.f);
             instantSpeedHandler.addObject(c);
             break;
         case 2:
-            c = new LinearSpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), 1.f, 10.f, 1.f);
+            c = new LinearSpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), speedFactor, 5.f, speedFactor);
             linearSpeedHandler.addObject(c);
             break;
         default:
