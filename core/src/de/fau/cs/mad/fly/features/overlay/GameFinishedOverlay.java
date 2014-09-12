@@ -176,10 +176,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             });
             
             messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            messageTable.add();
             messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
             messageTable.row().expand();
         }
-        
+        messageTable.debug();
         outerTable.add(messageTable).center();
         stage.addActor(outerTable);
         Fly game = (Fly) Gdx.app.getApplicationListener();
@@ -189,7 +190,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private void showInfoLabel(final Table messageTable, String info) {
         Label infoLabel = new Label(I18n.t(info), skin);
         messageTable.add(infoLabel).colspan(3);
-        messageTable.row().expand();
+        messageTable.row();
     }
     
     /**

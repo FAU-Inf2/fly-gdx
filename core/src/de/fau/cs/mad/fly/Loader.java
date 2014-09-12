@@ -109,7 +109,7 @@ public class Loader implements Loadable<Level> {
      * player.
      */
     public void loadLevel(final LevelProfile levelProfile) {
-        if (getCurrentLevel() != null && (!getCurrentLevel().head.file.equals(levelProfile.file))) {
+        if (getCurrentLevel() != null) {
             
             String levelPath = getCurrentLevel().head.file;
             Gdx.app.log("Gamescreen.hide", "dispose level: " + levelPath);
