@@ -2,7 +2,7 @@
 	"id": 4,
 	"name": "Rocket",
 	"modelRef": "rocket",
-	"levelGroupDependency": 3,
+	"levelGroupDependency": 4,
 	"speed": 16,
 	"rollingSpeed": 10,
 	"azimuthSpeed": 10,
