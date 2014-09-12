@@ -31,7 +31,6 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
 public class PlayerScreen extends BasicScreen {
     
     private TextButton addUserButton;
-    private Table userTable;
     private TextField newUserField;
     
     private int selectedUserindex = 0;
@@ -42,8 +41,8 @@ public class PlayerScreen extends BasicScreen {
      * all these control are placed in userTable
      */
     private void generateUserTable() {
-        userTable = new Table();
-        userTable.pad(UI.Window.BORDER_SPACE);
+        Table userTable = new Table();
+        userTable.pad(UI.Window.BORDER_SPACE,UI.Window.BORDER_SPACE,UI.Window.REFERENCE_HEIGHT/2,UI.Window.BORDER_SPACE);
         userTable.setFillParent(true);
         userTable.add(new Label(I18n.t("usernameLableText"), skin));
         // add all user to userList and set the current user to display value
@@ -63,8 +62,8 @@ public class PlayerScreen extends BasicScreen {
                 return false;
             }
         });
-        userTable.add(userList).width(UI.Buttons.MAIN_BUTTON_WIDTH).uniform();
-        userTable.row();
+        userTable.add(userList).width(UI.Buttons.MAIN_BUTTON_WIDTH);
+        userTable.row().expand();
         
         // add user field and button
         newUserField = new TextField("", skin);
@@ -78,9 +77,9 @@ public class PlayerScreen extends BasicScreen {
             }
         });
         newUserField.setMessageText(I18n.t("TipsUserName"));
-        userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
-        userTable.add(addUserButton).pad(UI.Buttons.SPACE_HEIGHT).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-        userTable.layout();
+        userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).top().expand();
+        userTable.add(addUserButton).pad(UI.Buttons.SPACE_HEIGHT).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).top().expand();
+        stage.addActor(userTable);
     }
     
     /**
@@ -111,7 +110,6 @@ public class PlayerScreen extends BasicScreen {
         addUserButton = new TextButton(I18n.t("addUserButtonText"), skin);
         stage.clear();
         generateUserTable();
-        stage.addActor(userTable);
         
         addUserButton.addListener(new ChangeListener() {
             @Override
