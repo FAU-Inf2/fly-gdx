@@ -2,15 +2,6 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.Map;
 
-import de.fau.cs.mad.fly.Fly;
-import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.game.GameModel;
-import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.player.IPlane;
-import de.fau.cs.mad.fly.profile.PlaneManager;
-import de.fau.cs.mad.fly.profile.PlayerProfileManager;
-import de.fau.cs.mad.fly.res.Assets;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -34,14 +25,23 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.I18n;
+import de.fau.cs.mad.fly.game.GameModel;
+import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.player.IPlane;
+import de.fau.cs.mad.fly.profile.PlaneManager;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.res.Assets;
 
 /**
  * Shows all available Spaceships and gives the user the ability to choose the

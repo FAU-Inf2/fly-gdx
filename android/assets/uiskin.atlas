@@ -146,8 +146,8 @@ arrow
 helpArrowDown
   rotate: false
   xy: 370, 1
-  size: 173, 250
-  orig: 173, 250
+  size: 172, 250
+  orig: 172, 250
   offset: 0, 0
   index: -1
 helpBackground

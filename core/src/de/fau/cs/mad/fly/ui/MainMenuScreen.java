@@ -3,7 +3,6 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -133,9 +132,9 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectShip", choosePlaneButton));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpHighscore", statsButton));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSettings", settingsButton));
-        Actor dummyActorForBackButton = new Actor();
-        dummyActorForBackButton.setBounds(UI.Window.REFERENCE_WIDTH + 100, 500, 0, 100);
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpEnd", dummyActorForBackButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlayer", playerButton));
+        
+        helpOverlay.addHelpFrame(new HelpFrameText(skin, "helpEnd"));
         
         helpButton.addListener(helpOverlay);
         showHelpScreen = false;
