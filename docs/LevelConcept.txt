@@ -1,9 +1,10 @@
-1. Tutorials:
+Tutorials:
 
     one tutorial per specific feature / upgrade / etc.
     with information overlays to explain it
     with arrow indicators for important objects etc.
-    about 10-20
+    about 10-20. They are placed right before a level 
+    where the corresponding feature is used first
 
 2. Beginner Levels:
 
@@ -11,15 +12,16 @@
     no special features in the first 10 levels, only flying through gates
     easy gate parcours
     no need to collect upgrades etc. to win the level
-    about 20-30
+    about 20
 
 when finished, a new spaceship is available
 
 3. Medium Space Levels:
 
-    bigger levels with more difficulties
+    bigger levels with more difficulties (upgrades for time and speed)
     levels in space environment
-    more difficult gate parcours
+    more difficult gate parcours (like moving asteroids that cross the flight line)
+    sometimes upgrades or gates are hidden behind asteroids
     sometimes upgrades needed to finish in time
     about 30-50
 
