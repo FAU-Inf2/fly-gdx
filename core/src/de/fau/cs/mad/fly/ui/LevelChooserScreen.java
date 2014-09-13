@@ -54,7 +54,7 @@ public class LevelChooserScreen extends BasicScreen {
                 final LevelProfile level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
                 final TextButton button = new TextButton(level.name, skin);
                 
-                if (!Fly.DEBUG_MODE && levelGroup.id > currentProfile.getPassedLevelgroupID() || (levelGroup.id == currentProfile.getPassedLevelgroupID() && level.id > currentProfile.getPassedLevelID())) {
+                if (!Fly.DEBUG_MODE && (levelGroup.id > currentProfile.getPassedLevelgroupID() || (levelGroup.id == currentProfile.getPassedLevelgroupID() && level.id > currentProfile.getPassedLevelID()))) {
                     button.setDisabled(true);
                     if (rowToScrollTo < 0) {
                         rowToScrollTo = row;
