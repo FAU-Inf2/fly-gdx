@@ -52,7 +52,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         Button continueButton = new TextButton(I18n.t("play"), skin);
         Button chooseLevelButton = new TextButton(I18n.t("choose.level"), skin);
         Button choosePlaneButton = new TextButton(I18n.t("choose.plane"), skin);
-        //removed for release Button statsButton = new TextButton(I18n.t("highscores"), skin);
+        Button statsButton = new TextButton(I18n.t("highscores"), skin);
         ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
         TextureRegion gear = skin.getRegion("gear");
         gear.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -80,7 +80,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         table.add();
         table.row().expand();
         table.add();
-        table.add();// removed for release statsButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        table.add(statsButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         table.add(playerButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).right();
         table.row();
         table.add();
@@ -130,7 +130,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlay", continueButton));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectLevel", chooseLevelButton));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectShip", choosePlaneButton));
-        //removed for release helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpHighscore", statsButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpHighscore", statsButton));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSettings", settingsButton));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlayer", playerButton));
         
@@ -139,12 +139,12 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         helpButton.addListener(helpOverlay);
         showHelpScreen = false;
         
-//        removed for release statsButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                ((Fly) Gdx.app.getApplicationListener()).setStatisticsScreen();
-//            }
-//        });
+        statsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((Fly) Gdx.app.getApplicationListener()).setStatisticsScreen();
+            }
+        });
     }
     
     /**

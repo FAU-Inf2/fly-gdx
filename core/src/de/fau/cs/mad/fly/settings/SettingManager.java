@@ -127,22 +127,9 @@ public class SettingManager {
         addBooleanSetting(VIBRATE_WHEN_COLLIDE, true, "helpVibrate");
         addBooleanSetting(USE_TOUCH, false, "helpTouch");
         addBooleanSetting(USE_ROLL_STEERING, false, "helpRoll");
-        // removed for release: addBooleanSetting(USE_LOW_PASS_FILTER,
-        // "Use LowPassFilter:", false);
-        // removed for release: addBooleanSetting(SHOW_GATE_INDICATOR,
-        // "Show next Gate:", true);
         // addBooleanSetting(SHOW_PAUSE, false);
         addBooleanSetting(SHOW_STEERING, false, "helpShowSteering");
         addBooleanSetting(SHOW_FPS, false, "helpShowFPS");
         addBooleanSetting(SHOW_RESET_STEERING, false, "helpResetSteering");
-        // removed for release: addBooleanSetting(FIRST_PERSON, "First Person",
-        // false);
-        
-        // removed for release: addFloatSetting(ALPHA_SLIDER, "Alpha:", 15.0f,
-        // 0.0f, 100.0f, 1.0f);
-        // removed for release: addFloatSetting(BUFFER_SLIDER, "Buffersize:",
-        // 30.0f, 0.0f, 100.0f, 1.0f);
-        // removed for release: addFloatSetting(CAMERA_OFFSET,
-        // "Camera Distance:", 50.0f, 0.0f, 100.0f, 1.0f);
     }
 }

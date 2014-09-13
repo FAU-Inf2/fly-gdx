@@ -174,23 +174,22 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         }
         background.setPosition(deltaX, deltaY);
         
-        //removed for release
         // adding the button that opens the UpgradeScreen
-//        ImageButton openButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
-//        
-//        Table table = new Table(skin);
-//        table.setFillParent(true);
-//        table.top().right().pad(UI.Window.BORDER_SPACE);
-//        table.add(openButton);
-//        
-//        stage.addActor(table);
-//        
-//        openButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                ((Fly) Gdx.app.getApplicationListener()).setPlaneUpgradeScreen();
-//            }
-//        });
+        ImageButton openButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+        
+        Table table = new Table(skin);
+        table.setFillParent(true);
+        table.top().right().pad(UI.Window.BORDER_SPACE);
+        table.add(openButton);
+        
+        stage.addActor(table);
+        
+        openButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((Fly) Gdx.app.getApplicationListener()).setPlaneUpgradeScreen();
+            }
+        });
         
         // initialize the InputProcessor
         inputProcessor = new InputMultiplexer(stage, this, new BackProcessor());
