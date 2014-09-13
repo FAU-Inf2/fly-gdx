@@ -27,7 +27,7 @@ import de.fau.cs.mad.fly.profile.ScoreManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
- * Optional Feature to display a start and a finish message to the player.
+ * Message that is shown to the player when he/she finished the game.
  * 
  * @author Tobias Zangl
  */
@@ -36,6 +36,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private final Skin skin;
     private final Stage stage;
     private Score newScore;
+    private Table messageTable;
+    private TextButton backToMainMenuButton;
     
     public GameFinishedOverlay(final Skin skin, final Stage stage) {
         this.stage = stage;
@@ -72,7 +74,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         
-        TextButton backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), skin);
+        backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), skin);
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -82,121 +84,141 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             }
         });
         
-        PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-        final Table messageTable = new Table();
+        messageTable = new Table();
         NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
         messageTable.setBackground(background);
         
         if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
-            
-            if (currentPlayer.IsLastLevel()) {
-                if (currentPlayer.IsLastLevelGroup()) {
-                    if (currentPlayer.getPassedLevelID() == currentPlayer.getCurrentLevelProfile().id) {
-                        currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
-                        currentPlayer.savePassedLevelID();
-                        showInfoLabel(messageTable, "ALLGroupPassed");
-                    } else {
-                        showInfoLabel(messageTable, "level.congratulations");
-                    }
-                    
-                    showScore(messageTable);
-                    messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).colspan(2).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-                } else {
-                    if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id) {
-                        currentPlayer.setPassedLevelgroupID(currentPlayer.getnextLevelGroup().id);
-                        currentPlayer.savePassedLevelgroupID();
-                        currentPlayer.setPassedLevelID(currentPlayer.getnextLevelGroup().getFirstLevel().id);
-                        currentPlayer.savePassedLevelID();
-                        showInfoLabel(messageTable, "OneGroupPassed");
-                    } else {
-                        showInfoLabel(messageTable, "level.congratulations");
-                    }
-                    
-                    showScore(messageTable);
-                    
-                    TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), skin);
-                    
-                    final PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-                    playerProfile.setToNextLevelGroup();
-                    playerProfile.saveCurrentLevelGroup();
-                    playerProfile.saveCurrentLevelProfile();
-                    nextGroupButton.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            // set and load new level
-                            Loader.getInstance().loadLevel(playerProfile.getCurrentLevelProfile());
-                        }
-                    });
-                    
-                    messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-                    messageTable.add();
-                    messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-                }
-                
-            } else {
-                if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id && currentPlayer.getPassedLevelID() == currentPlayer.getCurrentLevelProfile().id) {
-                    currentPlayer.setPassedLevelID(currentPlayer.getNextLevel().id);
-                    currentPlayer.savePassedLevelID();
-                }
-                
-                showInfoLabel(messageTable, "level.congratulations");
-                showScore(messageTable);
-                TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), skin);
-                
-                final PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-                playerProfile.setToNextLevel();
-                playerProfile.saveCurrentLevelProfile();
-                nextLevelButton.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        // load new level
-                        Loader.getInstance().loadLevel(playerProfile.getCurrentLevelProfile());
-                    }
-                });
-                messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-                messageTable.add();
-                messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-            }
-            
+            levelSuccessfullyFinished();
         } else if (gameController.getPlayer().isDead()) {
-            showInfoLabel(messageTable, "ship.destroyed");
-            
-            if (gameController.getLevel().head.isEndless()) {
-                showScore(messageTable);
-            }
-            
-            TextButton restartButton = new TextButton(I18n.t("restart"), skin);
-            restartButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    // reload the level
-                    LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
-                    Loader.getInstance().loadLevel(levelHead);
-                }
-            });
-            
-            messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-            messageTable.add();
-            messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-            messageTable.row().expand();
+            playerDead();
         }
+        
+        messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         outerTable.add(messageTable).center();
         stage.addActor(outerTable);
         Fly game = (Fly) Gdx.app.getApplicationListener();
         game.onMode3d2dChanged(Mode3d2dChangedEvent.MODE_2D);
     }
     
-    private void showInfoLabel(final Table messageTable, String info) {
+    /**
+     * Displays an info label which spans the whole table.
+     * 
+     * @param info
+     */
+    private void showInfoLabel(String info) {
         Label infoLabel = new Label(I18n.t(info), skin);
         messageTable.add(infoLabel).colspan(3);
         messageTable.row();
     }
     
     /**
+     * When the player is dead, a corresponding message should be shown and a
+     * button which leads back to the {@link MainMenuScreen}. Furthermore a
+     * Button to restart the level is shown.
+     * <p>
+     * In case of an EndlessLevel, the score is shown, too.
+     */
+    private void playerDead() {
+        showInfoLabel("ship.destroyed");
+        
+        if (gameController.getLevel().head.isEndless()) {
+            showScore();
+        }
+        
+        TextButton restartButton = new TextButton(I18n.t("restart"), skin);
+        restartButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // reload the level
+                LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
+                Loader.getInstance().loadLevel(levelHead);
+            }
+        });
+        
+        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        messageTable.add();
+    }
+    
+    /**
+     * When the level is finished successfully, the score is shown and a button
+     * to go back to the {@link MainMenuScreen}. If there exists a next Level, a
+     * button which leads to this level is shown.
+     */
+    private void levelSuccessfullyFinished() {
+        final PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+        if (currentPlayer.IsLastLevel()) {
+            if (currentPlayer.IsLastLevelGroup()) {
+                if (currentPlayer.getPassedLevelID() == currentPlayer.getCurrentLevelProfile().id) {
+                    currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
+                    currentPlayer.savePassedLevelID();
+                    showInfoLabel("ALLGroupPassed");
+                } else {
+                    showInfoLabel("level.congratulations");
+                }
+                
+                showScore();
+            } else {
+                if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id) {
+                    currentPlayer.setPassedLevelgroupID(currentPlayer.getnextLevelGroup().id);
+                    currentPlayer.savePassedLevelgroupID();
+                    currentPlayer.setPassedLevelID(currentPlayer.getnextLevelGroup().getFirstLevel().id);
+                    currentPlayer.savePassedLevelID();
+                    showInfoLabel("OneGroupPassed");
+                } else {
+                    showInfoLabel("level.congratulations");
+                }
+                
+                showScore();
+                
+                TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), skin);
+                
+                currentPlayer.setToNextLevelGroup();
+                currentPlayer.saveCurrentLevelGroup();
+                currentPlayer.saveCurrentLevelProfile();
+                nextGroupButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        // set and load new level
+                        Loader.getInstance().loadLevel(currentPlayer.getCurrentLevelProfile());
+                    }
+                });
+                
+                messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                messageTable.add();
+            }
+            
+        } else {
+            if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id && currentPlayer.getPassedLevelID() <= currentPlayer.getCurrentLevelProfile().id) {
+                currentPlayer.setPassedLevelID(currentPlayer.getNextLevel().id);
+                currentPlayer.savePassedLevelID();
+            }
+            
+            showInfoLabel("level.congratulations");
+            showScore();
+            TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), skin);
+            
+            currentPlayer.setToNextLevel();
+            currentPlayer.saveCurrentLevelProfile();
+            nextLevelButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // load new level
+                    Loader.getInstance().loadLevel(currentPlayer.getCurrentLevelProfile());
+                }
+            });
+            messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            messageTable.add();
+        }
+    }
+    
+    /**
+     * TODO: comments
+     * 
      * @param messageTable
      */
-    private void showScore(final Table messageTable) {
-        // Score newScore = gameController.getLevel().getScore();
+    private void showScore() {
+        
         newScore = gameController.getScoreController().getEndScore(gameController);
         
         // adds an amount of money to the players profile that equals the score
@@ -209,7 +231,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         messageTable.add();
         messageTable.add(new Label(newScore.getTotalScore() + "", skin)).left();
         messageTable.row().expand();
-        
         
         // gates
         ScoreDetail detail = newScore.getScoreDetails().get(0);
