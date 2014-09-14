@@ -36,6 +36,16 @@
 			"id": 207,
 			"name": "Level 6",
 			"file": "level6.json"
+		},
+		{
+			"id": 208,
+			"name": "Level 8",
+			"file": "level8.json"
+		},		
+		{
+			"id": 209,
+			"name": "Level 9",
+			"file": "level9.json"
 		}
 	]
 }
