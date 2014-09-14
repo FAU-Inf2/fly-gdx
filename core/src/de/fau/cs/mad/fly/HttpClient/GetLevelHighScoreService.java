@@ -96,7 +96,7 @@ public class GetLevelHighScoreService {
                 } else {
                 	listener.failed(String.valueOf(status.getStatusCode()));
                 }
-                
+                Gdx.app.log("GetLevelHighScoreService", "server return code: " + String.valueOf(status.getStatusCode()));
             }
             
             @Override

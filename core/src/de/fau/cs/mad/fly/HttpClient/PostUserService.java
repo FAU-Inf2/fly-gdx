@@ -25,7 +25,7 @@ public class PostUserService {
         post.setUrl(RemoteServices.getServerURL() + subURL);
         post.setContent(userData);
         
-        Gdx.app.log("PostUserService", "sending");
+        Gdx.app.log("PostUserService", "sending:" + userData);
         RemoteServices.sendHttpRequest(post, new HttpResponseListener() {
             
             @Override
@@ -36,7 +36,7 @@ public class PostUserService {
                     JsonReader reader = new JsonReader();
                     JsonValue val = reader.parse(httpResponse.getResultAsStream());
                     int id = val.getInt("id");
-                    Gdx.app.log("PostUserService", id + "");
+                    Gdx.app.log("PostUserService", "get fly id from server:" + id);
                     listener.successful(id);
                 } else {
                     Gdx.app.log("PostUserService", "new fly id server return code: " + String.valueOf(status.getStatusCode()));

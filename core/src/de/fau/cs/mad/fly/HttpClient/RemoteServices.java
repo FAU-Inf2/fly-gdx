@@ -4,7 +4,6 @@
 package de.fau.cs.mad.fly.HttpClient;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyManagementException;
@@ -24,6 +23,7 @@ import NetJavaImpl.NetHttpsJavaImpl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.HttpRequest;
 import com.badlogic.gdx.Net.HttpResponseListener;
+import com.badlogic.gdx.files.FileHandle;
 
 /**
  * @author Qufang Fan
@@ -38,15 +38,15 @@ public class RemoteServices {
 	public static int TIME_OUT = 1500;
 
 	public static void sendHttpRequest(HttpRequest httpRequest, HttpResponseListener httpResponseListener) {
-		switch (Gdx.app.getType()) {
-		case Android:
-
-		case Desktop:
-			netHttpsJavaImpl.sendHttpRequest(httpRequest, httpResponseListener);
-			break;
-		default:
-			Gdx.net.sendHttpRequest(httpRequest, httpResponseListener);
-		}
+		netHttpsJavaImpl.sendHttpRequest(httpRequest, httpResponseListener);
+//		switch (Gdx.app.getType()) {
+//		case Android:
+//		case Desktop:
+//			netHttpsJavaImpl.sendHttpRequest(httpRequest, httpResponseListener);
+//			break;
+//		default:
+//			Gdx.net.sendHttpRequest(httpRequest, httpResponseListener);
+//		}
 	}
 
 	private static NetHttpsJavaImpl netHttpsJavaImpl = new NetHttpsJavaImpl();
@@ -58,8 +58,10 @@ public class RemoteServices {
 		
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		// From https://www.washington.edu/itconnect/security/ca/load-der.crt
-		//TODO
-		InputStream caInput = new BufferedInputStream(new FileInputStream("load-der.crt"));
+
+		FileHandle cafile = Gdx.files.internal("CA/server.crt");
+		 
+		InputStream caInput = new BufferedInputStream(cafile.read());//new FileInputStream(cafile..path()));
 		Certificate ca;
 		try {
 			ca = cf.generateCertificate(caInput);
