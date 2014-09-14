@@ -154,6 +154,9 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 showInfoLabel("ALLGroupPassed");
                 
                 showScore();
+                // add some space to avoid crappy layout
+                messageTable.add().pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                messageTable.add();
             } else {
                 if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id) {
                     currentPlayer.setPassedLevelgroupID(currentPlayer.getnextLevelGroup().id);
