@@ -65,7 +65,8 @@ Gates + Upgrades:
 - location / rotation / scale define the position / rotation / scaling of the gate (scaling not working for gates yet)
 - to add rotation / translation:
 	- select the gate/upgrade
-	- [GAME]: click on physics on the left in the left side menu -> Physics Type Dynamic
+	- [GAME]: click on physics on the right in the right side menu -> Physics Type Dynamic
+		(very important to be in Blender Game Mode ! Otherwise you cant set Physics Type Dynamic)
 	- select viewport "Logic Editor" on bottom
 	- on the right part "Add Actuator" -> Motion (should add Simple Motion Actuator on bottom)
 		- Force / Torque / Linear Velocity -> Sinus translation, e.g.:
