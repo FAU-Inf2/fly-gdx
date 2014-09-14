@@ -21,7 +21,7 @@ public class GateGoal extends GameObject implements Disposable {
     private int score;
     public int passedTimes = 0;
     public int[] successors;
-    
+
     /**
      * Creates a new gate goal.
      * 
@@ -132,6 +132,10 @@ public class GateGoal extends GameObject implements Disposable {
     @Override
     public String toString() {
         return "#<GateGoal " + gateId + ">";
+    }
+    
+    public void setSuccessors(int[] successors) {
+        this.successors = successors;
     }
     
     @Override

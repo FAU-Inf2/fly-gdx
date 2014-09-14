@@ -43,6 +43,7 @@ import de.fau.cs.mad.fly.player.gravity.DirectionalGravity;
  * Created by danyel on 26/05/14.
  */
 public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.LevelParameters> {
+    private static final String JSON_POSITION = "position";
     private static final String MODEL_FOLDER = "models/";
     private static final int DEFAULT_GATE_SCORE = 50;
     
@@ -71,7 +72,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         components = new HashMap<String, GameObject>();
     }
     
-    public Level fromJson() {
+    public void loadLevelfromJson() {
         parseJson();
         for (Map.Entry<String, String> e : dependencies.entrySet()) {
             models.put(e.getKey(), dependencyFor(e.getKey()));
@@ -80,9 +81,9 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         parseComponents();
         Perspective start = auto.fromJson(Perspective.class, json.get("start").toString());
         
-        ArrayList<GameObject> componentsList = new ArrayList<GameObject>();
+        List<GameObject> componentsList = new ArrayList<GameObject>();
         componentsList.addAll(components.values());
-        Level level = new Level(json.getString("name"), start, componentsList, models, environments);
+        level = new Level(json.getString("name"), start, componentsList, models, environments);
         JsonValue levelClass = json.get("class");
         if (levelClass != null) {
             level.levelClass = levelClass.asString();
@@ -97,8 +98,6 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         
         level.addGateCircuit(parseGates());
         level.addCollectibleManager(parseCollectibles());
-        
-        return level;
     }
     
     /**
@@ -112,12 +111,12 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
     private void parseGravity(Level level, JsonValue e) {
         String type = e.getString("type");
         
-        if (type.equals("ConstantGravity")) {
+        if ("ConstantGravity".equals(type)) {
             JsonValue dir = e.get("direction");
             ConstantGravity gravity = new ConstantGravity(new Vector3(dir.getFloat(0), dir.getFloat(1), dir.getFloat(2)));
             level.setGravity(gravity);
-        } else if (type.equals("DirectionalGravity")) {
-            JsonValue pos = e.get("position");
+        } else if ("DirectionalGravity".equals(type)) {
+            JsonValue pos = e.get(JSON_POSITION);
             float strength = e.getFloat("strength");
             DirectionalGravity gravity = new DirectionalGravity(new Vector3(pos.getFloat(0), pos.getFloat(1), pos.getFloat(2)), strength);
             level.setGravity(gravity);
@@ -128,6 +127,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
      * Parses the gates in the level file and creates a gate circuit.
      * 
      * @return GateCircuit
+     * @throws LevelLoadingException 
      */
     private GateCircuit parseGates() {
         Map<Integer, GateGoal> gateMap = new HashMap<Integer, GateGoal>();
@@ -155,8 +155,9 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                 display = new GateDisplay(models.get(ref));
                 JsonValue scoreJS = jsonGate.get("score");
                 int score = DEFAULT_GATE_SCORE;
-                if (scoreJS != null)
+                if (scoreJS != null) {
                     score = scoreJS.asInt();
+                }
                 goal = new GateGoal(gateId.asInt(), models.get(refHole), score, display);
                 goal.hide();
                 display.setGoal(goal);
@@ -177,7 +178,12 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         }
         
         if (dummyGate == null) {
-            throw new RuntimeException("No dummy gate found.");
+            Gdx.app.log("LevelLoader.parseGates", "no dummy gate found, create default one");
+            dummyGate = new GateGoal(-1, models.get("hole"), 0, null);
+            dummyGate.hide();
+            int[] dummySuccessors = new int[1];
+            dummySuccessors[0] = 0;
+            dummyGate.setSuccessors(dummySuccessors);
         }
         
         GateCircuit gateCircuit = new GateCircuit(dummyGate);
@@ -213,30 +219,19 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
      */
     private void parseTransform(GameObject o, JsonValue e) {
         JsonValue transform = e.get("transformMatrix");
-        JsonValue position = e.get("position");
+        JsonValue position = e.get(JSON_POSITION);
         if (transform != null) {
             o.transform.set(transform.asFloatArray());
-            // Gdx.app.log("LevelLoader.getComponents", "TransformMatrix: " +
-            // o.transform.toString());
         } else if (position != null) {
             Vector3 pos = new Vector3(position.asFloatArray());
-            // Gdx.app.log("LevelLoader.getComponents", "Position: " +
-            // pos.toString());
             
             JsonValue euler = e.get("euler");
             JsonValue quaternion = e.get("quaternion");
             if (euler != null) {
-                // Gdx.app.log("LevelLoader.getComponents", "Euler: " +
-                // euler.getFloat(0) + ", " + euler.getFloat(1) + ", " +
-                // euler.getFloat(2));
                 Quaternion quat = new Quaternion();
                 quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
                 o.transform.set(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
             } else if (quaternion != null) {
-                // Gdx.app.log("LevelLoader.getComponents", "Quaternion: " +
-                // quaternion.getFloat(0) + ", " + quaternion.getFloat(1) + ", "
-                // +
-                // quaternion.getFloat(2) + ", " + quaternion.getFloat(3));
                 Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
                 o.transform.set(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
             } else {
@@ -250,8 +245,6 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             }
         } else {
             o.transform.idt();
-            // Gdx.app.log("LevelLoader.getComponents", "No 3D info found: " +
-            // o.transform.toString());
         }
     }
     
@@ -326,7 +319,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                 String type = upgradeType.asString();
                 Collectible c = null;
                 String ref = jsonUpgrade.getString("ref");
-                if (type.equals("ChangeTimeUpgrade")) {
+                if ("ChangeTimeUpgrade".equals(type)) {
                     c = new ChangeTimeUpgrade(models.get(ref), jsonUpgrade.get("time").asInt());
                 } else if (type.equals("ChangePointsUpgrade")) {
                     c = new ChangePointsUpgrade(models.get(ref), jsonUpgrade.get("points").asInt());
@@ -334,11 +327,11 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                     c = new InstantSpeedUpgrade(models.get(ref), jsonUpgrade.get("speedFactor").asFloat(), jsonUpgrade.get("duration").asFloat());
                 } else if (type.equals("LinearSpeedUpgrade")) {
                     c = new LinearSpeedUpgrade(models.get(ref), jsonUpgrade.get("increaseFactor").asFloat(), jsonUpgrade.get("increaseDuration").asFloat(), jsonUpgrade.get("decreaseFactor").asFloat());
-                } else if (type.equals("ResizeGatesUpgrade")) {
+                } else if ("ResizeGatesUpgrade".equals(type)) {
                     JsonValue jsonScale = jsonUpgrade.get("scale");
                     Vector3 scale = new Vector3(jsonScale.getFloat(0), jsonScale.getFloat(1), jsonScale.getFloat(2));
                     c = new ResizeGatesUpgrade(models.get(ref), scale);
-                } else if (type.equals("ChangeSteeringUpgrade")) {
+                } else if ("ChangeSteeringUpgrade".equals(type)) {
                     c = new ChangeSteeringUpgrade(models.get(ref), jsonUpgrade.get("roll").asFloat(), jsonUpgrade.get("azimuth").asFloat(), jsonUpgrade.get("duration").asFloat());
                 }
                 
@@ -398,7 +391,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             if (pointLights != null) {
                 for (int i = 0; i < pointLights.size; i++) {
                     JsonValue colorValue = pointLights.get(i).get("color");
-                    JsonValue positionValue = pointLights.get(i).get("position");
+                    JsonValue positionValue = pointLights.get(i).get(JSON_POSITION);
                     JsonValue intensityValue = pointLights.get(i).get("intensity");
                     Color color = new Color(colorValue.getFloat(0), colorValue.getFloat(1), colorValue.getFloat(2), colorValue.getFloat(3));
                     Vector3 position = new Vector3(positionValue.getFloat(0), positionValue.getFloat(1), positionValue.getFloat(2));
@@ -495,7 +488,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         Gdx.app.log("LevelLoader.loadAsync", "LOADING.");
         this.level = null;
         this.manager = manager;
-        this.level = fromJson();
+        loadLevelfromJson();
     }
     
     @Override

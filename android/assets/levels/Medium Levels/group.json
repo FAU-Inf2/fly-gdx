@@ -31,6 +31,11 @@
 			"id": 206,
 			"name": "Point Tutorial",
 			"file": "pointsTutorial.json"
+		},
+		{
+			"id": 207,
+			"name": "Level 6",
+			"file": "level6.json"
 		}
 	]
 }

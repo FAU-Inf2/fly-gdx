@@ -148,14 +148,10 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private void levelSuccessfullyFinished() {
         final PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         if (currentPlayer.IsLastLevel()) {
-            if (currentPlayer.IsLastLevelGroup()) {
-                if (currentPlayer.getPassedLevelID() == currentPlayer.getCurrentLevelProfile().id) {
-                    currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
-                    currentPlayer.savePassedLevelID();
-                    showInfoLabel("ALLGroupPassed");
-                } else {
-                    showInfoLabel("level.congratulations");
-                }
+            if (currentPlayer.IsLastLevelGroup()) {                
+                currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
+                currentPlayer.savePassedLevelID();
+                showInfoLabel("ALLGroupPassed");
                 
                 showScore();
             } else {

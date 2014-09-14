@@ -166,6 +166,12 @@ public class Level implements Disposable {
         
         gateCircuit.moveGates(delta);
         
+        int i;
+        final int numberOfComponents = components.size();
+        for (i = 0; i < numberOfComponents; i++) {
+            components.get(i).move(delta);
+        }
+        
         collectibleManager.moveCollectibles(delta);
     }
     
