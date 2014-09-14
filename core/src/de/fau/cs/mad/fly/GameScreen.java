@@ -50,7 +50,9 @@ public class GameScreen implements Screen {
     @Override
     public void resume() {
         Gdx.app.log("GameScreen", "resume");
-        gameController.resumeGame();
+        if (!gameController.isVictory() && !gameController.timeIsUp()) {
+            gameController.resumeGame();
+        }
     }
     
     @Override
