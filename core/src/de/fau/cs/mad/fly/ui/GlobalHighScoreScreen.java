@@ -84,8 +84,16 @@ public class GlobalHighScoreScreen extends BasicScreen {
         
         @Override
         public void failed(String msg) {
-            infoTable.row().expand();
-            infoTable.add(new Label(msg, skin)).pad(6f).uniform();
+        	infoTable.clear();
+        	infoTable.row().expand();
+        	String showmsg;
+        	if (msg != null && msg.length() > 21) {
+        		showmsg = I18n.t("ConnectServerError") + msg.substring(0, 20) + "...";
+            } else {
+            	showmsg = I18n.t("ConnectServerError") + msg;
+            }
+            
+            infoTable.add(new Label(showmsg, skin)).pad(6f).uniform();
         }
         
         @Override

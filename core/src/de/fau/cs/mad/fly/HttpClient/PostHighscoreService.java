@@ -54,7 +54,7 @@ public class PostHighscoreService {
         request.setContent(res);
         Gdx.app.log("PostHighscoreService", res);
         
-        Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
+        RemoteServices.sendHttpRequest(request, new HttpResponseListener() {
             @Override
             public void handleHttpResponse(HttpResponse httpResponse) {
                 HttpStatus status = httpResponse.getStatus();
@@ -62,8 +62,7 @@ public class PostHighscoreService {
                     JsonReader reader = new JsonReader();
                     JsonValue json = reader.parse(httpResponse.getResultAsStream());
                     ResponseData response = new ResponseData();
-                    // List<ResponseItem> results = new
-                    // ArrayList<ResponseItem>();
+                    
                     JsonValue scoreJS = json.get("highscore");
                     response.scoreID = scoreJS.getInt("id");
                     response.rank = scoreJS.getInt("rank");

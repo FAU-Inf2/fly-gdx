@@ -27,7 +27,7 @@ public class PutHighscoreService {
         request.setContent(res);
         Gdx.app.log("PutHighscoreService", res);
         
-        Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
+        RemoteServices.sendHttpRequest(request, new HttpResponseListener() {
             @Override
             public void handleHttpResponse(HttpResponse httpResponse) {
                 HttpStatus status = httpResponse.getStatus();

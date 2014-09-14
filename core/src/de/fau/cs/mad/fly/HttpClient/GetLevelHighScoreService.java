@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.HttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.HttpMethods;
 import com.badlogic.gdx.Net.HttpRequest;
@@ -70,7 +71,7 @@ public class GetLevelHighScoreService {
             request.setUrl(RemoteServices.getServerURL() + "/level_groups/" + levelID + "/highscores?top=" + TOP);
         }
         
-        Gdx.net.sendHttpRequest(request, new HttpResponseListener() {
+        RemoteServices.sendHttpRequest(request, new HttpResponseListener() {
             @Override
             public void handleHttpResponse(HttpResponse httpResponse) {
                 HttpStatus status = httpResponse.getStatus();
@@ -93,7 +94,7 @@ public class GetLevelHighScoreService {
                     }
                     listener.successful(response);
                 } else {
-                    listener.failed(status.toString());
+                	listener.failed(String.valueOf(status.getStatusCode()));
                 }
                 
             }

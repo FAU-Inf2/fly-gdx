@@ -26,7 +26,7 @@ public class PostUserService {
         post.setContent(userData);
         
         Gdx.app.log("PostUserService", "sending");
-        Gdx.net.sendHttpRequest(post, new HttpResponseListener() {
+        RemoteServices.sendHttpRequest(post, new HttpResponseListener() {
             
             @Override
             public void handleHttpResponse(HttpResponse httpResponse) {
