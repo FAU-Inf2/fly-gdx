@@ -227,20 +227,20 @@ public class HelpFrameTextWithArrow extends HelpFrame {
                 // put label and arrow above
                 arrowYPos = topEdgeOfActor / scalingFactor;
                 labelYPos = topEdgeOfActor + arrow.getRegionHeight() + PADDING_OF_LABEL;
-                arrowRotation = 0; // pointing downwards
+                // pointing downwards corresponds 0°
+                arrowRotation = 0;
             } else {
                 // put label and arrow below
                 float buttomEdgeOfArrow = actorPos.y - arrow.getRegionHeight();
                 arrowYPos = buttomEdgeOfArrow / scalingFactor;
                 labelYPos = buttomEdgeOfArrow - label.getHeight() - PADDING_OF_LABEL;
-                arrowRotation = 180; // pointing upwards
+                // pointing upwards corresponds 180°
+                arrowRotation = 180;
             }
-        }
-        // Actor is either left of the visible screen or right of the visible
-        // screen
-        else {
-            
-            // calculate vertical position of the arrow
+        } else {
+            // Actor is either left of the visible screen or right of the
+            // visible screen.
+            // Calculate vertical position of the arrow
             float horizontalMidOfActor = actorPos.y + 0.5f * actor.getHeight();
             arrowYPos = horizontalMidOfActor - 0.5f * arrow.getRegionHeight();
             float bottomBorder = UI.Window.BORDER_SPACE + PADDING_OF_LABEL;
@@ -266,13 +266,15 @@ public class HelpFrameTextWithArrow extends HelpFrame {
                 float leftBorder = UI.Window.BORDER_SPACE;
                 arrowXPos = leftBorder / scalingFactor;
                 labelXPos = leftBorder + arrow.getRegionWidth();
-                arrowRotation = 270; // pointing left
+                // pointing left corresponds 270°
+                arrowRotation = 270;
             } else {
                 // actor is on the right side
                 float rightBorder = viewport.getWorldWidth() - UI.Window.BORDER_SPACE;
                 arrowXPos = (rightBorder - arrow.getRegionWidth()) / scalingFactor;
                 labelXPos = rightBorder - arrow.getRegionWidth() - label.getWidth() - 2 * PADDING_OF_LABEL;
-                arrowRotation = 90; // pointing right
+                // pointing right corresponds 90°
+                arrowRotation = 90;
             }
         }
         
