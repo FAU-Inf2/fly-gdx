@@ -21,38 +21,38 @@ import de.fau.cs.mad.fly.settings.SettingManager;
  */
 public class FlightController implements InputProcessor {
     
-    private boolean useSensorData;
-    private boolean useRolling;
-    private boolean inTouch = false;
+    protected boolean useSensorData;
+    protected boolean useRolling;
+    protected boolean inTouch = false;
     
-    private Player player;
+    protected Player player;
     
-    private float startRoll, startPitch;
+    protected float startRoll, startPitch;
     
-    private float rollFactor = 0.0f;
-    private float azimuthFactor = 0.0f;
+    protected float rollFactor = 0.0f;
+    protected float azimuthFactor = 0.0f;
     
-    private float rollFactorChange = 1.0f;
-    private float azimuthFactorChange = 1.0f;
+    protected float rollFactorChange = 1.0f;
+    protected float azimuthFactorChange = 1.0f;
     
-    private int currentEvent = -1;
+    protected int currentEvent = -1;
     
-    private float screenHeight = Gdx.graphics.getHeight();
-    private float screenWidth = Gdx.graphics.getWidth();
+    protected float screenHeight = Gdx.graphics.getHeight();
+    protected float screenWidth = Gdx.graphics.getWidth();
     
     // variables for Sensor input smoothing
-    private int bufferSize;
-    private List<Float> rollInput;
-    private List<Float> pitchInput;
+    protected int bufferSize;
+    protected List<Float> rollInput;
+    protected List<Float> pitchInput;
     
-    private float roll;
-    private float pitch;
+    protected float roll;
+    protected float pitch;
     
-    float maxRotate = 45.f;
+    protected float maxRotate = 45.f;
     
-    private float centerX = TouchScreenOverlay.X_POS_OF_STEERING_CIRCLE + screenWidth / 2;
-    private float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;
-    private float radius = TouchScreenOverlay.RADIUS_OF_STEERING_CIRCLE;
+    protected float centerX = TouchScreenOverlay.X_POS_OF_STEERING_CIRCLE + screenWidth / 2;
+    protected float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;
+    protected float radius = TouchScreenOverlay.RADIUS_OF_STEERING_CIRCLE;
     
     public FlightController(Player player, PlayerProfile playerProfile) {
         this.player = player;
@@ -128,13 +128,7 @@ public class FlightController implements InputProcessor {
      * Resets the Steering with Sensors to the current Smartphone position
      */
     public void resetSteering() {
-        float roll = Gdx.input.getRoll();
-        float pitch = Gdx.input.getPitch();
-        float azimuth = Gdx.input.getAzimuth();
-        
-        Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
-        startPitch = pitch;
-        Gdx.app.log("FlightController.resetSteering", "roll=" + roll + " pitch=" + pitch + " azimuth=" + azimuth);
+        startPitch = Gdx.input.getPitch();
         startRoll = Gdx.input.getRoll();
     }
     
@@ -152,7 +146,7 @@ public class FlightController implements InputProcessor {
         player.getPlane().rotate(rollFactor, azimuthFactor, delta * 60.f);
     }
     
-    private void resetBuffers() {
+    protected void resetBuffers() {
         rollInput = new ArrayList<Float>();
         pitchInput = new ArrayList<Float>();
     }
@@ -160,7 +154,7 @@ public class FlightController implements InputProcessor {
     /**
      * Interprets the rotation of the smartphone
      */
-    private void interpretSensorInput() {
+    protected void interpretSensorInput() {
         roll = Gdx.input.getRoll();
         pitch = Gdx.input.getPitch();
         
@@ -238,7 +232,7 @@ public class FlightController implements InputProcessor {
      * 
      * @param azimuthFactor
      */
-    private void setAzimuthFactor(float azimuthFactor) {
+    protected void setAzimuthFactor(float azimuthFactor) {
         this.azimuthFactor = this.azimuthFactorChange * limitSpeed(azimuthFactor, player.getPlane().getAzimuthSpeed());
     }
     
@@ -248,11 +242,11 @@ public class FlightController implements InputProcessor {
      * 
      * @param rollFactor
      */
-    private void setRollFactor(float rollFactor) {
+    protected void setRollFactor(float rollFactor) {
         this.rollFactor = this.rollFactorChange * limitSpeed(rollFactor, player.getPlane().getRollingSpeed());
     }
     
-    private float average(List<Float> input) {
+    protected float average(List<Float> input) {
         float result = 0.0f;
         int size = input.size();
         for (int i = 0; i < size; i++) {
@@ -338,7 +332,7 @@ public class FlightController implements InputProcessor {
         return false;
     }
     
-    private float limitSpeed(float wantedSpeed, float speedLimit) {
+    protected float limitSpeed(float wantedSpeed, float speedLimit) {
         if (wantedSpeed > 0) {
             return Math.min(wantedSpeed, speedLimit);
         }

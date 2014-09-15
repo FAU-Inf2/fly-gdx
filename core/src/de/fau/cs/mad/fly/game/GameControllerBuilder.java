@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -107,7 +109,15 @@ public class GameControllerBuilder {
         player = new Player();
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         level = Loader.getInstance().getCurrentLevel();
-        flightController = new FlightController(player, playerProfile);
+        if(Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
+            try {
+                flightController = (FlightController)Class.forName("de.fau.cs.mad.fly.ios.input.IOSFlightController").newInstance();
+            } catch(Exception e) {
+                throw new GdxRuntimeException("Error instantiating IOSFlightController", e);
+            }
+        } else {
+            flightController = new FlightController(player, playerProfile);
+        }
         cameraController = new CameraController(player, playerProfile);
         
         stage = new Stage();

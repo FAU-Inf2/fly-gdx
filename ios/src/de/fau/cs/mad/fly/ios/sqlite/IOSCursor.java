@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.sqlite.ios;
+package de.fau.cs.mad.fly.ios.sqlite;
 
 import com.badlogic.gdx.sql.DatabaseCursor;
 
