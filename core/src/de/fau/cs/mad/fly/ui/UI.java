@@ -83,5 +83,7 @@ public final class UI {
         }
         
         public static final int MAIN_LABEL_VERSION_WIDTH = 400;
+        public static final float SPACE_WIDTH = 100;
+        public static final float SPACE_HEIGHT = 100;
     }
 }

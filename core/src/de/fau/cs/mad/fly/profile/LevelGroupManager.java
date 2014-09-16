@@ -132,4 +132,8 @@ public class LevelGroupManager {
         }
         return null;
     }
+    
+    public int getLastGroupID(){
+    	return getLevelGroups().get(getLevelGroups().size()-1).id;
+    }
 }

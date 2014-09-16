@@ -23,6 +23,7 @@ public class PlayerProfileManager {
     
     public void setCurrentPlayer(PlayerProfile currentPlayerProfile) {
         this.currentPlayerProfile = currentPlayerProfile;
+        AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.CHOSEN_USER, currentPlayerProfile.getId());
     }
     
     /**
@@ -41,7 +42,6 @@ public class PlayerProfileManager {
         }
         
         setCurrentPlayer(player);
-        AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.CHOSEN_USER, player.getId());
     }
     
     private static PlayerProfileManager Instance = new PlayerProfileManager();
@@ -143,5 +143,29 @@ public class PlayerProfileManager {
         final String sql = "update player set " + colname + "=" + newValue + " where player_id=" + playerProfile.getId();
         FlyDBManager.getInstance().execSQL(sql);
     }
+    
+	public void deletePlayerProfile() {
+		this.deletePlayerProfile(this.getCurrentPlayerProfile());
+	}
+
+	public void deletePlayerProfile(PlayerProfile playerProfile) {
+		final String sql = "delete from player where player_id=" + playerProfile.getId();
+		final String sql1 = "delete from score where player_id=" + playerProfile.getId();
+		final String sql2 = "delete from fly_plane_Equiped where player_id=" + playerProfile.getId();
+		final String sql3 = "delete from fly_plane_upgrade where player_id=" + playerProfile.getId();
+		FlyDBManager.getInstance().execSQL(sql);
+		FlyDBManager.getInstance().execSQL(sql1);
+		FlyDBManager.getInstance().execSQL(sql2);
+		FlyDBManager.getInstance().execSQL(sql3);
+
+		if (playerProfile == this.getCurrentPlayerProfile()) {
+			this.getAllPlayerProfiles().remove(playerProfile);
+			playerProfile.clearSettingManager();
+			this.setCurrentPlayer(this.getAllPlayerProfiles().get(0));
+		} else {
+			this.getAllPlayerProfiles().remove(playerProfile);
+			playerProfile.clearSettingManager();
+		}
+	}
     
 }

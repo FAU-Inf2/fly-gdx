@@ -2,8 +2,6 @@ package de.fau.cs.mad.fly.profile;
 
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
-
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
@@ -467,4 +465,14 @@ public class PlayerProfile {
     public SettingManager getSettingManager() {
         return settingManager;
     }
+    
+    /**
+     * Clear the SettingManager.
+     */
+    public void clearSettingManager() {
+        settingManager.getPreferences().clear();
+        settingManager.getPreferences().flush();
+    }
+    
+    
 }
