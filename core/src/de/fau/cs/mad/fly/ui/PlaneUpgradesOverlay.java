@@ -171,6 +171,7 @@ public class PlaneUpgradesOverlay {
                     // PlaneManager.getInstance().getChosenPlane().upgradesBought.get(currentUpgrade.name));
                     
                     PlaneManager.getInstance().buyUpgradeForPlane(currentUpgrade.name);
+                    updateLabels();
                     
                     upgradeButton.setText(I18n.t("equip"));
                     upgradeButton.setColor(Color.WHITE);
@@ -202,6 +203,7 @@ public class PlaneUpgradesOverlay {
                     }
                     
                     PlaneManager.getInstance().upgradePlane(name, 1);
+                    updateLabels();
                     screen.update();
                     
                     if (equiped + 1 == bought) {
@@ -226,6 +228,7 @@ public class PlaneUpgradesOverlay {
                     }
                     
                     PlaneManager.getInstance().upgradePlane(name, -1);
+                    updateLabels();
                     screen.update();
                     
                     if (equiped - 1 == 0) {
@@ -258,6 +261,17 @@ public class PlaneUpgradesOverlay {
         
     }
     
+    private void updateLabels() {
+        int equiped = PlaneManager.getInstance().getChosenPlane().getUpgradesEquiped().get(currentUpgrade.name);
+        int bought = PlaneManager.getInstance().getChosenPlane().getUpgradesBought().get(currentUpgrade.name);
+        int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
+        
+    	upgradeNameLabel.setText(I18n.t("upgrade") + ": " + I18n.t(currentUpgrade.name));
+        changeLabel.setText(I18n.t("changes") + ": " + getChanges());
+        upgradeCostLabel.setText(I18n.t("cost") + ": " + currentUpgrade.price + "\n" + I18n.t("currentMoney") + ": " + money);
+        upgradeStateLabel.setText(I18n.t("maximum") + ": " + currentUpgrade.timesAvailable + "\n" + I18n.t("bought") + ": " + bought + "\n" + I18n.t("equiped") + ": " + equiped);
+    }
+    
     /**
      * Adds all Buttons and Labels needed after selecting an Upgrade to
      * buy/equip
@@ -281,15 +295,25 @@ public class PlaneUpgradesOverlay {
                 buyButton.setText(I18n.t("maximum"));
             }
             buyButton.setColor(Color.GRAY);
+        } else {
+            buyButton.setText(I18n.t("buy"));
+        	buyButton.setColor(Color.WHITE);
         }
         
         if (equiped == bought) {
             upgradeButton.setText(I18n.t("allreadyMaximal"));
             upgradeButton.setColor(Color.GRAY);
+        } else {
+        	upgradeButton.setText(I18n.t("equip"));
+        	upgradeButton.setColor(Color.WHITE);
         }
+        
         if (equiped == 0) {
             downgradeButton.setText(I18n.t("allreadyMinimal"));
             downgradeButton.setColor(Color.GRAY);
+        } else {
+        	downgradeButton.setText(I18n.t("unequip"));
+        	downgradeButton.setColor(Color.WHITE);
         }
         
         scrollableTable.add(upgradeNameLabel).left();
