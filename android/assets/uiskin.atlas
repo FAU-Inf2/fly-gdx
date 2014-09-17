@@ -138,7 +138,7 @@ star
   index: -1
 arrow
   rotate: false
-  xy: 260, 149
+  xy: 260, 148
   size: 78, 140
   orig: 78, 140
   offset: 0, 0
@@ -164,7 +164,7 @@ questionmark
   orig: 118, 230
   offset: 0, 0
   index: -1
-green-text-field
+text-field
   rotate: false
   xy: 404,374
   size: 107, 108
@@ -175,9 +175,9 @@ green-text-field
 green-select-box
   rotate: false
   xy: 545,0
-  size: 164, 219
+  size: 164, 218
   split: 52, 109, 52, 52
-  orig: 165, 219
+  orig: 165, 218
   offset: 0, 0
   index: -1
 grey-select-drop-down

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -42,12 +43,15 @@ public class PlayerScreen extends BasicScreen {
     private int selectedUserindex = 0;
     private SelectBox<String> userList;
     
+    private LabelStyle dialogLabelStyle;
+    
     /**
      * init the UI controls which are relative to User management operations.
      * all these control are placed in userTable
      */
     private void generateUserTable() {
         stage.clear();
+        dialogLabelStyle = skin.get("black", LabelStyle.class);
         Table userTable = new Table();
         userTable.pad(UI.Window.BORDER_SPACE);
         userTable.setFillParent(true);
@@ -82,7 +86,7 @@ public class PlayerScreen extends BasicScreen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     Dialog dialog = new Dialog("", skin, "dialog");
-                    dialog.text(I18n.t("msgGetFlyId"));
+                    dialog.text(I18n.t("msgGetFlyId"),dialogLabelStyle);
                     TextButton button = new TextButton(I18n.t("ok"), skin);
                     dialog.button(button);
                     dialog.show(stage);
@@ -172,9 +176,10 @@ public class PlayerScreen extends BasicScreen {
             
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Dialog dialog;
                 if (PlayerProfileManager.getInstance().getAllPlayerProfiles().size() <= 1) {
-                    Dialog dialog = new Dialog("", skin, "dialog");
-                    dialog.text(I18n.t("msgLastUser"));
+                    dialog = new Dialog("", skin, "dialog");
+                    dialog.text(I18n.t("msgLastUser"), dialogLabelStyle);
                     TextButton button = new TextButton(I18n.t("ok"), skin);
                     dialog.button(button);
                     dialog.show(stage);
@@ -182,15 +187,18 @@ public class PlayerScreen extends BasicScreen {
                     TextButton button = new TextButton(I18n.t("ok"), skin);
                     TextButton concelButton = new TextButton(I18n.t("buttenText.cancel"), skin);
                     
-                    new Dialog("", skin, "dialog") {
+                    dialog = new Dialog("", skin, "dialog") {
                         protected void result(Object object) {
-                            Gdx.app.log("fan", object.toString());
                             if (object.toString().equals(YES)) {
                                 PlayerProfileManager.getInstance().deletePlayerProfile();
                                 generateUserTable();
                             }
                         }
-                    }.text(I18n.t("msgDeleteUser")).button(button, YES).button(concelButton, CANCEL).key(Keys.ENTER, YES).key(Keys.ESCAPE, CANCEL).show(stage);
+                    };
+                    dialog.text(I18n.t("msgDeleteUser"), dialogLabelStyle);
+                    dialog.button(button, YES).button(concelButton, CANCEL);
+                    dialog.key(Keys.ENTER, YES).key(Keys.ESCAPE, CANCEL);
+                    dialog.show(stage);
                 }
             }
         });
@@ -201,13 +209,17 @@ public class PlayerScreen extends BasicScreen {
                 TextButton button = new TextButton(I18n.t("ok"), skin);
                 TextButton concelButton = new TextButton(I18n.t("buttenText.cancel"), skin);
                 
-                new Dialog("", skin, "dialog") {
+                Dialog dialog = new Dialog("", skin, "dialog") {
                     protected void result(Object object) {
                         if (Boolean.getBoolean(object.toString()) == true) {
                             
                         }
                     }
-                }.text(I18n.t("msgInputNewUsername")).button(button, true).button(concelButton, false).key(Keys.ENTER, true).key(Keys.ESCAPE, false).show(stage);
+                };
+                dialog.text(I18n.t("msgInputNewUsername"), dialogLabelStyle);
+                dialog.button(button, true).button(concelButton, false);
+                dialog.key(Keys.ENTER, true).key(Keys.ESCAPE, false);
+                dialog.show(stage);
             }
         });
         
@@ -247,7 +259,7 @@ public class PlayerScreen extends BasicScreen {
                 }
             }
             if (userExists) {
-                dialog.text(I18n.t("UserExists"));
+                dialog.text(I18n.t("UserExists"), dialogLabelStyle);
             } else {
                 // update player profile
                 playerProfile = new PlayerProfile();
@@ -259,10 +271,10 @@ public class PlayerScreen extends BasicScreen {
                 newUserField.setText("");
                 newUserField.setMessageText(I18n.t("TipsUserName"));
                 // set dialog text
-                dialog.text(I18n.t("UserAdded"));
+                dialog.text(I18n.t("UserAdded"), dialogLabelStyle);
             }
         } else {
-            dialog.text(I18n.t("NullUserName"));
+            dialog.text(I18n.t("NullUserName"), dialogLabelStyle);
         }
         Gdx.input.setOnscreenKeyboardVisible(false);
         TextButton button = new TextButton(I18n.t("ok"), skin);
