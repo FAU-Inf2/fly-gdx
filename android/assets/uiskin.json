@@ -49,7 +49,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 	default-vertical: { background: default-slider, knob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-	default: { font: default-font, fontColor: black },
+	default: { font: default-font, fontColor: white },
 	small: { font: small-font, fontColor: black },
 	red: { font: default-font, fontColor: red },
 	darkGrey: { font: default-font, fontColor: darkGrey },

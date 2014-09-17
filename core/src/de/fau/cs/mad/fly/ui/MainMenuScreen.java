@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.FloatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
@@ -49,7 +50,10 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         table.pad(UI.Window.BORDER_SPACE);
         stage.addActor(table);
         
+        FloatAction test = new FloatAction();
+        
         Button continueButton = new TextButton(I18n.t("play"), skin);
+        continueButton.addAction(test);
         Button chooseLevelButton = new TextButton(I18n.t("choose.level"), skin);
         Button choosePlaneButton = new TextButton(I18n.t("choose.plane"), skin);
         Button statsButton = new TextButton(I18n.t("highscores"), skin);

@@ -9,12 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
@@ -23,7 +23,6 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
-import de.fau.cs.mad.fly.settings.AppSettingsManager;
 
 /**
  * Screen to see your user, to switch the user and to add a new user. Is called
@@ -48,11 +47,11 @@ public class PlayerScreen extends BasicScreen {
      * all these control are placed in userTable
      */
     private void generateUserTable() {
-    	stage.clear();
+        stage.clear();
         Table userTable = new Table();
-        userTable.pad(UI.Window.BORDER_SPACE,UI.Window.BORDER_SPACE,UI.Window.REFERENCE_HEIGHT/2,UI.Window.BORDER_SPACE);
+        userTable.pad(UI.Window.BORDER_SPACE);
         userTable.setFillParent(true);
-        userTable.add(new Label(I18n.t("usernameLableText"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
+        userTable.add(new Label(I18n.t("usernameLableText"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         // add all user to userList and set the current user to display value
         userList = new SelectBox<String>(skin);
         updateUserTable();
@@ -70,50 +69,49 @@ public class PlayerScreen extends BasicScreen {
                 return false;
             }
         });
-        userTable.add(userList).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
+        userTable.add(userList).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         userTable.row().expand();
         
-        //show fly id, if no fly id, show a info button
-        userTable.add(new Label(I18n.t("labelFlyId"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
-        if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID()>0) {
-        	  userTable.add(new Label(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() + "", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
+        // show fly id, if no fly id, show a info button
+        userTable.add(new Label(I18n.t("labelFlyId"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() > 0) {
+            userTable.add(new Label(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() + "", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         } else {
-        	ImageButton infoButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
-        	infoButton.addListener(new ChangeListener() {
+            ImageButton infoButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+            infoButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                	 Dialog dialog = new Dialog("", skin, "dialog");
-                	 dialog.text(I18n.t("msgGetFlyId"));
-                	 TextButton button = new TextButton(I18n.t("ok"), skin);
-                     dialog.button(button);
-                     dialog.show(stage);
+                    Dialog dialog = new Dialog("", skin, "dialog");
+                    dialog.text(I18n.t("msgGetFlyId"));
+                    TextButton button = new TextButton(I18n.t("ok"), skin);
+                    dialog.button(button);
+                    dialog.show(stage);
                 }
-            });        	
-        	userTable.add(infoButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
+            });
+            userTable.add(infoButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         }
         userTable.row().expand();
         
-        //show total score
-        userTable.add(new Label(I18n.t("labelTotalScore"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
-        userTable.add(new Label("" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney(), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
+        // show total score
+        userTable.add(new Label(I18n.t("labelTotalScore"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        userTable.add(new Label("" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney(), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         userTable.row().expand();
         
-        //show passed group
-        userTable.add(new Label(I18n.t("LabelReachedGroup"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
+        // show passed group
+        userTable.add(new Label(I18n.t("LabelReachedGroup"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         int group = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
-        if(group>LevelGroupManager.getInstance().getLastGroupID()){
-        	userTable.add(new Label(I18n.t("ALLGroupPassed") , skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
+        if (group > LevelGroupManager.getInstance().getLastGroupID()) {
+            userTable.add(new Label(I18n.t("ALLGroupPassed"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         } else {
-        	
-        	String groupname = LevelGroupManager.getInstance().getLevelGroup(group).name;
-        	userTable.add(new Label(groupname, skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
-        }      	
+            String groupname = LevelGroupManager.getInstance().getLevelGroup(group).name;
+            userTable.add(new Label(groupname, skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        }
         userTable.row().expand();
         
-        //show delete user and edit user name button        
-        userTable.add(editUserButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
-        userTable.add(deleteUserButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT);
-        userTable.row().expand();;
+        // show delete user and edit user name button
+        userTable.add(editUserButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        userTable.add(deleteUserButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        userTable.row().expand();
         
         // add user field and button
         newUserField = new TextField("", skin);
@@ -127,8 +125,9 @@ public class PlayerScreen extends BasicScreen {
             }
         });
         newUserField.setMessageText(I18n.t("TipsUserName"));
-        userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).top().expand();
-        userTable.add(addUserButton).pad(UI.Buttons.SPACE_HEIGHT).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).top().expand();
+        userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).top();
+        userTable.add(addUserButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).top();
+        userTable.debug();
         stage.addActor(userTable);
     }
     
@@ -166,51 +165,52 @@ public class PlayerScreen extends BasicScreen {
             public void changed(ChangeEvent event, Actor actor) {
                 addNewUser();
             }
-        });      
+        });
         
-		deleteUserButton.addListener(new ChangeListener() {
-			final String YES = "true";
-			final String CANCEL = "cancel";
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				if (PlayerProfileManager.getInstance().getAllPlayerProfiles().size() <= 1) {
-					Dialog dialog = new Dialog("", skin, "dialog");
-					dialog.text(I18n.t("msgLastUser"));
-					TextButton button = new TextButton(I18n.t("ok"), skin);
-					dialog.button(button);
-					dialog.show(stage);
-				} else {
-					TextButton button = new TextButton(I18n.t("ok"), skin);
-					TextButton concelButton = new TextButton(I18n.t("buttenText.cancel"), skin);
-
-					new Dialog("", skin, "dialog") {
-						protected void result(Object object) {
-							Gdx.app.log("fan", object.toString());
-							if (object.toString().equals(YES)) {								
-								PlayerProfileManager.getInstance().deletePlayerProfile();
-								generateUserTable();
-							}
-						}
-					}.text(I18n.t("msgDeleteUser")).button(button, YES).button(concelButton, CANCEL).key(Keys.ENTER, YES).key(Keys.ESCAPE, CANCEL).show(stage);
-				}
-			}
-		});
-
-		editUserButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				TextButton button = new TextButton(I18n.t("ok"), skin);
-				TextButton concelButton = new TextButton(I18n.t("buttenText.cancel"), skin);
-
-				new Dialog("", skin, "dialog") {
-					protected void result(Object object) {
-						if (Boolean.getBoolean(object.toString()) == true) {
-							
-						}
-					}
-				}.text(I18n.t("msgInputNewUsername")).button(button, true).button(concelButton, false).key(Keys.ENTER, true).key(Keys.ESCAPE, false).show(stage);
-			}
-		});
+        deleteUserButton.addListener(new ChangeListener() {
+            final String YES = "true";
+            final String CANCEL = "cancel";
+            
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (PlayerProfileManager.getInstance().getAllPlayerProfiles().size() <= 1) {
+                    Dialog dialog = new Dialog("", skin, "dialog");
+                    dialog.text(I18n.t("msgLastUser"));
+                    TextButton button = new TextButton(I18n.t("ok"), skin);
+                    dialog.button(button);
+                    dialog.show(stage);
+                } else {
+                    TextButton button = new TextButton(I18n.t("ok"), skin);
+                    TextButton concelButton = new TextButton(I18n.t("buttenText.cancel"), skin);
+                    
+                    new Dialog("", skin, "dialog") {
+                        protected void result(Object object) {
+                            Gdx.app.log("fan", object.toString());
+                            if (object.toString().equals(YES)) {
+                                PlayerProfileManager.getInstance().deletePlayerProfile();
+                                generateUserTable();
+                            }
+                        }
+                    }.text(I18n.t("msgDeleteUser")).button(button, YES).button(concelButton, CANCEL).key(Keys.ENTER, YES).key(Keys.ESCAPE, CANCEL).show(stage);
+                }
+            }
+        });
+        
+        editUserButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                TextButton button = new TextButton(I18n.t("ok"), skin);
+                TextButton concelButton = new TextButton(I18n.t("buttenText.cancel"), skin);
+                
+                new Dialog("", skin, "dialog") {
+                    protected void result(Object object) {
+                        if (Boolean.getBoolean(object.toString()) == true) {
+                            
+                        }
+                    }
+                }.text(I18n.t("msgInputNewUsername")).button(button, true).button(concelButton, false).key(Keys.ENTER, true).key(Keys.ESCAPE, false).show(stage);
+            }
+        });
         
         generateUserTable();
     }
