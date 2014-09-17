@@ -12,15 +12,18 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: { up: green-rounded-button-9patch, down: green-rounded-button-9patch, checked: green-rounded-button-9patch }
+	default: { up: button-9patch-up-rounded
+, down: button-9patch-down-rounded, checked: button-9patch-up-rounded }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, font: default-font, fontColor: white, disabled: grey-progress-bar, disabledFontColor: lightGrey }
+	default: { up: button-9patch-up-rounded
+, down: button-9patch-down-rounded, checked: button-9patch-up-rounded
+, font: default-font, fontColor: white, disabled: grey-progress-bar, disabledFontColor: lightGrey }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
-	settings: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: gear, imageDown: gear, disabled: grey-progress-bar },
-	help: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: questionmark, imageDown: questionmark, disabled: grey-progress-bar },
-	player: { up: green-rounded-button-9patch, down: dark-green-rounded-button-9patch, checked: green-rounded-button-9patch, imageUp: guy, imageDown: guy, disabled: grey-progress-bar }
+	settings: { up: button-9patch-up-rounded, down: button-9patch-down-rounded, checked: button-9patch-up-rounded, imageUp: gear, imageDown: gear, disabled: grey-progress-bar },
+	help: { up: button-9patch-up-rounded, down: button-9patch-down-rounded, checked: button-9patch-up-rounded, imageUp: questionmark, imageDown: questionmark, disabled: grey-progress-bar },
+	player: { up: button-9patch-up-rounded, down: button-9patch-down-rounded, checked: button-9patch-up-rounded, imageUp: guy, imageDown: guy, disabled: grey-progress-bar }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: transparent-rect, hScroll: default-scroll, vScrollKnob: default-round-large },

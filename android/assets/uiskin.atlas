@@ -83,20 +83,20 @@ white
   orig: 1, 1
   offset: 0, 0
   index: -1
-green-rounded-button-9patch
+button-9patch-up-rounded
   rotate: false
   xy: 1, 310
-  size: 109, 108
+  size: 108, 108
   split: 53, 53, 53, 53
-  orig: 109, 108
+  orig: 108, 108
   offset: 0, 0
   index: -1
-dark-green-rounded-button-9patch
+button-9patch-down-rounded
   rotate: false
   xy: 260, 1
-  size: 109, 109
-  split: 54, 54, 54, 54
-  orig: 109, 109
+  size: 108, 108
+  split: 53, 53, 53, 53
+  orig: 108, 108
   offset: 0, 0
   index: -1
 gear
