@@ -64,7 +64,12 @@ public class FlightController implements InputProcessor {
         this.bufferSize = 8;
         
         player.getPlane().setRolling(useRolling);
-        
+    }
+
+    /**
+     * Resets steering and the buffers.
+     */
+    public void init() {
         resetSteering();
         resetBuffers();
     }

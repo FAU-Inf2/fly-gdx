@@ -1,6 +1,9 @@
 package de.fau.cs.mad.fly.ios.input;
 
+import com.badlogic.gdx.Gdx;
+
 import org.robovm.apple.coremotion.CMAttitude;
+import org.robovm.apple.coremotion.CMDeviceMotion;
 import org.robovm.apple.coremotion.CMMotionManager;
 
 import de.fau.cs.mad.fly.game.FlightController;
@@ -16,13 +19,19 @@ public class IOSFlightController extends FlightController{
 
     public IOSFlightController(Player player, PlayerProfile playerProfile) {
         super(player, playerProfile);
+        Gdx.app.log("IOSFlightController", "Instantiating motion manager");
         motionManager = new CMMotionManager();
+        Gdx.app.log("IOSFlightController", motionManager.description());
         motionManager.setDeviceMotionUpdateInterval(1.f/60.f);
         motionManager.startDeviceMotionUpdates();
+        currentAttitude = new CMAttitude();
     }
 
     @Override
     public void resetSteering() {
+        Gdx.app.log("IOSFlightController.java", "Entering resetSteering; " + motionManager.toString());
+        CMDeviceMotion motion = motionManager.getDeviceMotion();
+        Gdx.app.log("IOSFlightController.resetSteering", "motion object null: " + Boolean.toString(motion == null));
         currentAttitude = motionManager.getDeviceMotion().getAttitude();
         startRoll = (float) currentAttitude.getRoll();
         startPitch = (float) currentAttitude.getPitch();

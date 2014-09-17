@@ -34,12 +34,13 @@
     <pattern>de.fau.cs.mad.fly.ios.sqlite.IOSDatabaseManager</pattern>
     <pattern>de.fau.cs.mad.fly.profile.PlayerProfileManager</pattern>
     <pattern>de.fau.cs.mad.fly.ios.input.IOSFlightController</pattern>
+    <pattern>com.android.okhttp.HttpsHandler</pattern>
   </forceLinkClasses>
   <libs>
-    <lib>build/libs/ios/libgdx.a</lib>
-    <lib>build/libs/ios/libgdx-freetype.a</lib>
-    <lib>build/libs/ios/libObjectAL.a</lib>
     <lib>build/libs/ios/libgdx-bullet.a</lib>
+    <lib>build/libs/ios/libgdx-freetype.a</lib>
+    <lib>build/libs/ios/libgdx.a</lib>
+    <lib>build/libs/ios/libObjectAL.a</lib>
   </libs>
   <frameworks>
     <framework>UIKit</framework>
