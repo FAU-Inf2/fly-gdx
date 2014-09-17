@@ -157,7 +157,7 @@ public class HelpFrameTextWithArrow extends HelpFrame {
         label = new Label(I18n.t(labelText), labelStyle);
         label.setAlignment(Align.center);
         helpingTextTable = new Table();
-        final NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
+        final NinePatchDrawable background = new NinePatchDrawable(skin.get("dialog-background", NinePatch.class));
         helpingTextTable.setBackground(background);
         helpingTextTable.row().expand();
         helpingTextTable.add(label);

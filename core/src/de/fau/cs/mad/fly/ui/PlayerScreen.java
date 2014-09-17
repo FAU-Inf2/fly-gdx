@@ -125,9 +125,8 @@ public class PlayerScreen extends BasicScreen {
             }
         });
         newUserField.setMessageText(I18n.t("TipsUserName"));
-        userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).top();
-        userTable.add(addUserButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).top();
-        userTable.debug();
+        userTable.add(newUserField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        userTable.add(addUserButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         stage.addActor(userTable);
     }
     
