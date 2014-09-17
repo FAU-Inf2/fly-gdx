@@ -12,18 +12,18 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: { up: button-9patch-up-rounded
-, down: button-9patch-down-rounded, checked: button-9patch-up-rounded }
+	default: { up: button-up
+, down: button-down, checked: button-up }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { up: button-9patch-up-rounded
-, down: button-9patch-down-rounded, checked: button-9patch-up-rounded
-, font: default-font, fontColor: white, disabled: grey-progress-bar, disabledFontColor: lightGrey }
+	default: { up: button-up
+, down: button-down, checked: button-up
+, font: default-font, fontColor: white, disabled: button-disabled, disabledFontColor: lightGrey }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
-	settings: { up: button-9patch-up-rounded, down: button-9patch-down-rounded, checked: button-9patch-up-rounded, imageUp: gear, imageDown: gear, disabled: grey-progress-bar },
-	help: { up: button-9patch-up-rounded, down: button-9patch-down-rounded, checked: button-9patch-up-rounded, imageUp: questionmark, imageDown: questionmark, disabled: grey-progress-bar },
-	player: { up: button-9patch-up-rounded, down: button-9patch-down-rounded, checked: button-9patch-up-rounded, imageUp: guy, imageDown: guy, disabled: grey-progress-bar }
+	settings: { up: button-up, down: button-down, checked: button-up, imageUp: gear, imageDown: gear, disabled: button-disabled },
+	help: { up: button-up, down: button-down, checked: button-up, imageUp: questionmark, imageDown: questionmark, disabled: button-disabled },
+	player: { up: button-up, down: button-down, checked: button-up, imageUp: guy, imageDown: guy, disabled: button-disabled }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: transparent-rect, hScroll: default-scroll, vScrollKnob: default-round-large },
@@ -33,7 +33,7 @@ com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
 		font: default-font, fontColor: black, background: green-select-box,
 		scrollStyle: grey-background,
-		listStyle: { font: default-font, selection: button-9patch-up-rounded }
+		listStyle: { font: default-font, selection: button-up }
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
@@ -63,6 +63,6 @@ com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }
 },
 de.fau.cs.mad.fly.ui.ScalableProgressBar$ScalableProgressBarStyle: {
-	default: { background: grey-progress-bar, foreground: green-progress-bar }
+	default: { background: progress-bar-background, foreground: progress-bar-foreground}
 }
 }

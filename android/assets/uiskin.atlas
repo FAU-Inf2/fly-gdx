@@ -83,17 +83,25 @@ white
   orig: 1, 1
   offset: 0, 0
   index: -1
-button-9patch-up-rounded
+button-up
   rotate: false
   xy: 1, 311
+  size: 108, 107
+  split: 53, 53, 53, 53
+  orig: 108, 107
+  offset: 0, 0
+  index: -1
+button-down
+  rotate: false
+  xy: 260, 1
   size: 108, 108
   split: 53, 53, 53, 53
   orig: 108, 108
   offset: 0, 0
   index: -1
-button-9patch-down-rounded
+button-disabled
   rotate: false
-  xy: 260, 1
+  xy: 751, 245
   size: 108, 108
   split: 53, 53, 53, 53
   orig: 108, 108
@@ -106,15 +114,7 @@ gear
   orig: 256, 256
   offset: 0, 0
   index: -1
-green-progress-bar
-  rotate: false
-  xy: 0, 309
-  size: 110, 110
-  split: 54, 54, 54, 54
-  orig: 110, 110
-  offset: 0, 0
-  index: -1
-grey-progress-bar
+progress-bar-background
   rotate: false
   xy: 112, 310
   size: 131, 131
@@ -122,6 +122,14 @@ grey-progress-bar
   orig: 131, 131
   offset: 0, 0
   index: -1
+progress-bar-foreground
+  rotate: false
+  xy: 710, 134
+  size: 108, 107
+  split: 53, 53, 53, 53
+  orig: 108, 107
+  offset: 0, 0
+  index: -1  
 watch
   rotate: false
   xy: 245, 289
