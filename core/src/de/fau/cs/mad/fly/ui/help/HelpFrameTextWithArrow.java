@@ -49,6 +49,9 @@ import de.fau.cs.mad.fly.ui.UI;
  */
 public class HelpFrameTextWithArrow extends HelpFrame {
     
+    /** Space between arrow and actor / message box */
+    private final static float PADDING = 10f;
+    
     /**
      * arrow that points to the actor that is described by this
      * {@link HelpFrame}
@@ -196,7 +199,7 @@ public class HelpFrameTextWithArrow extends HelpFrame {
             }
         }
         
-        // check if actor is horizontally between the visible commands.
+        // Check if actor is horizontally visible.
         // Otherwise place message and arrow horizontally on the same line as
         // the actor
         if (actorPos.x > 0 && actorPos.x + actor.getWidth() < viewport.getWorldWidth()) {
@@ -221,19 +224,19 @@ public class HelpFrameTextWithArrow extends HelpFrame {
             }
             
             // check if above is possible
-            float minSpaceAbove = label.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight();
+            float minSpaceAbove = label.getHeight() + UI.Window.BORDER_SPACE + arrow.getRegionHeight() + 2 * PADDING;
             float topEdgeOfActor = actorPos.y + actor.getHeight();
             if (viewport.getWorldHeight() - (topEdgeOfActor + UI.Window.BORDER_SPACE + arrow.getRegionHeight()) > minSpaceAbove) {
                 // put label and arrow above
-                arrowYPos = topEdgeOfActor / scalingFactor;
-                labelYPos = topEdgeOfActor + arrow.getRegionHeight() + PADDING_OF_LABEL;
+                arrowYPos = (topEdgeOfActor + PADDING) / scalingFactor;
+                labelYPos = topEdgeOfActor + arrow.getRegionHeight() + PADDING_OF_LABEL + 2 * PADDING;
                 // pointing downwards corresponds 0°
                 arrowRotation = 0;
             } else {
                 // put label and arrow below
                 float buttomEdgeOfArrow = actorPos.y - arrow.getRegionHeight();
-                arrowYPos = buttomEdgeOfArrow / scalingFactor;
-                labelYPos = buttomEdgeOfArrow - label.getHeight() - PADDING_OF_LABEL;
+                arrowYPos = (buttomEdgeOfArrow - PADDING) / scalingFactor;
+                labelYPos = buttomEdgeOfArrow - label.getHeight() - PADDING_OF_LABEL - 2 * PADDING;
                 // pointing upwards corresponds 180°
                 arrowRotation = 180;
             }
