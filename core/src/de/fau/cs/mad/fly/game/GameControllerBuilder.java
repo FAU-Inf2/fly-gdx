@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.game;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,13 +112,16 @@ public class GameControllerBuilder {
         level = Loader.getInstance().getCurrentLevel();
         if(Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
             try {
-                flightController = (FlightController)Class.forName("de.fau.cs.mad.fly.ios.input.IOSFlightController").newInstance();
+                Constructor c = Class.forName("de.fau.cs.mad.fly.ios.input.IOSFlightController").getConstructor(Player.class, PlayerProfile.class);
+                flightController = (FlightController) c.newInstance(player, playerProfile);
             } catch(Exception e) {
+                e.printStackTrace();
                 throw new GdxRuntimeException("Error instantiating IOSFlightController", e);
             }
         } else {
             flightController = new FlightController(player, playerProfile);
         }
+        flightController.init();
         cameraController = new CameraController(player, playerProfile);
         
         stage = new Stage();
@@ -363,7 +367,7 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Checks the {@link Level.levelClass} value and uses the default class
+     * Checks the {@link Level. levelClass} value and uses the default class
      * features or the features of a given class if found and invoked correctly.
      * 
      * @param level
