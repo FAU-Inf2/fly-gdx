@@ -107,7 +107,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      * @param info
      */
     private void showInfoLabel(String info) {
-        Label infoLabel = new Label(I18n.t(info), skin);
+        Label infoLabel = new Label(I18n.t(info), skin, "black");
         messageTable.add(infoLabel).colspan(3);
         messageTable.row();
     }
@@ -148,7 +148,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private void levelSuccessfullyFinished() {
         final PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         if (currentPlayer.IsLastLevel()) {
-            if (currentPlayer.IsLastLevelGroup()) {                
+            if (currentPlayer.IsLastLevelGroup()) {
                 currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
                 currentPlayer.savePassedLevelID();
                 showInfoLabel("ALLGroupPassed");
@@ -224,11 +224,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         // he got in this level
         PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(newScore.getTotalScore());
         
-        Label scoreName = new Label(I18n.t("newScore"), skin);
+        Label scoreName = new Label(I18n.t("newScore"), skin, "black");
         messageTable.columnDefaults(1).width(50f);
         messageTable.add(scoreName).right();
         messageTable.add();
-        messageTable.add(new Label(newScore.getTotalScore() + "", skin)).left();
+        messageTable.add(new Label(newScore.getTotalScore() + "", skin, "black")).left();
         messageTable.row().expand();
         
         // gates

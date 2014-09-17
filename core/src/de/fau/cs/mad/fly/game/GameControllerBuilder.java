@@ -37,8 +37,6 @@ import de.fau.cs.mad.fly.features.overlay.InfoButtonOverlay;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
 import de.fau.cs.mad.fly.features.overlay.ScoreOverlay;
-import de.fau.cs.mad.fly.features.overlay.SteeringOverlay;
-import de.fau.cs.mad.fly.features.overlay.SteeringResetOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeUpOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
@@ -292,14 +290,9 @@ public class GameControllerBuilder {
         if (preferences.getBoolean(SettingManager.SHOW_FPS)) {
             addFPSOverlay();
         }
-        if (preferences.getBoolean(SettingManager.SHOW_STEERING)) {
-            addSteeringOverlay();
-        }
         if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
             addTouchScreenOverlay();
-        } else if (preferences.getBoolean(SettingManager.SHOW_RESET_STEERING)) {
-            addSteeringResetOverlay();
-        }
+        } 
         if (preferences.getBoolean(SettingManager.VIBRATE_WHEN_COLLIDE)) {
             CollisionDetector.getInstance().getCollisionContactListener().addListener(new ICollisionListener() {
                 @Override
@@ -517,18 +510,6 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Adds a {@link SteeringOverlay} to the GameController, that is updated
-     * every frame.
-     * 
-     * @return Builder instance with SteeringOverlay
-     */
-    private GameControllerBuilder addSteeringOverlay() {
-        SteeringOverlay steeringOverlay = new SteeringOverlay(flightController, game.getSkin());
-        addFeatureToLists(steeringOverlay);
-        return this;
-    }
-    
-    /**
      * Adds a {@link TouchScreenOverlay} to the GameController, that is updated
      * every frame.
      * 
@@ -561,18 +542,6 @@ public class GameControllerBuilder {
     private GameControllerBuilder addPauseGameOverlay() {
         PauseGameOverlay pauseGameOverlay = new PauseGameOverlay(game.getSkin(), stage);
         addFeatureToLists(pauseGameOverlay);
-        return this;
-    }
-    
-    /**
-     * Adds a {@link SteeringResetOverlay} to the GameController, that is
-     * initialized and displayed every frame
-     * 
-     * @return Builder instance with SteeringResetOverlay
-     */
-    private GameControllerBuilder addSteeringResetOverlay() {
-        SteeringResetOverlay steeringResetOverlay = new SteeringResetOverlay(game.getSkin(), flightController, stage);
-        addFeatureToLists(steeringResetOverlay);
         return this;
     }
     
