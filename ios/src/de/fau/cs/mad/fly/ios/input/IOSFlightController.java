@@ -16,7 +16,7 @@ import de.fau.cs.mad.fly.profile.PlayerProfile;
  * Created by tschaei on 15.09.14.
  */
 public class IOSFlightController extends FlightController{
-    private CMMotionManager motionManager;
+    private final CMMotionManager motionManager;
     private CMAttitude currentAttitude;
 
     public IOSFlightController(Player player, PlayerProfile playerProfile) {
@@ -44,14 +44,20 @@ public class IOSFlightController extends FlightController{
         CMDeviceMotion motion = motionManager.getDeviceMotion();
         Gdx.app.log("IOSFlightController.resetSteering", "motion object null: " + Boolean.toString(motion == null));
         currentAttitude = motionManager.getDeviceMotion().getAttitude();
-        startRoll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
+        if(invertPitch)
+            startRoll = -(float) (currentAttitude.getRoll() * 180 / Math.PI);
+        else
+            startRoll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
         startPitch = -(float) (currentAttitude.getPitch() * 180 / Math.PI);
     }
 
     @Override
     protected void interpretSensorInput() {
         currentAttitude = motionManager.getDeviceMotion().getAttitude();
-        roll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
+        if(invertPitch)
+            roll = -(float) (currentAttitude.getRoll() * 180 / Math.PI);
+        else
+            roll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
         pitch = -(float) (currentAttitude.getPitch() * 180 / Math.PI);
 
         Gdx.app.log("IOSFlightController.interpretSensorInput", "Current roll: " + roll + "\nCurrent pitch: " + pitch + "\nStarting roll: " + startRoll + ". Starting pitch: " + startPitch);
@@ -97,4 +103,6 @@ public class IOSFlightController extends FlightController{
         setAzimuthFactor(difPitch / maxRotate);
         setRollFactor(difRoll / -maxRotate);
     }
+
+
 }
