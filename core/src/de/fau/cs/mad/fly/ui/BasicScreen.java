@@ -16,10 +16,22 @@ import de.fau.cs.mad.fly.res.Assets;
 
 public abstract class BasicScreen implements Screen {
     
-    protected final SpriteBatch batch;
-    protected static Sprite background;
+    /** saves weather the static members have been initialized or not */
+    private static boolean initialized = false;
+    
+    private static float widthScalingFactor;
+    private static float heightScalingFactor;
+    private static float scalingFactor;
+    private static float xSkalingFactor;
+    private static float ySkalingFactor;
+    private static float deltaX;
+    private static float deltaY;
+    private static Sprite background;
+    
+    protected static SpriteBatch batch;
+    protected static Viewport viewport;
+    
     protected final Stage stage;
-    protected final Viewport viewport;
     
     /**
      * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the
@@ -28,27 +40,33 @@ public abstract class BasicScreen implements Screen {
     protected InputMultiplexer inputProcessor;
     
     public BasicScreen() {
-        long t0 = System.currentTimeMillis();
         DisposeScreenManager.getInstance().registerForDispose(this);
-        stage = new Stage();
-        
-        batch = new SpriteBatch();
-        if (background == null) {
-            Assets.load(Assets.background);
-            background = new Sprite(Assets.manager.get(Assets.background));
+        if (!initialized) {
+            initialize();
+            initialized = true;
         }
-        
-        float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
-        float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
-        float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
-        viewport = new FitViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
+        stage = new Stage();
         stage.setViewport(viewport);
         inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
-        
-        float xSkalingFactor = Gdx.graphics.getWidth() / background.getWidth();
-        float ySkalingFactor = Gdx.graphics.getHeight() / background.getHeight();
-        float deltaX = 0f;
-        float deltaY = 0f;
+        generateContent();
+    }
+    
+    private void initialize() {
+        batch = new SpriteBatch();
+        Assets.load(Assets.background);
+        background = new Sprite(Assets.manager.get(Assets.background));
+        widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
+        heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
+        scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
+        viewport = new FitViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
+        updateBackground();
+    }
+    
+    private void updateBackground() {
+        xSkalingFactor = Gdx.graphics.getWidth() / background.getWidth();
+        ySkalingFactor = Gdx.graphics.getHeight() / background.getHeight();
+        deltaX = 0f;
+        deltaY = 0f;
         background.setOrigin(0, 0);
         if (xSkalingFactor >= ySkalingFactor) {
             background.setScale(xSkalingFactor);
@@ -58,9 +76,6 @@ public abstract class BasicScreen implements Screen {
             deltaX = (Gdx.graphics.getWidth() - background.getWidth() * ySkalingFactor) / 2.0f;
         }
         background.setPosition(deltaX, deltaY);
-        
-        Gdx.app.log("timing", "BasicScreen.create" + String.valueOf(System.currentTimeMillis() - t0));
-        generateContent();
     }
     
     /** You have to overwrite this method to create your custom content */
@@ -82,6 +97,7 @@ public abstract class BasicScreen implements Screen {
     
     @Override
     public void resize(int width, int height) {
+        updateBackground();
         stage.getViewport().update(width, height, true);
     }
     
@@ -95,26 +111,23 @@ public abstract class BasicScreen implements Screen {
     
     @Override
     public void hide() {
-        // TODO Auto-generated method stub
-        
+        // nothing to do, that is common for all screens
     }
     
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
-        
+        // nothing to do, that is common for all screens
     }
     
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
-        
+        // nothing to do, that is common for all screens
     }
     
     @Override
     public void dispose() {
         stage.dispose();
-        batch.dispose();
+        initialized = false;
     }
     
     /**
