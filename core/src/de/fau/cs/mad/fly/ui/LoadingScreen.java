@@ -12,6 +12,8 @@ import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loadable;
 import de.fau.cs.mad.fly.ProgressListener;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
  * Displays the splash screen.
@@ -45,16 +47,13 @@ public class LoadingScreen<T> extends BasicScreen {
                 Fly app = ((Fly) Gdx.app.getApplicationListener());
                 app.setGameScreen();
                 app.getGameController().initGame();
-                app.getGameController().getFlightController().resetSteering();
+                if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences().getBoolean(SettingManager.USE_TOUCH))
+                    app.getGameController().getFlightController().init();
                 dispose();
             }
         });
         table.add(button).bottom().width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).expand();
         button.setVisible(false);
-        if (Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
-            final TextButton button2 = new TextButton("Compass available: " + Boolean.toString(Gdx.input.isPeripheralAvailable(Input.Peripheral.Compass)), skin);
-            table.add(button2).bottom().expand();
-        }
         table.row();
         
         // add progress bar
