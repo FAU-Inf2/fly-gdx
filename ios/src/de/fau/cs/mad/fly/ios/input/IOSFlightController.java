@@ -24,7 +24,9 @@ public class IOSFlightController extends FlightController{
         Gdx.app.log("IOSFlightController", motionManager.description());
         motionManager.setDeviceMotionUpdateInterval(1.f/60.f);
         motionManager.startDeviceMotionUpdates();
-        currentAttitude = new CMAttitude();
+        Gdx.app.log("IOSFlightController", "DeviceMotionUpdateInterval: " + motionManager.getDeviceMotionUpdateInterval());
+        Gdx.app.log("IOSFlightController", "DeviceMotionAvailable: " + motionManager.isDeviceMotionAvailable());
+        Gdx.app.log("IOSFlightController", "DeviceMotionActive: " + motionManager.isDeviceMotionActive());
     }
 
     @Override
