@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly.features.overlay;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -10,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 public class PauseGameOverlay implements IFeatureInit {
@@ -18,12 +18,12 @@ public class PauseGameOverlay implements IFeatureInit {
     
     private final TextButton pauseButton;
     
-    public PauseGameOverlay(final Skin skin, final Stage stage) {
+    public PauseGameOverlay(final Stage stage) {
         this.stage = stage;
         
         table = new Table();
         table.setFillParent(true);
-        pauseButton = new TextButton(I18n.t("pause"), skin);
+        pauseButton = new TextButton(I18n.t("pause"), SkinManager.getInstance().getSkin());
         table.row().expand();
         table.add(pauseButton).right().pad(UI.Window.BORDER_SPACE);
         table.row().expand();

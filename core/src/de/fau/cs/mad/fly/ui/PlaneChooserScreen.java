@@ -112,7 +112,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         
         allPlanes = PlaneManager.getInstance().getSpaceshipList();
         
-        skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
+        skin = SkinManager.getInstance().getSkin();
         
         // initialize the stage
         stage = new Stage();

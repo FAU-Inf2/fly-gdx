@@ -19,19 +19,20 @@ import com.badlogic.gdx.utils.Disposable;
 public class SkinManager implements Disposable {
     
     private Skin skin;
+    private static SkinManager instance;
     
-    /**
-     * Creates the skin manager.
-     */
-    public SkinManager(String skinFile) {
-        createSkin(skinFile);
+    public static SkinManager getInstance() {
+        if (instance == null) {
+            instance = new SkinManager("uiskin.json");
+        }
+        return instance;
     }
     
     /**
      * Creates the skin for the UI. Load all the necessary fonts and add them to
      * the skin.
      */
-    public void createSkin(String skinFile) {
+    private SkinManager(String skinFile) {
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
         skin = new Skin(atlas);
         
@@ -73,6 +74,7 @@ public class SkinManager implements Disposable {
         if (skin != null) {
             skin.dispose();
             skin = null;
+            instance = null;
         }
     }
 }

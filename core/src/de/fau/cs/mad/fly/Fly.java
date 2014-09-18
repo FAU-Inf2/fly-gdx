@@ -9,7 +9,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.game.GameController;
@@ -29,7 +28,6 @@ import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
 import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
 import de.fau.cs.mad.fly.ui.PlayerScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
-import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.StatisticsScreen;
 
 /**
@@ -68,8 +66,6 @@ public class Fly extends Game implements Loadable<Fly> {
     
     private GameController gameController;
     
-    private SkinManager skinManager;
-    
     private List<ProgressListener<Fly>> listeners = new ArrayList<ProgressListener<Fly>>();
     
     private int progress = 0;
@@ -86,7 +82,6 @@ public class Fly extends Game implements Loadable<Fly> {
         // load SkinManager, has to be done in the main Tread because it needs
         // the OpenGl context that is only offered by the main Thread.
         time = System.currentTimeMillis();
-        skinManager = new SkinManager("uiskin.json");
         Gdx.app.log("timing", "Fly.create creating skin manager: " + String.valueOf(System.currentTimeMillis() - time));
         
         addProgressListener(new ProgressListener.ProgressAdapter<Fly>() {
@@ -164,19 +159,10 @@ public class Fly extends Game implements Loadable<Fly> {
         
         DisposeScreenManager.getInstance().dispose();
         Assets.dispose();
-        skinManager = null;
     }
-    
     
     public GameController getGameController() {
         return gameController;
-    }
-    
-    /**
-     * Getter for the Skin which is stored in the skin manager.
-     */
-    public Skin getSkin() {
-        return skinManager.getSkin();
     }
     
     /**

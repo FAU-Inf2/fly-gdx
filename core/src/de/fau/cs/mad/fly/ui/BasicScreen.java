@@ -37,7 +37,7 @@ public abstract class BasicScreen implements Screen {
         Assets.load(Assets.background);
         background = new Sprite(Assets.manager.get(Assets.background));
         
-        skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
+        skin = SkinManager.getInstance().getSkin();
         float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
         float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
         float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);

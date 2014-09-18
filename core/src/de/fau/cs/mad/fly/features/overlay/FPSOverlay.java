@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureDraw;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -20,10 +20,10 @@ public class FPSOverlay implements IFeatureDraw {
     private final Stage stage;
     private Label fpsDescription, fpsCounter;
     
-    public FPSOverlay(final Skin skin, final Stage stage) {
+    public FPSOverlay(final Stage stage) {
         this.stage = stage;
         
-        LabelStyle labelStyle = skin.get("red", LabelStyle.class);
+        LabelStyle labelStyle = SkinManager.getInstance().getSkin().get("red", LabelStyle.class);
         fpsDescription = new Label(I18n.t("fps"), labelStyle);
         fpsDescription.setPosition(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE * 4);
         stage.addActor(fpsDescription);

@@ -19,20 +19,20 @@ import de.fau.cs.mad.fly.game.TimeIsUpListener;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 public class TimeUpOverlay implements TimeIsUpListener {
     
-    private final Skin skin;
     private Stage stage;
     
-    public TimeUpOverlay(final Skin skin, Stage stage) {
-        this.skin = skin;
+    public TimeUpOverlay(Stage stage) {
         this.stage = stage;
     }
     
     @Override
     public boolean timeIsUp() {
+        Skin skin = SkinManager.getInstance().getSkin();
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         

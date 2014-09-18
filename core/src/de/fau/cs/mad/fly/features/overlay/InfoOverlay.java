@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -25,8 +26,8 @@ public class InfoOverlay implements IFeatureUpdate {
     /**
      * Creates the info overlay instance.
      */
-    public static void createInfoOverlay(final Skin skin, final Stage stage) {
-        instance = new InfoOverlay(skin, stage);
+    public static void createInfoOverlay(final Stage stage) {
+        instance = new InfoOverlay(stage);
     }
     
     /**
@@ -44,7 +45,9 @@ public class InfoOverlay implements IFeatureUpdate {
     
     private float duration = 0.0f;
     
-    protected InfoOverlay(final Skin skin, final Stage stage) {
+    protected InfoOverlay(final Stage stage) {
+        final Skin skin = SkinManager.getInstance().getSkin();
+        
         outerTable = new Table();
         outerTable.setFillParent(true);
         innerTable = new Table();

@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlaneManager;
@@ -59,7 +58,7 @@ public class PlaneUpgradeScreen implements Screen {
         turnSpeed = I18n.t("turnSpeed");
         lives = I18n.t("lives");
         
-        skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
+        skin = SkinManager.getInstance().getSkin();
         backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
         
         backgroundBatch = new SpriteBatch();

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.I18n;
+import de.fau.cs.mad.fly.ui.SkinManager;
 
 /**
  * 
@@ -26,8 +27,8 @@ public class InfoButtonOverlay {
     /**
      * Creates the info overlay instance.
      */
-    public static void createInfoButtonOverlay(final Skin skin, final Stage stage) {
-        instance = new InfoButtonOverlay(skin, stage);
+    public static void createInfoButtonOverlay(final Stage stage) {
+        instance = new InfoButtonOverlay(stage);
     }
     
     /**
@@ -43,7 +44,9 @@ public class InfoButtonOverlay {
     private final Table innerTable;
     private final TextButton button;
     
-    protected InfoButtonOverlay(final Skin skin, final Stage stage) {
+    protected InfoButtonOverlay(final Stage stage) {
+        final Skin skin = SkinManager.getInstance().getSkin();
+        
         innerTable = new Table();
         final NinePatchDrawable background = new NinePatchDrawable(skin.get("dialog-background", NinePatch.class));
         innerTable.setBackground(background);

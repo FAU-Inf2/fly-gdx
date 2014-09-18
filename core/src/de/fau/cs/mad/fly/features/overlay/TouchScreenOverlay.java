@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.fau.cs.mad.fly.features.IFeatureDraw;
+import de.fau.cs.mad.fly.ui.SkinManager;
 
 public class TouchScreenOverlay implements IFeatureDraw {
     
@@ -23,10 +23,10 @@ public class TouchScreenOverlay implements IFeatureDraw {
     private final OrthographicCamera camera;
     private final ShapeRenderer shapeRenderer;
     
-    public TouchScreenOverlay(final Stage stage, Skin skin) {
+    public TouchScreenOverlay(final Stage stage) {
         this.shapeRenderer = new ShapeRenderer();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        COLOR_OF_STEERING_CIRCLE = skin.getColor("lightGrey");
+        COLOR_OF_STEERING_CIRCLE = SkinManager.getInstance().getSkin().getColor("lightGrey");
     }
     
     @Override
