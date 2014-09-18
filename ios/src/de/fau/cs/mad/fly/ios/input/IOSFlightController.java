@@ -54,6 +54,8 @@ public class IOSFlightController extends FlightController{
         roll = (float) currentAttitude.getRoll();
         pitch = (float) currentAttitude.getPitch();
 
+        Gdx.app.log("IOSFlightController.interpretSensorInput", "Current roll: " + roll + "\nCurrent pitch: " + pitch + "\nStarting roll: " + startRoll + ". Starting pitch: " + startPitch);
+
         // removing oldest element in buffers
         if (rollInput.size() >= bufferSize) {
             rollInput.remove(0);
