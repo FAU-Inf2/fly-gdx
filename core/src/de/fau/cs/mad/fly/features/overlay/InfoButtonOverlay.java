@@ -45,7 +45,7 @@ public class InfoButtonOverlay {
     
     protected InfoButtonOverlay(final Skin skin, final Stage stage) {
         innerTable = new Table();
-        final NinePatchDrawable background = new NinePatchDrawable(skin.get("green-progress-bar", NinePatch.class));
+        final NinePatchDrawable background = new NinePatchDrawable(skin.get("dialog-background", NinePatch.class));
         innerTable.setBackground(background);
         
         infoLabel = new Label("", skin);

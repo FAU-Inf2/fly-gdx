@@ -49,7 +49,7 @@ public class HelpFrameText extends HelpFrame {
         Label label = new Label(I18n.t(text), skin, "black");
         label.setAlignment(Align.center);
         Table helpingTextTable = new Table();
-        helpingTextTable.setBackground(new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class)));
+        helpingTextTable.setBackground(new NinePatchDrawable(skin.get("dialog-background", NinePatch.class)));
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         outerTable.pad(UI.Window.BORDER_SPACE);

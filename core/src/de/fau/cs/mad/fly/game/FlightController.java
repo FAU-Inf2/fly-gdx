@@ -22,7 +22,6 @@ import de.fau.cs.mad.fly.settings.SettingManager;
 public class FlightController implements InputProcessor {
     
     protected boolean useSensorData;
-    protected boolean useRolling;
     protected boolean inTouch = false;
     
     protected Player player;
@@ -59,11 +58,8 @@ public class FlightController implements InputProcessor {
         
         Preferences preferences = playerProfile.getSettingManager().getPreferences();
         this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
-        this.useRolling = preferences.getBoolean(SettingManager.USE_ROLL_STEERING);
         
-        this.bufferSize = 8;
-        
-        player.getPlane().setRolling(useRolling);
+        this.bufferSize = 10;
     }
 
     /**
@@ -87,19 +83,7 @@ public class FlightController implements InputProcessor {
     }
     
     /**
-     * Sets the parameter that indicates whether the player should roll or fly
-     * curves
-     * 
-     * @param useRolling
-     *            True if player should roll instead of flying curves
-     */
-    public void setUseRolling(boolean useRolling) {
-        this.useRolling = useRolling;
-        player.getPlane().setRolling(useRolling);
-    }
-    
-    /**
-     * Setter for the size of buffers used for averaging the sensorvalues
+     * Setter for the size of buffers used for averaging the sensor values
      * 
      * @param bufferSize
      *            - The size of the buffers used for averaging

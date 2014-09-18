@@ -68,14 +68,6 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
     }
     
     /**
-     * Setter for the parameter which indicates whether the plane should fly
-     * curves or roll
-     * 
-     * @param rolling
-     */
-    public void setRolling(boolean rolling);
-    
-    /**
      * Getter for the head.
      * 
      * @return the head of the plane.

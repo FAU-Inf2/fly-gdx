@@ -83,20 +83,28 @@ white
   orig: 1, 1
   offset: 0, 0
   index: -1
-green-rounded-button-9patch
+button-up
   rotate: false
-  xy: 1, 310
-  size: 109, 108
+  xy: 1, 311
+  size: 108, 107
   split: 53, 53, 53, 53
-  orig: 109, 108
+  orig: 108, 107
   offset: 0, 0
   index: -1
-dark-green-rounded-button-9patch
+button-down
   rotate: false
   xy: 260, 1
-  size: 109, 109
-  split: 54, 54, 54, 54
-  orig: 109, 109
+  size: 108, 108
+  split: 53, 53, 53, 53
+  orig: 108, 108
+  offset: 0, 0
+  index: -1
+button-disabled
+  rotate: false
+  xy: 751, 245
+  size: 108, 108
+  split: 53, 53, 53, 53
+  orig: 108, 108
   offset: 0, 0
   index: -1
 gear
@@ -106,15 +114,7 @@ gear
   orig: 256, 256
   offset: 0, 0
   index: -1
-green-progress-bar
-  rotate: false
-  xy: 0, 309
-  size: 110, 110
-  split: 54, 54, 54, 54
-  orig: 110, 110
-  offset: 0, 0
-  index: -1
-grey-progress-bar
+progress-bar-background
   rotate: false
   xy: 112, 310
   size: 131, 131
@@ -122,6 +122,14 @@ grey-progress-bar
   orig: 131, 131
   offset: 0, 0
   index: -1
+progress-bar-foreground
+  rotate: false
+  xy: 710, 134
+  size: 108, 107
+  split: 53, 53, 53, 53
+  orig: 108, 107
+  offset: 0, 0
+  index: -1  
 watch
   rotate: false
   xy: 245, 289
@@ -138,7 +146,7 @@ star
   index: -1
 arrow
   rotate: false
-  xy: 260, 149
+  xy: 260, 148
   size: 78, 140
   orig: 78, 140
   offset: 0, 0
@@ -164,7 +172,7 @@ questionmark
   orig: 118, 230
   offset: 0, 0
   index: -1
-green-text-field
+text-field
   rotate: false
   xy: 404,374
   size: 107, 108
@@ -175,9 +183,9 @@ green-text-field
 green-select-box
   rotate: false
   xy: 545,0
-  size: 164, 219
+  size: 164, 218
   split: 52, 109, 52, 52
-  orig: 165, 219
+  orig: 165, 218
   offset: 0, 0
   index: -1
 grey-select-drop-down

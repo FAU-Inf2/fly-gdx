@@ -3,21 +3,24 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.res.Assets;
 
 public abstract class BasicScreen implements Screen {
     
+    protected final SpriteBatch batch;
+    protected final Sprite background;
     protected final Skin skin;
     protected final Stage stage;
     protected final Viewport viewport;
-    protected final Color backgroundColor;
     
     /**
      * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the
@@ -27,14 +30,33 @@ public abstract class BasicScreen implements Screen {
     
     public BasicScreen() {
         stage = new Stage();
+        
+        batch = new SpriteBatch();
+        Assets.load(Assets.background);
+        background = new Sprite(Assets.manager.get(Assets.background));
+        
         skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
         float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
         float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
         float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
-        viewport = new FillViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
+        viewport = new FitViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
         stage.setViewport(viewport);
         inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
-        backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
+        
+        float xSkalingFactor = Gdx.graphics.getWidth() / background.getWidth();
+        float ySkalingFactor = Gdx.graphics.getHeight() / background.getHeight();
+        float deltaX = 0f;
+        float deltaY = 0f;
+        background.setOrigin(0, 0);
+        if (xSkalingFactor >= ySkalingFactor) {
+            background.setScale(xSkalingFactor);
+            deltaY = (Gdx.graphics.getHeight() - background.getHeight() * xSkalingFactor) / 2.0f;
+        } else {
+            background.setScale(ySkalingFactor);
+            deltaX = (Gdx.graphics.getWidth() - background.getWidth() * ySkalingFactor) / 2.0f;
+        }
+        background.setPosition(deltaX, deltaY);
+        
         generateContent();
     }
     
@@ -44,8 +66,13 @@ public abstract class BasicScreen implements Screen {
     
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
+        batch.begin();
+        background.draw(batch);
+        batch.end();
+        
         stage.act(delta);
         stage.draw();
     }

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
@@ -13,19 +15,13 @@ import de.fau.cs.mad.fly.I18n;
 /**
  * Stores all the settings in a HashMap
  * 
- * @author Tobias Zangl
+ * @author Tobias Zangl, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
 public class SettingManager {
     
     public static final String USE_TOUCH = "useTouch";
-    public static final String USE_ROLL_STEERING = "useRolling";
-    public static final String USE_LOW_PASS_FILTER = "useLowPass";
-    public static final String SHOW_GATE_INDICATOR = "showGateIndicator";
     public static final String SHOW_PAUSE = "showPause";
-    public static final String SHOW_STEERING = "showSteering";
     public static final String SHOW_FPS = "showFPS";
-    public static final String FIRST_PERSON = "firstPerson";
-    public static final String SHOW_RESET_STEERING = "showResetSteering";
     public static final String VIBRATE_WHEN_COLLIDE = "vibrateWhenCollide";
     
     public static final String ALPHA_SLIDER = "alphaSlider";
@@ -124,12 +120,12 @@ public class SettingManager {
      * {@link ui#SettingScreen}.
      */
     private void createSettings() {
-        addBooleanSetting(VIBRATE_WHEN_COLLIDE, true, "helpVibrate");
-        addBooleanSetting(USE_TOUCH, false, "helpTouch");
-        addBooleanSetting(USE_ROLL_STEERING, false, "helpRoll");
+        ApplicationType type = Gdx.app.getType();
+        if (Application.ApplicationType.Android.equals(type) || Application.ApplicationType.iOS.equals(type)) {
+            addBooleanSetting(VIBRATE_WHEN_COLLIDE, true, "helpVibrate");
+            addBooleanSetting(USE_TOUCH, false, "helpTouch");
+        }
         // addBooleanSetting(SHOW_PAUSE, false);
-        addBooleanSetting(SHOW_STEERING, false, "helpShowSteering");
         addBooleanSetting(SHOW_FPS, false, "helpShowFPS");
-        addBooleanSetting(SHOW_RESET_STEERING, false, "helpResetSteering");
     }
 }

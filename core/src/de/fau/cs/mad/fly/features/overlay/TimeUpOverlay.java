@@ -55,7 +55,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
         });
         
         final Table messageTable = new Table();
-        NinePatchDrawable background = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
+        NinePatchDrawable background = new NinePatchDrawable(skin.get("dialog-background", NinePatch.class));
         messageTable.setBackground(background);
         
         Label infoLabel = new Label(I18n.t("level.time.up"), skin);

@@ -27,7 +27,7 @@ public class TimeLeftOverlay implements IntegerTimeListener {
         // necessary for adjusting the innerTable on the screen
         final Table outerTable = new Table();
         
-        final NinePatchDrawable backgroundOfInnerTable = new NinePatchDrawable(skin.get("grey-progress-bar", NinePatch.class));
+        final NinePatchDrawable backgroundOfInnerTable = new NinePatchDrawable(skin.get("button-up", NinePatch.class));
         innerTable.setBackground(backgroundOfInnerTable);
         
         final TextureRegion textureRegionOfWatchIcon = new TextureRegion(skin.getRegion("watch"));
