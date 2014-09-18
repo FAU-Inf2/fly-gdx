@@ -1,9 +1,9 @@
 package de.fau.cs.mad.fly.settings;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.fau.cs.mad.fly.ui.SkinManager;
@@ -36,13 +36,9 @@ public class BooleanSetting extends ChangeListener implements ISetting {
         this.settingManager = settingManager;
         this.id = id;
         
-        Skin skin = SkinManager.getInstance().getSkin();
-        this.label = new Label(description, skin);
+        this.label = new Label(description, SkinManager.getInstance().getSkin());
         
         this.value = value;
-        this.checkBox = new CheckBox("", skin);
-        this.checkBox.setChecked(value);
-        this.checkBox.addListener(this);
         this.helpingText = helpingText;
     }
     
@@ -77,6 +73,9 @@ public class BooleanSetting extends ChangeListener implements ISetting {
     
     @Override
     public Actor getActor() {
+        this.checkBox = new CheckBox("", SkinManager.getInstance().getSkin());
+        this.checkBox.setChecked(value);
+        this.checkBox.addListener(this);
         return checkBox;
     }
     

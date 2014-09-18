@@ -11,6 +11,7 @@ import com.badlogic.gdx.Preferences;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
@@ -23,6 +24,7 @@ public class FlightController implements InputProcessor {
     
     protected boolean useSensorData;
     protected boolean inTouch = false;
+    protected boolean invertPitch;
     
     protected Player player;
     
@@ -58,6 +60,7 @@ public class FlightController implements InputProcessor {
         
         Preferences preferences = playerProfile.getSettingManager().getPreferences();
         this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
+        this.invertPitch = preferences.getBoolean(SettingManager.INVERT_PITCH);
         
         this.bufferSize = 10;
     }
@@ -66,8 +69,11 @@ public class FlightController implements InputProcessor {
      * Resets steering and the buffers.
      */
     public void init() {
-        resetSteering();
-        resetBuffers();
+        useSensorData = !PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences().getBoolean(SettingManager.USE_TOUCH);
+        if (useSensorData) {
+            resetSteering();
+            resetBuffers();
+        }
     }
     
     /**
@@ -117,8 +123,11 @@ public class FlightController implements InputProcessor {
      * Resets the Steering with Sensors to the current Smartphone position
      */
     public void resetSteering() {
+        if(invertPitch)
+            startRoll = -Gdx.input.getRoll();
+        else
+            startRoll = Gdx.input.getRoll();
         startPitch = Gdx.input.getPitch();
-        startRoll = Gdx.input.getRoll();
     }
     
     /**
@@ -144,8 +153,11 @@ public class FlightController implements InputProcessor {
      * Interprets the rotation of the smartphone
      */
     protected void interpretSensorInput() {
-        roll = Gdx.input.getRoll();
         pitch = Gdx.input.getPitch();
+        if(invertPitch)
+            roll = -Gdx.input.getRoll();
+        else
+            roll = Gdx.input.getRoll();
         
         // removing oldest element in buffers
         if (rollInput.size() >= bufferSize) {

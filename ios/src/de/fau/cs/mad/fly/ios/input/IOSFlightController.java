@@ -1,6 +1,8 @@
 package de.fau.cs.mad.fly.ios.input;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import org.robovm.apple.coremotion.CMAttitude;
 import org.robovm.apple.coremotion.CMDeviceMotion;
@@ -14,7 +16,7 @@ import de.fau.cs.mad.fly.profile.PlayerProfile;
  * Created by tschaei on 15.09.14.
  */
 public class IOSFlightController extends FlightController{
-    private CMMotionManager motionManager;
+    private final CMMotionManager motionManager;
     private CMAttitude currentAttitude;
 
     public IOSFlightController(Player player, PlayerProfile playerProfile) {
@@ -22,26 +24,43 @@ public class IOSFlightController extends FlightController{
         Gdx.app.log("IOSFlightController", "Instantiating motion manager");
         motionManager = new CMMotionManager();
         Gdx.app.log("IOSFlightController", motionManager.description());
-        motionManager.setDeviceMotionUpdateInterval(1.f/60.f);
+        motionManager.setDeviceMotionUpdateInterval(1.f / 60.f);
         motionManager.startDeviceMotionUpdates();
-        currentAttitude = new CMAttitude();
+        Gdx.app.log("IOSFlightController", "DeviceMotionUpdateInterval: " + motionManager.getDeviceMotionUpdateInterval());
+        Gdx.app.log("IOSFlightController", "DeviceMotionAvailable: " + motionManager.isDeviceMotionAvailable());
+        Gdx.app.log("IOSFlightController", "DeviceMotionActive: " + motionManager.isDeviceMotionActive());
     }
 
     @Override
     public void resetSteering() {
-        Gdx.app.log("IOSFlightController.java", "Entering resetSteering; " + motionManager.toString());
+        //necessary because it takes some time until the motionManager creates motion data.
+        long startTime = TimeUtils.nanoTime();
+        long currentTime = startTime;
+        do {
+            if((TimeUtils.nanosToMillis(TimeUtils.timeSinceNanos(startTime))/1000.f) > 10.0f) {
+                throw new GdxRuntimeException("CMMotionManager is not delivering any data.");
+            }
+        } while(motionManager.getDeviceMotion() == null);
         CMDeviceMotion motion = motionManager.getDeviceMotion();
         Gdx.app.log("IOSFlightController.resetSteering", "motion object null: " + Boolean.toString(motion == null));
         currentAttitude = motionManager.getDeviceMotion().getAttitude();
-        startRoll = (float) currentAttitude.getRoll();
-        startPitch = (float) currentAttitude.getPitch();
+        if(invertPitch)
+            startRoll = -(float) (currentAttitude.getRoll() * 180 / Math.PI);
+        else
+            startRoll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
+        startPitch = -(float) (currentAttitude.getPitch() * 180 / Math.PI);
     }
 
     @Override
     protected void interpretSensorInput() {
         currentAttitude = motionManager.getDeviceMotion().getAttitude();
-        roll = (float) currentAttitude.getRoll();
-        pitch = (float) currentAttitude.getPitch();
+        if(invertPitch)
+            roll = -(float) (currentAttitude.getRoll() * 180 / Math.PI);
+        else
+            roll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
+        pitch = -(float) (currentAttitude.getPitch() * 180 / Math.PI);
+
+        Gdx.app.log("IOSFlightController.interpretSensorInput", "Current roll: " + roll + "\nCurrent pitch: " + pitch + "\nStarting roll: " + startRoll + ". Starting pitch: " + startPitch);
 
         // removing oldest element in buffers
         if (rollInput.size() >= bufferSize) {
@@ -84,4 +103,6 @@ public class IOSFlightController extends FlightController{
         setAzimuthFactor(difPitch / maxRotate);
         setRollFactor(difRoll / -maxRotate);
     }
+
+
 }

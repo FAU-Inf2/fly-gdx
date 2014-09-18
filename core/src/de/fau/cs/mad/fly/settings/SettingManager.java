@@ -23,6 +23,7 @@ public class SettingManager {
     public static final String SHOW_PAUSE = "showPause";
     public static final String SHOW_FPS = "showFPS";
     public static final String VIBRATE_WHEN_COLLIDE = "vibrateWhenCollide";
+    public static final String INVERT_PITCH = "invertPitch";
     
     public static final String ALPHA_SLIDER = "alphaSlider";
     public static final String BUFFER_SLIDER = "bufferSlider";
@@ -127,9 +128,11 @@ public class SettingManager {
         if (Application.ApplicationType.Android.equals(type) || Application.ApplicationType.iOS.equals(type)) {
             addBooleanSetting(VIBRATE_WHEN_COLLIDE, true, "helpVibrate", false);
             addBooleanSetting(USE_TOUCH, false, "helpTouch", false);
+            addBooleanSetting(INVERT_PITCH, false, "helpPitch", false);
         } else if (Application.ApplicationType.Desktop.equals(type)) {
             Gdx.app.log("Setting", "desktop");
             addBooleanSetting(USE_TOUCH, true, "helpTouch", true);
+            addBooleanSetting(INVERT_PITCH, false, "helpPitch", false);
         }
         // addBooleanSetting(SHOW_PAUSE, false);
         addBooleanSetting(SHOW_FPS, false, "helpShowFPS", false);

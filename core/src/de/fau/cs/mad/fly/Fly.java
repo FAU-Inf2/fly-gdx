@@ -28,6 +28,7 @@ import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
 import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
 import de.fau.cs.mad.fly.ui.PlayerScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.StatisticsScreen;
 
 /**
@@ -82,6 +83,7 @@ public class Fly extends Game implements Loadable<Fly> {
         // load SkinManager, has to be done in the main Tread because it needs
         // the OpenGl context that is only offered by the main Thread.
         time = System.currentTimeMillis();
+        SkinManager.getInstance();
         Gdx.app.log("timing", "Fly.create creating skin manager: " + String.valueOf(System.currentTimeMillis() - time));
         
         addProgressListener(new ProgressListener.ProgressAdapter<Fly>() {
@@ -158,6 +160,7 @@ public class Fly extends Game implements Loadable<Fly> {
         Loader.getInstance().dispose();
         
         DisposeScreenManager.getInstance().dispose();
+        SkinManager.getInstance().dispose();
         Assets.dispose();
     }
     

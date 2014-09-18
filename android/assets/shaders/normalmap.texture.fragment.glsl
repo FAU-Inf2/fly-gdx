@@ -23,6 +23,7 @@ precision mediump float;
 uniform float u_shininess;
 uniform vec4 u_ambientColor;
 uniform vec4 u_specularColor;
+uniform vec4 u_diffuseColor;
 uniform sampler2D texture1;
 uniform mat4 u_modelMatrix;
 
@@ -35,7 +36,7 @@ void main() {
 
     vec3 normal = normalize((inverse(u_modelMatrix) * texture2D(texture1, v_texCoord0)).xyz);
     vec3 lightDirection;
-    vec4 color = texture2D(texture1, v_texCoord0);
+    vec4 color = u_diffuseColor + texture2D(texture1, v_texCoord0);
     vec4 diffuseLight = vec4(0);
     vec4 specularLight = vec4(0);
 
