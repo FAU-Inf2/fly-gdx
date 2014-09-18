@@ -24,6 +24,19 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 public class LevelChooserScreen extends BasicScreen {
     private LevelGroup levelGroup;
     private ScrollPane levelScrollPane;
+    private static LevelChooserScreen instance;
+    
+    /**
+     * This class is a singleton. When called the instance is created (lazy
+     * loading)
+     * 
+     */
+    public static LevelChooserScreen getInstance() {
+        if (instance == null) {
+            instance = new LevelChooserScreen();
+        }
+        return instance;
+    }
     
     /**
      * Shows a list of all available levels.

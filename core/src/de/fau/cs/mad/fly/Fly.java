@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly;
 
+import java.awt.SplashScreen;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +19,8 @@ import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.ui.GameScreen;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
-import de.fau.cs.mad.fly.ui.LevelChooserScreen;
-import de.fau.cs.mad.fly.ui.LevelGroupScreen;
 import de.fau.cs.mad.fly.ui.LevelLoadingScreen;
 import de.fau.cs.mad.fly.ui.LevelsStatisScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
@@ -58,11 +58,8 @@ public class Fly extends Game implements Loadable<Fly> {
     public static boolean DEBUG_MODE = false;
     
     private LoadingScreen<Fly> splashScreen;
-    private LevelGroupScreen levelGroupScreen;
-    private LevelChooserScreen levelChooserScreen;
     private PlaneChooserScreen planeChooserScreen;
     private PlaneUpgradeScreen planeUpgradeScreen;
-    private MainMenuScreen mainMenuScreen;
     private SettingScreen settingScreen;
     private StatisticsScreen statisticsScreen;
     private GameScreen gameScreen;
@@ -95,7 +92,7 @@ public class Fly extends Game implements Loadable<Fly> {
         addProgressListener(new ProgressListener.ProgressAdapter<Fly>() {
             @Override
             public void progressFinished(Fly fly) {
-                fly.setMainMenuScreen();
+                MainMenuScreen.getInstance().set();
             }
         });
         
@@ -158,37 +155,18 @@ public class Fly extends Game implements Loadable<Fly> {
     @Override
     public void resume() {
         super.resume();
-        
-        if (skinManager == null) {
-            skinManager = new SkinManager("uiskin.json");
-        }
     }
     
     @Override
     public void dispose() {
-        Gdx.app.log("Fly", "dispose game");
-        
         FlyDBManager.getInstance().dispose();
         Loader.getInstance().dispose();
         
-        disposeScreen(splashScreen);
-        disposeScreen(levelGroupScreen);
-        disposeScreen(levelChooserScreen);
-        disposeScreen(planeChooserScreen);
-        disposeScreen(planeUpgradeScreen);
-        disposeScreen(mainMenuScreen);
-        disposeScreen(settingScreen);
-        disposeScreen(statisticsScreen);
-        disposeScreen(gameScreen);
-        disposeScreen(globalHighScoreScreen);
+        DisposeScreenManager.getInstance().dispose();
+        Assets.dispose();
+        skinManager = null;
     }
     
-    public void disposeScreen(Screen screen) {
-        if (screen != null) {
-            screen.dispose();
-            screen = null;
-        }
-    }
     
     public GameController getGameController() {
         return gameController;
@@ -199,27 +177,6 @@ public class Fly extends Game implements Loadable<Fly> {
      */
     public Skin getSkin() {
         return skinManager.getSkin();
-    }
-    
-    /**
-     * Switches the current screen to the {@link LevelGroupScreen}.
-     */
-    public void setLevelGroupScreen() {
-        if (levelGroupScreen == null) {
-            levelGroupScreen = new LevelGroupScreen();
-        }
-        setScreen(levelGroupScreen);
-    }
-    
-    /**
-     * Switches the current screen to the {@link LevelChooserScreen}.
-     */
-    public void setLevelChooserScreen(LevelGroup group) {
-        if (levelChooserScreen == null) {
-            levelChooserScreen = new LevelChooserScreen();
-        }
-        levelChooserScreen.setGroup(group);
-        setScreen(levelChooserScreen);
     }
     
     /**
@@ -260,16 +217,6 @@ public class Fly extends Game implements Loadable<Fly> {
             gameScreen = new GameScreen(this);
         }
         setScreen(gameScreen);
-    }
-    
-    /**
-     * Switches the current screen to the {@link MainMenuScreen}.
-     */
-    public void setMainMenuScreen() {
-        if (mainMenuScreen == null) {
-            mainMenuScreen = new MainMenuScreen();
-        }
-        setScreen(mainMenuScreen);
     }
     
     /**

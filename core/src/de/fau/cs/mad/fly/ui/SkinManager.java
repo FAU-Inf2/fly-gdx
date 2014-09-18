@@ -5,16 +5,15 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
 
-import de.fau.cs.mad.fly.res.Assets;
-
 /**
  * Manages the skin and the fonts in the skin.
  * 
- * @author Tobi
+ * @author Tobi, Lukas Hahmann <lukas.hahmann@gmail.com>
  * 
  */
 public class SkinManager implements Disposable {
@@ -29,11 +28,12 @@ public class SkinManager implements Disposable {
     }
     
     /**
-     * Creates the skin for the UI.
+     * Creates the skin for the UI. Load all the necessary fonts and add them to
+     * the skin.
      */
     public void createSkin(String skinFile) {
-        Assets.load(Assets.textureAtlas);
-        skin = new Skin(Assets.manager.get(Assets.textureAtlas));
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
+        skin = new Skin(atlas);
         
         Texture texture = new Texture(Gdx.files.internal("fonts/default.png"), true);
         texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);

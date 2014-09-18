@@ -34,6 +34,19 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     
     private HelpOverlay helpOverlay;
     private boolean showHelpScreen = false;
+    private static MainMenuScreen instance;
+    
+    /**
+     * This class is a singleton. When called the instance is created (lazy
+     * loading)
+     * 
+     */
+    public static MainMenuScreen getInstance() {
+        if (instance == null) {
+            instance = new MainMenuScreen();
+        }
+        return instance;
+    }
     
     /**
      * Adds the main menu to the main menu screen.
@@ -94,7 +107,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         chooseLevelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setLevelGroupScreen();
+                LevelGroupScreen.getInstance().set();
             }
         });
         
@@ -174,7 +187,8 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     
     @Override
     public void dispose() {
-        stage.dispose();
+        super.dispose();
+        instance = null;
     }
     
     @Override

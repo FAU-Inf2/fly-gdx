@@ -30,7 +30,7 @@ public class LoadingScreen<T> extends BasicScreen {
     public LoadingScreen(Loadable<T> listenable) {
         this.listenable = listenable;
         table = new Table();
-        
+
         progressBar = new ScalableProgressBar(skin);
         progressBar.setWidth(progressBarWidth);
         
@@ -46,7 +46,6 @@ public class LoadingScreen<T> extends BasicScreen {
                 app.setGameScreen();
                 app.getGameController().initGame();
                 app.getGameController().getFlightController().resetSteering();
-                dispose();
             }
         });
         table.add(button).bottom().width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).expand();
@@ -71,11 +70,6 @@ public class LoadingScreen<T> extends BasicScreen {
     public void render(float delta) {
         listenable.update();
         super.render(delta);
-    }
-    
-    @Override
-    public void dispose() {
-        batch.dispose();
     }
     
     @Override

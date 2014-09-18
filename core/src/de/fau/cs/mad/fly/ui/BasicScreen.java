@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import de.fau.cs.mad.fly.DisposeScreenManager;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.res.Assets;
 
@@ -29,6 +30,7 @@ public abstract class BasicScreen implements Screen {
     protected InputMultiplexer inputProcessor;
     
     public BasicScreen() {
+        DisposeScreenManager.getInstance().registerForDispose(this);
         stage = new Stage();
         
         batch = new SpriteBatch();
@@ -110,12 +112,16 @@ public abstract class BasicScreen implements Screen {
     
     @Override
     public void dispose() {
-        Gdx.app.log("BasicScreen", "dispose screen");
-        // everything that implements the interface Disposable should be
-        // disposed, because Java garbage collections does not care about such
-        // objects
-        
         stage.dispose();
+        batch.dispose();
+    }
+    
+    /**
+     * Sets the current screen.
+     * 
+     */
+    public void set() {
+        ((Fly) Gdx.app.getApplicationListener()).setScreen(this);
     }
     
 }

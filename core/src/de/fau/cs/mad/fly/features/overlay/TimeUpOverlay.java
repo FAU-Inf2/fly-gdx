@@ -18,6 +18,7 @@ import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.game.TimeIsUpListener;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.UI;
 
 public class TimeUpOverlay implements TimeIsUpListener {
@@ -41,7 +42,7 @@ public class TimeUpOverlay implements TimeIsUpListener {
             public void clicked(InputEvent event, float x, float y) {
                 Fly game = (Fly) Gdx.app.getApplicationListener();
                 game.getGameController().endGame();
-                game.setMainMenuScreen();
+                MainMenuScreen.getInstance().set();
             }
         });
         

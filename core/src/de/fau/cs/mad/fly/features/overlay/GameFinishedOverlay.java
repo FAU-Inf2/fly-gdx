@@ -24,6 +24,7 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
+import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -80,7 +81,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             public void clicked(InputEvent event, float x, float y) {
                 PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevel();
                 PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelProfile();
-                ((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
+                MainMenuScreen.getInstance().set();
             }
         });
         
