@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.fau.cs.mad.fly.profile.PlayerProfile;
@@ -39,6 +40,7 @@ public class SettingScreen extends BasicScreen implements WithHelpOverlay {
         stage.addActor(table);
         
         // setup help overlay
+        Skin skin = SkinManager.getInstance().getSkin();
         final Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
         helpButton.setBounds(UI.Window.BORDER_SPACE, viewport.getWorldHeight() - UI.Window.BORDER_SPACE - UI.Buttons.MAIN_BUTTON_HEIGHT, UI.Buttons.MAIN_BUTTON_HEIGHT, UI.Buttons.MAIN_BUTTON_HEIGHT);
         
@@ -50,6 +52,7 @@ public class SettingScreen extends BasicScreen implements WithHelpOverlay {
     
     private void generateContentDynamic() {
         PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+        Skin skin = SkinManager.getInstance().getSkin();
         if (displayPlayer == null || (!displayPlayer.equals(playerProfile.getName()))) {
             ISetting setting;
             settingTable.clear();

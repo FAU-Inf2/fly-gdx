@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -18,8 +17,7 @@ import de.fau.cs.mad.fly.res.Assets;
 public abstract class BasicScreen implements Screen {
     
     protected final SpriteBatch batch;
-    protected final Sprite background;
-    protected final Skin skin;
+    protected static Sprite background;
     protected final Stage stage;
     protected final Viewport viewport;
     
@@ -30,14 +28,16 @@ public abstract class BasicScreen implements Screen {
     protected InputMultiplexer inputProcessor;
     
     public BasicScreen() {
+        long t0 = System.currentTimeMillis();
         DisposeScreenManager.getInstance().registerForDispose(this);
         stage = new Stage();
         
         batch = new SpriteBatch();
-        Assets.load(Assets.background);
-        background = new Sprite(Assets.manager.get(Assets.background));
+        if (background == null) {
+            Assets.load(Assets.background);
+            background = new Sprite(Assets.manager.get(Assets.background));
+        }
         
-        skin = SkinManager.getInstance().getSkin();
         float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
         float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
         float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
@@ -59,6 +59,7 @@ public abstract class BasicScreen implements Screen {
         }
         background.setPosition(deltaX, deltaY);
         
+        Gdx.app.log("timing", "BasicScreen.create" + String.valueOf(System.currentTimeMillis() - t0));
         generateContent();
     }
     

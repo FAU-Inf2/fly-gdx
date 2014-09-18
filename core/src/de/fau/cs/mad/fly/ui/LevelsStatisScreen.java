@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -44,6 +45,7 @@ public class LevelsStatisScreen extends BasicScreen {
      * init buttons, which don't need to be created dynamically
      */
     private void initButtons() {
+        Skin skin = SkinManager.getInstance().getSkin();
         globalHighScoreButton = new TextButton(I18n.t("GlobalHighscores"), skin);
         globalHighScoreButton.addListener(new ClickListener() {
             @Override
@@ -74,6 +76,7 @@ public class LevelsStatisScreen extends BasicScreen {
         infoTable = new Table();
         
         scoreTable = new Table();
+        Skin skin = SkinManager.getInstance().getSkin();
         scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
         infoTable.add(scoreTable);
         
@@ -134,6 +137,7 @@ public class LevelsStatisScreen extends BasicScreen {
                     end = System.currentTimeMillis();
                     Gdx.app.log("timing", "clear UI table " + (end - begin));
                     begin = end;
+                    Skin skin = SkinManager.getInstance().getSkin();
                     scoreTable.add(new Label(levelGroup.name, skin)).pad(6f).colspan(2);
                     scoreTable.row().expand();
                     
@@ -274,6 +278,7 @@ public class LevelsStatisScreen extends BasicScreen {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
+                    Skin skin = SkinManager.getInstance().getSkin();
                     Dialog dialog = new Dialog("", skin, "dialog");
                     if (msgg != null && msgg.length() > 21) {
                         dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");
@@ -325,6 +330,7 @@ public class LevelsStatisScreen extends BasicScreen {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
+                    Skin skin = SkinManager.getInstance().getSkin();
                     button.setDisabled(true);
                     Dialog dialog = new Dialog("", skin, "dialog");
                     dialog.text(I18n.t("ScoreUploaded"));
@@ -341,6 +347,7 @@ public class LevelsStatisScreen extends BasicScreen {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
+                    Skin skin = SkinManager.getInstance().getSkin();
                     Dialog dialog = new Dialog("", skin, "dialog");
                     if (msgg != null && msgg.length() > 21) {
                         dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");

@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -51,6 +52,7 @@ public class PlayerScreen extends BasicScreen {
      */
     private void generateUserTable() {
         stage.clear();
+        Skin skin = SkinManager.getInstance().getSkin();
         dialogLabelStyle = skin.get("black", LabelStyle.class);
         Table userTable = new Table();
         userTable.pad(UI.Window.BORDER_SPACE);
@@ -85,6 +87,7 @@ public class PlayerScreen extends BasicScreen {
             infoButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
+                    Skin skin = SkinManager.getInstance().getSkin();
                     Dialog dialog = new Dialog("", skin, "dialog");
                     dialog.text(I18n.t("msgGetFlyId"),dialogLabelStyle);
                     TextButton button = new TextButton(I18n.t("ok"), skin);
@@ -159,6 +162,7 @@ public class PlayerScreen extends BasicScreen {
      */
     @Override
     protected void generateContent() {
+        Skin skin = SkinManager.getInstance().getSkin();
         addUserButton = new TextButton(I18n.t("addUserButtonText"), skin);
         deleteUserButton = new TextButton(I18n.t("button.deleteUser"), skin);
         editUserButton = new TextButton(I18n.t("button.editUser"), skin);
@@ -177,6 +181,7 @@ public class PlayerScreen extends BasicScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Dialog dialog;
+                Skin skin = SkinManager.getInstance().getSkin();
                 if (PlayerProfileManager.getInstance().getAllPlayerProfiles().size() <= 1) {
                     dialog = new Dialog("", skin, "dialog");
                     dialog.text(I18n.t("msgLastUser"), dialogLabelStyle);
@@ -206,6 +211,7 @@ public class PlayerScreen extends BasicScreen {
         editUserButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Skin skin = SkinManager.getInstance().getSkin();
                 TextButton button = new TextButton(I18n.t("ok"), skin);
                 TextButton concelButton = new TextButton(I18n.t("buttenText.cancel"), skin);
                 
@@ -244,6 +250,7 @@ public class PlayerScreen extends BasicScreen {
      */
     public void addNewUser() {
         String name = newUserField.getText();
+        Skin skin = SkinManager.getInstance().getSkin();
         Dialog dialog = new Dialog("", skin, "dialog");
         PlayerProfileManager profileManager = PlayerProfileManager.getInstance();
         boolean userExists = false;

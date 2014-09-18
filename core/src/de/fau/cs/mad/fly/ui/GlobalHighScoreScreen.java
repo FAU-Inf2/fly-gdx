@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.fau.cs.mad.fly.I18n;
@@ -48,6 +49,7 @@ public class GlobalHighScoreScreen extends BasicScreen {
                 public void run() {
                     infoTable.clear();
                     infoTable.row();
+                    Skin skin = SkinManager.getInstance().getSkin();
                     if (results != null && results.records.size() > 0) {
                         for (LevelRecords item : results.records) {
                             String levelname = levelGroup.getLevelName(item.levelID);
@@ -92,7 +94,7 @@ public class GlobalHighScoreScreen extends BasicScreen {
             } else {
             	showmsg = I18n.t("ConnectServerError") + msg;
             }
-            
+        	Skin skin = SkinManager.getInstance().getSkin();
             infoTable.add(new Label(showmsg, skin)).pad(6f).uniform();
         }
         
@@ -115,6 +117,7 @@ public class GlobalHighScoreScreen extends BasicScreen {
         table.setFillParent(true);
         stage.addActor(table);
         infoTable = new Table();
+        Skin skin = SkinManager.getInstance().getSkin();
         infoTable.add(new Label(I18n.t("StatusLoading"), skin));
         final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
         statisticsPane.setFadeScrollBars(false);

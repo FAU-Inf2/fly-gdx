@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -48,6 +49,7 @@ public class LevelChooserScreen extends BasicScreen {
         stage.clear();
         
         // table that contains all buttons
+        Skin skin = SkinManager.getInstance().getSkin();
         Table scrollableTable = new Table(skin);
         levelScrollPane = new ScrollPane(scrollableTable, skin);
         levelScrollPane.setScrollingDisabled(true, false);

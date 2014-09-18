@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -45,6 +46,7 @@ public class StatisticsScreen extends BasicScreen {
         levelGroupTable = new Table();
         levelGroupTable.pad(UI.Window.BORDER_SPACE);
         levelGroupTable.setFillParent(true);
+        Skin skin = SkinManager.getInstance().getSkin();
         Label selectLevelGroup = new Label(I18n.t("selectLevelGroup"), skin);
         selectLevelGroup.setAlignment(Align.center);
         levelGroupTable.add(selectLevelGroup).colspan(2).center();
