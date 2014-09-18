@@ -121,16 +121,20 @@
 package de.fau.cs.mad.fly.graphics.shaders;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+
+import javax.swing.text.AttributeSet;
 
 public class FlyTextureShader extends FlyBaseShader {
     
     private String VERTEX_SHADER = "shaders/vertex.glsl";
     private String FRAGMENT_SHADER = "shaders/texture.fragment.glsl";
-    private int texture1;
+    private int texture1, u_diffuseColor;
     
     public FlyTextureShader(Renderable renderable) {
         super(renderable);
@@ -142,7 +146,8 @@ public class FlyTextureShader extends FlyBaseShader {
         super.createShaderProgram(VERTEX_SHADER, FRAGMENT_SHADER);
         
         super.init();
-        
+
+        u_diffuseColor = program.getUniformLocation("u_diffuseColor");
         texture1 = program.getUniformLocation("texture1");
     }
     
@@ -160,7 +165,10 @@ public class FlyTextureShader extends FlyBaseShader {
     public void render(Renderable renderable) {
         // Set up uniforms
         super.setUpBaseUniforms(renderable);
-        
+        if(renderable.material.has(ColorAttribute.Diffuse))
+            program.setUniformf(u_diffuseColor, ((ColorAttribute) renderable.material.get(ColorAttribute.Diffuse)).color);
+        else
+            program.setUniformf(u_diffuseColor, Color.BLACK);
         // Bind texture
         ((TextureAttribute) renderable.material.get(TextureAttribute.Diffuse)).textureDescription.texture.bind(0);
         program.setUniformi(texture1, 0);
