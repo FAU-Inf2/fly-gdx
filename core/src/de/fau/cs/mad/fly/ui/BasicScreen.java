@@ -41,11 +41,13 @@ public abstract class BasicScreen implements Screen {
     
     public BasicScreen() {
         DisposeScreenManager.getInstance().registerForDispose(this);
+        // stage has to be created before initialize because it is needed for
+        // creating the viewport
+        stage = new Stage();
         if (!initialized) {
             initialize();
             initialized = true;
         }
-        stage = new Stage();
         stage.setViewport(viewport);
         inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
         generateContent();
@@ -58,8 +60,9 @@ public abstract class BasicScreen implements Screen {
         widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
         heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
         scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
-        viewport = new FitViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
+        
         updateBackground();
+        viewport = new FitViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
     }
     
     private void updateBackground() {
