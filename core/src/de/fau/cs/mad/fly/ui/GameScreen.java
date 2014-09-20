@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameController.GameState;
 
 /**
  * Provides a screen for the game itself.
@@ -44,13 +45,16 @@ public class GameScreen implements Screen {
     @Override
     public void pause() {
         Gdx.app.log("GameScreen", "pause");
-        gameController.pauseGame();
+        if (gameController.isRunning()) {
+            gameController.pauseGame();
+        }
     }
     
     @Override
     public void resume() {
         Gdx.app.log("GameScreen", "resume");
-        if (!gameController.isVictory() && !gameController.timeIsUp()) {
+        GameController.GameState state = gameController.getGameState();
+        if (state == GameState.PAUSED) {
             gameController.resumeGame();
         }
     }

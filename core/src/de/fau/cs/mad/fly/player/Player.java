@@ -84,9 +84,7 @@ public class Player {
      *         otherwise.
      */
     public boolean isDead() {
-        if (lives <= 0)
-            return true;
-        return false;
+        return lives <= 0;
     }
     
     /**

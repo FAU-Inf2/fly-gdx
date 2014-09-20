@@ -18,6 +18,7 @@ import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameController.GameState;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -79,8 +80,9 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevel();
-                PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelProfile();
+                PlayerProfile profile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                profile.setToNextLevel();
+                profile.saveCurrentLevelProfile();
                 MainMenuScreen.getInstance().set();
             }
         });
@@ -91,6 +93,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         
         if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
             levelSuccessfullyFinished(skin);
+        } else if(gameController.getGameState() == GameState.TIME_OVER) {
+            timeOver(skin);
         } else if (gameController.getPlayer().isDead()) {
             playerDead(skin);
         }
@@ -102,6 +106,30 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         game.onMode3d2dChanged(Mode3d2dChangedEvent.MODE_2D);
     }
     
+    private void timeOver(Skin skin) {
+
+        backToMainMenuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Fly game = (Fly) Gdx.app.getApplicationListener();
+                game.getGameController().endGame();
+                MainMenuScreen.getInstance().set();
+            }
+        });
+        
+        TextButton restartButton = new TextButton(I18n.t("restart"), skin);
+        restartButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
+                Loader.getInstance().loadLevel(levelHead);
+            }
+        });
+        
+        showInfoLabel(skin, "level.time.up");
+        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH);
+    }
+
     /**
      * Displays an info label which spans the whole table.
      * 
