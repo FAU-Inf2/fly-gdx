@@ -32,9 +32,11 @@ public class IOSLauncher extends IOSApplication.Delegate {
 
     @Override
     public void didReceiveMemoryWarning(UIApplication application) {
+        System.out.println("Received a memory warning. Current total memory: " + Runtime.getRuntime().totalMemory());
         for(int i=0; i<5; i++) {
             System.gc();
         }
+        System.out.println("Total memory after GC: " + Runtime.getRuntime().totalMemory());
     }
 
 }
