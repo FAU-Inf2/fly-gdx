@@ -51,7 +51,7 @@ import de.fau.cs.mad.fly.res.Level;
  */
 public class GameController implements TimeIsUpListener {
     public enum GameState {
-        RUNNING, PAUSED, VICTORY, GAMEOVER
+        RUNNING, PAUSED, VICTORY, NO_LIVES, TIME_OVER
     }
     
     protected static GameController instance = null;
@@ -217,7 +217,7 @@ public class GameController implements TimeIsUpListener {
         if (victory) {
             gameState = GameState.VICTORY;
         } else {
-            gameState = GameState.GAMEOVER;
+            gameState = GameState.NO_LIVES;
         }
         
         endGame();
@@ -384,7 +384,8 @@ public class GameController implements TimeIsUpListener {
     
     @Override
     public boolean timeIsUp() {
-        pauseGame();
+        gameState = GameState.TIME_OVER;
+        endGame();
         return true;
     }
 }

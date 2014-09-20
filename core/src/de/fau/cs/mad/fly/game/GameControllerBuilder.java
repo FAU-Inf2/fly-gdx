@@ -38,7 +38,6 @@ import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
 import de.fau.cs.mad.fly.features.overlay.ScoreOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
-import de.fau.cs.mad.fly.features.overlay.TimeUpOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.features.upgrades.ChangePointsUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.ChangeSteeringUpgradeHandler;
@@ -123,8 +122,6 @@ public class GameControllerBuilder {
         
         stage = new Stage();
         timeController = new TimeController();
-        TimeUpOverlay timeUpOverlay = new TimeUpOverlay(stage);
-        timeController.registerTimeIsUpListener(timeUpOverlay);
         
         scoreController = new ScoreController();
         

@@ -1,5 +1,9 @@
 package de.fau.cs.mad.fly.ui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -136,9 +140,12 @@ public class LevelsStatisScreen extends BasicScreen {
                     
                     // add scores details
                     boolean haveScore = false;
-                    Gdx.app.log("fan", "count:" + scores.size());
                     
-                    for (String levelID : scores.keySet()) {
+                    List<String> sortedKeys=new ArrayList<String>(scores.keySet());
+                    Collections.sort(sortedKeys);
+                    Collections.reverse(sortedKeys);
+                    
+                    for (String levelID : sortedKeys) {
                         Score score = scores.get(levelID);
                         if (score != null && score.getTotalScore() > 0) {
                             haveScore = true;
@@ -156,7 +163,7 @@ public class LevelsStatisScreen extends BasicScreen {
                             // skin)).pad(6f);
                             // }
                             
-                            Gdx.app.log("timing", " UI one score record UI builded " + (end - begin));
+                            Gdx.app.log("timing", " UI one score record UI builded " + (end - begin) + " " + levelID + levelname);
                             uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin);
                             if (score.getIsUploaded()) {
                                 uploadScoreButton.setDisabled(true);

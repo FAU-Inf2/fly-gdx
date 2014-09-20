@@ -2,12 +2,12 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.List;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.profile.LevelGroup;
@@ -63,9 +63,9 @@ public class LevelGroupScreen extends BasicScreen {
                     button.setDisabled(true);
                 }
                 
-                button.addListener(new ChangeListener() {
+                button.addListener(new ClickListener() {
                     @Override
-                    public void changed(ChangeEvent event, Actor actor) {
+                    public void clicked(InputEvent event, float x, float y) {
                         LevelChooserScreen levelChooserScreen = LevelChooserScreen.getInstance();
                         levelChooserScreen.setGroup(group);
                         levelChooserScreen.set();

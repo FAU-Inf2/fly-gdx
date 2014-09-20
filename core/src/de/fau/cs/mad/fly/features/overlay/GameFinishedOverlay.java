@@ -18,6 +18,7 @@ import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.features.IFeatureFinish;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameController.GameState;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -79,8 +80,9 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevel();
-                PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelProfile();
+                PlayerProfile profile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                profile.setToNextLevel();
+                profile.saveCurrentLevelProfile();
                 MainMenuScreen.getInstance().set();
             }
         });
@@ -91,17 +93,43 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         
         if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
             levelSuccessfullyFinished(skin);
+        } else if(gameController.getGameState() == GameState.TIME_OVER) {
+            timeOver(skin);
         } else if (gameController.getPlayer().isDead()) {
             playerDead(skin);
         }
         
-        messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         outerTable.add(messageTable).center();
         stage.addActor(outerTable);
         Fly game = (Fly) Gdx.app.getApplicationListener();
         game.onMode3d2dChanged(Mode3d2dChangedEvent.MODE_2D);
     }
     
+    private void timeOver(Skin skin) {
+
+        backToMainMenuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Fly game = (Fly) Gdx.app.getApplicationListener();
+                game.getGameController().endGame();
+                MainMenuScreen.getInstance().set();
+            }
+        });
+        
+        TextButton restartButton = new TextButton(I18n.t("restart"), skin);
+        restartButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
+                Loader.getInstance().loadLevel(levelHead);
+            }
+        });
+        
+        showInfoLabel(skin, "level.time.up");
+        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH);
+    }
+
     /**
      * Displays an info label which spans the whole table.
      * 
@@ -137,7 +165,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             }
         });
         
-        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         messageTable.add();
     }
     
@@ -150,25 +178,26 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         final PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         if (currentPlayer.IsLastLevel()) {
             if (currentPlayer.IsLastLevelGroup()) {
+            	//it is last level of last group
                 currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
                 currentPlayer.savePassedLevelID();
                 showInfoLabel(skin, "ALLGroupPassed");
-                
                 showScore(skin);
                 // add some space to avoid crappy layout
-                messageTable.add().pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                messageTable.add().pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                 messageTable.add();
             } else {
                 if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id) {
+                	//it is last level, but not last group, the first time pass this level
                     currentPlayer.setPassedLevelgroupID(currentPlayer.getnextLevelGroup().id);
                     currentPlayer.savePassedLevelgroupID();
                     currentPlayer.setPassedLevelID(currentPlayer.getnextLevelGroup().getFirstLevel().id);
                     currentPlayer.savePassedLevelID();
                     showInfoLabel(skin, "OneGroupPassed");
                 } else {
+                	//it is last level, but not last group, not the first time pass this level
                     showInfoLabel(skin, "level.congratulations");
                 }
-                
                 showScore(skin);
                 
                 TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), skin);
@@ -184,7 +213,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     }
                 });
                 
-                messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                 messageTable.add();
             }
             
@@ -207,7 +236,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     Loader.getInstance().loadLevel(currentPlayer.getCurrentLevelProfile());
                 }
             });
-            messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
             messageTable.add();
         }
     }
@@ -272,7 +301,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             }).start();
             
             messageTable.row();
-            messageTable.add(new Label(I18n.t("newRecord"), skin)).colspan(3);
+            messageTable.add(new Label(I18n.t("newRecord"), skin, "black")).colspan(3);
         }
         messageTable.row().expand();
     }
