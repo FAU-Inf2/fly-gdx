@@ -36,6 +36,7 @@ import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
+import de.fau.cs.mad.fly.graphics.shaders.FlyShaderProvider;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -122,7 +123,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         viewport = new FillViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
         stage.setViewport(viewport);
         
-        batch = new ModelBatch();
+        batch = new ModelBatch(null, new FlyShaderProvider(), null);
         backgroundBatch = new SpriteBatch();
         Assets.load(new AssetDescriptor<Texture>("spaceships/previews/background.jpg", Texture.class));
         
