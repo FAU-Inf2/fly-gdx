@@ -99,7 +99,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             playerDead(skin);
         }
         
-        messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         outerTable.add(messageTable).center();
         stage.addActor(outerTable);
         Fly game = (Fly) Gdx.app.getApplicationListener();
@@ -165,7 +165,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             }
         });
         
-        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         messageTable.add();
     }
     
@@ -178,25 +178,26 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         final PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         if (currentPlayer.IsLastLevel()) {
             if (currentPlayer.IsLastLevelGroup()) {
+            	//it is last level of last group
                 currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
                 currentPlayer.savePassedLevelID();
                 showInfoLabel(skin, "ALLGroupPassed");
-                
                 showScore(skin);
                 // add some space to avoid crappy layout
-                messageTable.add().pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                messageTable.add().pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                 messageTable.add();
             } else {
                 if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id) {
+                	//it is last level, but not last group, the first time pass this level
                     currentPlayer.setPassedLevelgroupID(currentPlayer.getnextLevelGroup().id);
                     currentPlayer.savePassedLevelgroupID();
                     currentPlayer.setPassedLevelID(currentPlayer.getnextLevelGroup().getFirstLevel().id);
                     currentPlayer.savePassedLevelID();
                     showInfoLabel(skin, "OneGroupPassed");
                 } else {
+                	//it is last level, but not last group, not the first time pass this level
                     showInfoLabel(skin, "level.congratulations");
                 }
-                
                 showScore(skin);
                 
                 TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), skin);
@@ -212,7 +213,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     }
                 });
                 
-                messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                 messageTable.add();
             }
             
@@ -235,7 +236,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     Loader.getInstance().loadLevel(currentPlayer.getCurrentLevelProfile());
                 }
             });
-            messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
             messageTable.add();
         }
     }
