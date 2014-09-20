@@ -3,12 +3,12 @@ package de.fau.cs.mad.fly.ui;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.Loader;
@@ -75,9 +75,9 @@ public class LevelChooserScreen extends BasicScreen {
                         rowToScrollTo = row;
                     }
                 }
-                button.addListener(new ChangeListener() {
+                button.addListener(new ClickListener() {
                     @Override
-                    public void changed(ChangeEvent event, Actor actor) {
+                    public void clicked(InputEvent event, float x, float y) {
                         PlayerProfile currentProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
                         currentProfile.setCurrentLevelGroup(levelGroup);
                         currentProfile.saveCurrentLevelGroup();
