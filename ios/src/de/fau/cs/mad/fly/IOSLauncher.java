@@ -2,9 +2,14 @@ package de.fau.cs.mad.fly;
 
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
+import org.robovm.rt.bro.*;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
+
+import java.lang.Runtime;
+
 import de.fau.cs.mad.fly.Fly;
 
 public class IOSLauncher extends IOSApplication.Delegate {
@@ -24,4 +29,12 @@ public class IOSLauncher extends IOSApplication.Delegate {
         UIApplication.main(argv, null, IOSLauncher.class);
         pool.close();
     }
+
+    @Override
+    public void didReceiveMemoryWarning(UIApplication application) {
+        for(int i=0; i<5; i++) {
+            System.gc();
+        }
+    }
+
 }
