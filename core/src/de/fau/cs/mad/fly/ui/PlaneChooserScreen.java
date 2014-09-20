@@ -49,10 +49,12 @@ import de.fau.cs.mad.fly.res.Assets;
  * 
  */
 public class PlaneChooserScreen implements Screen, InputProcessor {
+   
+    private static PlaneChooserScreen instance;
     
     private Map<Integer, IPlane.Head> allPlanes;
     
-    private GameObject instance;
+    private GameObject currentSpaceship;
     
     private IPlane.Head currentPlane;
     
@@ -87,6 +89,14 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     
     private String name, speed, pitch, turnSpeed, lives;
     
+    
+    public static PlaneChooserScreen getInstance() {
+        if(instance == null) {
+            instance = new PlaneChooserScreen();
+        }
+        return instance;
+    }
+    
     public PlaneChooserScreen() {
         
         environment = new Environment();
@@ -102,7 +112,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         
         allPlanes = PlaneManager.getInstance().getSpaceshipList();
         
-        skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
+        skin = SkinManager.getInstance().getSkin();
         
         // initialize the stage
         stage = new Stage();
@@ -208,11 +218,11 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
         GameModel model = Assets.manager.get(ref, GameModel.class);
         
-        instance = new GameObject(model, "spaceship");
+        currentSpaceship = new GameObject(model, "spaceship");
         
-        instance.transform.rotate(yRotationAxis, 180.f);
+        currentSpaceship.transform.rotate(yRotationAxis, 180.f);
         xRotationAxis.rotate(yRotationAxis, -180.f);
-        instance.transform.rotate(xRotationAxis, -20.f);
+        currentSpaceship.transform.rotate(xRotationAxis, -20.f);
         yRotationAxis.rotate(xRotationAxis, 20.f);
     }
     
@@ -223,7 +233,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         
         // Steady rotation if the Player doesn't touch the Touchscreen
         if (!touched) {
-            instance.transform.rotate(yRotationAxis, 0.2f);
+            currentSpaceship.transform.rotate(yRotationAxis, 0.2f);
             xRotationAxis.rotate(yRotationAxis, -0.2f);
         }
         backgroundBatch.begin();
@@ -231,7 +241,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         backgroundBatch.end();
         
         batch.begin(camera);
-        instance.render(batch, environment, camera);
+        currentSpaceship.render(batch, environment, camera);
         batch.end();
         
         stage.act(delta);
@@ -262,11 +272,11 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
         GameModel model = Assets.manager.get(ref, GameModel.class);
         
-        instance = new GameObject(model, "spaceship");
+        currentSpaceship = new GameObject(model, "spaceship");
         
-        instance.transform.rotate(yRotationAxis, 180.f);
+        currentSpaceship.transform.rotate(yRotationAxis, 180.f);
         xRotationAxis.rotate(yRotationAxis, -180.f);
-        instance.transform.rotate(xRotationAxis, -20.f);
+        currentSpaceship.transform.rotate(xRotationAxis, -20.f);
         yRotationAxis.rotate(xRotationAxis, 20.f);
         
         updateOverlay();
@@ -403,8 +413,8 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
             xFactor = -xDif / screenWidth;
             yFactor = yDif / screenHeight;
             
-            instance.transform.rotate(yRotationAxis, xFactor * 360);
-            instance.transform.rotate(xRotationAxis, yFactor * 360);
+            currentSpaceship.transform.rotate(yRotationAxis, xFactor * 360);
+            currentSpaceship.transform.rotate(xRotationAxis, yFactor * 360);
             yAxis = yRotationAxis;
             xAxis = xRotationAxis;
             xRotationAxis.rotate(yAxis, -xFactor * 360);

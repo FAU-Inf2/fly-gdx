@@ -19,7 +19,7 @@ public class BackProcessor extends InputAdapter {
             Fly game = (Fly) Gdx.app.getApplicationListener();
             
             if (game.getScreen() instanceof LevelChooserScreen) {
-                game.setLevelGroupScreen();
+                LevelGroupScreen.getInstance().set();
             } else if (game.getScreen() instanceof LevelsStatisScreen) {
                 game.setStatisticsScreen();
             } else if (game.getScreen() instanceof PlaneUpgradeScreen) {
@@ -34,7 +34,7 @@ public class BackProcessor extends InputAdapter {
                 if (game.getScreen() instanceof LevelLoadingScreen) {
                     game.getGameController().disposeGame();
                 }
-                game.setMainMenuScreen();
+                MainMenuScreen.getInstance().set();
             } else {
                 Gdx.app.exit();
             }

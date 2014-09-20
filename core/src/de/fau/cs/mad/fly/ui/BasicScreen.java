@@ -7,20 +7,31 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import de.fau.cs.mad.fly.DisposeScreenManager;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.res.Assets;
 
 public abstract class BasicScreen implements Screen {
     
-    protected final SpriteBatch batch;
-    protected final Sprite background;
-    protected final Skin skin;
+    /** saves weather the static members have been initialized or not */
+    private static boolean initialized = false;
+    
+    private static float widthScalingFactor;
+    private static float heightScalingFactor;
+    private static float scalingFactor;
+    private static float xSkalingFactor;
+    private static float ySkalingFactor;
+    private static float deltaX;
+    private static float deltaY;
+    private static Sprite background;
+    
+    protected static SpriteBatch batch;
+    protected static Viewport viewport;
+    
     protected final Stage stage;
-    protected final Viewport viewport;
     
     /**
      * Processes all the input within the {@link #LevelChooserScreen(Fly)}. the
@@ -29,24 +40,36 @@ public abstract class BasicScreen implements Screen {
     protected InputMultiplexer inputProcessor;
     
     public BasicScreen() {
+        DisposeScreenManager.getInstance().registerForDispose(this);
+        // stage has to be created before initialize because it is needed for
+        // creating the viewport
         stage = new Stage();
-        
+        if (!initialized) {
+            initialize();
+            initialized = true;
+        }
+        stage.setViewport(viewport);
+        inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
+        generateContent();
+    }
+    
+    private void initialize() {
         batch = new SpriteBatch();
         Assets.load(Assets.background);
         background = new Sprite(Assets.manager.get(Assets.background));
+        widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
+        heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
+        scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
         
-        skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
-        float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
-        float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
-        float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
+        updateBackground();
         viewport = new FitViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
-        stage.setViewport(viewport);
-        inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
-        
-        float xSkalingFactor = Gdx.graphics.getWidth() / background.getWidth();
-        float ySkalingFactor = Gdx.graphics.getHeight() / background.getHeight();
-        float deltaX = 0f;
-        float deltaY = 0f;
+    }
+    
+    private void updateBackground() {
+        xSkalingFactor = Gdx.graphics.getWidth() / background.getWidth();
+        ySkalingFactor = Gdx.graphics.getHeight() / background.getHeight();
+        deltaX = 0f;
+        deltaY = 0f;
         background.setOrigin(0, 0);
         if (xSkalingFactor >= ySkalingFactor) {
             background.setScale(xSkalingFactor);
@@ -56,8 +79,6 @@ public abstract class BasicScreen implements Screen {
             deltaX = (Gdx.graphics.getWidth() - background.getWidth() * ySkalingFactor) / 2.0f;
         }
         background.setPosition(deltaX, deltaY);
-        
-        generateContent();
     }
     
     /** You have to overwrite this method to create your custom content */
@@ -79,6 +100,7 @@ public abstract class BasicScreen implements Screen {
     
     @Override
     public void resize(int width, int height) {
+        updateBackground();
         stage.getViewport().update(width, height, true);
     }
     
@@ -92,30 +114,31 @@ public abstract class BasicScreen implements Screen {
     
     @Override
     public void hide() {
-        // TODO Auto-generated method stub
-        
+        // nothing to do, that is common for all screens
     }
     
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
-        
+        // nothing to do, that is common for all screens
     }
     
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
-        
+        // nothing to do, that is common for all screens
     }
     
     @Override
     public void dispose() {
-        Gdx.app.log("BasicScreen", "dispose screen");
-        // everything that implements the interface Disposable should be
-        // disposed, because Java garbage collections does not care about such
-        // objects
-        
         stage.dispose();
+        initialized = false;
+    }
+    
+    /**
+     * Sets the current screen.
+     * 
+     */
+    public void set() {
+        ((Fly) Gdx.app.getApplicationListener()).setScreen(this);
     }
     
 }

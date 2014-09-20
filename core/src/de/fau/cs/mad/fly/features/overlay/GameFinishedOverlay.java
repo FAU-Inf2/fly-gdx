@@ -24,6 +24,8 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
+import de.fau.cs.mad.fly.ui.MainMenuScreen;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -33,15 +35,13 @@ import de.fau.cs.mad.fly.ui.UI;
  */
 public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private GameController gameController;
-    private final Skin skin;
     private final Stage stage;
     private Score newScore;
     private Table messageTable;
     private TextButton backToMainMenuButton;
     
-    public GameFinishedOverlay(final Skin skin, final Stage stage) {
+    public GameFinishedOverlay(final Stage stage) {
         this.stage = stage;
-        this.skin = skin;
     }
     
     @Override
@@ -73,6 +73,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     public void finish() {
         Table outerTable = new Table();
         outerTable.setFillParent(true);
+        Skin skin = SkinManager.getInstance().getSkin();
         
         backToMainMenuButton = new TextButton(I18n.t("back.to.menu"), skin);
         backToMainMenuButton.addListener(new ClickListener() {
@@ -80,7 +81,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             public void clicked(InputEvent event, float x, float y) {
                 PlayerProfileManager.getInstance().getCurrentPlayerProfile().setToNextLevel();
                 PlayerProfileManager.getInstance().getCurrentPlayerProfile().saveCurrentLevelProfile();
-                ((Fly) Gdx.app.getApplicationListener()).setMainMenuScreen();
+                MainMenuScreen.getInstance().set();
             }
         });
         
@@ -89,9 +90,9 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         messageTable.setBackground(background);
         
         if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
-            levelSuccessfullyFinished();
+            levelSuccessfullyFinished(skin);
         } else if (gameController.getPlayer().isDead()) {
-            playerDead();
+            playerDead(skin);
         }
         
         messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
@@ -106,7 +107,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      * 
      * @param info
      */
-    private void showInfoLabel(String info) {
+    private void showInfoLabel(Skin skin, String info) {
         Label infoLabel = new Label(I18n.t(info), skin, "black");
         messageTable.add(infoLabel).colspan(3);
         messageTable.row();
@@ -119,11 +120,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      * <p>
      * In case of an EndlessLevel, the score is shown, too.
      */
-    private void playerDead() {
-        showInfoLabel("ship.destroyed");
+    private void playerDead(Skin skin) {
+        showInfoLabel(skin, "ship.destroyed");
         
         if (gameController.getLevel().head.isEndless()) {
-            showScore();
+            showScore(skin);
         }
         
         TextButton restartButton = new TextButton(I18n.t("restart"), skin);
@@ -145,15 +146,15 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      * to go back to the {@link MainMenuScreen}. If there exists a next Level, a
      * button which leads to this level is shown.
      */
-    private void levelSuccessfullyFinished() {
+    private void levelSuccessfullyFinished(Skin skin) {
         final PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         if (currentPlayer.IsLastLevel()) {
             if (currentPlayer.IsLastLevelGroup()) {
                 currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
                 currentPlayer.savePassedLevelID();
-                showInfoLabel("ALLGroupPassed");
+                showInfoLabel(skin, "ALLGroupPassed");
                 
-                showScore();
+                showScore(skin);
                 // add some space to avoid crappy layout
                 messageTable.add().pad(UI.Buttons.SPACE_WIDTH).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                 messageTable.add();
@@ -163,12 +164,12 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     currentPlayer.savePassedLevelgroupID();
                     currentPlayer.setPassedLevelID(currentPlayer.getnextLevelGroup().getFirstLevel().id);
                     currentPlayer.savePassedLevelID();
-                    showInfoLabel("OneGroupPassed");
+                    showInfoLabel(skin, "OneGroupPassed");
                 } else {
-                    showInfoLabel("level.congratulations");
+                    showInfoLabel(skin, "level.congratulations");
                 }
                 
-                showScore();
+                showScore(skin);
                 
                 TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), skin);
                 
@@ -193,8 +194,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 currentPlayer.savePassedLevelID();
             }
             
-            showInfoLabel("level.congratulations");
-            showScore();
+            showInfoLabel(skin, "level.congratulations");
+            showScore(skin);
             TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), skin);
             
             currentPlayer.setToNextLevel();
@@ -212,11 +213,10 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     }
     
     /**
-     * TODO: comments
-     * 
-     * @param messageTable
+     * Shows the score for the current level. When a new record is achieved,
+     * this is shown, too.
      */
-    private void showScore() {
+    private void showScore(Skin skin) {
         
         newScore = gameController.getScoreController().getEndScore(gameController);
         

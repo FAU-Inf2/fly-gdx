@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.game.ScoreChangeListener;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -21,7 +22,9 @@ public class ScoreOverlay implements ScoreChangeListener {
     
     private final Label scoreCounter;
     
-    public ScoreOverlay(final Skin skin, final Stage stage) {
+    public ScoreOverlay(final Stage stage) {
+        
+        final Skin skin= SkinManager.getInstance().getSkin();
         // offers the visible background, contains icon and points
         final Table innerTable = new Table();
         // necessary for adjusting the innerTable on the screen

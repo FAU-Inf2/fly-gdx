@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.settings;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -8,12 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.ui.SkinManager;
 
 /**
  * This class contains a Setting with a {@link Slider} to manage a float value.
  * 
- * @author Lukas Hahmann
+ * @author Lukas Hahmann <lukas.hahmann@gmail.com>
  * 
  */
 public class FloatSetting extends ChangeListener implements ISetting {
@@ -39,7 +38,7 @@ public class FloatSetting extends ChangeListener implements ISetting {
         this.id = id;
         this.helpingText = helpingText;
         
-        Skin skin = ((Fly) Gdx.app.getApplicationListener()).getSkin();
+        Skin skin = SkinManager.getInstance().getSkin();
         this.label = new Label(description, skin);
         
         this.value = value;

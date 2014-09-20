@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.game.IntegerTimeListener;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -21,7 +22,9 @@ public class TimeLeftOverlay implements IntegerTimeListener {
     
     private final Label timeCounter;
     
-    public TimeLeftOverlay(final Skin skin, final Stage stage, final float timeLeft) {
+    public TimeLeftOverlay(final Stage stage, final float timeLeft) {
+        
+        final Skin skin = SkinManager.getInstance().getSkin();
         // offers the visible background, contains icon and time
         final Table innerTable = new Table();
         // necessary for adjusting the innerTable on the screen

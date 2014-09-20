@@ -61,6 +61,7 @@ import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.BackProcessor;
+import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
@@ -71,7 +72,6 @@ import de.fau.cs.mad.fly.ui.UI;
  * 
  */
 public class GameControllerBuilder {
-    private Fly game;
     private Player player;
     private PlayerProfile playerProfile;
     private Stage stage;
@@ -104,7 +104,6 @@ public class GameControllerBuilder {
     public GameControllerBuilder init(final Fly game) {
         clearFeatureLists();
         
-        this.game = game;
         player = new Player();
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         level = Loader.getInstance().getCurrentLevel();
@@ -124,7 +123,7 @@ public class GameControllerBuilder {
         
         stage = new Stage();
         timeController = new TimeController();
-        TimeUpOverlay timeUpOverlay = new TimeUpOverlay(game.getSkin(), stage);
+        TimeUpOverlay timeUpOverlay = new TimeUpOverlay(stage);
         timeController.registerTimeIsUpListener(timeUpOverlay);
         
         scoreController = new ScoreController();
@@ -455,7 +454,7 @@ public class GameControllerBuilder {
      * @return Builder instance with GateIndicator
      */
     private GameControllerBuilder addGateIndicator() {
-        TextureRegion region = game.getSkin().getRegion("arrow");
+        TextureRegion region = SkinManager.getInstance().getSkin().getRegion("arrow");
         region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
         GateIndicator gateIndicator = new GateIndicator(region);
         addFeatureToLists(gateIndicator);
@@ -468,7 +467,7 @@ public class GameControllerBuilder {
      * @return Builder instance with TimeLeftOverlay
      */
     private GameControllerBuilder addTimeLeftOverlay() {
-        TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(game.getSkin(), stage, level.getLeftTime());
+        TimeLeftOverlay timeLeftOverlay = new TimeLeftOverlay(stage, level.getLeftTime());
         timeController.registerIntegerTimeListener(timeLeftOverlay);
         return this;
     }
@@ -479,7 +478,7 @@ public class GameControllerBuilder {
      * @return Builder instance with ScoreOverlay
      */
     private GameControllerBuilder addScoreOverlay() {
-        ScoreOverlay scoreOverlay = new ScoreOverlay(game.getSkin(), stage);
+        ScoreOverlay scoreOverlay = new ScoreOverlay(stage);
         scoreController.registerScoreChangeListener(scoreOverlay);
         return this;
     }
@@ -491,9 +490,9 @@ public class GameControllerBuilder {
      * @return Builder instance with InfoOverlay and InfoButtonOverlay
      */
     private GameControllerBuilder addInfoOverlays() {
-        InfoOverlay.createInfoOverlay(game.getSkin(), stage);
+        InfoOverlay.createInfoOverlay(stage);
         addFeatureToLists(InfoOverlay.getInstance());
-        InfoButtonOverlay.createInfoButtonOverlay(game.getSkin(), stage);
+        InfoButtonOverlay.createInfoButtonOverlay(stage);
         return this;
     }
     
@@ -504,7 +503,7 @@ public class GameControllerBuilder {
      * @return Builder instance with FPSOverlay
      */
     private GameControllerBuilder addFPSOverlay() {
-        FPSOverlay fpsOverlay = new FPSOverlay(game.getSkin(), stage);
+        FPSOverlay fpsOverlay = new FPSOverlay(stage);
         addFeatureToLists(fpsOverlay);
         return this;
     }
@@ -516,7 +515,7 @@ public class GameControllerBuilder {
      * @return Builder instance with TouchScreenOverlay
      */
     private GameControllerBuilder addTouchScreenOverlay() {
-        TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(stage, game.getSkin());
+        TouchScreenOverlay touchScreenOverlay = new TouchScreenOverlay(stage);
         addFeatureToLists(touchScreenOverlay);
         return this;
     }
@@ -528,7 +527,7 @@ public class GameControllerBuilder {
      * @return Builder instance with GameFinishedOverlay
      */
     private GameControllerBuilder addGameFinishedOverlay() {
-        GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(game.getSkin(), stage);
+        GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(stage);
         addFeatureToLists(gameFinishedOverlay);
         return this;
     }
@@ -540,7 +539,7 @@ public class GameControllerBuilder {
      * @return Builder instance with PauseGameOverlay
      */
     private GameControllerBuilder addPauseGameOverlay() {
-        PauseGameOverlay pauseGameOverlay = new PauseGameOverlay(game.getSkin(), stage);
+        PauseGameOverlay pauseGameOverlay = new PauseGameOverlay(stage);
         addFeatureToLists(pauseGameOverlay);
         return this;
     }

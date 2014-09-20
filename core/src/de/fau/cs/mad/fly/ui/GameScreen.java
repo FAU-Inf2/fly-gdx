@@ -1,10 +1,10 @@
-package de.fau.cs.mad.fly;
+package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
+import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.game.GameController;
-import de.fau.cs.mad.fly.res.Assets;
 
 /**
  * Provides a screen for the game itself.
@@ -57,9 +57,6 @@ public class GameScreen implements Screen {
     
     @Override
     public void dispose() {
-        Gdx.app.log("GameScreen.dispose", "dispose game screen");
-        // TODO: Assets should not be disposed here, because they also include
-        // UI stuff like the texture atlas for the buttons etc.
-        Assets.dispose();
+        // nothing to dispose
     }
 }

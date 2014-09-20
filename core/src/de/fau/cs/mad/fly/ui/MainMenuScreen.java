@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -34,6 +35,19 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     
     private HelpOverlay helpOverlay;
     private boolean showHelpScreen = false;
+    private static MainMenuScreen instance;
+    
+    /**
+     * This class is a singleton. When called the instance is created (lazy
+     * loading)
+     * 
+     */
+    public static MainMenuScreen getInstance() {
+        if (instance == null) {
+            instance = new MainMenuScreen();
+        }
+        return instance;
+    }
     
     /**
      * Adds the main menu to the main menu screen.
@@ -51,7 +65,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         stage.addActor(table);
         
         FloatAction test = new FloatAction();
-        
+        Skin skin = SkinManager.getInstance().getSkin();
         Button continueButton = new TextButton(I18n.t("play"), skin);
         continueButton.addAction(test);
         Button chooseLevelButton = new TextButton(I18n.t("choose.level"), skin);
@@ -94,7 +108,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         chooseLevelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setLevelGroupScreen();
+                LevelGroupScreen.getInstance().set();
             }
         });
         
@@ -174,7 +188,8 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     
     @Override
     public void dispose() {
-        stage.dispose();
+        super.dispose();
+        instance = null;
     }
     
     @Override

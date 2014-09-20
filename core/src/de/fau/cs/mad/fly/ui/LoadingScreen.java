@@ -1,9 +1,8 @@
 package de.fau.cs.mad.fly.ui;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -32,7 +31,7 @@ public class LoadingScreen<T> extends BasicScreen {
     public LoadingScreen(Loadable<T> listenable) {
         this.listenable = listenable;
         table = new Table();
-        
+        Skin skin = SkinManager.getInstance().getSkin();
         progressBar = new ScalableProgressBar(skin);
         progressBar.setWidth(progressBarWidth);
         
@@ -49,7 +48,6 @@ public class LoadingScreen<T> extends BasicScreen {
                 app.getGameController().initGame();
                 if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences().getBoolean(SettingManager.USE_TOUCH))
                     app.getGameController().getFlightController().init();
-                dispose();
             }
         });
         table.add(button).bottom().width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).expand();
@@ -70,11 +68,6 @@ public class LoadingScreen<T> extends BasicScreen {
     public void render(float delta) {
         listenable.update();
         super.render(delta);
-    }
-    
-    @Override
-    public void dispose() {
-        batch.dispose();
     }
     
     @Override

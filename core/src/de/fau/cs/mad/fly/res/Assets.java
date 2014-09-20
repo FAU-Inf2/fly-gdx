@@ -29,7 +29,7 @@ public class Assets {
         manager.dispose();
     }
     
-    public static void load(AssetDescriptor descriptor) {
+    public static void load(AssetDescriptor<?> descriptor) {
         manager.load(descriptor);
         manager.finishLoading();
     }

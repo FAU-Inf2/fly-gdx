@@ -2,9 +2,9 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -21,6 +21,20 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
  */
 public class LevelGroupScreen extends BasicScreen {
     
+    private static LevelGroupScreen instance;
+    
+    /**
+     * This class is a singleton. When called the instance is created (lazy
+     * loading)
+     * 
+     */
+    public static LevelGroupScreen getInstance() {
+        if(instance == null) {
+            instance = new LevelGroupScreen();
+        }
+        return instance;
+    }
+    
     /**
      * Shows a list of all available level groups.
      */
@@ -29,6 +43,7 @@ public class LevelGroupScreen extends BasicScreen {
         List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
         
         // table that contains all buttons
+        Skin skin = SkinManager.getInstance().getSkin();
         Table scrollableTable = new Table(skin);
         ScrollPane levelScrollPane = new ScrollPane(scrollableTable, skin);
         levelScrollPane.setScrollingDisabled(true, false);
@@ -51,7 +66,9 @@ public class LevelGroupScreen extends BasicScreen {
                 button.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        ((Fly) Gdx.app.getApplicationListener()).setLevelChooserScreen(group);
+                        LevelChooserScreen levelChooserScreen = LevelChooserScreen.getInstance();
+                        levelChooserScreen.setGroup(group);
+                        levelChooserScreen.set();
                     }
                 });
                 scrollableTable.add(button).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
@@ -68,8 +85,8 @@ public class LevelGroupScreen extends BasicScreen {
     }
     
     @Override
-    protected void generateContent() {
-        // TODO Auto-generated method stub
-        
+    public void dispose() {
+        super.dispose();
+        instance = null;
     }
 }
