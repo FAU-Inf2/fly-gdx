@@ -111,19 +111,20 @@ public class GlobalHighScoreScreen extends BasicScreen {
      */
     @Override
     protected void generateContent() {
-        stage.clear();
-        final Table table = new Table();
-        table.pad(UI.Window.BORDER_SPACE);
-        table.setFillParent(true);
-        stage.addActor(table);
+        stage.clear();    
         infoTable = new Table();
+        infoTable.pad(UI.Window.BORDER_SPACE);
+        infoTable.setFillParent(true);
+        
         Skin skin = SkinManager.getInstance().getSkin();
-        infoTable.add(new Label(I18n.t("StatusLoading"), skin));
         final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
-        table.row().expand();
-        table.add(statisticsPane);
+        statisticsPane.setFillParent(true);
+        
+        infoTable.add(new Label(I18n.t("StatusLoading"), skin));
+        
+        stage.addActor(statisticsPane);
     }
     
     protected void generateContentDynamic() {

@@ -33,7 +33,6 @@ import de.fau.cs.mad.fly.profile.ScoreManager;
  */
 public class LevelsStatisScreen extends BasicScreen {
     
-    private Table infoTable;
     private Table scoreTable;
     
     private TextButton uploadScoreButton;
@@ -68,24 +67,18 @@ public class LevelsStatisScreen extends BasicScreen {
         long begin = System.currentTimeMillis();
         initButtons();
         stage.clear();
-        final Table table = new Table();
-        table.pad(UI.Window.BORDER_SPACE);
-        table.setFillParent(true);
-        stage.addActor(table);
-        
-        infoTable = new Table();
         
         scoreTable = new Table();
+        scoreTable.pad(UI.Window.BORDER_SPACE);
         Skin skin = SkinManager.getInstance().getSkin();
-        scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
-        infoTable.add(scoreTable);
         
-        final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
+        final ScrollPane statisticsPane = new ScrollPane(scoreTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
-        table.row().expand();
-        table.add(statisticsPane);
+        statisticsPane.setFillParent(true);
+        scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
         Gdx.app.log("timing", "LevelsStatisScreen generateContent " + (System.currentTimeMillis() - begin));
+        stage.addActor(statisticsPane);
     }
     
     /**
@@ -138,20 +131,21 @@ public class LevelsStatisScreen extends BasicScreen {
                     Gdx.app.log("timing", "clear UI table " + (end - begin));
                     begin = end;
                     Skin skin = SkinManager.getInstance().getSkin();
-                    scoreTable.add(new Label(levelGroup.name, skin)).pad(6f).colspan(2);
+                    scoreTable.add(new Label(levelGroup.name, skin)).colspan(3);
                     scoreTable.row().expand();
                     
                     // add scores details
                     boolean haveScore = false;
+                    Gdx.app.log("fan", "count:" + scores.size());
                     
                     for (String levelID : scores.keySet()) {
                         Score score = scores.get(levelID);
                         if (score != null && score.getTotalScore() > 0) {
                             haveScore = true;
                             String levelname = levelGroup.getLevelName(Integer.valueOf(levelID));
-                            scoreTable.add(new Label(levelname, skin)).pad(6f).right();
+                            scoreTable.add(new Label(levelname, skin));
                             
-                            scoreTable.add(new Label(score.getTotalScore() + "", skin)).pad(6f).uniform();
+                            scoreTable.add(new Label(score.getTotalScore() + "", skin));
                             // for (ScoreDetail detail :
                             // score.getScoreDetails()) {
                             // scoreTable.row().expand();
@@ -169,7 +163,7 @@ public class LevelsStatisScreen extends BasicScreen {
                             }
                             uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton));
                             // scoreTable.row().expand();
-                            scoreTable.add(uploadScoreButton).pad(6f).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                            scoreTable.add(uploadScoreButton).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
                             scoreTable.row().expand();
                         }
                         scoreTable.add(new Label("", skin)).pad(6f).uniform();
@@ -185,7 +179,7 @@ public class LevelsStatisScreen extends BasicScreen {
                     
                     // global high score button
                     scoreTable.row();
-                    scoreTable.add(globalHighScoreButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(2);
+                    scoreTable.add(globalHighScoreButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(3);
                     
                     end = System.currentTimeMillis();
                     Gdx.app.log("timing", " UI table builded " + (end - begin));
