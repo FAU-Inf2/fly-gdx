@@ -50,6 +50,8 @@ public class RollTutorialLevel implements ILevel, IFeatureInit, GateCircuitListe
     public void onGatePassed(GateGoal gate) {
         if (gate.getGateId() == 0) {
             InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.red.gate"), 4);
+        } else if(gate.getGateId() == 2) {
+            InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.gate.finish"), 4);
         } else if (gate.getGateId() < 3) {
             InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.congratulation." + MathUtils.random(1, 5)), 3);
         }
