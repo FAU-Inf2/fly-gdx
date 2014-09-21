@@ -46,6 +46,9 @@ public class PlayerScreen extends BasicScreen {
     
     private LabelStyle dialogLabelStyle;
     
+    final String YES = "true";
+    final String CANCEL = "cancel";
+    
     /**
      * init the UI controls which are relative to User management operations.
      * all these control are placed in userTable
@@ -104,16 +107,24 @@ public class PlayerScreen extends BasicScreen {
         userTable.add(new Label("" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney(), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         userTable.row().expand();
         
-        // show passed group
+        // show passed group and level
         userTable.add(new Label(I18n.t("LabelReachedGroup"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         int group = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
-        if (group > LevelGroupManager.getInstance().getLastGroupID()) {
+        int level = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelID();
+        if (level > LevelGroupManager.getInstance().getLastGroup().getLastLevelProfile().id) {
             userTable.add(new Label(I18n.t("ALLGroupPassed"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         } else {
             String groupname = LevelGroupManager.getInstance().getLevelGroup(group).name;
             userTable.add(new Label(groupname, skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            userTable.row().expand();
+            
+            //show passed level 
+            userTable.add(new Label(I18n.t("LabelReachedLevel"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            String levelname = LevelGroupManager.getInstance().getLevelGroup(group).getLevelName(level);
+            userTable.add(new Label(levelname, skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         }
         userTable.row().expand();
+        
         
         // show delete user and edit user name button
         userTable.add(editUserButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
@@ -174,9 +185,7 @@ public class PlayerScreen extends BasicScreen {
             }
         });
         
-        deleteUserButton.addListener(new ChangeListener() {
-            final String YES = "true";
-            final String CANCEL = "cancel";
+        deleteUserButton.addListener(new ChangeListener() {          
             
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -201,37 +210,110 @@ public class PlayerScreen extends BasicScreen {
                         }
                     };
                     dialog.text(I18n.t("msgDeleteUser"), dialogLabelStyle);
-                    dialog.button(button, YES).button(concelButton, CANCEL);
+                    dialog.button(button, YES).add();
+                    dialog.button(concelButton, CANCEL);
                     dialog.key(Keys.ENTER, YES).key(Keys.ESCAPE, CANCEL);
                     dialog.show(stage);
                 }
             }
         });
         
-        editUserButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Skin skin = SkinManager.getInstance().getSkin();
-                TextButton button = new TextButton(I18n.t("ok"), skin);
-                TextButton concelButton = new TextButton(I18n.t("buttenText.cancel"), skin);
-                
-                Dialog dialog = new Dialog("", skin, "dialog") {
-                    protected void result(Object object) {
-                        if (Boolean.getBoolean(object.toString()) == true) {
-                            
-                        }
-                    }
-                };
-                dialog.text(I18n.t("msgInputNewUsername"), dialogLabelStyle);
-                dialog.button(button, true).button(concelButton, false);
-                dialog.key(Keys.ENTER, true).key(Keys.ESCAPE, false);
-                dialog.show(stage);
-            }
-        });
-        
-        generateUserTable();
-    }
-    
+		editUserButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				final Skin skin = SkinManager.getInstance().getSkin();
+				final PlayerProfile player = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+
+				EditUserDialog dialog = new EditUserDialog("", skin, "dialog", player.getName()) {
+					@Override
+					protected void result(Object object) {
+						super.result(object);
+						if (object.toString().equals(YES)) {
+							if (!newUserName.equals(player.getName())) {
+								Dialog retdialog = new Dialog("", skin, "dialog");
+								boolean userExists = false;
+								if (!"".equals(newUserName)) {
+									List<PlayerProfile> allPlayerProfiles = PlayerProfileManager.getInstance().getAllPlayerProfiles();
+									int numberOfAllPlayerProfiles = allPlayerProfiles.size();
+									PlayerProfile playerProfile;
+									for (int i = 0; i < numberOfAllPlayerProfiles; i++) {
+										playerProfile = allPlayerProfiles.get(i);
+										if (playerProfile.getName().equals(newUserName)) {
+											userExists = true;
+											i = numberOfAllPlayerProfiles;
+										}
+									}
+									if (userExists) {
+										retdialog.text(I18n.t("UserExists"), dialogLabelStyle);
+									} else {
+										// update player profile
+										player.setName(newUserName);
+										PlayerProfileManager.getInstance().updateIntColumn(player, "name", newUserName);
+										updateUserTable();
+										// set dialog text
+										retdialog.text(I18n.t("userChanged"), dialogLabelStyle);
+									}
+								} else {
+									retdialog.text(I18n.t("NullUserName"), dialogLabelStyle);
+								}
+
+								TextButton button = new TextButton(I18n.t("ok"), skin);
+								retdialog.button(button);
+								retdialog.show(stage);
+							}
+						}
+					}
+				};
+				dialog.show(stage);
+			}
+		});
+	}
+
+	public class EditUserDialog extends Dialog {
+
+		private TextField newUserNameField;
+		private Skin skin;
+
+		public String newUserName = "";
+		public String oldName;
+
+		public EditUserDialog(String title, Skin skin1, String windowStyleName, String oldName) {
+			super(title, skin1, windowStyleName);
+			this.skin = skin1;
+			this.oldName = oldName;
+
+			this.text(I18n.t("msgInputNewUsername"), dialogLabelStyle);
+			this.row().expand();
+			newUserNameField = new TextField("", skin);
+			newUserNameField.setTextFieldFilter(new UserNameTextFieldFilter());
+			newUserNameField.setTextFieldListener(new TextFieldListener() {
+				@Override
+				public void keyTyped(TextField textField, char key) {
+					if ((key == '\r' || key == '\n')) {
+						newUserName = newUserNameField.getText();
+					}
+				}
+			});
+			newUserNameField.setMessageText(oldName);
+			this.add(newUserNameField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(3);
+			this.row().expand();
+
+			TextButton okbutton = new TextButton(I18n.t("ok"), skin);
+			TextButton concelButton = new TextButton(I18n.t("buttenText.cancel"), skin);
+			button(okbutton, true).add();
+			button(concelButton, false);
+			key(Keys.ENTER, true).key(Keys.ESCAPE, false);
+		}
+
+		@Override
+		protected void result(Object object) {
+			super.result(object);
+			if (object.toString().equals(YES)) {
+				newUserName = newUserNameField.getText();
+			}
+		}
+	}
+
     /**
      * Method that is called when the button is pressed to create a new user or
      * the enter button is pressed.
@@ -295,4 +377,9 @@ public class PlayerScreen extends BasicScreen {
         userList.hideList();
     }
     
+    @Override
+    public void show() {
+        super.show();
+        generateUserTable();
+    }
 }
