@@ -50,6 +50,9 @@ public class SettingManager {
      *            the default value of the Setting
      * @param helpingText
      *            String that identifies the helping text in the I18N
+     * @param hide
+     *            defines weather to hide (true) or to show (false) the option
+     *            in the ui
      */
     public void addBooleanSetting(String id, boolean defaultValue, String helpingText, boolean hide) {
         boolean value = defaultValue;
