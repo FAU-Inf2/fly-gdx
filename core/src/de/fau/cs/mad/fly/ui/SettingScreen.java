@@ -1,11 +1,13 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -36,11 +38,12 @@ public class SettingScreen extends BasicScreen implements WithHelpOverlay {
         Table table = new Table();
         table.setFillParent(true);
         table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
+        Skin skin = SkinManager.getInstance().getSkin();
+        settingTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
         table.add(settingTable).center();
         stage.addActor(table);
         
         // setup help overlay
-        Skin skin = SkinManager.getInstance().getSkin();
         final Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
         helpButton.setBounds(UI.Window.BORDER_SPACE, viewport.getWorldHeight() - UI.Window.BORDER_SPACE - UI.Buttons.MAIN_BUTTON_HEIGHT, UI.Buttons.MAIN_BUTTON_HEIGHT, UI.Buttons.MAIN_BUTTON_HEIGHT);
         
