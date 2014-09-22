@@ -156,9 +156,10 @@ public class PlayerScreen extends BasicScreen {
      * Method that is called, if the list of user changes.
      */
     public void updateUserTable() {
-        String currentUserName = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName();
+        PlayerProfileManager playerProfileManager = PlayerProfileManager.getInstance();
+        String currentUserName = playerProfileManager.getCurrentPlayerProfile().getName();
         Array<String> nameList = new Array<String>();
-        java.util.List<PlayerProfile> playerList = PlayerProfileManager.getInstance().getAllPlayerProfiles();
+        List<PlayerProfile> playerList = playerProfileManager.getAllPlayerProfiles();
         String name;
         for (int i = 0; i < playerList.size(); i++) {
             name = playerList.get(i).getName();
@@ -167,6 +168,7 @@ public class PlayerScreen extends BasicScreen {
                 selectedUserindex = i;
             }
         }
+        playerProfileManager.setCurrentPlayer(playerList.get(selectedUserindex));
         userSelectBox.setItems(nameList);
         userSelectBox.setSelectedIndex(selectedUserindex);
     }
