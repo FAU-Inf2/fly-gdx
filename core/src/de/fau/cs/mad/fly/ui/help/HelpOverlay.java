@@ -18,12 +18,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class HelpOverlay extends ClickListener implements InputProcessor {
     
     private final WithHelpOverlay backListener;
-    private final ArrayList<HelpFrame> helpFrames;
+    private final ArrayList<OverlayFrame> helpFrames;
     private int currentHelpFrame;
     
     /**
-     * Create a new {@link HelpOverlay}. No {@link HelpFrame}s are in this
-     * {@link HelpOverlay} unless you call {@link #addHelpFrame(HelpFrame)}.
+     * Create a new {@link HelpOverlay}. No {@link OverlayFrame}s are in this
+     * {@link HelpOverlay} unless you call {@link #addHelpFrame(OverlayFrame)}.
      * 
      * @param screen
      *            that is called to display the help frames in this
@@ -31,26 +31,26 @@ public class HelpOverlay extends ClickListener implements InputProcessor {
      */
     public HelpOverlay(WithHelpOverlay screen) {
         this.backListener = screen;
-        helpFrames = new ArrayList<HelpFrame>();
+        helpFrames = new ArrayList<OverlayFrame>();
         currentHelpFrame = 0;
     }
     
     /**
-     * Adds a new {@link HelpFrame} to this overlay.
+     * Adds a new {@link OverlayFrame} to this overlay.
      * <p>
-     * The order of how {@link HelpFrame}s are added is the order the
-     * {@link HelpFrame}s are shown.
+     * The order of how {@link OverlayFrame}s are added is the order the
+     * {@link OverlayFrame}s are shown.
      * 
      * @param newHelpFrame
      */
-    public void addHelpFrame(HelpFrame newHelpFrame) {
+    public void addHelpFrame(OverlayFrame newHelpFrame) {
         helpFrames.add(newHelpFrame);
     }
     
     /**
      * Internal method, that is called, whenever a key is pressed or the user
-     * touches the screen. It goes to the next {@link HelpFrame} or ends the
-     * help if the last {@link HelpFrame} is reached.
+     * touches the screen. It goes to the next {@link OverlayFrame} or ends the
+     * help if the last {@link OverlayFrame} is reached.
      */
     private void switchFrameOrQuit() {
         if (currentHelpFrame < helpFrames.size() - 1) {

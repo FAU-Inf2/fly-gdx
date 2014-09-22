@@ -10,12 +10,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
- * Abstract class for HelpFrames.
+ * Abstract class that represents a frame that is layed above a visible screen.
  * <p>
- * A help frame is a virtual frame that is shown when accessing the help. Each
- * HelpFrame explains an own functionality.
- * <p>
- * To use a HelpFrame, extend this class. Make sure to call
+ * To use an OverlayFrame, extend this class. Make sure to call
  * {@link #setupBatchAndStage()} before you place elements on the screen. This
  * makes sure that your stuff is displayed independent from the resolution.
  * After you have placed your stuff set the {@link #viewport} to the width and
@@ -24,13 +21,12 @@ import de.fau.cs.mad.fly.ui.UI;
  * @author Lukas Hahmann
  * 
  */
-public abstract class HelpFrame {
+public abstract class OverlayFrame {
     
     protected Batch batch;
     protected Stage stage;
     protected float scalingFactor;
     protected Viewport viewport;
-    protected final int PADDING_OF_LABEL = 70;
     
     /**
      * Set up batch and stage that are independent from the resolution. Call

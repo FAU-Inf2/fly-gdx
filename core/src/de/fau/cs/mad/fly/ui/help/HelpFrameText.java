@@ -12,12 +12,12 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
- * {@link HelpFrame} that shows a simple text centered in the top mid.
+ * {@link OverlayFrame} that shows a simple text centered in the top mid.
  * 
  * @author Lukas Hahmann
  * 
  */
-public class HelpFrameText extends HelpFrame {
+public class HelpFrameText extends OverlayFrame {
     
     /** skin that is used for the label and the background */
     private Skin skin;

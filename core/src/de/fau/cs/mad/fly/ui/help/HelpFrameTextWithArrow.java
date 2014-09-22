@@ -47,14 +47,16 @@ import de.fau.cs.mad.fly.ui.UI;
  * @author Lukas Hahmann
  * 
  */
-public class HelpFrameTextWithArrow extends HelpFrame {
+public class HelpFrameTextWithArrow extends OverlayFrame {
+    
+    protected final int PADDING_OF_LABEL = 70;
     
     /** Space between arrow and actor / message box */
     private final static float PADDING = 10f;
     
     /**
      * arrow that points to the actor that is described by this
-     * {@link HelpFrame}
+     * {@link OverlayFrame}
      */
     private TextureRegion arrow;
     

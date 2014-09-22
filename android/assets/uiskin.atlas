@@ -101,7 +101,7 @@ button-down
   index: -1
 button-disabled
   rotate: false
-  xy: 751, 245
+  xy: 752, 246
   size: 108, 108
   split: 53, 53, 53, 53
   orig: 108, 108

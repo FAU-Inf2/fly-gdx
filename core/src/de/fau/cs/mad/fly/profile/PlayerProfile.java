@@ -474,5 +474,16 @@ public class PlayerProfile {
         settingManager.getPreferences().flush();
     }
     
+    @Override
+    public boolean equals(Object o) {
+        if(o != null && o instanceof PlayerProfile) {
+            return this.getName().equals(((PlayerProfile) o).getName());
+        }
+        return false;
+    }
     
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

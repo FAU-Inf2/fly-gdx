@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Array;
 
+import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
@@ -46,14 +48,14 @@ public class PlayerScreen extends BasicScreen {
     private int selectedUserindex = 0;
     private SelectBox<String> userSelectBox;
     
-    private LabelStyle dialogLabelStyle;
+    LabelStyle dialogLabelStyle;
     
     private float padding = 20f;
     
-    private final String OK = "true";
-    private final String CANCEL = "cancel";
+    public static final String OK = "true";
+    public static final String CANCEL = "cancel";
     
-    private final int BUTTON_WIDTH = 1650;
+    public final static int MAX_NAME_WIDTH = 1650;
     
     /**
      * init the UI controls which are relative to User management operations.
@@ -69,7 +71,7 @@ public class PlayerScreen extends BasicScreen {
         Table contentTable = new Table();
         userTable.add(contentTable);
         contentTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
-        contentTable.add(new Label(I18n.t("usernameLableText")+":", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        contentTable.add(new Label(I18n.t("usernameLableText") + ":", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         // add all user to userList and set the current user to display value
         userSelectBox = new SelectBox<String>(skin);
         updateUserTable();
@@ -86,11 +88,11 @@ public class PlayerScreen extends BasicScreen {
                 }
             }
         });
-        contentTable.add(userSelectBox).width(BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        contentTable.add(userSelectBox).width(MAX_NAME_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         contentTable.row().pad(padding);
         
         // show fly id, if no fly id, show a info button
-        contentTable.add(new Label(I18n.t("labelFlyId")+":", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        contentTable.add(new Label(I18n.t("labelFlyId") + ":", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() > 0) {
             contentTable.add(new Label(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() + "", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         } else {
@@ -119,7 +121,7 @@ public class PlayerScreen extends BasicScreen {
         contentTable.row().pad(padding);
         
         // show passed group and level
-        contentTable.add(new Label(I18n.t("lastLevel")+":", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        contentTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
         
         int group = playerProfile.getPassedLevelgroupID();
         int level = playerProfile.getPassedLevelID();
@@ -227,97 +229,12 @@ public class PlayerScreen extends BasicScreen {
         editUserButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                final Skin skin = SkinManager.getInstance().getSkin();
-                final PlayerProfile player = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                final PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
                 
-                EditUserDialog dialog = new EditUserDialog("", skin, "dialog", player.getName()) {
-                    @Override
-                    protected void result(Object object) {
-                        super.result(object);
-                        if (object.toString().equals(OK)) {
-                            if (!newUserName.equals(player.getName())) {
-                                Dialog retdialog = new Dialog("", skin, "dialog");
-                                boolean userExists = false;
-                                if (!"".equals(newUserName)) {
-                                    List<PlayerProfile> allPlayerProfiles = PlayerProfileManager.getInstance().getAllPlayerProfiles();
-                                    int numberOfAllPlayerProfiles = allPlayerProfiles.size();
-                                    PlayerProfile playerProfile;
-                                    for (int i = 0; i < numberOfAllPlayerProfiles; i++) {
-                                        playerProfile = allPlayerProfiles.get(i);
-                                        if (playerProfile.getName().equals(newUserName)) {
-                                            userExists = true;
-                                            i = numberOfAllPlayerProfiles;
-                                        }
-                                    }
-                                    if (userExists) {
-                                        retdialog.text(I18n.t("UserExists"), dialogLabelStyle);
-                                    } else {
-                                        // update player profile
-                                        player.setName(newUserName);
-                                        PlayerProfileManager.getInstance().updateIntColumn(player, "name", newUserName);
-                                        updateUserTable();
-                                        // set dialog text
-                                        retdialog.text(I18n.t("userChanged"), dialogLabelStyle);
-                                    }
-                                } else {
-                                    retdialog.text(I18n.t("NullUserName"), dialogLabelStyle);
-                                }
-                                
-                                TextButton button = new TextButton(I18n.t("ok"), skin);
-                                retdialog.button(button);
-                                retdialog.show(stage);
-                            }
-                        }
-                    }
-                };
-                dialog.show(stage);
+                Screen dialog = new EditPlayerNameScreen(PlayerScreen.this, playerProfile); 
+                ((Fly) Gdx.app.getApplicationListener()).setScreen(dialog);
             }
         });
-    }
-    
-    public class EditUserDialog extends Dialog {
-        
-        private TextField newUserNameField;
-        private Skin skin;
-        
-        public String newUserName = "";
-        public String oldName;
-        
-        public EditUserDialog(String title, Skin skin1, String windowStyleName, String oldName) {
-            super(title, skin1, windowStyleName);
-            this.skin = skin1;
-            this.oldName = oldName;
-            
-            this.text(I18n.t("msgInputNewUsername")+":", dialogLabelStyle);
-            this.row().expand();
-            newUserNameField = new TextField("", skin);
-            newUserNameField.setTextFieldFilter(new UserNameTextFieldFilter());
-            newUserNameField.setTextFieldListener(new TextFieldListener() {
-                @Override
-                public void keyTyped(TextField textField, char key) {
-                    if ((key == '\r' || key == '\n')) {
-                        newUserName = newUserNameField.getText();
-                    }
-                }
-            });
-            newUserNameField.setMessageText(oldName);
-            this.add(newUserNameField).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(3);
-            this.row().expand();
-            
-            TextButton okbutton = new TextButton(I18n.t("ok"), skin);
-            TextButton concelButton = new TextButton(I18n.t("cancel"), skin);
-            button(okbutton, true).add();
-            button(concelButton, false);
-            key(Keys.ENTER, true).key(Keys.ESCAPE, false);
-        }
-        
-        @Override
-        protected void result(Object object) {
-            super.result(object);
-            if (object.toString().equals(OK)) {
-                newUserName = newUserNameField.getText();
-            }
-        }
     }
     
     /**

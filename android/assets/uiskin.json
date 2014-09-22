@@ -38,7 +38,7 @@ com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: { titleFont: default-font, background: dialog-background, titleFontColor: black },
-	dialog: { titleFont: default-font, background: dialog-background, titleFontColor: black, stageBackground: dialogDim }
+	dialog: { titleFont: default-font, background: button-up, titleFontColor: black, stageBackground: dialogDim }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: { background: default-slider, knob: default-slider-knob },
