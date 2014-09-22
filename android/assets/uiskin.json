@@ -33,7 +33,7 @@ com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
 		font: default-font, fontColor: black, background: green-select-box,
 		scrollStyle: grey-background,
-		listStyle: { font: default-font, selection: button-up }
+		listStyle: { font: default-font, fontColorSelected: white, fontColorUnselected: black, selection: button-up }
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {

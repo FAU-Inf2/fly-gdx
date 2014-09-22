@@ -191,17 +191,17 @@ green-select-box
 grey-select-drop-down
   rotate: false
   xy: 524, 531
-  size: 227, 176
+  size: 227, 191
   split: 66, 160, 109, 66
-  orig: 227, 176
+  orig: 227, 191
   offset: 0, 0
   index: -1
 dialog-background
   rotate: false
-  xy: 710, 0
+  xy: 711, 0
   size: 131, 131
   split: 65, 65, 65, 65
-  orig: 133, 133
+  orig: 131, 131
   offset: 0, 0
   index: -1
 guy
