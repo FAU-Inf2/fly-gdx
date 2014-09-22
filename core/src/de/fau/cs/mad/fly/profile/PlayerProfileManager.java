@@ -144,6 +144,11 @@ public class PlayerProfileManager {
         FlyDBManager.getInstance().execSQL(sql);
     }
     
+    public void updateIntColumn(PlayerProfile playerProfile, String colname, String newValue) {
+        final String sql = "update player set " + colname + "='" + newValue + "' where player_id=" + playerProfile.getId();
+        FlyDBManager.getInstance().execSQL(sql);
+    }
+    
 	public void deletePlayerProfile() {
 		this.deletePlayerProfile(this.getCurrentPlayerProfile());
 	}

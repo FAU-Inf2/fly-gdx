@@ -58,8 +58,11 @@ public class LevelGroup {
         return null;
     }
     
+    public LevelProfile getLastLevelProfile() {
+    	return getLevels().get(getLevels().size()-1);
+    }
+    
     private void readLevelGroup() {
-        long time = System.currentTimeMillis();
         levels = new ArrayList<LevelProfile>();
         // check for all the levels
         JsonReader reader = new JsonReader();

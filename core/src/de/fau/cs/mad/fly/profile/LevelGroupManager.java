@@ -136,4 +136,8 @@ public class LevelGroupManager {
     public int getLastGroupID(){
     	return getLevelGroups().get(getLevelGroups().size()-1).id;
     }
+    
+    public LevelGroup getLastGroup(){
+    	return getLevelGroups().get(getLevelGroups().size()-1);
+    }
 }
