@@ -20,14 +20,9 @@ import de.fau.cs.mad.fly.I18n;
 public class SettingManager {
     
     public static final String USE_TOUCH = "useTouch";
-    public static final String SHOW_PAUSE = "showPause";
     public static final String SHOW_FPS = "showFPS";
     public static final String VIBRATE_WHEN_COLLIDE = "vibrateWhenCollide";
     public static final String INVERT_PITCH = "invertPitch";
-    
-    public static final String ALPHA_SLIDER = "alphaSlider";
-    public static final String BUFFER_SLIDER = "bufferSlider";
-    public static final String CAMERA_OFFSET = "cameraOffset";
     
     private Preferences prefs;
     private Map<String, ISetting> settingMap;
@@ -63,7 +58,7 @@ public class SettingManager {
             prefs.flush();
         }
         
-        ISetting newBooleanSetting = new BooleanSetting(this, id, I18n.t(id), value, helpingText);
+        ISetting newBooleanSetting = new BooleanSetting(this, id, I18n.t(id) + ":", value, helpingText);
         settingMap.put(id, newBooleanSetting);
         if (!hide) {
             settingList.add(id);

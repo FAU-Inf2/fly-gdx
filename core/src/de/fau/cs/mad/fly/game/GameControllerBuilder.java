@@ -280,9 +280,6 @@ public class GameControllerBuilder {
         addScoreOverlay();
         addInfoOverlays();
         
-        if (preferences.getBoolean(SettingManager.SHOW_PAUSE)) {
-            addPauseGameOverlay();
-        }
         if (preferences.getBoolean(SettingManager.SHOW_FPS)) {
             addFPSOverlay();
         }

@@ -24,7 +24,7 @@ import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
  */
 public class SettingScreen extends BasicScreen implements WithHelpOverlay {
     private SettingManager settingManager;
-    private float padding = 50;
+    private float padding = 20;
     private Table settingTable;
     private String displayPlayer = "";
     private boolean showHelpScreen = false;
