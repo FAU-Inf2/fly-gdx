@@ -53,7 +53,7 @@ public class SettingManager {
      */
     public void addBooleanSetting(String id, boolean defaultValue, String helpingText, boolean hide) {
         boolean value = defaultValue;
-        if (prefs.contains(id) && id != USE_TOUCH && !Application.ApplicationType.Desktop.equals(Gdx.app.getType())) {
+        if (prefs.contains(id)) {
             value = prefs.getBoolean(id);
         } else {
             prefs.putBoolean(id, defaultValue);
