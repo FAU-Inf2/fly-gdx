@@ -147,8 +147,8 @@ star
 arrow
   rotate: false
   xy: 260, 148
-  size: 78, 140
-  orig: 78, 140
+  size: 78, 139
+  orig: 78, 139
   offset: 0, 0
   index: -1
 helpArrowDown
