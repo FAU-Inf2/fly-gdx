@@ -83,7 +83,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 PlayerProfile profile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
                 profile.setToNextLevel();
                 profile.saveCurrentLevelProfile();
-                MainMenuScreen.getInstance().set();
+                ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             }
         });
         
@@ -113,7 +113,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             public void clicked(InputEvent event, float x, float y) {
                 Fly game = (Fly) Gdx.app.getApplicationListener();
                 game.getGameController().endGame();
-                MainMenuScreen.getInstance().set();
+                ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             }
         });
         
