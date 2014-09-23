@@ -62,7 +62,7 @@ public class IOSDatabaseManager implements DatabaseManager {
                         dbOnUpgradeQuery);
 
             try {
-                connection =  new JDBCConnection("jdbc:sqlite:/" + System.getenv("HOME") + "/Documents" + dbName, "", "", "", System.getProperty("SQLite.vfs"));
+                connection =  new JDBCConnection("jdbc:sqlite:/" + System.getenv("HOME") + "/Documents/" + dbName, "", "", "", System.getProperty("SQLite.vfs"));
                 stmt = connection.createStatement();
                 helper.onCreate(stmt);
             } catch (SQLException e) {
