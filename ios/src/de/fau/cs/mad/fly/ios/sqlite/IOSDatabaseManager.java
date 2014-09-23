@@ -62,7 +62,8 @@ public class IOSDatabaseManager implements DatabaseManager {
                 stmt = connection.createStatement();
                 helper.onCreate(stmt);
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                Gdx.app.log("IOSDatabaseManager.openOrCreateDatabase", "threw an SQLException");
+                throw new GdxRuntimeException(e);
             }
 
         }
