@@ -63,6 +63,7 @@ public class IOSDatabaseManager implements DatabaseManager {
                 helper.onCreate(stmt);
             } catch (SQLException e) {
                 Gdx.app.log("IOSDatabaseManager.openOrCreateDatabase", "threw an SQLException");
+                e.printStackTrace();
                 throw new GdxRuntimeException(e);
             }
 
