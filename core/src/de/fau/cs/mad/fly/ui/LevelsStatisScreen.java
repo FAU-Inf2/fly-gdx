@@ -225,6 +225,8 @@ public class LevelsStatisScreen extends BasicScreen {
         
         @Override
         public void changed(ChangeEvent event, Actor actor) {
+        	button.setDisabled(true);
+        	
             final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
             requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
             requestData.LevelID = levelId;
@@ -315,6 +317,8 @@ public class LevelsStatisScreen extends BasicScreen {
         
         @Override
         public void successful(Object obj) {
+        	button.setDisabled(false);
+        	
             if (requestData.Score.getServerScoreId() > 0) {
                 requestData.Score.setIsUploaded(true);
                 ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), requestData.LevelgroupID, requestData.LevelID);
@@ -344,6 +348,8 @@ public class LevelsStatisScreen extends BasicScreen {
         
         @Override
         public void failed(String msg) {
+        	button.setDisabled(false);
+        	
             final String msgg = msg;
             Gdx.app.postRunnable(new Runnable() {
                 @Override
