@@ -71,7 +71,7 @@ public final class UI {
         /** Max. number of buttons for level to show in a row */
         public static final int BUTTONS_IN_A_ROW = 2;
         
-        public static final float SPACE = 100;
+        public static final float SPACE = 50;
         
         public static final float SPACE_WIDTH = 100;
         public static final float SPACE_HEIGHT = 100;
