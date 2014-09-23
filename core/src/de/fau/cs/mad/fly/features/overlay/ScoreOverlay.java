@@ -43,7 +43,7 @@ public class ScoreOverlay implements ScoreChangeListener {
         innerTable.add(scoreCounter);
         
         outerTable.setFillParent(true);
-        outerTable.add(innerTable).pad(UI.Window.BORDER_SPACE).height(UI.Buttons.MAIN_BUTTON_HEIGHT).expand().top().right();
+        outerTable.add(innerTable).pad(UI.Window.BORDER_SPACE).height(UI.Buttons.TEXT_BUTTON_HEIGHT).expand().top().right();
         stage.addActor(outerTable);
     }
     

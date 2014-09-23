@@ -64,7 +64,8 @@ public class Fly extends Game implements Loadable<Fly> {
     private GameScreen gameScreen;
     private GlobalHighScoreScreen globalHighScoreScreen;
     private PlayerScreen playerScreen;
-    
+    private MainMenuScreen mainMenuScreen;
+
     private GameController gameController;
     
     private List<ProgressListener<Fly>> listeners = new ArrayList<ProgressListener<Fly>>();
@@ -89,7 +90,10 @@ public class Fly extends Game implements Loadable<Fly> {
         addProgressListener(new ProgressListener.ProgressAdapter<Fly>() {
             @Override
             public void progressFinished(Fly fly) {
-                MainMenuScreen.getInstance().set();
+                if(mainMenuScreen == null) {
+                    mainMenuScreen = new MainMenuScreen();
+                }
+                mainMenuScreen.set();
             }
         });
         
@@ -271,6 +275,10 @@ public class Fly extends Game implements Loadable<Fly> {
             onMode3d2dChanged(newMode);
         }
         super.setScreen(screen);
+    }
+    
+    public MainMenuScreen getMainMenuScreen() {
+        return mainMenuScreen;
     }
     
     /**

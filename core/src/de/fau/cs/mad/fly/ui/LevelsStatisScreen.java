@@ -170,7 +170,7 @@ public class LevelsStatisScreen extends BasicScreen {
                             }
                             uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton));
                             // scoreTable.row().expand();
-                            scoreTable.add(uploadScoreButton).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                            scoreTable.add(uploadScoreButton).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                             scoreTable.row().expand();
                         }
                         scoreTable.add(new Label("", skin)).pad(6f).uniform();
@@ -186,7 +186,7 @@ public class LevelsStatisScreen extends BasicScreen {
                     
                     // global high score button
                     scoreTable.row();
-                    scoreTable.add(globalHighScoreButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).colspan(3);
+                    scoreTable.add(globalHighScoreButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).colspan(3);
                     
                     end = System.currentTimeMillis();
                     Gdx.app.log("timing", " UI table builded " + (end - begin));

@@ -39,10 +39,10 @@ public class PlayerScreen extends BasicScreen {
     private int selectedUserindex = 0;
     private SelectBox<String> userSelectBox;
     
-    private float padding = 80f;
+    private final float padding = 50f;
     
-    final BasicScreen addNewPlayerScreen = new AddNewPlayerScreen(this);
-    final BasicScreen editPlayerNameScreen = new EditPlayerNameScreen(this);
+    private BasicScreen addNewPlayerScreen;
+    private BasicScreen editPlayerNameScreen;
     
     public final static int MAX_NAME_WIDTH = 1650;
     
@@ -81,8 +81,8 @@ public class PlayerScreen extends BasicScreen {
         contentTable = new Table();
         
         contentTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
-        
-        contentTable.add(new Label(I18n.t("playerNameLableText") + ":", skin));
+
+        contentTable.add(new Label(I18n.t("playerNameLableText") + ":", skin)).pad(padding);
         
         // add all users to userList and set the current user to display value
         userSelectBox = new SelectBox<String>(skin);
@@ -98,7 +98,7 @@ public class PlayerScreen extends BasicScreen {
                 }
             }
         });
-        contentTable.add(userSelectBox);
+        contentTable.add(userSelectBox).width(MAX_NAME_WIDTH);
         
         // add button to delete the current player
         deletePlayerButton = new ImageButton(skin, "trash");
@@ -130,20 +130,20 @@ public class PlayerScreen extends BasicScreen {
         addPlayerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                addNewPlayerScreen.set();
+                switchToAddNewPlayerScreen();
             }
         });
-        contentTable.add(addPlayerButton);
+        contentTable.add(addPlayerButton).pad(padding);
         
         // add button to edit the current player name
         editPlayerNameButton = new TextButton(I18n.t("button.editPlayer"), skin);
         editPlayerNameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                editPlayerNameScreen.set();
+                switchToEditPlayerNameScreen();
             }
         });
-        contentTable.add(editPlayerNameButton);
+        contentTable.add(editPlayerNameButton).pad(padding);
         contentTable.row();
         
         // show fly id, if no fly id, show a info button
@@ -175,8 +175,23 @@ public class PlayerScreen extends BasicScreen {
         // show passed group and level
         addLastLevel(playerProfile, skin);
         
-        outerTable.add(contentTable).pad(UI.Window.BORDER_SPACE).expand();
+        outerTable.add(contentTable).pad(UI.Window.BORDER_SPACE);
         stage.addActor(outerTable);
+    }
+    
+    
+    protected void switchToAddNewPlayerScreen() {
+        if(addNewPlayerScreen == null) {
+            addNewPlayerScreen = new AddNewPlayerScreen(this);
+        }
+        addNewPlayerScreen.set();
+    }
+    
+    protected void switchToEditPlayerNameScreen() {
+        if(editPlayerNameScreen == null) {
+            editPlayerNameScreen = new EditPlayerNameScreen(this);
+        }
+        editPlayerNameScreen.set();
     }
     
     /**
@@ -186,14 +201,14 @@ public class PlayerScreen extends BasicScreen {
      * @param skin
      */
     private void addLastLevel(PlayerProfile playerProfile, Skin skin) {
-        contentTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        contentTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         
         int group = playerProfile.getPassedLevelgroupID();
         int level = playerProfile.getPassedLevelID();
         if (level > LevelGroupManager.getInstance().getLastGroup().getLastLevelProfile().id) {
-            contentTable.add(new Label(I18n.t("ALLGroupPassed"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            contentTable.add(new Label(I18n.t("ALLGroupPassed"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         } else {
-            contentTable.add(new Label("" + group + " - " + level, skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            contentTable.add(new Label("" + group + " - " + level, skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         }
         contentTable.row();
     }

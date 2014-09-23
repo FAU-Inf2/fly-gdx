@@ -83,7 +83,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 PlayerProfile profile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
                 profile.setToNextLevel();
                 profile.saveCurrentLevelProfile();
-                MainMenuScreen.getInstance().set();
+                ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             }
         });
         
@@ -99,7 +99,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             playerDead(skin);
         }
         
-        messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         outerTable.add(messageTable).center();
         stage.addActor(outerTable);
         Fly game = (Fly) Gdx.app.getApplicationListener();
@@ -113,7 +113,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             public void clicked(InputEvent event, float x, float y) {
                 Fly game = (Fly) Gdx.app.getApplicationListener();
                 game.getGameController().endGame();
-                MainMenuScreen.getInstance().set();
+                ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             }
         });
         
@@ -165,7 +165,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             }
         });
         
-        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         messageTable.add();
     }
     
@@ -184,7 +184,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 showInfoLabel(skin, "ALLGroupPassed");
                 showScore(skin);
                 // add some space to avoid crappy layout
-                messageTable.add().pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                messageTable.add().pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                 messageTable.add();
             } else {
                 if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id) {
@@ -213,7 +213,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     }
                 });
                 
-                messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+                messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                 messageTable.add();
             }
             
@@ -236,7 +236,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     Loader.getInstance().loadLevel(currentPlayer.getCurrentLevelProfile());
                 }
             });
-            messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
             messageTable.add();
         }
     }

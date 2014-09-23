@@ -3,14 +3,17 @@ package de.fau.cs.mad.fly.ui;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
@@ -19,7 +22,7 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 
-public class InputScreen extends BasicScreen {
+public abstract class InputScreen extends BasicScreen {
     
     protected static final float PADDING = 40;
     
@@ -32,6 +35,7 @@ public class InputScreen extends BasicScreen {
     
     public InputScreen(BasicScreen screenToGoBack) {
         this.screenToGoBack = screenToGoBack;
+        inputProcessor = new InputMultiplexer(new GenericBackProcessor(screenToGoBack), stage);
     }
     
     public void generateContent() {
@@ -44,7 +48,7 @@ public class InputScreen extends BasicScreen {
         Table contentTable = new Table();
         contentTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
         
-        label = new Label("", skin);
+        label = new Label(I18n.t("msgInputNewPlayerName"), skin);
         contentTable.add(label);
         
         textField = new TextField("", skin);
@@ -66,10 +70,44 @@ public class InputScreen extends BasicScreen {
         });
         contentTable.add(cancelButton).pad(PADDING);
         
-        textField.getOnscreenKeyboard().show(true);
-        stage.setKeyboardFocus(textField);
         outerTable.add(contentTable).pad(PADDING).expand().top();
         stage.addActor(outerTable);
+        
+        textField.setTextFieldListener(new TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char key) {
+                if (!"".equals(textField.getText())) {
+                    if (doesNameExist()) {
+                        okButton.setDisabled(true);
+                    } else {
+                        okButton.setDisabled(false);
+                        if (key == '\r' || key == '\n') {
+                            validInputAndGoBack();
+                        }
+                    }
+                } else {
+                    okButton.setDisabled(true);
+                }
+            }
+        });
+        
+        okButton.addListener(new ClickListener() {
+            Dialog dialog;
+            
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (okButton.isDisabled()) {
+                    if ("".equals(textField.getText())) {
+                        dialog = new DialogWithOkButton("NullUserName");
+                    } else {
+                        dialog = new DialogWithOkButton("UserExists");
+                    }
+                    dialog.show(stage);
+                } else {
+                    validInputAndGoBack();
+                }
+            }
+        });
     }
     
     protected boolean doesNameExist() {
@@ -90,7 +128,22 @@ public class InputScreen extends BasicScreen {
     
     protected void goBackToPreviousScreen() {
         textField.getOnscreenKeyboard().show(false);
+        stage.setKeyboardFocus(null);
+        textField.setText("");
         ((Fly) Gdx.app.getApplicationListener()).setScreen(screenToGoBack);
     }
+    
+    @Override
+    public void show() {
+        super.show();
+        textField.getOnscreenKeyboard().show(true);
+        stage.setKeyboardFocus(textField);
+    }
+    
+    /**
+     * This method is called, when a valid user name is in the textfield and
+     * either enter or ok is pressed.
+     */
+    abstract protected void validInputAndGoBack();
     
 }

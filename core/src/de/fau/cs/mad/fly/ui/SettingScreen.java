@@ -45,7 +45,7 @@ public class SettingScreen extends BasicScreen implements WithHelpOverlay {
         
         // setup help overlay
         final Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
-        helpButton.setBounds(UI.Window.BORDER_SPACE, viewport.getWorldHeight() - UI.Window.BORDER_SPACE - UI.Buttons.MAIN_BUTTON_HEIGHT, UI.Buttons.MAIN_BUTTON_HEIGHT, UI.Buttons.MAIN_BUTTON_HEIGHT);
+        helpButton.setBounds(UI.Window.BORDER_SPACE, viewport.getWorldHeight() - UI.Window.BORDER_SPACE - UI.Buttons.TEXT_BUTTON_HEIGHT, UI.Buttons.TEXT_BUTTON_HEIGHT, UI.Buttons.TEXT_BUTTON_HEIGHT);
         
         this.helpOverlay = new HelpOverlay(this);
         helpButton.addListener(helpOverlay);

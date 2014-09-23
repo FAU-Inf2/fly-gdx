@@ -54,9 +54,13 @@ public final class UI {
         private Buttons() {
         }
         
-        public static final int MAIN_BUTTON_WIDTH = 1550;
+        public static final int TEXT_BUTTON_WIDTH = 1550;
         
-        public static final int MAIN_BUTTON_HEIGHT = 320;
+        public static final int TEXT_BUTTON_HEIGHT = 320;
+        
+        public static final int IMAGE_BUTTON_WIDTH = 320;
+        
+        public static final int IMAGE_BUTTON_HEIGHT = 320;
         
         /** This is the default font size for all Buttons */
         public static final int DEFAULT_FONT_SIZE = 150;
@@ -66,6 +70,8 @@ public final class UI {
         
         /** Max. number of buttons for level to show in a row */
         public static final int BUTTONS_IN_A_ROW = 2;
+        
+        public static final float SPACE = 50;
         
         public static final float SPACE_WIDTH = 100;
         public static final float SPACE_HEIGHT = 100;
@@ -82,7 +88,6 @@ public final class UI {
         private Labels() {
         }
         
-        public static final int MAIN_LABEL_VERSION_WIDTH = 400;
         public static final float SPACE_WIDTH = 100;
         public static final float SPACE_HEIGHT = 100;
     }

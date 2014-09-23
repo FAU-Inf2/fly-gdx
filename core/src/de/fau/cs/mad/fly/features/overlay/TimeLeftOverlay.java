@@ -45,7 +45,7 @@ public class TimeLeftOverlay implements IntegerTimeListener {
         innerTable.add(timeCounter);
         
         outerTable.setFillParent(true);
-        outerTable.add(innerTable).pad(UI.Window.BORDER_SPACE).height(UI.Buttons.MAIN_BUTTON_HEIGHT).expand().top().left();
+        outerTable.add(innerTable).pad(UI.Window.BORDER_SPACE).height(UI.Buttons.TEXT_BUTTON_HEIGHT).expand().top().left();
         stage.addActor(outerTable);
     }
     

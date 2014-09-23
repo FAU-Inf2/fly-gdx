@@ -50,7 +50,7 @@ public class LoadingScreen<T> extends BasicScreen {
                     app.getGameController().getFlightController().init();
             }
         });
-        table.add(button).bottom().width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).expand();
+        table.add(button).bottom().width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).expand();
         button.setVisible(false);
         table.row();
         
