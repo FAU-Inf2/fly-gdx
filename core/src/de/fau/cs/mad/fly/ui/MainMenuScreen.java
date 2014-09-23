@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.FloatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
@@ -29,24 +28,23 @@ import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
 /**
  * Displays the main menu with Start, Options, Help and Exit buttons.
  * 
- * @author Tobias Zangl
+ * @author Tobias Zangl, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
+public class MainMenuScreen extends BasicScreenWithBackButton implements WithHelpOverlay {
     
     private HelpOverlay helpOverlay;
-    private boolean showHelpScreen = false;
-    private static MainMenuScreen instance;
+    private boolean showHelpScreen;
     
-    /**
-     * This class is a singleton. When called the instance is created (lazy
-     * loading)
-     * 
-     */
-    public static MainMenuScreen getInstance() {
-        if (instance == null) {
-            instance = new MainMenuScreen();
-        }
-        return instance;
+    private Button continueButton;
+    private Button chooseLevelButton;
+    private Button choosePlaneButton;
+    private Button highscoreButton;
+    private ImageButton settingsButton;
+    private Button helpButton;
+    private Button playerButton;
+    
+    public MainMenuScreen() {
+        super(null);
     }
     
     /**
@@ -57,53 +55,9 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     protected void generateContent() {
         // Create an instance of the PlayerManager, which needs an access to the
         // database
-        
-        Table table = new Table();
-        table.defaults().width(viewport.getWorldWidth() / 3);
-        table.setFillParent(true);
-        table.pad(UI.Window.BORDER_SPACE);
-        stage.addActor(table);
-        
-        FloatAction test = new FloatAction();
-        Skin skin = SkinManager.getInstance().getSkin();
-        Button continueButton = new TextButton(I18n.t("play"), skin);
-        continueButton.addAction(test);
-        Button chooseLevelButton = new TextButton(I18n.t("choose.level"), skin);
-        Button choosePlaneButton = new TextButton(I18n.t("choose.plane"), skin);
-        Button statsButton = new TextButton(I18n.t("highscores"), skin);
-        ImageButton settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
-        TextureRegion gear = skin.getRegion("gear");
-        gear.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        TextureRegionDrawable drawableGear = new TextureRegionDrawable(gear);
-        settingsButton.getImage().setDrawable(drawableGear);
-        Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
-        Button playerButton = new ImageButton(skin, "player");
-        
-        Label versionLabel = new Label(createVersion(), skin, "small");
-        
-        table.add(helpButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).left();
-        table.add();
-        table.add(settingsButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).right();
-        table.row().expand();
-        table.add();
-        table.add(continueButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-        table.add();
-        table.row().expand();
-        table.add();
-        table.add(chooseLevelButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-        table.add();
-        table.row().expand();
-        table.add();
-        table.add(choosePlaneButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-        table.add();
-        table.row().expand();
-        table.add();
-        table.add(statsButton).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
-        table.add(playerButton).width(UI.Buttons.MAIN_BUTTON_HEIGHT).height(UI.Buttons.MAIN_BUTTON_HEIGHT).right();
-        table.row();
-        table.add();
-        table.add();
-        table.add(versionLabel).width(UI.Labels.MAIN_LABEL_VERSION_WIDTH);
+        super.generateContent();
+        createAndPositionContent();
+        createHelp();
         
         chooseLevelButton.addListener(new ClickListener() {
             @Override
@@ -143,26 +97,81 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             }
         });
         
-        this.helpOverlay = new HelpOverlay(this);
-        helpOverlay.addHelpFrame(new HelpFrameText(skin, "welcome"));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlay", continueButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectLevel", chooseLevelButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectShip", choosePlaneButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpHighscore", statsButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSettings", settingsButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlayer", playerButton));
-        
-        helpOverlay.addHelpFrame(new HelpFrameText(skin, "helpEnd"));
-        
-        helpButton.addListener(helpOverlay);
-        showHelpScreen = false;
-        
-        statsButton.addListener(new ClickListener() {
+        highscoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ((Fly) Gdx.app.getApplicationListener()).setStatisticsScreen();
             }
         });
+    }
+    
+    /**
+     * Creates all the buttons and the version label and positions them.
+     */
+    private void createAndPositionContent() {
+        Skin skin = SkinManager.getInstance().getSkin();
+        Table outerTable = new Table();
+        outerTable.setFillParent(true);
+        stage.addActor(outerTable);
+        
+        Table innerTable = new Table();
+        
+        continueButton = new TextButton(I18n.t("play"), skin);
+        chooseLevelButton = new TextButton(I18n.t("choose.level"), skin);
+        choosePlaneButton = new TextButton(I18n.t("choose.plane"), skin);
+        highscoreButton = new TextButton(I18n.t("highscores"), skin);
+        settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+        TextureRegion gear = skin.getRegion("gear");
+        gear.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        settingsButton.getImage().setDrawable(new TextureRegionDrawable(gear));
+        
+        helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
+        playerButton = new ImageButton(skin, "player");
+        
+        Label versionLabel = new Label(createVersion(), skin, "small");
+        
+        outerTable.add(helpButton).width(UI.Buttons.IMAGE_BUTTON_WIDTH).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).top().left();
+        
+        outerTable.add(settingsButton).width(UI.Buttons.IMAGE_BUTTON_WIDTH).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).top().right();
+        outerTable.row();
+        
+        innerTable.add(continueButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE);
+        innerTable.row();
+        innerTable.add(chooseLevelButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE);
+        innerTable.row();
+        innerTable.add(choosePlaneButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE);
+        innerTable.row();
+        innerTable.add(highscoreButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE);
+        
+        outerTable.add(innerTable).colspan(2).expand();
+        outerTable.row();
+        outerTable.add();
+        outerTable.add(playerButton).width(UI.Buttons.IMAGE_BUTTON_WIDTH).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).bottom().right();
+        
+        Table versionTable = new Table();
+        versionTable.setFillParent(true);
+        stage.addActor(versionTable);
+        versionTable.add(versionLabel).pad(UI.Window.BORDER_SPACE).bottom().expand();
+    }
+    
+    /**
+     * Creates the help content for each Actor that is useful for the user.
+     */
+    private void createHelp() {
+        Skin skin = SkinManager.getInstance().getSkin();
+        
+        helpOverlay = new HelpOverlay(this);
+        helpOverlay.addHelpFrame(new HelpFrameText(skin, "welcome"));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlay", continueButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectLevel", chooseLevelButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectShip", choosePlaneButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpHighscore", highscoreButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSettings", settingsButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlayer", playerButton));
+        helpOverlay.addHelpFrame(new HelpFrameText(skin, "helpEnd"));
+        
+        helpButton.addListener(helpOverlay);
+        showHelpScreen = false;
     }
     
     /**
@@ -173,8 +182,6 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
      * @return version text
      */
     private String createVersion() {
-        // return I18n.t("version") + ": " + Fly.VERSION_MAJOR + "." +
-        // Fly.VERSION_MINOR + "." + Fly.VERSION_PATCH;
         return I18n.t("version") + ": " + Fly.VERSION;
     }
     
@@ -189,7 +196,6 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     @Override
     public void dispose() {
         super.dispose();
-        instance = null;
     }
     
     @Override

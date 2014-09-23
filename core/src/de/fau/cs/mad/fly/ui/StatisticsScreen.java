@@ -67,7 +67,7 @@ public class StatisticsScreen extends BasicScreen {
                         ((Fly) Gdx.app.getApplicationListener()).setLevelsStatisScreen(group);
                     }
                 });
-                levelGroupTable.add(button).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
+                levelGroupTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
             }
             levelGroupTable.row();
         }

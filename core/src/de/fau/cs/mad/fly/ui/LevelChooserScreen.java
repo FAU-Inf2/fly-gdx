@@ -86,7 +86,7 @@ public class LevelChooserScreen extends BasicScreen {
                         Loader.getInstance().loadLevel(level);
                     }
                 });
-                scrollableTable.add(button).width(UI.Buttons.MAIN_BUTTON_WIDTH).height(UI.Buttons.MAIN_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
+                scrollableTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
             }
             scrollableTable.row().expand();
         }
@@ -96,7 +96,7 @@ public class LevelChooserScreen extends BasicScreen {
         if (rowToScrollTo < 0) {
             rowToScrollTo = maxRows;
         }
-        levelScrollPane.setScrollY(rowToScrollTo * (UI.Buttons.MAIN_BUTTON_HEIGHT + UI.Buttons.SPACE_HEIGHT) - Gdx.graphics.getHeight());
+        levelScrollPane.setScrollY(rowToScrollTo * (UI.Buttons.TEXT_BUTTON_HEIGHT + UI.Buttons.SPACE_HEIGHT) - Gdx.graphics.getHeight());
     }
     
     /**

@@ -186,14 +186,14 @@ public class PlayerScreen extends BasicScreen {
      * @param skin
      */
     private void addLastLevel(PlayerProfile playerProfile, Skin skin) {
-        contentTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+        contentTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         
         int group = playerProfile.getPassedLevelgroupID();
         int level = playerProfile.getPassedLevelID();
         if (level > LevelGroupManager.getInstance().getLastGroup().getLastLevelProfile().id) {
-            contentTable.add(new Label(I18n.t("ALLGroupPassed"), skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            contentTable.add(new Label(I18n.t("ALLGroupPassed"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         } else {
-            contentTable.add(new Label("" + group + " - " + level, skin)).height(UI.Buttons.MAIN_BUTTON_HEIGHT);
+            contentTable.add(new Label("" + group + " - " + level, skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         }
         contentTable.row();
     }

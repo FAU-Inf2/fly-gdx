@@ -34,7 +34,7 @@ public class BackProcessor extends InputAdapter {
                 if (game.getScreen() instanceof LevelLoadingScreen) {
                     game.getGameController().disposeGame();
                 }
-                MainMenuScreen.getInstance().set();
+                ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             } else {
                 Gdx.app.exit();
             }
