@@ -82,7 +82,7 @@ public class PlayerScreen extends BasicScreen {
         
         contentTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
         
-        contentTable.add(new Label(I18n.t("usernameLableText") + ":", skin));
+        contentTable.add(new Label(I18n.t("playerNameLableText") + ":", skin));
         
         // add all users to userList and set the current user to display value
         userSelectBox = new SelectBox<String>(skin);
@@ -126,7 +126,7 @@ public class PlayerScreen extends BasicScreen {
         contentTable.row().expand();
         
         // add button to add a new player
-        addPlayerButton = new TextButton(I18n.t("addUserButtonText"), skin);
+        addPlayerButton = new TextButton(I18n.t("addPlayerButtonText"), skin);
         addPlayerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -136,7 +136,7 @@ public class PlayerScreen extends BasicScreen {
         contentTable.add(addPlayerButton);
         
         // add button to edit the current player name
-        editPlayerNameButton = new TextButton(I18n.t("button.editUser"), skin);
+        editPlayerNameButton = new TextButton(I18n.t("button.editPlayer"), skin);
         editPlayerNameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

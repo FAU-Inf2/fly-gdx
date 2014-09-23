@@ -53,9 +53,9 @@ public class EditPlayerNameScreen extends InputScreen {
             public void clicked(InputEvent event, float x, float y) {
                 if (okButton.isDisabled()) {
                     if ("".equals(textField.getText())) {
-                        dialog = new DialogWithOkButton("NullUserName");
+                        dialog = new DialogWithOkButton("NullPlayerName");
                     } else {
-                        dialog = new DialogWithOkButton("UserExists");
+                        dialog = new DialogWithOkButton("playerExists");
                     }
                     dialog.show(stage);
                 } else {
