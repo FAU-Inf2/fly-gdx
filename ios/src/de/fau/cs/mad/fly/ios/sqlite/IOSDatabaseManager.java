@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.ios.sqlite;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +14,8 @@ import com.badlogic.gdx.sql.DatabaseCursor;
 import com.badlogic.gdx.sql.DatabaseFactory;
 import com.badlogic.gdx.sql.DatabaseManager;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+
+import org.robovm.apple.foundation.Foundation;
 
 import SQLite.JDBC2z.JDBCConnection;
 
@@ -62,7 +66,11 @@ public class IOSDatabaseManager implements DatabaseManager {
                 stmt = connection.createStatement();
                 helper.onCreate(stmt);
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                StringWriter exWriter = new StringWriter();
+                PrintWriter pw = new PrintWriter(exWriter);
+                e.printStackTrace(pw);
+                Gdx.app.log("IOSDatabaseManager.openOrCreateDatabase", "threw an SQLException: \n" + exWriter.toString());
+                throw new GdxRuntimeException(e);
             }
 
         }

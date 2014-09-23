@@ -37,7 +37,7 @@ public class PlayerProfileManager {
         PlayerProfile player = getPlayerfromList(userID);
         if (player == null) {
             player = new PlayerProfile();
-            player.setName(I18n.t("default.playername"));
+            player.setName(I18n.t("default.playerName"));
             savePlayer(player);
         }
         
