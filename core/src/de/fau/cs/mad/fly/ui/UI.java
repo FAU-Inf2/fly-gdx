@@ -86,4 +86,13 @@ public final class UI {
         public static final float SPACE_WIDTH = 100;
         public static final float SPACE_HEIGHT = 100;
     }
+    
+    
+    public static final class Dialogs {
+        
+        private Dialogs() {
+        }
+        
+        public static final int PADDING = 50;
+    }
 }

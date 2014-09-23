@@ -49,7 +49,7 @@ public abstract class BasicScreen implements Screen {
             initialized = true;
         }
         stage.setViewport(viewport);
-        inputProcessor = new InputMultiplexer(new BackProcessor(), stage);
+        inputProcessor = new InputMultiplexer(stage, new BackProcessor());
         generateContent();
     }
     

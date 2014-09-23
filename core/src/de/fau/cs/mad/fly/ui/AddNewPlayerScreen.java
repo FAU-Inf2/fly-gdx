@@ -10,19 +10,13 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 
-/**
- * Screen that is displayed, when pressing the button to edit the player name.
- * 
- * @author Lukas Hahmann <lukas.hahmann@gmail.com>
- * 
- */
-public class EditPlayerNameScreen extends InputScreen {
-    
-    public EditPlayerNameScreen(BasicScreen screenToGoBack) {
+public class AddNewPlayerScreen extends InputScreen {
+
+    public AddNewPlayerScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
     }
-
-    public void generateContent() {
+    
+   public void generateContent() {
         
         super.generateContent();
         
@@ -37,7 +31,7 @@ public class EditPlayerNameScreen extends InputScreen {
                     } else {
                         okButton.setDisabled(false);
                         if (key == '\r' || key == '\n') {
-                            updateUserNameAndCloseDialog();
+                            addUserNameAndCloseDialog();
                         }
                     }
                 } else {
@@ -59,7 +53,7 @@ public class EditPlayerNameScreen extends InputScreen {
                     }
                     dialog.show(stage);
                 } else {
-                    updateUserNameAndCloseDialog();
+                    addUserNameAndCloseDialog();
                 }
             }
         });
@@ -69,12 +63,13 @@ public class EditPlayerNameScreen extends InputScreen {
     /**
      * Save the new user name and go back to the previous screen.
      */
-    protected void updateUserNameAndCloseDialog() {
-        String newUserName = textField.getText();
-        
-        PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-        playerProfile.setName(newUserName);
-        PlayerProfileManager.getInstance().updateIntColumn(playerProfile, "name", newUserName);
+    protected void addUserNameAndCloseDialog() {
+        PlayerProfile playerProfile = new PlayerProfile();
+        playerProfile.setName(textField.getText());
+        PlayerProfileManager profileManager = PlayerProfileManager.getInstance();
+        profileManager.setCurrentPlayer(playerProfile);
+        profileManager.savePlayer(playerProfile);
+        textField.setText("");
         goBackToPreviousScreen();
     }
     

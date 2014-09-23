@@ -211,3 +211,10 @@ guy
   orig: 225, 254
   offset: 0, 0
   index: -1
+trash
+  rotate: false
+  xy: 752, 358
+  size: 236, 255
+  orig: 236, 255
+  offset: 0, 0
+  index: -1

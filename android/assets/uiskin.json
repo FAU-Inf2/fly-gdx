@@ -23,7 +23,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	settings: { up: button-up, down: button-down, checked: button-up, imageUp: gear, imageDown: gear, disabled: button-disabled },
 	help: { up: button-up, down: button-down, checked: button-up, imageUp: questionmark, imageDown: questionmark, disabled: button-disabled },
-	player: { up: button-up, down: button-down, checked: button-up, imageUp: guy, imageDown: guy, disabled: button-disabled }
+	player: { up: button-up, down: button-down, checked: button-up, imageUp: guy, imageDown: guy, disabled: button-disabled },
+	trash: { up: button-up, down: button-down, checked: button-up, imageUp: trash, imageDown: trash, disabled: button-disabled }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: transparent-rect, hScroll: default-scroll, vScrollKnob: default-round-large },
