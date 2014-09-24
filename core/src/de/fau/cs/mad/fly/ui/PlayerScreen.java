@@ -108,9 +108,9 @@ public class PlayerScreen extends BasicScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (playerProfileManager.getAllPlayerProfiles().size() <= 1) {
-                    dialog = new DialogWithOkButton("msgLastUser");
+                    dialog = new DialogWithOkButton("msgLastPlayer");
                 } else {
-                    dialog = new DialogWithOkAndCancelButton("msgDeleteUser") {
+                    dialog = new DialogWithOkAndCancelButton("msgDeletePlayer") {
                         protected void result(Object object) {
                             if (DialogWithOkButton.OK.equals(object.toString())) {
                                 playerProfileManager.deletePlayerProfile();
