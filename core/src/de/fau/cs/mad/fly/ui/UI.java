@@ -103,6 +103,6 @@ public final class UI {
         private Dialogs() {
         }
         
-        public static final int PADDING = 50;
+        public static final int PADDING = 100;
     }
 }

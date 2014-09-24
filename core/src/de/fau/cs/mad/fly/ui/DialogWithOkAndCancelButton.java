@@ -3,16 +3,20 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
-import de.fau.cs.mad.fly.I18n;
-
-public class DialogWithOkAndCancelButton extends DialogWithOkButton {
+public class DialogWithOkAndCancelButton extends DialogWithOneButton {
     
-    public static final String CANCEL = "cancel";
+    /**
+     * Object that is passed to {@link #result(Object)} when second button is
+     * pressed
+     */
+    public static final String SECOND_BUTTON = "cancel";
     
-    public DialogWithOkAndCancelButton(String i18nKey) {
-        super(i18nKey);
-        TextButton cancelButton = new TextButton(I18n.t("cancel"), SkinManager.getInstance().getSkin());
-        super.button(cancelButton, CANCEL).key(Keys.ESCAPE, CANCEL).pad(UI.Dialogs.PADDING);
+    public DialogWithOkAndCancelButton(String text, String button1Text, String button2Text) {
+        super(text, button1Text);
+        TextButton button2 = new TextButton(button2Text, SkinManager.getInstance().getSkin());
+        super.getButtonTable().add(button2).pad(UI.Dialogs.PADDING);
+        super.setObject(button2, SECOND_BUTTON);
+        super.key(Keys.ESCAPE, SECOND_BUTTON);
     }
     
 }

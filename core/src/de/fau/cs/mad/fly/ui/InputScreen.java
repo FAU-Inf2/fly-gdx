@@ -98,9 +98,9 @@ public abstract class InputScreen extends BasicScreen {
             public void clicked(InputEvent event, float x, float y) {
                 if (okButton.isDisabled()) {
                     if ("".equals(textField.getText())) {
-                        dialog = new DialogWithOkButton("NullUserName");
+                        dialog = new DialogWithOneButton(I18n.t("NullUserName"), I18n.t("ok"));
                     } else {
-                        dialog = new DialogWithOkButton("UserExists");
+                        dialog = new DialogWithOneButton(I18n.t("UserExists"), I18n.t("ok"));
                     }
                     dialog.show(stage);
                 } else {

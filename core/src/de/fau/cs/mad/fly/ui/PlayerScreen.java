@@ -108,11 +108,15 @@ public class PlayerScreen extends BasicScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (playerProfileManager.getAllPlayerProfiles().size() <= 1) {
-                    dialog = new DialogWithOkButton("msgLastPlayer");
+                    dialog = new DialogWithOneButton(I18n.t("msgLastPlayer"), I18n.t("ok"));
                 } else {
-                    dialog = new DialogWithOkAndCancelButton("msgDeletePlayer") {
+                    StringBuilder text = new StringBuilder();
+                    text.append(I18n.t("msgDeletePlayer1")).append(" ");
+                    text.append(playerProfileManager.getCurrentPlayerProfile().getName());
+                    text.append(I18n.t("msgDeletePlayer2")).append("?");
+                    dialog = new DialogWithOkAndCancelButton(text.toString(), I18n.t("yes"), I18n.t("no")) {
                         protected void result(Object object) {
-                            if (DialogWithOkButton.OK.equals(object.toString())) {
+                            if (DialogWithOneButton.FIRST_BUTTON.equals(object.toString())) {
                                 playerProfileManager.deletePlayerProfile();
                                 updateUserTable();
                             }
@@ -153,7 +157,7 @@ public class PlayerScreen extends BasicScreen {
         } else {
             ImageButton infoButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
             infoButton.addListener(new ClickListener() {
-                Dialog dialog = new DialogWithOkButton("msgGetFlyId");
+                Dialog dialog = new DialogWithOneButton(I18n.t("msgGetFlyId"), I18n.t("ok"));
                 
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
