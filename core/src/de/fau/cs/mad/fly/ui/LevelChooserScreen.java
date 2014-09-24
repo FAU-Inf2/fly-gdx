@@ -18,48 +18,42 @@ import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 
 /**
- * Offers a selection of levels to start.
+ * Offers the levels of one {@link LevelGroup }to start.
  * 
- * @author Lukas Hahmann
+ * @author Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class LevelChooserScreen extends BasicScreen {
-    private LevelGroup levelGroup;
-    private ScrollPane levelScrollPane;
-    private static LevelChooserScreen instance;
+public class LevelChooserScreen extends BasicScreenWithBackButton {
     
-    /**
-     * This class is a singleton. When called the instance is created (lazy
-     * loading)
-     * 
-     */
-    public static LevelChooserScreen getInstance() {
-        if (instance == null) {
-            instance = new LevelChooserScreen();
-        }
-        return instance;
+    private LevelGroup levelGroup;
+    
+    public LevelChooserScreen(BasicScreen screenToReturn) {
+        super(screenToReturn);
     }
     
     /**
-     * Shows a list of all available levels.
+     * Shows a list of all available levels. This list is always created when
+     * the {@link LevelChooserScreen} is shown because either the level group or
+     * the progress may have changed since the last time it has been generated.
      */
     public void generateDynamicContent() {
-        // calculate width and height of buttons and the space in between
-        List<LevelProfile> allLevels = levelGroup.getLevels();
-        
-        stage.clear();
-        
-        // table that contains all buttons
         Skin skin = SkinManager.getInstance().getSkin();
-        Table scrollableTable = new Table(skin);
-        levelScrollPane = new ScrollPane(scrollableTable, skin);
+        
+        // clear the contentTable so that elements of a previous view are deleted
+        contentTable.clear();
+        
+        Table buttonTable = new Table();
+        ScrollPane levelScrollPane = new ScrollPane(buttonTable, skin);
         levelScrollPane.setScrollingDisabled(true, false);
         levelScrollPane.setFadeScrollBars(false);
-        levelScrollPane.setFillParent(true);
+        contentTable.add(levelScrollPane);
         
         int rowToScrollTo = -1;
-        PlayerProfile currentProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+        final PlayerProfile currentProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         
-        // create a button for each level
+        List<LevelProfile> allLevels = levelGroup.getLevels();
+        
+        // create a button for each level. The amount of buttons in a row can be
+        // adjusted
         int maxRows = (int) Math.ceil((double) allLevels.size() / (double) UI.Buttons.BUTTONS_IN_A_ROW);
         
         for (int row = 0; row < maxRows; row++) {
@@ -78,7 +72,6 @@ public class LevelChooserScreen extends BasicScreen {
                 button.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        PlayerProfile currentProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
                         currentProfile.setCurrentLevelGroup(levelGroup);
                         currentProfile.saveCurrentLevelGroup();
                         currentProfile.setCurrentLevelProfile(level);
@@ -86,13 +79,15 @@ public class LevelChooserScreen extends BasicScreen {
                         Loader.getInstance().loadLevel(level);
                     }
                 });
-                scrollableTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
+                buttonTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
             }
-            scrollableTable.row().expand();
+            buttonTable.row().expand();
         }
-        stage.addActor(levelScrollPane);
-        super.stage.act();
-        super.stage.draw();
+        
+        // let the stage act once, otherwise scrolling programatically is not
+        // possible
+        stage.act();
+        stage.draw();
         if (rowToScrollTo < 0) {
             rowToScrollTo = maxRows;
         }
@@ -116,8 +111,4 @@ public class LevelChooserScreen extends BasicScreen {
         generateDynamicContent();
     }
     
-    @Override
-    protected void generateContent() {
-        // is done in .generateDynamicContent
-    }
 }

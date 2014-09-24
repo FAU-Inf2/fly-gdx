@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -20,6 +19,8 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
  */
 public class LevelGroupScreen extends BasicScreenWithBackButton {
     
+    private LevelChooserScreen levelChooserScreen;
+    
     public LevelGroupScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
     }
@@ -27,15 +28,11 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
     /**
      * Shows a list of all available level groups.
      */
-    public void generateDynamicContent() {
+    public void generateDynamicContent() {        
         
-        // calculate width and height of buttons and the space in between
-        List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
-        
-        // table that contains all buttons
+        contentTable.clear();
         Skin skin = SkinManager.getInstance().getSkin();
-        Table levelGroupTable = new Table(skin);
-        levelGroupTable.setFillParent(true);
+        List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
         
         // create a button for each level group
         int maxRows = (int) Math.ceil((double) levelGroups.size() / (double) UI.Buttons.BUTTONS_IN_A_ROW);
@@ -53,16 +50,21 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
                 button.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        LevelChooserScreen levelChooserScreen = LevelChooserScreen.getInstance();
-                        levelChooserScreen.setGroup(group);
-                        levelChooserScreen.set();
+                        setLevelChooserScreen(group);
                     }
                 });
-                levelGroupTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
+                contentTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
             }
-            levelGroupTable.row().expand();
+            contentTable.row();
         }
-        stage.addActor(levelGroupTable);
+    }
+    
+    public void setLevelChooserScreen(LevelGroup levelGroup) {
+        if (levelChooserScreen == null) {
+            levelChooserScreen = new LevelChooserScreen(this);
+        }
+        levelChooserScreen.setGroup(levelGroup);
+        levelChooserScreen.set();
     }
     
     @Override
@@ -74,5 +76,6 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
     @Override
     public void dispose() {
         super.dispose();
+        levelChooserScreen.dispose();
     }
 }

@@ -31,6 +31,12 @@ public final class UI {
          */
         public static final int BORDER_SPACE = 100;
         
+        /**
+         * This space is left from the bottom border of the screen to the lowest
+         * element in case of a screen with a back button.
+         */
+        public static final int BOTTOM_SPACE_FOR_BACK_KEY = 500;
+        
         /** Width in Pixel for that all bitmaps are optimized */
         public static final float REFERENCE_WIDTH = 4000;
         
@@ -91,7 +97,6 @@ public final class UI {
         public static final float SPACE_WIDTH = 100;
         public static final float SPACE_HEIGHT = 100;
     }
-    
     
     public static final class Dialogs {
         

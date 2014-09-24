@@ -36,7 +36,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     private Button chooseLevelButton;
     private Button choosePlaneButton;
     private Button highscoreButton;
-    private ImageButton settingsButton;
+    private Button settingsButton;
     private Button helpButton;
     private Button playerButton;
     
@@ -194,6 +194,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     @Override
     public void dispose() {
         super.dispose();
+        levelGroupScreen.dispose();
     }
     
     @Override

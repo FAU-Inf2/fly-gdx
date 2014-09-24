@@ -11,6 +11,7 @@ public abstract class BasicScreenWithBackButton extends BasicScreen {
     
     private static ImageButton backButton;
     private GenericBackProcessor genericBackProcessor;
+    protected Table contentTable;
     
     public BasicScreenWithBackButton(BasicScreen screenToReturn) {
         super();
@@ -27,6 +28,9 @@ public abstract class BasicScreenWithBackButton extends BasicScreen {
         Table outerTable = new Table();
         outerTable.setFillParent(true);
         stage.addActor(outerTable);
+        contentTable = new Table();
+        outerTable.add(contentTable).pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BOTTOM_SPACE_FOR_BACK_KEY, UI.Window.BORDER_SPACE).expand();
+        outerTable.row();
         
         Skin skin = SkinManager.getInstance().getSkin();
         backButton = new ImageButton(skin, "backArrow");
