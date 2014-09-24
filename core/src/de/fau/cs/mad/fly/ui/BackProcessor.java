@@ -18,9 +18,7 @@ public class BackProcessor extends InputAdapter {
         if (keycode == Keys.ESCAPE || keycode == Keys.BACK) {
             Fly game = (Fly) Gdx.app.getApplicationListener();
             
-            if (game.getScreen() instanceof LevelChooserScreen) {
-                LevelGroupScreen.getInstance().set();
-            } else if (game.getScreen() instanceof LevelsStatisScreen) {
+            if (game.getScreen() instanceof LevelsStatisScreen) {
                 game.setStatisticsScreen();
             } else if (game.getScreen() instanceof PlaneUpgradeScreen) {
                 PlaneUpgradeScreen screen = (PlaneUpgradeScreen) game.getScreen();

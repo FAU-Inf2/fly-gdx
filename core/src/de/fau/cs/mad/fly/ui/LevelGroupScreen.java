@@ -17,22 +17,12 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 /**
  * Offers a selection of level groups.
  * 
- * @author Lukas Hahmann
+ * @author Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class LevelGroupScreen extends BasicScreen {
+public class LevelGroupScreen extends BasicScreenWithBackButton {
     
-    private static LevelGroupScreen instance;
-    
-    /**
-     * This class is a singleton. When called the instance is created (lazy
-     * loading)
-     * 
-     */
-    public static LevelGroupScreen getInstance() {
-        if(instance == null) {
-            instance = new LevelGroupScreen();
-        }
-        return instance;
+    public LevelGroupScreen(BasicScreen screenToGoBack) {
+        super(screenToGoBack);
     }
     
     /**
@@ -87,6 +77,5 @@ public class LevelGroupScreen extends BasicScreen {
     @Override
     public void dispose() {
         super.dispose();
-        instance = null;
     }
 }

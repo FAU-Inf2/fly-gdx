@@ -124,7 +124,7 @@ progress-bar-background
   index: -1
 progress-bar-foreground
   rotate: false
-  xy: 710, 134
+  xy: 340, 134
   size: 108, 107
   split: 53, 53, 53, 53
   orig: 108, 107
@@ -153,16 +153,9 @@ arrow
   index: -1
 helpArrowDown
   rotate: false
-  xy: 370, 1
-  size: 172, 250
-  orig: 172, 250
-  offset: 0, 0
-  index: -1
-helpBackground
-  rotate: false
-  xy: 57, 0
-  size: 6, 6
-  orig: 6, 6
+  xy: 710, 1
+  size: 250, 172
+  orig: 250, 172
   offset: 0, 0
   index: -1
 questionmark
@@ -198,7 +191,7 @@ grey-select-drop-down
   index: -1
 dialog-background
   rotate: false
-  xy: 711, 0
+  xy: 370, 0
   size: 131, 131
   split: 65, 65, 65, 65
   orig: 131, 131

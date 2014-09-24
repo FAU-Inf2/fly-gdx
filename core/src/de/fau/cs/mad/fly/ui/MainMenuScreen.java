@@ -1,8 +1,6 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -12,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
@@ -30,7 +27,7 @@ import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
  * 
  * @author Tobias Zangl, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class MainMenuScreen extends BasicScreenWithBackButton implements WithHelpOverlay {
+public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     
     private HelpOverlay helpOverlay;
     private boolean showHelpScreen;
@@ -43,8 +40,13 @@ public class MainMenuScreen extends BasicScreenWithBackButton implements WithHel
     private Button helpButton;
     private Button playerButton;
     
-    public MainMenuScreen() {
-        super(null);
+    private LevelGroupScreen levelGroupScreen;
+    
+    private void setLevelGroupScreen() {
+        if (levelGroupScreen == null) {
+            levelGroupScreen = new LevelGroupScreen(this);
+        }
+        levelGroupScreen.set();
     }
     
     /**
@@ -52,17 +54,17 @@ public class MainMenuScreen extends BasicScreenWithBackButton implements WithHel
      * <p>
      * Includes buttons for Start, Options, Help, Exit.
      */
-    protected void generateContent() {
+    protected void generateBackButton() {
         // Create an instance of the PlayerManager, which needs an access to the
         // database
-        super.generateContent();
-        createAndPositionContent();
+        super.generateBackButton();
+        createButtonsAndPositionContent();
         createHelp();
         
         chooseLevelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                LevelGroupScreen.getInstance().set();
+                setLevelGroupScreen();
             }
         });
         
@@ -108,7 +110,7 @@ public class MainMenuScreen extends BasicScreenWithBackButton implements WithHel
     /**
      * Creates all the buttons and the version label and positions them.
      */
-    private void createAndPositionContent() {
+    private void createButtonsAndPositionContent() {
         Skin skin = SkinManager.getInstance().getSkin();
         Table outerTable = new Table();
         outerTable.setFillParent(true);
@@ -120,11 +122,7 @@ public class MainMenuScreen extends BasicScreenWithBackButton implements WithHel
         chooseLevelButton = new TextButton(I18n.t("choose.level"), skin);
         choosePlaneButton = new TextButton(I18n.t("choose.plane"), skin);
         highscoreButton = new TextButton(I18n.t("highscores"), skin);
-        settingsButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
-        TextureRegion gear = skin.getRegion("gear");
-        gear.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        settingsButton.getImage().setDrawable(new TextureRegionDrawable(gear));
-        
+        settingsButton = new ImageButton(skin, UI.Buttons.SETTING_BUTTON_STYLE);
         helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
         playerButton = new ImageButton(skin, "player");
         

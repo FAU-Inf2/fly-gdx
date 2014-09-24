@@ -50,7 +50,7 @@ public abstract class BasicScreen implements Screen {
         }
         stage.setViewport(viewport);
         inputProcessor = new InputMultiplexer(stage, new BackProcessor());
-        generateContent();
+        generateBackButton();
     }
     
     private void initialize() {
@@ -82,7 +82,7 @@ public abstract class BasicScreen implements Screen {
     }
     
     /** You have to overwrite this method to create your custom content */
-    protected void generateContent() {
+    protected void generateBackButton() {
     };
     
     @Override

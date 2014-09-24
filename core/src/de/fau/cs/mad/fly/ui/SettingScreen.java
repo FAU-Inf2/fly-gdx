@@ -32,7 +32,7 @@ public class SettingScreen extends BasicScreen implements WithHelpOverlay {
     private boolean helpScreenCreated = false;
     
     @Override
-    protected void generateContent() {
+    protected void generateBackButton() {
         settingTable = new Table();
         
         Table table = new Table();

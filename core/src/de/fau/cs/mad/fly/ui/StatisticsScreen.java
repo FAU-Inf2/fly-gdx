@@ -32,7 +32,7 @@ public class StatisticsScreen extends BasicScreen {
      * and levelgroupTable
      */
     @Override
-    protected void generateContent() {
+    protected void generateBackButton() {
         stage.clear();
         initLevegroups();
         stage.addActor(levelGroupTable);

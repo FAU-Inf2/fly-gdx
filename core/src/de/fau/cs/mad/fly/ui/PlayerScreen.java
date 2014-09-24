@@ -72,7 +72,7 @@ public class PlayerScreen extends BasicScreen {
      * and levelgroupTable
      */
     @Override
-    protected void generateContent() {
+    protected void generateBackButton() {
         Skin skin = SkinManager.getInstance().getSkin();
         final PlayerProfileManager playerProfileManager = PlayerProfileManager.getInstance();
         

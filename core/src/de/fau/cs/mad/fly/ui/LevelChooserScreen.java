@@ -117,7 +117,7 @@ public class LevelChooserScreen extends BasicScreen {
     }
     
     @Override
-    protected void generateContent() {
+    protected void generateBackButton() {
         // is done in .generateDynamicContent
     }
 }
