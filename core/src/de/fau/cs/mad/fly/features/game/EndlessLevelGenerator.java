@@ -33,15 +33,15 @@ import de.fau.cs.mad.fly.res.Level;
  */
 public class EndlessLevelGenerator {
     
-    private AssetManager manager;
+	protected AssetManager manager;
     
-    private LinearSpeedUpgradeHandler linearSpeedHandler;
-    private InstantSpeedUpgradeHandler instantSpeedHandler;
-    private ChangeTimeUpgradeHandler changeTimeHandler;
+	protected LinearSpeedUpgradeHandler linearSpeedHandler;
+	protected InstantSpeedUpgradeHandler instantSpeedHandler;
+	protected ChangeTimeUpgradeHandler changeTimeHandler;
     
-    private Level level;
+	protected Level level;
     private Vector3 lastDirection;
-    private int currGate = 4;
+    protected int currGate = 4;
     
     private List<GateGoal> gateGoals;
     private List<GateGoal> predecessors;
@@ -58,7 +58,7 @@ public class EndlessLevelGenerator {
     private float difficulty;
     private boolean increasingDifficulty;
     
-    private int defaultGateScore = 50;
+    protected int defaultGateScore = 50;
     
     /**
      * 

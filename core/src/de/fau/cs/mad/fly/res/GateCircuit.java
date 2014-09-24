@@ -220,6 +220,18 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
     }
     
     /**
+     * Sets the VirtualGate and marks all its successors 
+     * @param gate
+     */
+    public void setVirtualGate(GateGoal gate) {
+    	virtualGate = gate;
+    	int len = gate.successors.length;
+        for (int i = 0; i < len; i++) {
+        	getGateGoalById(gate.successors[i]).mark();
+        }
+    }
+    
+    /**
      * Calls the gate circuit listeners for the finished gate circuit.
      */
     protected void circuitFinished() {

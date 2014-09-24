@@ -75,6 +75,7 @@ public class CollectibleManager {
      */
     public void removeCollectible(Collectible c) {
         collectibles.remove(c);
+        c.dispose();
     }
     
     /**

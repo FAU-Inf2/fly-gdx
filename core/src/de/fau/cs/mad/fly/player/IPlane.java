@@ -156,4 +156,6 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
      * @param azimuthDir
      */
     public void rotate(float rollDir, float azimuthDir, float deltaFactor);
+    
+    public void shift(Vector3 vector);
 }
