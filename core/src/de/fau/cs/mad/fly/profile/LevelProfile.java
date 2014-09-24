@@ -12,6 +12,10 @@ public class LevelProfile {
     public String file;
     
     public boolean isEndless() {
-        return name.equals("Endless");
+        return (name.equals("Endless"));
+    }
+    
+    public boolean isEndlessRails() {
+        return name.equals("EndlessRails");
     }
 }

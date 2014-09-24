@@ -142,6 +142,18 @@ public class Level implements Disposable {
         this.gateCircuit.level = this;
     }
     
+    public void addComponent(GameObject o) {
+    	components.add(o);
+    }
+    
+    public boolean removeComponent(GameObject o) {
+    	boolean removed = components.remove(o);
+    	if(removed) {
+    		o.dispose();
+    	}
+    	return removed;
+    }
+    
     /**
      * Environment in the level.
      * <p>

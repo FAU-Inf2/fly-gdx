@@ -30,6 +30,7 @@ import de.fau.cs.mad.fly.features.IFeatureLoad;
 import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
+import de.fau.cs.mad.fly.features.game.EndlessRailLevelGenerator;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
 import de.fau.cs.mad.fly.features.overlay.GateIndicator;
@@ -206,7 +207,19 @@ public class GameControllerBuilder {
                     timeController.addBonusTime(extraTime);
                 }
             });
+        } else if (level.head.isEndlessRails()) {
+            generator = new EndlessRailLevelGenerator(Loader.getInstance().getCurrentLevel(), this);
+            flightController = new RailFlightController(player, playerProfile, generator, level.start);
+            
+            gateCircuit.addListener(new GateCircuitAdapter() {
+                @Override
+                public void onGatePassed(GateGoal passed) {
+                    int extraTime = generator.getExtraTime();
+                    timeController.addBonusTime(extraTime);
+                }
+            });
         }
+        
         
         checkAndAddSettingFeatures();
         

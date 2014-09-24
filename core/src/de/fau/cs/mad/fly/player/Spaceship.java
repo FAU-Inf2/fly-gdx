@@ -224,6 +224,17 @@ public class Spaceship extends GameObject implements IPlane {
         lastAzimuth = azimuthDir;
     }
     
+    public void shift(Vector3 vector) {
+    	rotationTransform = getRigidBody().getCenterOfMassTransform();
+    	
+    	rotationTransform.trn(vector);
+    	
+    	getRigidBody().setCenterOfMassTransform(rotationTransform);
+    	
+    	lastRoll = Math.signum(vector.z);
+    	lastAzimuth = -Math.signum(vector.x);
+    }
+    
     @Override
     public int getMaxHealth() {
         return 10;

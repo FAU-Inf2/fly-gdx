@@ -81,8 +81,8 @@ public class PlayerScreen extends BasicScreen {
         contentTable = new Table();
         
         contentTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
-        
-        contentTable.add(new Label(I18n.t("usernameLableText") + ":", skin)).pad(padding);
+
+        contentTable.add(new Label(I18n.t("playerNameLableText") + ":", skin)).pad(padding);
         
         // add all users to userList and set the current user to display value
         userSelectBox = new SelectBox<String>(skin);
@@ -108,9 +108,9 @@ public class PlayerScreen extends BasicScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (playerProfileManager.getAllPlayerProfiles().size() <= 1) {
-                    dialog = new DialogWithOkButton("msgLastUser");
+                    dialog = new DialogWithOkButton("msgLastPlayer");
                 } else {
-                    dialog = new DialogWithOkAndCancelButton("msgDeleteUser") {
+                    dialog = new DialogWithOkAndCancelButton("msgDeletePlayer") {
                         protected void result(Object object) {
                             if (DialogWithOkButton.OK.equals(object.toString())) {
                                 playerProfileManager.deletePlayerProfile();
@@ -126,7 +126,7 @@ public class PlayerScreen extends BasicScreen {
         contentTable.row().expand();
         
         // add button to add a new player
-        addPlayerButton = new TextButton(I18n.t("addUserButtonText"), skin);
+        addPlayerButton = new TextButton(I18n.t("addPlayerButtonText"), skin);
         addPlayerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -136,7 +136,7 @@ public class PlayerScreen extends BasicScreen {
         contentTable.add(addPlayerButton).pad(padding);
         
         // add button to edit the current player name
-        editPlayerNameButton = new TextButton(I18n.t("button.editUser"), skin);
+        editPlayerNameButton = new TextButton(I18n.t("button.editPlayer"), skin);
         editPlayerNameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
