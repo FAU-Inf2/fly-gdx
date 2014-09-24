@@ -73,7 +73,9 @@ public class BooleanSetting extends ChangeListener implements ISetting {
     
     @Override
     public Actor getActor() {
-        this.checkBox = new CheckBox("", SkinManager.getInstance().getSkin());
+        if (checkBox == null) {
+            this.checkBox = new CheckBox("", SkinManager.getInstance().getSkin());
+        }
         this.checkBox.setChecked(value);
         this.checkBox.addListener(this);
         return checkBox;
