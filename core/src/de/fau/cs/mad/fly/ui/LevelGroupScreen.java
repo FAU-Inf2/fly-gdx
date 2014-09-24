@@ -3,7 +3,6 @@ package de.fau.cs.mad.fly.ui;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -29,16 +28,14 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
      * Shows a list of all available level groups.
      */
     public void generateDynamicContent() {
+        
         // calculate width and height of buttons and the space in between
         List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
         
         // table that contains all buttons
         Skin skin = SkinManager.getInstance().getSkin();
-        Table scrollableTable = new Table(skin);
-        ScrollPane levelScrollPane = new ScrollPane(scrollableTable, skin);
-        levelScrollPane.setScrollingDisabled(true, false);
-        levelScrollPane.setFadeScrollBars(false);
-        levelScrollPane.setFillParent(true);
+        Table levelGroupTable = new Table(skin);
+        levelGroupTable.setFillParent(true);
         
         // create a button for each level group
         int maxRows = (int) Math.ceil((double) levelGroups.size() / (double) UI.Buttons.BUTTONS_IN_A_ROW);
@@ -61,11 +58,11 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
                         levelChooserScreen.set();
                     }
                 });
-                scrollableTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
+                levelGroupTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH, UI.Buttons.SPACE_HEIGHT, UI.Buttons.SPACE_WIDTH).expand();
             }
-            scrollableTable.row().expand();
+            levelGroupTable.row().expand();
         }
-        stage.addActor(levelScrollPane);
+        stage.addActor(levelGroupTable);
     }
     
     @Override

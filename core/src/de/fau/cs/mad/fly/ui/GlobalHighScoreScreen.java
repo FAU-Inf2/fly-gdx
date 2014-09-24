@@ -107,10 +107,10 @@ public class GlobalHighScoreScreen extends BasicScreen {
     /**
      * generate Content
      * 
-     * @see de.fau.cs.mad.fly.ui.BasicScreen#generateBackButton()
+     * @see de.fau.cs.mad.fly.ui.BasicScreen#generateContent()
      */
     @Override
-    protected void generateBackButton() {
+    protected void generateContent() {
         stage.clear();    
         infoTable = new Table();
         infoTable.pad(UI.Window.BORDER_SPACE);

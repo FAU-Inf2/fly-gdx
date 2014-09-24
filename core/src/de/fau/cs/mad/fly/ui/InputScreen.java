@@ -38,7 +38,7 @@ public abstract class InputScreen extends BasicScreen {
         inputProcessor = new InputMultiplexer(new GenericBackProcessor(screenToGoBack), stage);
     }
     
-    public void generateBackButton() {
+    public void generateContent() {
         
         Skin skin = SkinManager.getInstance().getSkin();
         

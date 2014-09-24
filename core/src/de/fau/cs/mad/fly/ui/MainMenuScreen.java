@@ -54,10 +54,10 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
      * <p>
      * Includes buttons for Start, Options, Help, Exit.
      */
-    protected void generateBackButton() {
+    protected void generateContent() {
         // Create an instance of the PlayerManager, which needs an access to the
         // database
-        super.generateBackButton();
+        super.generateContent();
         createButtonsAndPositionContent();
         createHelp();
         

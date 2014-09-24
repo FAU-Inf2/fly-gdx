@@ -17,13 +17,17 @@ public class GenericBackProcessor extends BackProcessor {
         this.screenToReturn = screenToReturn;
     }
     
+    /** Call this when you want to go back and display the previous screen */
+    public void goBack() {
+        keyDown(Keys.ESCAPE);
+    }
+    
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Keys.ESCAPE || keycode == Keys.BACK) {
-            if(screenToReturn == null) {
+            if (screenToReturn == null) {
                 Gdx.app.exit();
-            }
-            else {
+            } else {
                 screenToReturn.set();
             }
             return true;

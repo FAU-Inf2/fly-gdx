@@ -67,7 +67,7 @@ public class LevelsStatisScreen extends BasicScreen {
      * to loading scores data from Database and display
      */
     @Override
-    protected void generateBackButton() {
+    protected void generateContent() {
         long begin = System.currentTimeMillis();
         initButtons();
         stage.clear();
