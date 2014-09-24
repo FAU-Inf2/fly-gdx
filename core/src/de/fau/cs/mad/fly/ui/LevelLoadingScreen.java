@@ -1,5 +1,7 @@
 package de.fau.cs.mad.fly.ui;
 
+import com.badlogic.gdx.Gdx;
+
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.res.Level;
 
@@ -22,6 +24,8 @@ public class LevelLoadingScreen extends LoadingScreen<Level> {
         if (add) {
             progressBar.setVisible(false);
             button.setVisible(true);
+            inputProcessor.addProcessor(stage);
+            Gdx.input.setInputProcessor(inputProcessor);
         }
         
         add = false;
