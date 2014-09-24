@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -30,11 +30,11 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
  */
 public class PlayerScreen extends BasicScreen {
     
-    private TextButton addPlayerButton;
+    private Button addPlayerButton;
     private Table contentTable;
     
-    private ImageButton deletePlayerButton;
-    private TextButton editPlayerNameButton;
+    private Button deletePlayerButton;
+    private Button editPlayerNameButton;
     
     private int selectedUserindex = 0;
     private SelectBox<String> userSelectBox;
@@ -148,24 +148,6 @@ public class PlayerScreen extends BasicScreen {
             }
         });
         contentTable.add(editPlayerNameButton).pad(padding);
-        contentTable.row();
-        
-        // show fly id, if no fly id, show a info button
-        contentTable.add(new Label(I18n.t("labelFlyId") + ":", skin)).pad(padding);
-        if (playerProfileManager.getCurrentPlayerProfile().getFlyID() > 0) {
-            contentTable.add(new Label(playerProfileManager.getCurrentPlayerProfile().getFlyID() + "", skin)).pad(padding);
-        } else {
-            ImageButton infoButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
-            infoButton.addListener(new ClickListener() {
-                Dialog dialog = new DialogWithOneButton(I18n.t("msgGetFlyId"), I18n.t("ok"));
-                
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    dialog.show(stage);
-                }
-            });
-            contentTable.add(infoButton).pad(padding);
-        }
         contentTable.row();
         
         PlayerProfile playerProfile = playerProfileManager.getCurrentPlayerProfile();
