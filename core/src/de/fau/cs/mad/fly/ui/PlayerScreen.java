@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -29,7 +28,7 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
  * @author Qufang Fan, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
 public class PlayerScreen extends BasicScreenWithBackButton {
-
+    
     private Button addPlayerButton;
     private Table playerTable;
     
@@ -83,7 +82,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         playerTable = new Table();
         
         playerTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
-
+        
         playerTable.add(new Label(I18n.t("playerNameLableText") + ":", skin)).pad(padding);
         
         // add all users to userList and set the current user to display value
@@ -101,6 +100,30 @@ public class PlayerScreen extends BasicScreenWithBackButton {
             }
         });
         playerTable.add(userSelectBox).width(MAX_NAME_WIDTH);
+        playerTable.row();
+        
+        playerTable.add();
+        Table imageButtonTable = new Table();
+        
+        // add button to add a new player
+        addPlayerButton = new ImageButton(skin, "cross");
+        addPlayerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                switchToAddNewPlayerScreen();
+            }
+        });
+        imageButtonTable.add(addPlayerButton).pad(padding, 0, padding, 0);
+        
+        // add button to edit the current player name
+        editPlayerNameButton = new ImageButton(skin, "editButton");
+        editPlayerNameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                switchToEditPlayerNameScreen();
+            }
+        });
+        imageButtonTable.add(editPlayerNameButton).pad(padding, 0, padding, 0).expand();
         
         // add button to delete the current player
         deletePlayerButton = new ImageButton(skin, "trash");
@@ -128,28 +151,8 @@ public class PlayerScreen extends BasicScreenWithBackButton {
                 dialog.show(stage);
             }
         });
-        playerTable.add(deletePlayerButton).pad(padding);
-        playerTable.row().expand();
-        
-        // add button to add a new player
-        addPlayerButton = new ImageButton(skin, "cross");
-        addPlayerButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                switchToAddNewPlayerScreen();
-            }
-        });
-        playerTable.add(addPlayerButton).pad(padding).width(UI.Buttons.IMAGE_BUTTON_WIDTH).height(UI.Buttons.IMAGE_BUTTON_HEIGHT);
-        
-        // add button to edit the current player name
-        editPlayerNameButton = new TextButton(I18n.t("button.editPlayer"), skin);
-        editPlayerNameButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                switchToEditPlayerNameScreen();
-            }
-        });
-        playerTable.add(editPlayerNameButton).pad(padding);
+        imageButtonTable.add(deletePlayerButton).pad(padding, 0, padding, 0);
+        playerTable.add(imageButtonTable).width(MAX_NAME_WIDTH);
         playerTable.row();
         
         PlayerProfile playerProfile = playerProfileManager.getCurrentPlayerProfile();
@@ -166,16 +169,15 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         contentTable.add(playerTable);
     }
     
-    
     protected void switchToAddNewPlayerScreen() {
-        if(addNewPlayerScreen == null) {
+        if (addNewPlayerScreen == null) {
             addNewPlayerScreen = new AddNewPlayerScreen(this);
         }
         addNewPlayerScreen.set();
     }
     
     protected void switchToEditPlayerNameScreen() {
-        if(editPlayerNameScreen == null) {
+        if (editPlayerNameScreen == null) {
             editPlayerNameScreen = new EditPlayerNameScreen(this);
         }
         editPlayerNameScreen.set();

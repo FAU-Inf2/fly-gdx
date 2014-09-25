@@ -31,6 +31,8 @@ public abstract class InputScreen extends BasicScreen {
     protected Button okButton;
     protected Button cancelButton;
     
+    private boolean waitForNextKey = false;
+    
     private final BasicScreen screenToGoBack;
     
     public InputScreen(BasicScreen screenToGoBack) {
@@ -75,39 +77,79 @@ public abstract class InputScreen extends BasicScreen {
         
         textField.setTextFieldListener(new TextFieldListener() {
             @Override
-            public void keyTyped(TextField textField, char key) {
-                if (!"".equals(textField.getText())) {
-                    if (doesNameExist()) {
-                        okButton.setDisabled(true);
+            public void keyTyped(final TextField textField, char key) {
+                
+                if (key == '\r' || key == '\n') {
+                    if (waitForNextKey) {
+                        waitForNextKey = false;
                     } else {
-                        okButton.setDisabled(false);
-                        if (key == '\r' || key == '\n') {
-                            validInputAndGoBack();
-                        }
+                        checkInput();
                     }
                 } else {
-                    okButton.setDisabled(true);
+                    if (waitForNextKey) {
+                        waitForNextKey = false;
+                    }
+                    if (!"".equals(textField.getText())) {
+                        if (doesNameExist()) {
+                            okButton.setDisabled(true);
+                        } else {
+                            okButton.setDisabled(false);
+                        }
+                    } else {
+                        okButton.setDisabled(true);
+                    }
                 }
             }
         });
         
         okButton.addListener(new ClickListener() {
-            Dialog dialog;
-            
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (okButton.isDisabled()) {
-                    if ("".equals(textField.getText())) {
-                        dialog = new DialogWithOneButton(I18n.t("NullUserName"), I18n.t("ok"));
-                    } else {
-                        dialog = new DialogWithOneButton(I18n.t("UserExists"), I18n.t("ok"));
-                    }
-                    dialog.show(stage);
-                } else {
-                    validInputAndGoBack();
-                }
+                checkInput();
             }
         });
+    }
+    
+    /**
+     * Checks if a name is entered, otherwise a dialog with a corresponding
+     * message is shown. Furthermore it is checked weather the player name
+     * already exists. If so a corresponding message is shown.
+     */
+    private void checkInput() {
+        if (okButton.isDisabled()) {
+            Dialog dialog;
+            if ("".equals(textField.getText())) {
+                dialog = new DialogWithOneButton(I18n.t("NullPlayerName"), I18n.t("ok")) {
+                    @Override
+                    protected void result(Object object) {
+                        super.result(object);
+                        if (object == DialogWithOneButton.FIRST_BUTTON) {
+                            stage.setKeyboardFocus(null);
+                            textField.getOnscreenKeyboard().show(true);
+                            waitForNextKey = true;
+                            stage.setKeyboardFocus(textField);
+                        }
+                    }
+                };
+            } else {
+                dialog = new DialogWithOneButton(I18n.t("playerExists"), I18n.t("ok")) {
+                    @Override
+                    protected void result(Object object) {
+                        super.result(object);
+                        if (object == DialogWithOneButton.FIRST_BUTTON) {
+                            stage.setKeyboardFocus(null);
+                            textField.getOnscreenKeyboard().show(true);
+                            waitForNextKey = true;
+                            stage.setKeyboardFocus(textField);
+                        }
+                    }
+                };
+            }
+            dialog.show(stage);
+            textField.getOnscreenKeyboard().show(false);
+        } else {
+            validInputAndGoBack();
+        }
     }
     
     protected boolean doesNameExist() {
@@ -136,7 +178,9 @@ public abstract class InputScreen extends BasicScreen {
     @Override
     public void show() {
         super.show();
+        waitForNextKey = false;
         textField.getOnscreenKeyboard().show(true);
+        okButton.setDisabled(true);
         stage.setKeyboardFocus(textField);
     }
     

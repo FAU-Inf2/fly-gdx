@@ -214,7 +214,14 @@ trash
 cross
   rotate: false
   xy: 962, 1
-  size: 249, 249
-  orig: 249, 249
+  size: 249, 242
+  orig: 249, 242
+  offset: 0, 0
+  index: -1
+editButton
+  rotate: false
+  xy: 990, 475
+  size: 249, 246
+  orig: 249, 246
   offset: 0, 0
   index: -1
