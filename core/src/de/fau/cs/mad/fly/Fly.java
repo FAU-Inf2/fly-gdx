@@ -153,6 +153,8 @@ public class Fly extends Game implements Loadable<Fly> {
     
     @Override
     public void dispose() {
+        mainMenuScreen.dispose();
+        mainMenuScreen = null;
         FlyDBManager.getInstance().dispose();
         Loader.getInstance().dispose();
         SkinManager.getInstance().dispose();
