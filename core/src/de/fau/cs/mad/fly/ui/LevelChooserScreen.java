@@ -28,6 +28,7 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
     
     public LevelChooserScreen(BasicScreen screenToReturn) {
         super(screenToReturn);
+        generateBackButton();
     }
     
     /**

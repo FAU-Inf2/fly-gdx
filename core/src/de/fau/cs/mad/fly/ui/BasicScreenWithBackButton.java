@@ -17,7 +17,6 @@ public abstract class BasicScreenWithBackButton extends BasicScreen {
         super();
         genericBackProcessor = new GenericBackProcessor(screenToReturn);
         inputProcessor = new InputMultiplexer(stage, genericBackProcessor);
-        generateBackButton();
     }
     
     /**

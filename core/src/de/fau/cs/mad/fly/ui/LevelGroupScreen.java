@@ -23,6 +23,7 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
     
     public LevelGroupScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
+        generateBackButton();
     }
     
     /**

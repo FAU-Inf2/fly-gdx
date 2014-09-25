@@ -29,7 +29,7 @@ import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
 import de.fau.cs.mad.fly.ui.PlayerScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
-import de.fau.cs.mad.fly.ui.StatisticsScreen;
+import de.fau.cs.mad.fly.ui.HighscoreScreen;
 
 /**
  * Manages the different game screens.
@@ -60,7 +60,6 @@ public class Fly extends Game implements Loadable<Fly> {
     private PlaneChooserScreen planeChooserScreen;
     private PlaneUpgradeScreen planeUpgradeScreen;
     private SettingScreen settingScreen;
-    private StatisticsScreen statisticsScreen;
     private GameScreen gameScreen;
     private GlobalHighScoreScreen globalHighScoreScreen;
     private PlayerScreen playerScreen;
@@ -225,17 +224,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * Switches the current screen to the {@link StatisticsScreen}.
-     */
-    public void setStatisticsScreen() {
-        if (statisticsScreen == null) {
-            statisticsScreen = new StatisticsScreen();
-        }
-        setScreen(statisticsScreen);
-    }
-    
-    /**
-     * Switches the current screen to the {@link StatisticsScreen}.
+     * Switches the current screen to the {@link HighscoreScreen}.
      */
     public void setGlobalHighScoreScreen(LevelGroup levelGroup) {
         if (globalHighScoreScreen == null) {

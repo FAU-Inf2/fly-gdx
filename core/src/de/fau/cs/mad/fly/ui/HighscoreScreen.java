@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -23,34 +22,24 @@ import de.fau.cs.mad.fly.profile.LevelGroupManager;
  * 
  * @author Qufang Fan, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class StatisticsScreen extends BasicScreen {
+public class HighscoreScreen extends BasicScreenWithBackButton {
     
-    private Table levelGroupTable;
-    
+    public HighscoreScreen(BasicScreen screenToReturn) {
+        super(screenToReturn);
+    }
+
     /**
      * generate Content here two Tables are used to show the content: userTable
      * and levelgroupTable
      */
     @Override
     protected void generateContent() {
-        stage.clear();
-        initLevegroups();
-        stage.addActor(levelGroupTable);
-        
-    }
-    
-    /**
-     * init and display the level groups
-     */
-    private void initLevegroups() {
-        levelGroupTable = new Table();
-        levelGroupTable.pad(UI.Window.BORDER_SPACE);
-        levelGroupTable.setFillParent(true);
+        super.generateBackButton();
         Skin skin = SkinManager.getInstance().getSkin();
         Label selectLevelGroup = new Label(I18n.t("selectLevelGroup"), skin);
         selectLevelGroup.setAlignment(Align.center);
-        levelGroupTable.add(selectLevelGroup).colspan(2).center();
-        levelGroupTable.row();
+        contentTable.add(selectLevelGroup).colspan(2).center();
+        contentTable.row();
         List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
         // create a button for each level group
         int maxRows = (int) Math.ceil((float) levelGroups.size() / (float) UI.Buttons.BUTTONS_IN_A_ROW);
@@ -67,10 +56,9 @@ public class StatisticsScreen extends BasicScreen {
                         ((Fly) Gdx.app.getApplicationListener()).setLevelsStatisScreen(group);
                     }
                 });
-                levelGroupTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
+                contentTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
             }
-            levelGroupTable.row();
+            contentTable.row();
         }
     }
-    
 }
