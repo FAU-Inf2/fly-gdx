@@ -28,10 +28,10 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
  * 
  * @author Qufang Fan, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class PlayerScreen extends BasicScreen {
-    
+public class PlayerScreen extends BasicScreenWithBackButton {
+
     private Button addPlayerButton;
-    private Table contentTable;
+    private Table playerTable;
     
     private Button deletePlayerButton;
     private Button editPlayerNameButton;
@@ -45,6 +45,10 @@ public class PlayerScreen extends BasicScreen {
     private BasicScreen editPlayerNameScreen;
     
     public final static int MAX_NAME_WIDTH = 1650;
+    
+    public PlayerScreen(BasicScreen screenToReturn) {
+        super(screenToReturn);
+    }
     
     /**
      * Method that is called, if the list of user changes.
@@ -73,16 +77,14 @@ public class PlayerScreen extends BasicScreen {
      */
     @Override
     protected void generateContent() {
+        generateBackButton();
         Skin skin = SkinManager.getInstance().getSkin();
         final PlayerProfileManager playerProfileManager = PlayerProfileManager.getInstance();
+        playerTable = new Table();
         
-        Table outerTable = new Table();
-        outerTable.setFillParent(true);
-        contentTable = new Table();
-        
-        contentTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
+        playerTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
 
-        contentTable.add(new Label(I18n.t("playerNameLableText") + ":", skin)).pad(padding);
+        playerTable.add(new Label(I18n.t("playerNameLableText") + ":", skin)).pad(padding);
         
         // add all users to userList and set the current user to display value
         userSelectBox = new SelectBox<String>(skin);
@@ -98,7 +100,7 @@ public class PlayerScreen extends BasicScreen {
                 }
             }
         });
-        contentTable.add(userSelectBox).width(MAX_NAME_WIDTH);
+        playerTable.add(userSelectBox).width(MAX_NAME_WIDTH);
         
         // add button to delete the current player
         deletePlayerButton = new ImageButton(skin, "trash");
@@ -126,8 +128,8 @@ public class PlayerScreen extends BasicScreen {
                 dialog.show(stage);
             }
         });
-        contentTable.add(deletePlayerButton).pad(padding);
-        contentTable.row().expand();
+        playerTable.add(deletePlayerButton).pad(padding);
+        playerTable.row().expand();
         
         // add button to add a new player
         addPlayerButton = new TextButton(I18n.t("addPlayerButtonText"), skin);
@@ -137,7 +139,7 @@ public class PlayerScreen extends BasicScreen {
                 switchToAddNewPlayerScreen();
             }
         });
-        contentTable.add(addPlayerButton).pad(padding);
+        playerTable.add(addPlayerButton).pad(padding);
         
         // add button to edit the current player name
         editPlayerNameButton = new TextButton(I18n.t("button.editPlayer"), skin);
@@ -147,22 +149,21 @@ public class PlayerScreen extends BasicScreen {
                 switchToEditPlayerNameScreen();
             }
         });
-        contentTable.add(editPlayerNameButton).pad(padding);
-        contentTable.row();
+        playerTable.add(editPlayerNameButton).pad(padding);
+        playerTable.row();
         
         PlayerProfile playerProfile = playerProfileManager.getCurrentPlayerProfile();
         
         // show total score
-        contentTable.add(new Label(I18n.t("labelTotalScore"), skin)).pad(padding);
-        contentTable.add(new Label("" + playerProfile.getMoney(), skin)).pad(padding);
+        playerTable.add(new Label(I18n.t("labelTotalScore"), skin)).pad(padding);
+        playerTable.add(new Label("" + playerProfile.getMoney(), skin)).pad(padding);
         // TODO: do not use money for that!
-        contentTable.row();
+        playerTable.row();
         
         // show passed group and level
         addLastLevel(playerProfile, skin);
         
-        outerTable.add(contentTable).pad(UI.Window.BORDER_SPACE);
-        stage.addActor(outerTable);
+        contentTable.add(playerTable);
     }
     
     
@@ -187,16 +188,16 @@ public class PlayerScreen extends BasicScreen {
      * @param skin
      */
     private void addLastLevel(PlayerProfile playerProfile, Skin skin) {
-        contentTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+        playerTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         
         int group = playerProfile.getPassedLevelgroupID();
         int level = playerProfile.getPassedLevelID();
         if (level > LevelGroupManager.getInstance().getLastGroup().getLastLevelProfile().id) {
-            contentTable.add(new Label(I18n.t("ALLGroupPassed"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+            playerTable.add(new Label(I18n.t("ALLGroupPassed"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         } else {
-            contentTable.add(new Label("" + group + " - " + level, skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+            playerTable.add(new Label("" + group + " - " + level, skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         }
-        contentTable.row();
+        playerTable.row();
     }
     
     @Override

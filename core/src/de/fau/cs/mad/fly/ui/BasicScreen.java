@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.fau.cs.mad.fly.DisposeScreenManager;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.res.Assets;
 
@@ -40,7 +39,6 @@ public abstract class BasicScreen implements Screen {
     protected InputMultiplexer inputProcessor;
     
     public BasicScreen() {
-        DisposeScreenManager.getInstance().registerForDispose(this);
         // stage has to be created before initialize because it is needed for
         // creating the viewport
         stage = new Stage();

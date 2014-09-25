@@ -26,7 +26,6 @@ import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
 import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
-import de.fau.cs.mad.fly.ui.PlayerScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 
 /**
@@ -59,7 +58,6 @@ public class Fly extends Game implements Loadable<Fly> {
     private PlaneUpgradeScreen planeUpgradeScreen;
     private GameScreen gameScreen;
     private GlobalHighScoreScreen globalHighScoreScreen;
-    private PlayerScreen playerScreen;
     private MainMenuScreen mainMenuScreen;
 
     private GameController gameController;
@@ -158,8 +156,6 @@ public class Fly extends Game implements Loadable<Fly> {
     public void dispose() {
         FlyDBManager.getInstance().dispose();
         Loader.getInstance().dispose();
-        
-        DisposeScreenManager.getInstance().dispose();
         SkinManager.getInstance().dispose();
         Assets.dispose();
     }
@@ -216,16 +212,6 @@ public class Fly extends Game implements Loadable<Fly> {
             globalHighScoreScreen = new GlobalHighScoreScreen(levelGroup);
         }
         setScreen(globalHighScoreScreen);
-    }
-    
-    /**
-     * Switches the current screen to the {@link PlayerScreen}.
-     */
-    public void setPlayerScreen() {
-        if (playerScreen == null) {
-            playerScreen = new PlayerScreen();
-        }
-        setScreen(playerScreen);
     }
     
     /**

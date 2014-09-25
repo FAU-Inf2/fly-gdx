@@ -44,6 +44,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     private LevelGroupScreen levelGroupScreen;
     private HighscoreScreen highscoreScreen;
     private SettingScreen settingScreen;
+    private PlayerScreen playerScreen;
     
     private void setLevelGroupScreen() {
         if (levelGroupScreen == null) {
@@ -64,6 +65,13 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             settingScreen = new SettingScreen(this);
         }
         settingScreen.set();
+    }
+    
+    private void setPlayerScreen() {
+        if (playerScreen == null) {
+            playerScreen= new PlayerScreen(this);
+        }
+        playerScreen.set();
     }
     
     /**
@@ -112,7 +120,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         playerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setPlayerScreen();
+                setPlayerScreen();
             }
         });
         
@@ -221,6 +229,12 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         }
         if (highscoreScreen != null) {
             highscoreScreen.dispose();
+        }
+        if (playerScreen != null) {
+            playerScreen.dispose();
+        }
+        if (settingScreen != null) {
+            settingScreen.dispose();
         }
     }
     
