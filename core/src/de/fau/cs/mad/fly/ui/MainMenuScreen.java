@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.ui;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -182,7 +183,12 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpHighscore", highscoreButton));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSettings", settingsButton));
         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlayer", playerButton));
-        helpOverlay.addHelpFrame(new HelpFrameText(skin, "helpEnd"));
+        if(Gdx.app.getType() == ApplicationType.Desktop) {
+            helpOverlay.addHelpFrame(new HelpFrameText(skin, "helpEndGameDesktop"));
+        }
+        else {
+            helpOverlay.addHelpFrame(new HelpFrameText(skin, "helpEndGameMobile"));
+        }
         
         helpButton.addListener(helpOverlay);
         showHelpScreen = false;
