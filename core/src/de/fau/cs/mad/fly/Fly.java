@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly;
 
-import java.awt.SplashScreen;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +50,7 @@ public class Fly extends Game implements Loadable<Fly> {
      * <p>
      * Currently debug mode only disables the level dependencies.
      */
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
     
     private LoadingScreen<Fly> splashScreen;
     private PlaneChooserScreen planeChooserScreen;
@@ -185,7 +184,7 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     /**
-     * Switches the current screen to the {@link SplashScreen}.
+     * Switches the current screen to the {@link LoadingScreen}.
      */
     public void setSplashScreen() {
         if (splashScreen == null) {

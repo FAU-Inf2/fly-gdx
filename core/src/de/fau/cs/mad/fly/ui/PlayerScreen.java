@@ -132,14 +132,14 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         playerTable.row().expand();
         
         // add button to add a new player
-        addPlayerButton = new TextButton(I18n.t("addPlayerButtonText"), skin);
+        addPlayerButton = new ImageButton(skin, "cross");
         addPlayerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 switchToAddNewPlayerScreen();
             }
         });
-        playerTable.add(addPlayerButton).pad(padding);
+        playerTable.add(addPlayerButton).pad(padding).width(UI.Buttons.IMAGE_BUTTON_WIDTH).height(UI.Buttons.IMAGE_BUTTON_HEIGHT);
         
         // add button to edit the current player name
         editPlayerNameButton = new TextButton(I18n.t("button.editPlayer"), skin);

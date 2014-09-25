@@ -101,7 +101,7 @@ button-down
   index: -1
 button-disabled
   rotate: false
-  xy: 752, 246
+  xy: 752, 353
   size: 108, 108
   split: 53, 53, 53, 53
   orig: 108, 108
@@ -146,7 +146,7 @@ star
   index: -1
 arrow
   rotate: false
-  xy: 260, 148
+  xy: 260, 149
   size: 78, 139
   orig: 78, 139
   offset: 0, 0
@@ -206,8 +206,15 @@ guy
   index: -1
 trash
   rotate: false
-  xy: 752, 358
+  xy: 752, 466
   size: 236, 255
   orig: 236, 255
+  offset: 0, 0
+  index: -1
+cross
+  rotate: false
+  xy: 962, 1
+  size: 249, 249
+  orig: 249, 249
   offset: 0, 0
   index: -1
