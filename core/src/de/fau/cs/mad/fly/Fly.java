@@ -27,7 +27,6 @@ import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
 import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
 import de.fau.cs.mad.fly.ui.PlayerScreen;
-import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 
 /**
@@ -58,7 +57,6 @@ public class Fly extends Game implements Loadable<Fly> {
     private LoadingScreen<Fly> splashScreen;
     private PlaneChooserScreen planeChooserScreen;
     private PlaneUpgradeScreen planeUpgradeScreen;
-    private SettingScreen settingScreen;
     private GameScreen gameScreen;
     private GlobalHighScoreScreen globalHighScoreScreen;
     private PlayerScreen playerScreen;
@@ -208,18 +206,6 @@ public class Fly extends Game implements Loadable<Fly> {
             gameScreen = new GameScreen(this);
         }
         setScreen(gameScreen);
-    }
-    
-    /**
-     * Switches the current screen to the {@link SettingScreen}.
-     * 
-     * It is recreated when the player has switched.
-     */
-    public void setSettingScreen() {
-        if (settingScreen == null) {
-            settingScreen = new SettingScreen();
-        }
-        setScreen(settingScreen);
     }
     
     /**

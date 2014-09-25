@@ -42,6 +42,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     
     private LevelGroupScreen levelGroupScreen;
     private HighscoreScreen highscoreScreen;
+    private SettingScreen settingScreen;
     
     private void setLevelGroupScreen() {
         if (levelGroupScreen == null) {
@@ -55,6 +56,13 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             highscoreScreen = new HighscoreScreen(this);
         }
         highscoreScreen.set();
+    }
+    
+    private void setSettingScreen() {
+        if (settingScreen == null) {
+            settingScreen = new SettingScreen(this);
+        }
+        settingScreen.set();
     }
     
     /**
@@ -96,7 +104,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setSettingScreen();
+                setSettingScreen();
             }
         });
         

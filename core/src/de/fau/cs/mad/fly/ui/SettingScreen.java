@@ -20,9 +20,10 @@ import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
 /**
  * Displays and changes the options of the game.
  * 
- * @author Tobias Zangl
+ * @author Tobias Zangl, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class SettingScreen extends BasicScreen implements WithHelpOverlay {
+public class SettingScreen extends BasicScreenWithBackButton implements WithHelpOverlay {
+    
     private SettingManager settingManager;
     private float padding = 20;
     private Table settingTable;
@@ -31,17 +32,24 @@ public class SettingScreen extends BasicScreen implements WithHelpOverlay {
     private HelpOverlay helpOverlay;
     private boolean helpScreenCreated = false;
     
+    /**
+     * Creates a setting screen and defines to which {@link BasicScreen} to
+     * return when pressing back button.
+     * 
+     * @param screenToReturn
+     */
+    public SettingScreen(BasicScreen screenToReturn) {
+        super(screenToReturn);
+    }
+    
     @Override
     protected void generateContent() {
+        generateBackButton();
         settingTable = new Table();
-        
-        Table table = new Table();
-        table.setFillParent(true);
-        table.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE);
+
         Skin skin = SkinManager.getInstance().getSkin();
         settingTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
-        table.add(settingTable).center();
-        stage.addActor(table);
+        contentTable.add(settingTable).center();
         
         // setup help overlay
         final Button helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
