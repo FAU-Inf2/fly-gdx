@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +31,10 @@ import de.fau.cs.mad.fly.profile.ScoreManager;
 /**
  * Display the highscores of all levels in one level group
  * 
- * @author Qufang Fan
+ * @author Qufang Fan, Lukas Hahmann <lukas.hahmann@gmail.com>
  * 
  */
-public class LevelsStatisScreen extends BasicScreen {
+public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
     
     private Table scoreTable;
     
@@ -43,6 +42,12 @@ public class LevelsStatisScreen extends BasicScreen {
     private TextButton globalHighScoreButton;
     
     private LevelGroup levelGroup;
+    
+    
+    public LevelGroupHighscoreScreen(LevelGroup group, BasicScreen screenToReturn) {
+        super(screenToReturn);
+        this.levelGroup = group;
+    }
     
     /**
      * init buttons, which don't need to be created dynamically
@@ -58,19 +63,17 @@ public class LevelsStatisScreen extends BasicScreen {
         });
     }
     
-    public LevelsStatisScreen(LevelGroup group) {
-        this.levelGroup = group;
-    }
-    
     /**
      * generate Content Display text "loading" at first, then start a new thread
      * to loading scores data from Database and display
      */
     @Override
     protected void generateContent() {
+        
+        generateBackButton();
         long begin = System.currentTimeMillis();
         initButtons();
-        stage.clear();
+        
         
         scoreTable = new Table();
         scoreTable.pad(UI.Window.BORDER_SPACE);
@@ -82,7 +85,7 @@ public class LevelsStatisScreen extends BasicScreen {
         statisticsPane.setFillParent(true);
         scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
         Gdx.app.log("timing", "LevelsStatisScreen generateContent " + (System.currentTimeMillis() - begin));
-        stage.addActor(statisticsPane);
+        contentTable.add(statisticsPane);
     }
     
     /**

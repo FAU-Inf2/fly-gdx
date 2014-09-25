@@ -29,7 +29,7 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
     /**
      * Shows a list of all available level groups.
      */
-    public void generateDynamicContent() {        
+    public void generateDynamicContent() {
         
         contentTable.clear();
         Skin skin = SkinManager.getInstance().getSkin();
@@ -60,6 +60,12 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
         }
     }
     
+    /**
+     * Lazy loading of {@link LevelChooserScreen} showing the specified
+     * {@link LevelGroup}.
+     * 
+     * @param levelGroup
+     */
     public void setLevelChooserScreen(LevelGroup levelGroup) {
         if (levelChooserScreen == null) {
             levelChooserScreen = new LevelChooserScreen(this);

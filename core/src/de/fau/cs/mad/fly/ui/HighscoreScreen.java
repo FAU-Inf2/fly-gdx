@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
@@ -53,12 +51,17 @@ public class HighscoreScreen extends BasicScreenWithBackButton {
                 button.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        ((Fly) Gdx.app.getApplicationListener()).setLevelsStatisScreen(group);
+                        setLevelHighscoreScreen(group);
                     }
                 });
                 contentTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
             }
             contentTable.row();
         }
+    }
+    
+    private void setLevelHighscoreScreen(LevelGroup group) {
+        LevelGroupHighscoreScreen levelHighscoreScreen = new LevelGroupHighscoreScreen(group, this);
+        levelHighscoreScreen.set();
     }
 }

@@ -100,6 +100,7 @@ public final class UI {
     
     public static final class Dialogs {
         
+        /** This class should not be instantiated */
         private Dialogs() {
         }
         

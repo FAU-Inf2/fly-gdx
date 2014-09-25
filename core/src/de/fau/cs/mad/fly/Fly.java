@@ -20,8 +20,8 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GameScreen;
 import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
+import de.fau.cs.mad.fly.ui.HighscoreScreen;
 import de.fau.cs.mad.fly.ui.LevelLoadingScreen;
-import de.fau.cs.mad.fly.ui.LevelsStatisScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
@@ -29,7 +29,6 @@ import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
 import de.fau.cs.mad.fly.ui.PlayerScreen;
 import de.fau.cs.mad.fly.ui.SettingScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
-import de.fau.cs.mad.fly.ui.HighscoreScreen;
 
 /**
  * Manages the different game screens.
@@ -241,14 +240,6 @@ public class Fly extends Game implements Loadable<Fly> {
             playerScreen = new PlayerScreen();
         }
         setScreen(playerScreen);
-    }
-    
-    /**
-     * Switches the current Screen to the {@link LevelStatisticsScreen}.
-     */
-    public void setLevelsStatisScreen(LevelGroup group) {
-        LevelsStatisScreen levelsStatisScreen = new LevelsStatisScreen(group);
-        setScreen(levelsStatisScreen);
     }
     
     /**
