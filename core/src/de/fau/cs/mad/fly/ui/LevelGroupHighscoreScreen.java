@@ -76,13 +76,11 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         
         
         scoreTable = new Table();
-        scoreTable.pad(UI.Window.BORDER_SPACE);
         Skin skin = SkinManager.getInstance().getSkin();
         
         final ScrollPane statisticsPane = new ScrollPane(scoreTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
-        statisticsPane.setFillParent(true);
         scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
         Gdx.app.log("timing", "LevelsStatisScreen generateContent " + (System.currentTimeMillis() - begin));
         contentTable.add(statisticsPane);

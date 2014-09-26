@@ -36,7 +36,7 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
         List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
         
         // create a button for each level group
-        int maxRows = (int) Math.ceil((double) levelGroups.size() / (double) UI.Buttons.BUTTONS_IN_A_ROW);
+        int maxRows = (int) Math.ceil((float) levelGroups.size() / (float) UI.Buttons.BUTTONS_IN_A_ROW);
         
         for (int row = 0; row < maxRows; row++) {
             int maxColumns = Math.min(levelGroups.size() - (row * UI.Buttons.BUTTONS_IN_A_ROW), UI.Buttons.BUTTONS_IN_A_ROW);

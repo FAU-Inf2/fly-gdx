@@ -43,10 +43,12 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
         contentTable.clear();
         
         Table buttonTable = new Table();
-        ScrollPane levelScrollPane = new ScrollPane(buttonTable, skin);
+        Table outerButtonTable = new Table();
+        outerButtonTable.add(buttonTable).width(viewport.getWorldWidth());
+        ScrollPane levelScrollPane = new ScrollPane(outerButtonTable, skin);
         levelScrollPane.setScrollingDisabled(true, false);
         levelScrollPane.setFadeScrollBars(false);
-        contentTable.add(levelScrollPane);
+        contentTable.add(levelScrollPane).pad(0);
         
         int rowToScrollTo = -1;
         final PlayerProfile currentProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
@@ -82,7 +84,7 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
                 });
                 buttonTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
             }
-            buttonTable.row().expand();
+            buttonTable.row();
         }
         
         // let the stage act once, otherwise scrolling programatically is not
@@ -92,7 +94,7 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
         if (rowToScrollTo < 0) {
             rowToScrollTo = maxRows;
         }
-        levelScrollPane.setScrollY(rowToScrollTo * (UI.Buttons.TEXT_BUTTON_HEIGHT + UI.Buttons.SPACE_HEIGHT) - Gdx.graphics.getHeight());
+        levelScrollPane.setScrollY(rowToScrollTo * (UI.Buttons.TEXT_BUTTON_HEIGHT + UI.Buttons.SPACE) - Gdx.graphics.getHeight());
     }
     
     /**

@@ -54,7 +54,7 @@ public class HighscoreScreen extends BasicScreenWithBackButton {
                         setLevelHighscoreScreen(group);
                     }
                 });
-                contentTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE_HEIGHT).expand();
+                contentTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
             }
             contentTable.row();
         }
