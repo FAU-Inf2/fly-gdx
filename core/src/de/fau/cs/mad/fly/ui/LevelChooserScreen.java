@@ -2,9 +2,7 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -16,6 +14,7 @@ import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.ui.UI.Window;
 
 /**
  * Offers the levels of one {@link LevelGroup }to start.
@@ -39,38 +38,42 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
     public void generateDynamicContent() {
         Skin skin = SkinManager.getInstance().getSkin();
         
-        // clear the contentTable so that elements of a previous view are deleted
+        // clear the contentTable so that elements of a previous view are
+        // deleted
         contentTable.clear();
         
         Table buttonTable = new Table();
         Table outerButtonTable = new Table();
-        outerButtonTable.add(buttonTable).width(viewport.getWorldWidth());
-        ScrollPane levelScrollPane = new ScrollPane(outerButtonTable, skin);
-        levelScrollPane.setScrollingDisabled(true, false);
-        levelScrollPane.setFadeScrollBars(false);
-        contentTable.add(levelScrollPane).pad(0);
+        outerButtonTable.add(buttonTable).width(viewport.getWorldWidth() - 2 * (Window.BORDER_SPACE - UI.Buttons.SPACE));
+        contentTable.add(outerButtonTable);
         
-        int rowToScrollTo = -1;
         final PlayerProfile currentProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         
         List<LevelProfile> allLevels = levelGroup.getLevels();
         
         // create a button for each level. The amount of buttons in a row can be
         // adjusted
-        int maxRows = (int) Math.ceil((double) allLevels.size() / (double) UI.Buttons.BUTTONS_IN_A_ROW);
+        int buttonsInARow;
+        int buttonWidth;
+        if(allLevels.size() > 2) {
+            buttonsInARow = 9;
+            buttonWidth = UI.Buttons.IMAGE_BUTTON_WIDTH;
+        }
+        else {
+            buttonsInARow = UI.Buttons.BUTTONS_IN_A_ROW;
+            buttonWidth = UI.Buttons.TEXT_BUTTON_WIDTH;
+        }
+        int maxRows = (int) Math.ceil((float) allLevels.size() / (float) buttonsInARow);
         
         for (int row = 0; row < maxRows; row++) {
-            int maxColumns = Math.min(allLevels.size() - (row * UI.Buttons.BUTTONS_IN_A_ROW), UI.Buttons.BUTTONS_IN_A_ROW);
+            int maxColumns = Math.min(allLevels.size() - (row * buttonsInARow), buttonsInARow);
             // fill a row with buttons
             for (int column = 0; column < maxColumns; column++) {
-                final LevelProfile level = allLevels.get(row * UI.Buttons.BUTTONS_IN_A_ROW + column);
+                final LevelProfile level = allLevels.get(row * buttonsInARow + column);
                 final TextButton button = new TextButton(level.name, skin);
                 
                 if (!Fly.DEBUG_MODE && (levelGroup.id > currentProfile.getPassedLevelgroupID() || (levelGroup.id == currentProfile.getPassedLevelgroupID() && level.id > currentProfile.getPassedLevelID()))) {
                     button.setDisabled(true);
-                    if (rowToScrollTo < 0) {
-                        rowToScrollTo = row;
-                    }
                 }
                 button.addListener(new ClickListener() {
                     @Override
@@ -82,19 +85,10 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
                         Loader.getInstance().loadLevel(level);
                     }
                 });
-                buttonTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
+                buttonTable.add(button).width(buttonWidth).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
             }
             buttonTable.row();
         }
-        
-        // let the stage act once, otherwise scrolling programatically is not
-        // possible
-        stage.act();
-        stage.draw();
-        if (rowToScrollTo < 0) {
-            rowToScrollTo = maxRows;
-        }
-        levelScrollPane.setScrollY(rowToScrollTo * (UI.Buttons.TEXT_BUTTON_HEIGHT + UI.Buttons.SPACE) - Gdx.graphics.getHeight());
     }
     
     /**

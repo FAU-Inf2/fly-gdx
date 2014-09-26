@@ -4,47 +4,47 @@
 	"levels": [
 		{
 			"id": 201,
-			"name": "Level 1",
+			"name": "1",
 			"file": "level1.json"
 		},
 		{
 			"id": 202,
-			"name": "Level 2",
+			"name": "2",
 			"file": "level2.json"
 		},
 		{
 			"id": 203,
-			"name": "Level 3",
+			"name": "3",
 			"file": "level3.json"
 		},
 		{
 			"id": 204,
-			"name": "Level 4",
+			"name": "4",
 			"file": "level4.json"
 		},
 		{
 			"id": 205,
-			"name": "Level 5",
+			"name": "5",
 			"file": "level5.json"
 		},
 		{
 			"id": 206,
-			"name": "Point Tutorial",
+			"name": "T 6",
 			"file": "pointsTutorial.json"
 		},
 		{
 			"id": 207,
-			"name": "Level 6",
+			"name": "6",
 			"file": "level6.json"
 		},
 		{
 			"id": 208,
-			"name": "Level 8",
+			"name": "8",
 			"file": "level8.json"
 		},		
 		{
 			"id": 209,
-			"name": "Level 9",
+			"name": "9",
 			"file": "level9.json"
 		}
 	]

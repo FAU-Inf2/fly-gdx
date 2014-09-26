@@ -223,7 +223,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
             
             lastLevelValueLabel.setText(I18n.t("ALLGroupPassed"));
         } else {
-            lastLevelValueLabel.setText("" + group + " - " + level);
+            lastLevelValueLabel.setText("" + group + " - " + playerProfile.getCurrentLevelProfile().name);
         }
     }
     
