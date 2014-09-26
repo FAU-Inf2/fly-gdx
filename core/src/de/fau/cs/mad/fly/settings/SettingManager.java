@@ -23,6 +23,7 @@ public class SettingManager {
     public static final String SHOW_FPS = "showFPS";
     public static final String VIBRATE_WHEN_COLLIDE = "vibrateWhenCollide";
     public static final String INVERT_PITCH = "invertPitch";
+    public static final String CHOSEN_PLANE_ID = "chosenPlaneID";
     
     private Preferences prefs;
     private Map<String, ISetting> settingMap;

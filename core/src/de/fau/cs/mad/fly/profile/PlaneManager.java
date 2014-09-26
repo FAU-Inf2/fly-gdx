@@ -3,17 +3,20 @@ package de.fau.cs.mad.fly.profile;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
+import java.util.Map.Entry;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.sql.DatabaseCursor;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.player.IPlane;
+import de.fau.cs.mad.fly.player.IPlane.Head;
 import de.fau.cs.mad.fly.res.PlaneUpgrade;
+import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
  * Manages the different Spaceships
@@ -32,6 +35,18 @@ public class PlaneManager {
     
     public static PlaneManager getInstance() {
         return Instance;
+    }
+    
+    private PlaneManager(){
+    	 PlayerProfileManager.getInstance().addPlayerChangedListener(new ChangeListener<PlayerProfile>() {
+             
+             @Override
+             public void changed(PlayerProfile newPlayerProfile) {
+            	 initPlayerUpdateAndEquiped(newPlayerProfile.getId());
+            	 chosenPlane = null;
+            	 getChosenPlane();
+             }             
+         });
     }
     
     public Map<Integer, IPlane.Head> getSpaceshipList() {
@@ -64,59 +79,58 @@ public class PlaneManager {
                     planeHead.particleOffset = new Vector3(particleOffset.getFloat(0), particleOffset.getFloat(1), particleOffset.getFloat(2));
                 }
                 
-                planeHead.file = file;
-                
+                planeHead.file = file;                
                 int[] upgradeTypes = json.get("upgrades").asIntArray();
                 planeHead.upgradeTypes = upgradeTypes;
-                
-                Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
-                planeHead.getUpgradesBought().clear();
-                planeHead.getUpgradesEquiped().clear();
-                // Map<String, Integer> upgradeMap = new HashMap<String,
-                // Integer>();
-                // Map<String, Integer> equipedMap = new HashMap<String,
-                // Integer>();
-                
-                Map<String, Integer> upgradeDB = getUpgradesFromDB(id);
-                Map<String, Integer> equipedDB = getEquipedsFromDB(id);
-                
-                int size = upgradeTypes.length;
-                for (PlaneUpgrade upgrade : upgrades) {
-                    for (int i = 0; i < size; i++) {
-                        if (upgrade.type == upgradeTypes[i]) {
-                            if (upgradeDB.get(upgrade.name) != null) {
-                                planeHead.getUpgradesBought().put(upgrade.name, upgradeDB.get(upgrade.name));
-                            } else {
-                                planeHead.addUpgradeBought(upgrade.name, 0);
-                            }
-                            if (equipedDB.get(upgrade.name) != null) {
-                                planeHead.getUpgradesBought().put(upgrade.name, equipedDB.get(upgrade.name));
-                            } else {
-                                planeHead.addUpgradeEquiped(upgrade.name, 0);
-                            }
-                        }
-                    }
-                }
-                
-                // planeHead.upgradesBought = upgradeMap;
-                // planeHead.upgradesEquiped = equipedMap;
-                
-                // planes.add(spaceshipHead);
                 planes.put(id, planeHead);
             }
+            initPlayerUpdateAndEquiped(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId());
         }
         return planes;
     }
+    
+	public void initPlayerUpdateAndEquiped( int playerID) {
+		if (planes == null) {
+			getSpaceshipList();
+		}
+		for (Entry<Integer, Head> entry : planes.entrySet()) {
+			IPlane.Head planeHead = entry.getValue();
+			Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
+			planeHead.getUpgradesBought().clear();
+			planeHead.getUpgradesEquiped().clear();
+
+			Map<String, Integer> upgradeDB = getUpgradesFromDB(planeHead.id);
+			Map<String, Integer> equipedDB = getEquipedsFromDB(planeHead.id);
+
+			for (PlaneUpgrade upgrade : upgrades) {
+				// for (int i = 0; i < upgradeTypes.length; i++) {
+				// if (upgrade.name == upgradeTypes[i]) {
+				if (upgradeDB.get(upgrade.name) != null) {
+					planeHead.getUpgradesBought().put(upgrade.name, upgradeDB.get(upgrade.name));
+				} else {
+					planeHead.getUpgradesBought().put(upgrade.name, 0);
+				}
+				if (equipedDB.get(upgrade.name) != null) {
+					planeHead.getUpgradesEquiped().put(upgrade.name, equipedDB.get(upgrade.name));
+				} else {
+					planeHead.getUpgradesEquiped().put(upgrade.name, 0);
+				}
+				// }
+				// }
+			}
+		}
+	}
     
     public Map<String, Integer> getEquipedsFromDB(int planeID) {
         Map<String, Integer> result = new HashMap<String, Integer>();
         String sql = "select equiped_name, _count from fly_plane_Equiped where player_id=" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId() + " and plane_id=" + planeID;
         DatabaseCursor cursor = FlyDBManager.getInstance().selectData(sql);
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.next();
-            result.put(cursor.getString(0), cursor.getInt(1));
-            cursor.close();
-        }
+		if (cursor != null && cursor.getCount() > 0) {
+			while (cursor.next()) {
+				result.put(cursor.getString(0), cursor.getInt(1));
+			}
+			cursor.close();
+		}
         return result;
     }
     
@@ -124,11 +138,12 @@ public class PlaneManager {
         Map<String, Integer> result = new HashMap<String, Integer>();
         String sql = "select update_name, _count from fly_plane_upgrade where player_id=" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId() + " and plane_id=" + planeID;
         DatabaseCursor cursor = FlyDBManager.getInstance().selectData(sql);
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.next();
-            result.put(cursor.getString(0), cursor.getInt(1));
-            cursor.close();
-        }
+		if (cursor != null && cursor.getCount() > 0) {
+			while (cursor.next()) {
+				result.put(cursor.getString(0), cursor.getInt(1));
+			}
+			cursor.close();
+		}
         return result;
     }
     
@@ -158,12 +173,26 @@ public class PlaneManager {
         return 0;
     }
     
-    public IPlane.Head getChosenPlane() {
-        if (chosenPlane == null) {
-            chosenPlane = getSpaceshipList().get(1);
-        }
-        return chosenPlane;
-    }
+	public IPlane.Head getChosenPlane() {
+		if (chosenPlane == null) {
+			Preferences appPrefs = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences();
+			if (!appPrefs.contains(SettingManager.CHOSEN_PLANE_ID)) {
+				appPrefs.putInteger(SettingManager.CHOSEN_PLANE_ID, 0);
+				appPrefs.flush();
+			}
+
+			int planeID = appPrefs.getInteger(SettingManager.CHOSEN_PLANE_ID);
+			for (IPlane.Head plane : getSpaceshipList().values()) {
+				if (plane.id == planeID) {
+					chosenPlane = plane;
+				}
+			}
+			if (chosenPlane == null) {
+				chosenPlane = getSpaceshipList().get(1);
+			}
+		}
+		return chosenPlane;
+	}
     
     public IPlane.Head getNextPlane(int left) {
         if (chosenPlane == null) {
@@ -189,9 +218,12 @@ public class PlaneManager {
         return chosenPlane;
     }
     
-    public void setChosenPlane(IPlane.Head plane) {
-        chosenPlane = plane;
-    }
+	public void setChosenPlane(IPlane.Head plane) {
+		chosenPlane = plane;
+		Preferences appPrefs = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences();
+		appPrefs.putInteger(SettingManager.CHOSEN_PLANE_ID, plane.id);
+		appPrefs.flush();
+	}
     
     public IPlane.Head upgradePlane(String upgradeName, int signum) {
         PlaneUpgrade upgrade = PlaneUpgradeManager.getInstance().getUpgrade(upgradeName);
