@@ -80,9 +80,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                PlayerProfile profile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-                profile.setToNextLevel();
-                profile.saveCurrentLevelProfile();
+                //Removed by fan, this settings were already set. No need to set it here now.
+            	//Please don't change it back again!
+            	//PlayerProfile profile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                //profile.setToNextLevel();
+                //profile.saveCurrentLevelProfile();
                 ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             }
         });
@@ -291,18 +293,13 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         messageTable.add();
         messageTable.add(new Label(detail.getValue(), skin, "medium-font")).left();
         
-        Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
-        if ((tmpScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > tmpScore.getTotalScore()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ScoreManager.getInstance().saveBestScore(newScore);
-                }
-            }).start();
-            
-            messageTable.row();
-            messageTable.add(new Label(I18n.t("newRecord"), skin, "black")).colspan(3);
-        }
+		Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
+		if ((tmpScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > tmpScore.getTotalScore()) {
+			ScoreManager.getInstance().saveBestScore(newScore);
+
+			messageTable.row();
+			messageTable.add(new Label(I18n.t("newRecord"), skin, "black")).colspan(3);
+		}
         messageTable.row().expand();
     }
 }
