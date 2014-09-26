@@ -83,6 +83,9 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
     @Override
     public void dispose() {
         super.dispose();
-        levelChooserScreen.dispose();
+        if (levelChooserScreen != null) {
+            levelChooserScreen.dispose();
+            levelChooserScreen = null;
+        }
     }
 }

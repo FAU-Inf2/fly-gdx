@@ -43,7 +43,6 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
     
     private LevelGroup levelGroup;
     
-    
     public LevelGroupHighscoreScreen(LevelGroup group, BasicScreen screenToReturn) {
         super(screenToReturn);
         this.levelGroup = group;
@@ -53,6 +52,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
      * init buttons, which don't need to be created dynamically
      */
     private void initButtons() {
+        // global high score button
         Skin skin = SkinManager.getInstance().getSkin();
         globalHighScoreButton = new TextButton(I18n.t("GlobalHighscores"), skin);
         globalHighScoreButton.addListener(new ClickListener() {
@@ -61,6 +61,11 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                 ((Fly) Gdx.app.getApplicationListener()).setGlobalHighScoreScreen(levelGroup);
             }
         });
+        
+        Table highscoreButtonTable = new Table();
+        highscoreButtonTable.setFillParent(true);
+        stage.addActor(highscoreButtonTable);
+        highscoreButtonTable.add(globalHighScoreButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).bottom().expand();
     }
     
     /**
@@ -69,21 +74,9 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
      */
     @Override
     protected void generateContent() {
-        
         generateBackButton();
-        long begin = System.currentTimeMillis();
         initButtons();
-        
-        
         scoreTable = new Table();
-        Skin skin = SkinManager.getInstance().getSkin();
-        
-        final ScrollPane statisticsPane = new ScrollPane(scoreTable, skin);
-        statisticsPane.setFadeScrollBars(false);
-        statisticsPane.setScrollingDisabled(true, false);
-        scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
-        Gdx.app.log("timing", "LevelsStatisScreen generateContent " + (System.currentTimeMillis() - begin));
-        contentTable.add(statisticsPane);
     }
     
     /**
@@ -115,9 +108,20 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         
         Map<String, Score> scores;
         long begin, end;
+        boolean newRow = false;
         
         @Override
         public void run() {
+            final Skin skin = SkinManager.getInstance().getSkin();
+            scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
+            final ScrollPane statisticsPane = new ScrollPane(scoreTable, skin, "black-background");
+            statisticsPane.setFadeScrollBars(false);
+            statisticsPane.setScrollingDisabled(true, false);
+            
+            contentTable.add(new Label(levelGroup.name, skin)).pad(0, 0, UI.Buttons.SPACE, 0);
+            contentTable.row();
+            contentTable.add(statisticsPane);
+            
             begin = System.currentTimeMillis();
             scores = ScoreManager.getInstance().getPlayerBestScores(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), levelGroup);
             end = System.currentTimeMillis();
@@ -135,14 +139,11 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                     end = System.currentTimeMillis();
                     Gdx.app.log("timing", "clear UI table " + (end - begin));
                     begin = end;
-                    Skin skin = SkinManager.getInstance().getSkin();
-                    scoreTable.add(new Label(levelGroup.name, skin)).colspan(3);
-                    scoreTable.row().expand();
                     
                     // add scores details
                     boolean haveScore = false;
                     
-                    List<String> sortedKeys=new ArrayList<String>(scores.keySet());
+                    List<String> sortedKeys = new ArrayList<String>(scores.keySet());
                     Collections.sort(sortedKeys);
                     Collections.reverse(sortedKeys);
                     
@@ -151,18 +152,9 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                         if (score != null && score.getTotalScore() > 0) {
                             haveScore = true;
                             String levelname = levelGroup.getLevelName(Integer.valueOf(levelID));
-                            scoreTable.add(new Label(levelname, skin));
+                            scoreTable.add(new Label(levelname + ":", skin)).pad(UI.Buttons.SPACE, 100, UI.Buttons.SPACE, UI.Buttons.SPACE).right();
                             
-                            scoreTable.add(new Label(score.getTotalScore() + "", skin));
-                            // for (ScoreDetail detail :
-                            // score.getScoreDetails()) {
-                            // scoreTable.row().expand();
-                            // scoreTable.add(new
-                            // Label(I18n.t(detail.getDetailName()),
-                            // skin)).pad(6f).right();
-                            // scoreTable.add(new Label(detail.getValue(),
-                            // skin)).pad(6f);
-                            // }
+                            scoreTable.add(new Label(score.getTotalScore() + "", skin)).pad(UI.Buttons.SPACE, 20, UI.Buttons.SPACE, UI.Buttons.SPACE).right();
                             
                             Gdx.app.log("timing", " UI one score record UI builded " + (end - begin) + " " + levelID + levelname);
                             uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin);
@@ -170,24 +162,23 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                                 uploadScoreButton.setDisabled(true);
                             }
                             uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton));
-                            // scoreTable.row().expand();
-                            scoreTable.add(uploadScoreButton).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-                            scoreTable.row().expand();
+                            
+                            scoreTable.add(uploadScoreButton).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, UI.Buttons.SPACE, 40, 120);
                         }
-                        scoreTable.add(new Label("", skin)).pad(6f).uniform();
-                        scoreTable.row().expand();
+                        if (newRow) {
+                            scoreTable.row();
+                            newRow = false;
+                        } else {
+                            newRow = true;
+                        }
                     }
                     
                     // if no score at all
                     if (!haveScore) {
                         scoreTable.row();
-                        scoreTable.add(new Label(I18n.t("noScore"), skin)).pad(6f).uniform();
+                        scoreTable.add(new Label(I18n.t("noScore"), skin));
                         scoreTable.row().expand();
                     }
-                    
-                    // global high score button
-                    scoreTable.row();
-                    scoreTable.add(globalHighScoreButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).colspan(3);
                     
                     end = System.currentTimeMillis();
                     Gdx.app.log("timing", " UI table builded " + (end - begin));
@@ -226,8 +217,8 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         
         @Override
         public void changed(ChangeEvent event, Actor actor) {
-        	button.setDisabled(true);
-        	
+            button.setDisabled(true);
+            
             final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
             requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
             requestData.LevelID = levelId;
@@ -318,8 +309,8 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         
         @Override
         public void successful(Object obj) {
-        	button.setDisabled(false);
-        	
+            button.setDisabled(false);
+            
             if (requestData.Score.getServerScoreId() > 0) {
                 requestData.Score.setIsUploaded(true);
                 ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), requestData.LevelgroupID, requestData.LevelID);
@@ -349,8 +340,8 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         
         @Override
         public void failed(String msg) {
-        	button.setDisabled(false);
-        	
+            button.setDisabled(false);
+            
             final String msgg = msg;
             Gdx.app.postRunnable(new Runnable() {
                 @Override
