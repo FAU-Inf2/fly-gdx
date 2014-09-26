@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.ui;
 
-import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 
 /**
@@ -19,11 +18,7 @@ public class EditPlayerNameScreen extends InputScreen {
      * Save the new user name and go back to the previous screen.
      */
     protected void validInputAndGoBack() {
-        String newUserName = textField.getText();
-        
-        PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-        playerProfile.setName(newUserName);
-        PlayerProfileManager.getInstance().updateIntColumn(playerProfile, "name", newUserName);
+        PlayerProfileManager.getInstance().editCurrentPlayerName(textField.getText());
         goBackToPreviousScreen();
     }
     

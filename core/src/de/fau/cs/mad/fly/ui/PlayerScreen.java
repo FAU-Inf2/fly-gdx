@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Array;
 
 import de.fau.cs.mad.fly.I18n;
+import de.fau.cs.mad.fly.profile.ChangeListener;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -43,6 +44,9 @@ public class PlayerScreen extends BasicScreenWithBackButton {
     private BasicScreen addNewPlayerScreen;
     private BasicScreen editPlayerNameScreen;
     
+    private Label totalScoreValueLabel;
+    private Label lastLevelValueLabel;
+    
     public final static int MAX_NAME_WIDTH = 1650;
     
     public PlayerScreen(BasicScreen screenToReturn) {
@@ -50,13 +54,13 @@ public class PlayerScreen extends BasicScreenWithBackButton {
     }
     
     /**
-     * Method that is called, if the list of user changes.
+     * Method that is called, if the list of user changes. It updates the user
+     * table and sets its selection to the given {@link PlayerProfile}.
      */
-    public void updateUserTable() {
-        PlayerProfileManager playerProfileManager = PlayerProfileManager.getInstance();
-        String currentUserName = playerProfileManager.getCurrentPlayerProfile().getName();
+    public void updateUserTable(PlayerProfile newPlayerProfile) {
+        String currentUserName = newPlayerProfile.getName();
         Array<String> nameList = new Array<String>();
-        List<PlayerProfile> playerList = playerProfileManager.getAllPlayerProfiles();
+        List<PlayerProfile> playerList = PlayerProfileManager.getInstance().getAllPlayerProfiles();
         String name;
         for (int i = 0; i < playerList.size(); i++) {
             name = playerList.get(i).getName();
@@ -65,7 +69,6 @@ public class PlayerScreen extends BasicScreenWithBackButton {
                 selectedUserindex = i;
             }
         }
-        playerProfileManager.setCurrentPlayer(playerList.get(selectedUserindex));
         userSelectBox.setItems(nameList);
         userSelectBox.setSelectedIndex(selectedUserindex);
     }
@@ -87,7 +90,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         
         // add all users to userList and set the current user to display value
         userSelectBox = new SelectBox<String>(skin);
-        updateUserTable();
+        updateUserTable(playerProfileManager.getCurrentPlayerProfile());
         userSelectBox.getList().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -95,9 +98,16 @@ public class PlayerScreen extends BasicScreenWithBackButton {
                     selectedUserindex = userSelectBox.getSelectedIndex();
                     PlayerProfile newPlayerProfile = playerProfileManager.getAllPlayerProfiles().get(selectedUserindex);
                     playerProfileManager.setCurrentPlayer(newPlayerProfile);
-                    updateUserTable();
                 }
             }
+        });
+        playerProfileManager.addPlayerChangedListener(new ChangeListener<PlayerProfile>() {
+            
+            @Override
+            public void changed(PlayerProfile newPlayerProfile) {
+                updateUserTable(newPlayerProfile);
+            }
+            
         });
         playerTable.add(userSelectBox).width(MAX_NAME_WIDTH);
         playerTable.row();
@@ -143,7 +153,6 @@ public class PlayerScreen extends BasicScreenWithBackButton {
                         protected void result(Object object) {
                             if (DialogWithOneButton.FIRST_BUTTON.equals(object.toString())) {
                                 playerProfileManager.deletePlayerProfile();
-                                updateUserTable();
                             }
                         }
                     };
@@ -159,7 +168,17 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         
         // show total score
         playerTable.add(new Label(I18n.t("labelTotalScore"), skin)).pad(padding);
-        playerTable.add(new Label("" + playerProfile.getMoney(), skin)).pad(padding);
+        totalScoreValueLabel = new Label("" + playerProfile.getMoney(), skin);
+        playerTable.add(totalScoreValueLabel).pad(padding);
+        playerProfileManager.addPlayerChangedListener(new ChangeListener<PlayerProfile>() {
+            
+            @Override
+            public void changed(PlayerProfile newPlayerProfile) {
+                totalScoreValueLabel.setText(String.valueOf(newPlayerProfile.getMoney()));
+                updateLastLevelGroup(newPlayerProfile);
+            }
+            
+        });
         // TODO: do not use money for that!
         playerTable.row();
         
@@ -191,15 +210,21 @@ public class PlayerScreen extends BasicScreenWithBackButton {
      */
     private void addLastLevel(PlayerProfile playerProfile, Skin skin) {
         playerTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-        
+        lastLevelValueLabel = new Label("", skin);
+        playerTable.add(lastLevelValueLabel);
+        updateLastLevelGroup(playerProfile);
+        playerTable.row();
+    }
+    
+    private void updateLastLevelGroup(PlayerProfile playerProfile) {
         int group = playerProfile.getPassedLevelgroupID();
         int level = playerProfile.getPassedLevelID();
         if (level > LevelGroupManager.getInstance().getLastGroup().getLastLevelProfile().id) {
-            playerTable.add(new Label(I18n.t("ALLGroupPassed"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+            
+            lastLevelValueLabel.setText(I18n.t("ALLGroupPassed"));
         } else {
-            playerTable.add(new Label("" + group + " - " + level, skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+            lastLevelValueLabel.setText("" + group + " - " + level);
         }
-        playerTable.row();
     }
     
     @Override
@@ -210,6 +235,10 @@ public class PlayerScreen extends BasicScreenWithBackButton {
     @Override
     public void show() {
         super.show();
-        updateUserTable();
+        if (totalScoreValueLabel != null) {
+            PlayerProfile currentPlayerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+            totalScoreValueLabel.setText(String.valueOf(currentPlayerProfile.getMoney()));
+            updateLastLevelGroup(currentPlayerProfile);
+        }
     }
 }

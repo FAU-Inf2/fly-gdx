@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.sql.DatabaseCursor;
+
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.settings.AppSettingsManager;
@@ -14,16 +15,60 @@ import de.fau.cs.mad.fly.settings.AppSettingsManager;
  * @author Qufang Fan
  */
 public class PlayerProfileManager {
+    
     private PlayerProfile currentPlayerProfile;
-    List<PlayerProfile> playerProfiles;
+    private List<PlayerProfile> playerProfiles;
+    private static PlayerProfileManager Instance = new PlayerProfileManager();
+    private List<ChangeListener<PlayerProfile>> playerProfileChangeListener;
     
     public PlayerProfile getCurrentPlayerProfile() {
         return currentPlayerProfile;
     }
     
+    /**
+     * Sets the current player and saves them during the app is running in the
+     * {@link AppSettingsManager}. If the new {@link PlayerProfile} is an other
+     * profile than the current, it calls {@link #currentPlayerProfileChanged().
+     */
     public void setCurrentPlayer(PlayerProfile currentPlayerProfile) {
-        this.currentPlayerProfile = currentPlayerProfile;
-        AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.CHOSEN_USER, currentPlayerProfile.getId());
+        if (this.currentPlayerProfile != currentPlayerProfile) {
+            this.currentPlayerProfile = currentPlayerProfile;
+            AppSettingsManager.Instance.setIntegerSetting(AppSettingsManager.CHOSEN_USER, currentPlayerProfile.getId());
+            currentPlayerProfileChanged();
+        }
+        
+    }
+    
+    /**
+     * Adds a new {@link PlayerProfile} with the defined name and makes it the
+     * new {@link #currentPlayerProfile} with {@link #setCurrentPlayer(PlayerProfile)}.
+     * 
+     * @param newPlayerProfileName
+     */
+    public void addNewPlayerProfile(String newPlayerProfileName) {
+        PlayerProfile newPlayerProfile = new PlayerProfile();
+        newPlayerProfile.setName(newPlayerProfileName);
+        playerProfiles.add(newPlayerProfile);
+        addNewPlayerToDatabase(newPlayerProfile);
+        setCurrentPlayer(newPlayerProfile);
+    }
+    
+    /** Calls every listener of the current {@link PlayerProfile} */
+    private void currentPlayerProfileChanged() {
+        for (int i = playerProfileChangeListener.size() - 1; i >= 0; i--) {
+            playerProfileChangeListener.get(i).changed(currentPlayerProfile);
+        }
+    }
+    
+    /**
+     * Add a new listener, that is called whenever the current
+     * {@link PlayerProfile} is changed by
+     * {@link #setCurrentPlayer(PlayerProfile)}.
+     * 
+     * @param listener
+     */
+    public void addPlayerChangedListener(ChangeListener<PlayerProfile> listener) {
+        playerProfileChangeListener.add(listener);
     }
     
     /**
@@ -33,18 +78,17 @@ public class PlayerProfileManager {
     private PlayerProfileManager() {
         setPlayers();
         
+        playerProfileChangeListener = new ArrayList<ChangeListener<PlayerProfile>>();
+        
         int userID = AppSettingsManager.Instance.getIntegerSetting(AppSettingsManager.CHOSEN_USER, 0);
         PlayerProfile player = getPlayerfromList(userID);
         if (player == null) {
-            player = new PlayerProfile();
-            player.setName(I18n.t("default.playerName"));
-            savePlayer(player);
+            addNewPlayerProfile(I18n.t("default.playerName"));
         }
-        
-        setCurrentPlayer(player);
+        else {
+            setCurrentPlayer(player);
+        }
     }
-    
-    private static PlayerProfileManager Instance = new PlayerProfileManager();
     
     public static PlayerProfileManager getInstance() {
         return Instance;
@@ -105,16 +149,11 @@ public class PlayerProfileManager {
         }
     }
     
-    public void savePlayer(PlayerProfile playerProfile) {
-        
+    private void addNewPlayerToDatabase(PlayerProfile playerProfile) {
         int newID = getMaxPlayerID() + 1;
         playerProfile.setId(newID);
         final String insertSQL = "insert into player (player_id, name) values (" + playerProfile.getId() + " , '" + playerProfile.getName() + "')";
-        
         FlyDBManager.getInstance().execSQL(insertSQL);
-        
-        playerProfiles.add(playerProfile);
-        
     }
     
     private int getMaxPlayerID() {
@@ -142,7 +181,22 @@ public class PlayerProfileManager {
         FlyDBManager.getInstance().execSQL(sql);
     }
     
-    public void updateIntColumn(PlayerProfile playerProfile, String colname, String newValue) {
+    /**
+     * Changes the name of the current {@link PlayerProfile} to the defined
+     * name. In case it is a new name {@link #currentPlayerProfileChanged()} is
+     * called.
+     * 
+     * @param newPlayerProfileName
+     */
+    public void editCurrentPlayerName(String newPlayerProfileName) {
+        if (!currentPlayerProfile.getName().equals(newPlayerProfileName)) {
+            updateIntColumn(currentPlayerProfile, "name", newPlayerProfileName);
+            currentPlayerProfile.setName(newPlayerProfileName);
+            currentPlayerProfileChanged();
+        }
+    }
+    
+    private void updateIntColumn(PlayerProfile playerProfile, String colname, String newValue) {
         final String sql = "update player set " + colname + "='" + newValue + "' where player_id=" + playerProfile.getId();
         FlyDBManager.getInstance().execSQL(sql);
     }
