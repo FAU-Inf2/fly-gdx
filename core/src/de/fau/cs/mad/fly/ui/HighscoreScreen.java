@@ -22,10 +22,12 @@ import de.fau.cs.mad.fly.profile.LevelGroupManager;
  */
 public class HighscoreScreen extends BasicScreenWithBackButton {
     
+    private LevelGroupHighscoreScreen levelHighscoreScreen;
+    
     public HighscoreScreen(BasicScreen screenToReturn) {
         super(screenToReturn);
     }
-
+    
     /**
      * generate Content here two Tables are used to show the content: userTable
      * and levelgroupTable
@@ -61,7 +63,18 @@ public class HighscoreScreen extends BasicScreenWithBackButton {
     }
     
     private void setLevelHighscoreScreen(LevelGroup group) {
-        LevelGroupHighscoreScreen levelHighscoreScreen = new LevelGroupHighscoreScreen(group, this);
+        if (levelHighscoreScreen == null) {
+            levelHighscoreScreen = new LevelGroupHighscoreScreen(this);
+        }
+        levelHighscoreScreen.setLevelGroup(group);
         levelHighscoreScreen.set();
+    }
+    
+    @Override
+    public void dispose() {
+        if(levelHighscoreScreen != null) {
+            levelHighscoreScreen.dispose();
+            levelHighscoreScreen = null;
+        }
     }
 }

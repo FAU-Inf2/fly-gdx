@@ -1,10 +1,12 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
@@ -20,7 +22,7 @@ import de.fau.cs.mad.fly.profile.LevelGroup;
  * @author Qufang Fan
  * 
  */
-public class GlobalHighScoreScreen extends BasicScreen {
+public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
     
     private Table infoTable;
     
@@ -29,7 +31,11 @@ public class GlobalHighScoreScreen extends BasicScreen {
     
     private LevelGroup levelGroup;
     
-    public GlobalHighScoreScreen(LevelGroup group) {
+    public GlobalHighscoreScreen(BasicScreen screenToGoBack) {
+        super(screenToGoBack);
+    }
+    
+    public void setLevelGroup(LevelGroup group) {
         levelGroup = group;
     }
     
@@ -54,8 +60,8 @@ public class GlobalHighScoreScreen extends BasicScreen {
                         for (LevelRecords item : results.records) {
                             String levelname = levelGroup.getLevelName(item.levelID);
                             infoTable.row();
-                            infoTable.add(new Label(I18n.t("level"), skin)).left();
-                            infoTable.add(new Label(levelname, skin, "darkGrey")).pad(0, 0, 0, padding).left();
+                            infoTable.add(new Label(I18n.t("level"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+                            infoTable.add(new Label(levelname, skin)).pad(0, 0, 0, padding).left();
                             infoTable.row();
                             infoTable.add(new Label(I18n.t("flyID"), skin)).left();
                             infoTable.add(new Label(I18n.t("player"), skin)).left();
@@ -72,13 +78,10 @@ public class GlobalHighScoreScreen extends BasicScreen {
                         }
                     } else {
                         infoTable.row();
-                        infoTable.add(new Label(levelGroup.name, skin, "darkGrey")).pad(0, 0, 0, padding).left();
+                        infoTable.add(new Label(levelGroup.name, skin)).pad(0, 0, 0, padding).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                         infoTable.row();
-                        infoTable.add(new Label(I18n.t("noScore"), skin, "darkGrey"));
+                        infoTable.add(new Label(I18n.t("noScore"), skin, "darkGrey")).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                     }
-                    infoTable.row();
-                    infoTable.add(new Label(" ", skin));
-                    infoTable.row();
                 }
             });
             
@@ -86,16 +89,16 @@ public class GlobalHighScoreScreen extends BasicScreen {
         
         @Override
         public void failed(String msg) {
-        	infoTable.clear();
-        	infoTable.row().expand();
-        	String showmsg;
-        	if (msg != null && msg.length() > 21) {
-        		showmsg = I18n.t("ConnectServerError") + msg.substring(0, 20) + "...";
+            infoTable.clear();
+            infoTable.row().expand();
+            String showmsg;
+            if (msg != null && msg.length() > 21) {
+                showmsg = I18n.t("ConnectServerError") + msg.substring(0, 20) + "...";
             } else {
-            	showmsg = I18n.t("ConnectServerError") + msg;
+                showmsg = I18n.t("ConnectServerError") + msg;
             }
-        	Skin skin = SkinManager.getInstance().getSkin();
-            infoTable.add(new Label(showmsg, skin)).pad(6f).uniform();
+            Skin skin = SkinManager.getInstance().getSkin();
+            infoTable.add(new Label(showmsg, skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         }
         
         @Override
@@ -111,20 +114,20 @@ public class GlobalHighScoreScreen extends BasicScreen {
      */
     @Override
     protected void generateContent() {
-        stage.clear();    
+        Skin skin = SkinManager.getInstance().getSkin();
+        stage.clear();
         infoTable = new Table();
-        infoTable.pad(UI.Window.BORDER_SPACE);
+        infoTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
         infoTable.setFillParent(true);
         
-        Skin skin = SkinManager.getInstance().getSkin();
         final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
         statisticsPane.setFadeScrollBars(false);
         statisticsPane.setScrollingDisabled(true, false);
-        statisticsPane.setFillParent(true);
         
-        infoTable.add(new Label(I18n.t("StatusLoading"), skin));
+        infoTable.add(new Label(I18n.t("StatusLoading"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         
-        stage.addActor(statisticsPane);
+        generateBackButton();
+        contentTable.add(statisticsPane);
     }
     
     protected void generateContentDynamic() {

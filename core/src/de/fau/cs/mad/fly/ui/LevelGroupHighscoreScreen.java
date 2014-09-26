@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.PostHighscoreService;
@@ -43,29 +42,26 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
     
     private LevelGroup levelGroup;
     
-    public LevelGroupHighscoreScreen(LevelGroup group, BasicScreen screenToReturn) {
+    private GlobalHighscoreScreen globalHighscoreScreen;
+    
+    public LevelGroupHighscoreScreen(BasicScreen screenToReturn) {
         super(screenToReturn);
-        this.levelGroup = group;
+    }
+    
+    public void setLevelGroup(LevelGroup levelGroup) {
+        this.levelGroup = levelGroup;
     }
     
     /**
-     * init buttons, which don't need to be created dynamically
+     * Switches to {@link GlobalHighscoreScreen} which show the defined
+     * {@link LevelGroup}.
      */
-    private void initButtons() {
-        // global high score button
-        Skin skin = SkinManager.getInstance().getSkin();
-        globalHighScoreButton = new TextButton(I18n.t("GlobalHighscores"), skin);
-        globalHighScoreButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setGlobalHighScoreScreen(levelGroup);
-            }
-        });
-        
-        Table highscoreButtonTable = new Table();
-        highscoreButtonTable.setFillParent(true);
-        stage.addActor(highscoreButtonTable);
-        highscoreButtonTable.add(globalHighScoreButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).bottom().expand();
+    private void setGlobalHighscoreScreen(LevelGroup levelGroup) {
+        if (globalHighscoreScreen == null) {
+            globalHighscoreScreen = new GlobalHighscoreScreen(this);
+        }
+        globalHighscoreScreen.setLevelGroup(levelGroup);
+        globalHighscoreScreen.set();
     }
     
     /**
@@ -75,7 +71,6 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
     @Override
     protected void generateContent() {
         generateBackButton();
-        initButtons();
         scoreTable = new Table();
     }
     
@@ -84,10 +79,18 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
      */
     @Override
     public void show() {
-        long begin = System.currentTimeMillis();
         super.show();
+        scoreTable.clear();
+        contentTable.clear();
         genarateScoreTable();
-        Gdx.app.log("timing", "LevelsStatisScreen show " + (System.currentTimeMillis() - begin));
+    }
+    
+    @Override
+    public void dispose() {
+        if (globalHighscoreScreen != null) {
+            globalHighscoreScreen.dispose();
+            globalHighscoreScreen = null;
+        }
     }
     
     /**
@@ -113,6 +116,21 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         @Override
         public void run() {
             final Skin skin = SkinManager.getInstance().getSkin();
+
+            // global high score button
+            globalHighScoreButton = new TextButton(I18n.t("GlobalHighscores"), skin);
+            globalHighScoreButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    setGlobalHighscoreScreen(levelGroup);
+                }
+            });
+            
+            Table highscoreButtonTable = new Table();
+            highscoreButtonTable.setFillParent(true);
+            stage.addActor(highscoreButtonTable);
+            highscoreButtonTable.add(globalHighScoreButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).bottom().expand();
+            
             scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
             final ScrollPane statisticsPane = new ScrollPane(scoreTable, skin, "black-background");
             statisticsPane.setFadeScrollBars(false);
@@ -120,25 +138,15 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
             
             contentTable.add(new Label(levelGroup.name, skin)).pad(0, 0, UI.Buttons.SPACE, 0);
             contentTable.row();
-            contentTable.add(statisticsPane);
+            contentTable.add(statisticsPane).expand();
             
-            begin = System.currentTimeMillis();
             scores = ScoreManager.getInstance().getPlayerBestScores(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), levelGroup);
-            end = System.currentTimeMillis();
-            Gdx.app.log("timing", "get data from db " + (end - begin));
-            begin = end;
             // it is faster if we remove this postRunnable, but it may also
             // bring in UI render exception
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                    end = System.currentTimeMillis();
-                    Gdx.app.log("timing", "begin run postrunable " + (end - begin));
-                    begin = end;
                     scoreTable.clear();
-                    end = System.currentTimeMillis();
-                    Gdx.app.log("timing", "clear UI table " + (end - begin));
-                    begin = end;
                     
                     // add scores details
                     boolean haveScore = false;
@@ -175,18 +183,9 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                     
                     // if no score at all
                     if (!haveScore) {
+                        scoreTable.add(new Label(I18n.t("noScore"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE);
                         scoreTable.row();
-                        scoreTable.add(new Label(I18n.t("noScore"), skin));
-                        scoreTable.row().expand();
                     }
-                    
-                    end = System.currentTimeMillis();
-                    Gdx.app.log("timing", " UI table builded " + (end - begin));
-                    begin = end;
-                    scoreTable.layout();
-                    end = System.currentTimeMillis();
-                    Gdx.app.log("timing", " UI table updated" + (end - begin));
-                    begin = end;
                 }
             });
             

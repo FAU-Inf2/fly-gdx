@@ -13,13 +13,10 @@ import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.game.ParticleController;
-import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GameScreen;
-import de.fau.cs.mad.fly.ui.GlobalHighScoreScreen;
-import de.fau.cs.mad.fly.ui.HighscoreScreen;
 import de.fau.cs.mad.fly.ui.LevelLoadingScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
@@ -56,7 +53,6 @@ public class Fly extends Game implements Loadable<Fly> {
     private PlaneChooserScreen planeChooserScreen;
     private PlaneUpgradeScreen planeUpgradeScreen;
     private GameScreen gameScreen;
-    private GlobalHighScoreScreen globalHighScoreScreen;
     private MainMenuScreen mainMenuScreen;
 
     private GameController gameController;
@@ -203,16 +199,6 @@ public class Fly extends Game implements Loadable<Fly> {
             gameScreen = new GameScreen(this);
         }
         setScreen(gameScreen);
-    }
-    
-    /**
-     * Switches the current screen to the {@link HighscoreScreen}.
-     */
-    public void setGlobalHighScoreScreen(LevelGroup levelGroup) {
-        if (globalHighScoreScreen == null) {
-            globalHighScoreScreen = new GlobalHighScoreScreen(levelGroup);
-        }
-        setScreen(globalHighScoreScreen);
     }
     
     /**
