@@ -153,7 +153,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private void playerDead(Skin skin) {
         showInfoLabel(skin, "ship.destroyed");
         
-        if (gameController.getLevel().head.isEndless()) {
+        if (gameController.getLevel().head.isEndless()||gameController.getLevel().head.isEndlessRails()) {
             showScore(skin);
         }
         

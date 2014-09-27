@@ -80,7 +80,7 @@ public class ScoreController extends GateCircuitAdapter {
             
             newScore.setTotalScore(score);
             return newScore;
-        } else if (gameController.getLevel().head.isEndless()) {
+        } else if (gameController.getLevel().head.isEndless()||gameController.getLevel().head.isEndlessRails()) {
             Score newScore = new Score();
             newScore.setReachedDate(new Date());
             
