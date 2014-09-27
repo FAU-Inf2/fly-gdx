@@ -295,6 +295,12 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         
 		Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
 		if ((tmpScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > tmpScore.getTotalScore()) {
+			
+			//solution B for totalHighScoreOfall
+ 			int score0 = (tmpScore == null)? 0 : tmpScore.getTotalScore();
+			int addScore = newScore.getTotalScore() - score0;
+			PlayerProfileManager.getInstance().getCurrentPlayerProfile().addScore(addScore);
+			
 			ScoreManager.getInstance().saveBestScore(newScore);
 
 			messageTable.row();

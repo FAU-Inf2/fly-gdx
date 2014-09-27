@@ -2,6 +2,9 @@ package de.fau.cs.mad.fly.profile;
 
 import java.util.List;
 
+import com.badlogic.gdx.sql.DatabaseCursor;
+
+import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.settings.SettingManager;
 
@@ -49,11 +52,16 @@ public class PlayerProfile {
     private IPlane.Head plane;
     
     /**
-     * The amount of money the player currently has
+     * The amount of money the player currently has. It is the total score of every single play.
      */
     private int money;
     
     /**
+     * The amount of total scores of the highest score of all levels
+     */
+    private int totalScoreOfAll = 0;
+
+	/**
      * The name of the player profile.
      */
     private String name;
@@ -88,6 +96,35 @@ public class PlayerProfile {
      */
     private int passedLevelID = DEFAULT_PASSED_LEVEL_ID;
     
+	/**
+	 * @return the totalScoreOfAll, solution A
+	 */
+	public int getTotalScoreOfAll_A() {
+		String selectSQL = "select sum(score) from score where player_id=" + this.getId();
+		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
+		if (cursor != null && cursor.getCount() > 0) {
+			cursor.next();
+			totalScoreOfAll = cursor.getInt(0);
+			cursor.close();
+		}
+		return totalScoreOfAll;
+	}
+
+	/**
+	 * @return the totalScoreOfAll, solution B
+	 */
+	public int getTotalScoreOfAll_B() {
+
+		return totalScoreOfAll;
+	}
+
+	/**
+	 * @param totalScoreOfAll the totalScoreOfAll to set
+	 */
+	public void setTotalScoreOfAll(int totalScoreOfAll) {
+		this.totalScoreOfAll = totalScoreOfAll;
+	}
+	
     /**
      * get max passed level group id, default is the beginner group
      * 
@@ -253,6 +290,26 @@ public class PlayerProfile {
         
         this.money = newMoney;
         PlayerProfileManager.getInstance().updateIntColumn(this, "total_score", newMoney);
+        return true;
+    }
+    
+    /**
+     * Adds a certain amount of score to the total scores of the highest score of all levels
+     * 
+     * @param score
+     *            The Amount of score to add, may be positive or negative
+     * @return false if the new amount of score would be negative, the total scores of all
+     *         then remains unchanged
+     */
+    public boolean addScore(int score) {
+        int newScore = this.totalScoreOfAll + score;
+        
+        if (newScore < 0) {
+            return false;
+        }
+        
+        this.totalScoreOfAll = newScore;
+        PlayerProfileManager.getInstance().updateIntColumn(this, "total_geld", totalScoreOfAll);
         return true;
     }
     
