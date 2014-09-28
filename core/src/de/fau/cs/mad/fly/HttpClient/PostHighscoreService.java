@@ -52,7 +52,7 @@ public class PostHighscoreService {
         request.setUrl(RemoteServices.getServerURL() + "/highscores");
         String res = "{ \"highscore\": { \"points\": " + requestData.Score.getTotalScore() + ", \"user_id\": " + requestData.FlyID + ", \"level_group_id\": " + requestData.LevelgroupID + ", \"level_id\": " + requestData.LevelID + " } }";
         request.setContent(res);
-        Gdx.app.log("PostHighscoreService", res);
+        Gdx.app.log("PostHighscoreService", "send:" + res);
         
         RemoteServices.sendHttpRequest(request, new HttpResponseListener() {
             @Override
@@ -60,7 +60,10 @@ public class PostHighscoreService {
                 HttpStatus status = httpResponse.getStatus();
                 if (status.getStatusCode() == HttpStatus.SC_CREATED) {
                     JsonReader reader = new JsonReader();
-                    JsonValue json = reader.parse(httpResponse.getResultAsStream());
+                    String ress = httpResponse.getResultAsString();
+                    Gdx.app.log("PostHighscoreService", "Received:" + ress );
+                    JsonValue json = reader.parse(ress);                   
+                   
                     ResponseData response = new ResponseData();
                     
                     JsonValue scoreJS = json.get("highscore");

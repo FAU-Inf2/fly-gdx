@@ -66,9 +66,13 @@ public class GetLevelHighScoreService {
         HttpRequest request = new HttpRequest(HttpMethods.GET);
         request.setTimeOut(2500);
         if (type == 1) {
-            request.setUrl(RemoteServices.getServerURL() + "/levels/" + levelID + "/highscores?top=" + TOP);
+        	String url = RemoteServices.getServerURL() + "/levels/" + levelID + "/highscores?top=" + TOP;
+            Gdx.app.log("GetLevelHighScoreService", "Call: " + url);
+        	request.setUrl(url);
         } else {
-            request.setUrl(RemoteServices.getServerURL() + "/level_groups/" + levelID + "/highscores?top=" + TOP);
+        	String url = RemoteServices.getServerURL() + "/level_groups/" + levelID + "/highscores?top=" + TOP;
+        	Gdx.app.log("GetLevelHighScoreService", "Call: " + url);
+        	request.setUrl(url);
         }
         
         RemoteServices.sendHttpRequest(request, new HttpResponseListener() {
@@ -77,19 +81,19 @@ public class GetLevelHighScoreService {
                 HttpStatus status = httpResponse.getStatus();
                 if (status.getStatusCode() == HttpStatus.SC_OK) {
                     JsonReader reader = new JsonReader();
-                    JsonValue json = reader.parse(httpResponse.getResultAsStream());
+                    String ress = httpResponse.getResultAsString();
+                    Gdx.app.log("GetLevelHighScoreService", "Received:" + ress );
+                    JsonValue json = reader.parse(ress);
                     ResponseData response = new ResponseData();
                     
-                    // List<ResponseItem> results = new
-                    // ArrayList<ResponseItem>();
                     for (JsonValue item : json) {
                         RecordItem res = new RecordItem();
                         res.score = item.getInt("points");
                         res.rank = item.getInt("rank");
                         res.flyID = item.get("user").getInt("id");
                         res.username = item.get("user").getString("name");
-                        int levelID = item.get("level").getInt("id");
-                        String levelName = item.get("level").getString("name");
+                        int levelID = item.getInt("level_id");
+                        String levelName = item.getString("level_id");//wont be used
                         response.addRecord(levelID, levelName, res);
                     }
                     listener.successful(response);

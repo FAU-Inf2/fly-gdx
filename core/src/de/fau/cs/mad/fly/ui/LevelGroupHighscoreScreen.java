@@ -312,7 +312,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
             
             Gdx.app.log("Hallo", "Is Uploaded. levelID: " + requestData.LevelID + ", group: " + requestData.LevelgroupID + ", id: " + requestData.Score.getServerScoreId());
             requestData.Score.setIsUploaded(true);
-            // ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), requestData.LevelgroupID, requestData.LevelID);
+            ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), requestData.LevelgroupID, requestData.LevelID);
             if (requestData.Score.getServerScoreId() <= 0) {
                 PostHighscoreService.ResponseData response = (PostHighscoreService.ResponseData) obj;
                 if (response != null) {

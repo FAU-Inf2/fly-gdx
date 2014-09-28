@@ -63,15 +63,15 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
                             infoTable.add(new Label(I18n.t("level"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                             infoTable.add(new Label(levelname, skin)).pad(0, 0, 0, padding).left();
                             infoTable.row();
-                            infoTable.add(new Label(I18n.t("flyID"), skin)).left();
+                            //infoTable.add(new Label(I18n.t("flyID"), skin)).left();
                             infoTable.add(new Label(I18n.t("player"), skin)).left();
                             infoTable.add(new Label(I18n.t("score"), skin)).left();
                             infoTable.add(new Label(I18n.t("rank"), skin)).left();
                             
                             for (RecordItem item0 : item.records) {
                                 infoTable.row();
-                                infoTable.add(new Label(item0.flyID + "", skin, "darkGrey")).pad(0, 0, 0, padding);
-                                infoTable.add(new Label(item0.username, skin, "darkGrey")).pad(0, 0, 0, padding).left();
+                                //infoTable.add(new Label(item0.flyID + "", skin, "darkGrey")).pad(0, 0, 0, padding);
+                                infoTable.add(new Label(item0.username +"("+item0.flyID+")", skin, "darkGrey")).pad(0, 0, 0, padding).left();
                                 infoTable.add(new Label(item0.score + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
                                 infoTable.add(new Label(item0.rank + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
                             }
