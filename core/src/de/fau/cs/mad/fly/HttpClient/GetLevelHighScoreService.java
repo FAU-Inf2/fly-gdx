@@ -70,7 +70,7 @@ public class GetLevelHighScoreService {
             Gdx.app.log("GetLevelHighScoreService", "Call: " + url);
         	request.setUrl(url);
         } else {
-        	String url = RemoteServices.getServerURL() + "/level_groups/" + levelID + "/highscores?top=" + TOP;
+        	String url = RemoteServices.getServerURL() + "/level_groups/" + levelID + "/highscores?top=" + TOP + "&top_by=levels";
         	Gdx.app.log("GetLevelHighScoreService", "Call: " + url);
         	request.setUrl(url);
         }
