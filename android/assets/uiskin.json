@@ -5,7 +5,7 @@ com.badlogic.gdx.graphics.Color: {
 	red: { a: 1, b: 0, g: 0, r: 1 },
 	black: { a: 1, b: 0, g: 0, r: 0 },
 	lightGrey: { a: 1, b: 0.7, g: 0.7, r: 0.7 },
-	darkGrey: { a: 1, b: 0.4, g: 0.4, r: 0.4 },
+	darkGrey: { a: 1, b: 0.5, g: 0.5, r: 0.5 },
 	transparent: { a: 0, b: 0, g: 0, r: 0 }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
@@ -32,7 +32,8 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: default-round-large, hScrollKnob: default-round-large, background: transparent-rect, hScroll: default-scroll, vScrollKnob: default-scroll },
 	grey-background: { vScroll: default-round-large, hScrollKnob: default-round-large, background: grey-select-drop-down, hScroll: default-scroll, vScrollKnob: default-scroll },
-	black-background: { vScroll: default-round-large, hScrollKnob: default-round-large, background: button-up, hScroll: default-scroll, vScrollKnob: default-scroll }
+	black-background: { vScroll: default-round-large, hScrollKnob: default-round-large, background: button-up, hScroll: default-scroll, vScrollKnob: default-scroll },
+	semiTransparentBackground: { vScroll: default-round-large, hScrollKnob: default-round-large, background: semiTransparentBackground, hScroll: default-scroll, vScrollKnob: default-scroll }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {

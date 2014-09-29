@@ -132,7 +132,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
             highscoreButtonTable.add(globalHighScoreButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).bottom().expand();
             
             scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
-            final ScrollPane statisticsPane = new ScrollPane(scoreTable, skin, "black-background");
+            final ScrollPane statisticsPane = new ScrollPane(scoreTable, skin, "semiTransparentBackground");
             statisticsPane.setFadeScrollBars(false);
             statisticsPane.setScrollingDisabled(true, false);
             

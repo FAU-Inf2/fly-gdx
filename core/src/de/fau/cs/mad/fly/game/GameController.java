@@ -337,10 +337,9 @@ public class GameController implements TimeIsUpListener {
     public void disposeGame() {
         // dispose features
         for (IFeatureDispose optionalFeature : optionalFeaturesToDispose) {
-            // Gdx.app.log("GameController.disposeGame", "dispose: " +
-            // optionalFeature.getClass().getSimpleName());
             optionalFeature.dispose();
         }
+        // remove all objects from a previous level
         CollisionDetector.getInstance().dispose();
         
         optionalFeaturesToLoad.clear();

@@ -26,8 +26,10 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
     
     private Table infoTable;
     
+    private ScrollPane scrollPane;
+    
     /** space between the columns */
-    private final float padding = 320;
+    private final float padding = 220;
     
     private LevelGroup levelGroup;
     
@@ -53,28 +55,32 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                    infoTable.clear();
-                    infoTable.row();
                     Skin skin = SkinManager.getInstance().getSkin();
+                    infoTable.clear();
+                    infoTable = new Table();
+                    
+                    scrollPane = new ScrollPane(infoTable, skin, "semiTransparentBackground");
+                    scrollPane.setFadeScrollBars(false);
+                    scrollPane.setScrollingDisabled(true, false);
+                    
                     if (results != null && results.records.size() > 0) {
-                        for (LevelRecords item : results.records) {
-                            String levelname = levelGroup.getLevelName(item.levelID);
+                        for (LevelRecords level : results.records) {
+                            String levelname = levelGroup.getLevelName(level.levelID);
                             infoTable.row();
-                            infoTable.add(new Label(I18n.t("level"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-                            infoTable.add(new Label(levelname, skin)).pad(0, 0, 0, padding).left();
+                            infoTable.add(new Label(I18n.t("level") + " " + levelname, skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                             infoTable.row();
-                            //infoTable.add(new Label(I18n.t("flyID"), skin)).left();
-                            infoTable.add(new Label(I18n.t("player"), skin)).left();
-                            infoTable.add(new Label(I18n.t("score"), skin)).left();
-                            infoTable.add(new Label(I18n.t("rank"), skin)).left();
+                            infoTable.add(new Label(I18n.t("player"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+                            infoTable.add(new Label(I18n.t("score"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, padding, 0, padding);
+                            infoTable.add(new Label(I18n.t("rank"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, 0, 0, padding);
+                            Gdx.app.log("GlobalHighscoreScreen", "level id:" + level.levelID + " count:" + level.records.size());
                             
-                            for (RecordItem item0 : item.records) {
+                            for (RecordItem user : level.records) {
                                 infoTable.row();
-                                //infoTable.add(new Label(item0.flyID + "", skin, "darkGrey")).pad(0, 0, 0, padding);
-                                infoTable.add(new Label(item0.username +"("+item0.flyID+")", skin, "darkGrey")).pad(0, 0, 0, padding).left();
-                                infoTable.add(new Label(item0.score + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
-                                infoTable.add(new Label(item0.rank + "", skin, "darkGrey")).pad(0, 0, 0, padding).right();
+                                infoTable.add(new Label(user.username + " (" + user.flyID + ")", skin, "darkGrey")).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+                                infoTable.add(new Label(user.score + "", skin, "darkGrey")).right().pad(0, padding, 0, padding);
+                                infoTable.add(new Label(user.rank + "", skin, "darkGrey")).right().pad(0, 0, 0, padding);
                             }
+                            infoTable.row();
                         }
                     } else {
                         infoTable.row();
@@ -82,6 +88,10 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
                         infoTable.row();
                         infoTable.add(new Label(I18n.t("noScore"), skin, "darkGrey")).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                     }
+                    Table outerTable = new Table();
+                    outerTable.setFillParent(true);
+                    outerTable.add(scrollPane).pad(UI.Window.BORDER_SPACE);
+                    stage.addActor(outerTable);
                 }
             });
             
@@ -117,17 +127,17 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
         Skin skin = SkinManager.getInstance().getSkin();
         stage.clear();
         infoTable = new Table();
-        infoTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
+        infoTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         infoTable.setFillParent(true);
         
-        final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);
-        statisticsPane.setFadeScrollBars(false);
-        statisticsPane.setScrollingDisabled(true, false);
+        scrollPane = new ScrollPane(infoTable, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
         
         infoTable.add(new Label(I18n.t("StatusLoading"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         
         generateBackButton();
-        contentTable.add(statisticsPane);
+        contentTable.add(scrollPane);
     }
     
     protected void generateContentDynamic() {
