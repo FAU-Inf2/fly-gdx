@@ -85,7 +85,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         });
         
         messageTable = new Table();
-        NinePatchDrawable background = new NinePatchDrawable(skin.get("dialog-background", NinePatch.class));
+        NinePatchDrawable background = new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class));
         messageTable.setBackground(background);
         
         if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
@@ -133,7 +133,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      * @param info
      */
     private void showInfoLabel(Skin skin, String info) {
-        Label infoLabel = new Label(I18n.t(info), skin, "black");
+        Label infoLabel = new Label(I18n.t(info), skin);
         messageTable.add(infoLabel).colspan(3);
         messageTable.row();
     }
@@ -250,11 +250,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         // he got in this level
         PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(newScore.getTotalScore());
         
-        Label scoreName = new Label(I18n.t("newScore"), skin, "black");
+        Label scoreName = new Label(I18n.t("newScore"), skin);
         messageTable.columnDefaults(1).width(50f);
         messageTable.add(scoreName).right();
         messageTable.add();
-        messageTable.add(new Label(newScore.getTotalScore() + "", skin, "black")).left();
+        messageTable.add(new Label(newScore.getTotalScore() + "", skin)).left();
         messageTable.row().expand();
         
         // gates
