@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.profile;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.sql.DatabaseCursor;
 
 import de.fau.cs.mad.fly.db.FlyDBManager;
@@ -63,14 +64,14 @@ public class ScoreManager {
     }
     
     /**
-     * return the best scores of all levels in one level group
+     * return the best scores of all levels in one level group.
      * 
      * @param playerProfile
      * @return
      */
-    public Map<String, Score> getPlayerBestScores(PlayerProfile playerProfile, LevelGroup levelGroup) {
+    public Map<Integer, Score> getPlayerBestScores(PlayerProfile playerProfile, LevelGroup levelGroup) {
         String selectScore = "select level_id, score, compare_score, reached_date,is_uploaded,server_score_id from score where player_id =" + playerProfile.getId() + " and level_group_id=" + levelGroup.id;
-        Map<String, Score> map = new HashMap<String, Score>();
+        Map<Integer, Score> bestScores = new HashMap<Integer, Score>();
         
         DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectScore);
         if (cursor != null && cursor.getCount() > 0) {
@@ -84,49 +85,18 @@ public class ScoreManager {
                 score.setIsUploaded(cursor.getInt(4) > 0);
                 score.setServerScoreId(cursor.getInt(5));
                 
-                // String selectDetail =
-                // "select score_detail,_value from score_detail where player_id="
-                // + playerProfile.getId()
-                // + " and level_id=" + levelId
-                // + " and level_group_id=" + levelGroup.id;
-                //
-                // List<ScoreDetail> details = new ArrayList<ScoreDetail>();
-                // DatabaseCursor subCursor =
-                // FlyDBManager.getInstance().selectData(selectDetail);
-                // if (subCursor != null && subCursor.getCount() > 0) {
-                // while (subCursor.next()) {
-                // ScoreDetail detail = new ScoreDetail();
-                // detail.setDetailName(subCursor.getString(0));
-                // detail.setValue(subCursor.getString(1));
-                // details.add(detail);
-                // }
-                // subCursor.close();
-                // }
-                // score.setScoreDetails(details);
-                map.put(levelId + "", score);
+                Gdx.app.log("ScoreManager", "LevelId: " + levelId);
+                bestScores.put(levelId, score);
             }
             cursor.close();
         }
         
-        return map;
-    }
-    
-    public Map<String, Score> getPlayerBestScores(PlayerProfile playerProfile) {
-        return getPlayerBestScores(playerProfile, playerProfile.getCurrentLevelGroup());
-    }
-    
-    public Map<String, Score> getcurrentBestScores() {
-        return getPlayerBestScores(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
+        return bestScores;
     }
     
     public Score getLevelBestScore(PlayerProfile playerProfile, LevelProfile level) {
         int levelgroupID = playerProfile.getCurrentLevelGroup().id;
         String selectScore = "select score, compare_score, reached_date, is_uploaded, server_score_id from score where player_id =" + playerProfile.getId() + " and level_id=" + level.id + " and level_group_id=" + levelgroupID;
-        
-        // String selectDetail =
-        // "select score_detail,_value from score_detail where player_id=" +
-        // playerProfile.getId() + " and level_id=" + level.id +
-        // " and level_group_id=" + levelgroupID;
         Score score = null;
         
         DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectScore);
@@ -139,23 +109,7 @@ public class ScoreManager {
             score.setIsUploaded(cursor.getInt(3) > 0);
             score.setServerScoreId(cursor.getInt(4));
             cursor.close();
-            // List<ScoreDetail> details = new ArrayList<ScoreDetail>();
-            // DatabaseCursor subCursor =
-            // FlyDBManager.getInstance().selectData(selectDetail);
-            //
-            // if (subCursor != null && subCursor.getCount() > 0) {
-            // while (subCursor.next()) {
-            // ScoreDetail detail = new ScoreDetail();
-            // detail.setDetailName(subCursor.getString(0));
-            // detail.setValue(subCursor.getString(1));
-            // details.add(detail);
-            // }
-            // subCursor.close();
-            // }
-            // score.setScoreDetails(details);
-            
         }
-        
         return score;
     }
     

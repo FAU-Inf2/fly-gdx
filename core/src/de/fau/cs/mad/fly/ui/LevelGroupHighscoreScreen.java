@@ -111,7 +111,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
      */
     public class showScore implements Runnable {
         
-        Map<String, Score> scores;
+        Map<Integer, Score> scores;
         long begin, end;
         boolean newRow = false;
         
@@ -149,18 +149,16 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                 @Override
                 public void run() {
                     scoreTable.clear();
+                    boolean scoresExist = false;
                     
-                    // add scores details
-                    boolean haveScore = false;
-                    
-                    List<String> sortedKeys = new ArrayList<String>(scores.keySet());
+                    List<Integer> sortedKeys = new ArrayList<Integer>(scores.keySet());
                     Collections.sort(sortedKeys);
                     Collections.reverse(sortedKeys);
                     
-                    for (String levelID : sortedKeys) {
+                    for (Integer levelID : sortedKeys) {
                         Score score = scores.get(levelID);
                         if (score != null && score.getTotalScore() > 0) {
-                            haveScore = true;
+                            scoresExist = true;
                             String levelname = levelGroup.getLevelName(Integer.valueOf(levelID));
                             scoreTable.add(new Label(levelname + ":", skin)).pad(UI.Buttons.SPACE, 100, UI.Buttons.SPACE, UI.Buttons.SPACE).right();
                             
@@ -184,7 +182,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                     }
                     
                     // if no score at all
-                    if (!haveScore) {
+                    if (!scoresExist) {
                         scoreTable.add(new Label(I18n.t("noScore"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE);
                         scoreTable.row();
                     }
