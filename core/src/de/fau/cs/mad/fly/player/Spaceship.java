@@ -231,6 +231,10 @@ public class Spaceship extends GameObject implements IPlane {
     	
     	getRigidBody().setCenterOfMassTransform(rotationTransform);
     	
+    	float[] transformValues = rotationTransform.getValues();
+        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
+        setMovement(linearMovement);
+    	
     	lastRoll = Math.signum(vector.z);
     	lastAzimuth = -Math.signum(vector.x);
     }

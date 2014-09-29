@@ -38,7 +38,6 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 	private List<Vector3> centerRail;
 	private float railOffset = 1.f;
 	
-	
 	private GateGoal lastGate;
 	
 	private int asteroidCount = 0;
@@ -46,13 +45,14 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
     protected ChangePointsUpgradeHandler changePointsHandler;
     
     private int lastUpgrade;
-	private int stepsSinceLastGate = 10;
+	private int stepsSinceLastGate = 0;
 	private int stepsSinceLastUpgrade = 10;
 	private int stepsSinceLastPointUpgrade = 10;
 	private int stepsSinceLastTimeUpgrade = 10;
 	private int stepsSinceLastSpeedUpgrade = 10;
 	private int stepsSinceLastAsteroid = 10;
-    private Vector3 lastUpgradePos = new Vector3(2,0,0);
+    private Vector3 lastUpgradePos = new Vector3(0,0,0);
+    private Vector3 lastPointUpgradePos = new Vector3(0,0,0);
     private Vector3 lastGatePos = new Vector3(0,0,0);
     private Vector3 lastAsteroidPos = new Vector3(2,0,0);
     
@@ -78,17 +78,18 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 		builder.addFeatureToLists(changePointsHandler);
 	}
 	
-	public void addRandomComponent() {
+	public void addRandomComponents() {
+		
+		int random = MathUtils.random(15);
+		if((random - stepsSinceLastAsteroid) < 0/* && stepsSinceLastAsteroid > 3*/) {
+			addRandomAsteroid();
+		}
+		
 		if(stepsSinceLastGate >= 10) {
 			addRandomGate();
 		}
 		
 		addRandomUpgrade();
-		
-		int random = MathUtils.random(15);
-		if((random - stepsSinceLastAsteroid) < 0) {
-			addRandomAsteroid();
-		}
 		
 		stepsSinceLastGate++;
 		stepsSinceLastUpgrade++;
@@ -123,7 +124,7 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 	}
 	
 	
-	public GateGoal addRandomGate() {
+	private GateGoal addRandomGate() {
 		
         CollisionDetector collisionDetector = CollisionDetector.getInstance();
         
@@ -131,12 +132,18 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 		GateGoal newGoal = new GateGoal(currGate, level.getDependency("hole"), defaultGateScore, newDisplay);
 		newDisplay.setGoal(newGoal);
 		 
-		Vector3 railOffset = addRailOffset();
-        if(railOffset.equals(stepsSinceLastAsteroid)) {
+		Vector3 railOffset = addGateRailOffset();
+    	
+    	if(stepsSinceLastAsteroid <= 3) {
+    		if(railOffset.equals(lastAsteroidPos)) {
+    			return null;
+    		}
+    	}
+        /*if(railOffset.equals(stepsSinceLastAsteroid)) {
         	return null;
-        }
+        }*/
         
-		Vector3 gatePositon = centerRail.get(centerRail.size()-1).cpy().add(addRailOffset());
+		Vector3 gatePositon = centerRail.get(centerRail.size()-1).cpy().add(railOffset);
 		newDisplay.transform.setToTranslation(gatePositon);
 		newGoal.transform = newDisplay.transform.cpy();
 		 
@@ -173,18 +180,22 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
      *            predecessors
      */
     private void addRandomUpgrade() {
-        int random = MathUtils.random(9);
+        int random = MathUtils.random(7);
         
         Collectible c = null;
         
         float speedFactor = MathUtils.random(0.1f, 0.5f);
+        
+        if(stepsSinceLastGate == 0) {
+        	return;
+        }
         
         switch (random) {
         case 0:
         	if(stepsSinceLastTimeUpgrade <= 20 || stepsSinceLastSpeedUpgrade <= 20) {
         		return;
         	}
-            c = new ChangeTimeUpgrade(manager.get("models/timeUpgrade/timeUpgrade", GameModel.class), 10);
+            c = new ChangeTimeUpgrade(manager.get("models/timeUpgrade/timeUpgrade", GameModel.class), 5);
             changeTimeHandler.addObject(c);
             break;
         case 1:
@@ -199,6 +210,7 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
         case 4:
         	c = new ChangePointsUpgrade(manager.get("models/pointsUpgrade/pointsUpgrade", GameModel.class), 50);
         	changePointsHandler.addObject(c);
+        	random = 2;
             break;
         default:
             break;
@@ -206,9 +218,15 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
         
         if (c != null) {
         	Vector3 railOffset;
-        	if(lastUpgrade == 2 && random == 2 && stepsSinceLastPointUpgrade <= 5) {
+        	/*if(lastUpgrade == 2 && random == 2 && stepsSinceLastPointUpgrade <= 5) {
         		// setting pointsUpgrades right behind each other
         		railOffset = lastUpgradePos;
+        	} else {*/
+        		//railOffset = addUpgradeRailOffset();
+        	//}
+        	
+        	if(random == 2) {
+        		railOffset = addPointUpgradeRailOffset();
         	} else {
         		railOffset = addRailOffset();
         	}
@@ -236,8 +254,6 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
             	stepsSinceLastSpeedUpgrade = 0;
                 break;
             case 2:
-            case 3:
-            case 4:
             	stepsSinceLastPointUpgrade = 0;
                 break;
             default:
@@ -245,7 +261,7 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
             }
             stepsSinceLastUpgrade = 0;
             lastUpgrade = random;
-            lastUpgradePos = railOffset;
+            //lastUpgradePos = railOffset;
         }
     }
     
@@ -258,8 +274,10 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
         o.setId("" + asteroidCount);
 
         Vector3 railOffset = addRailOffset();
-        if((railOffset.equals(lastUpgradePos) && stepsSinceLastUpgrade <= 3) || (railOffset.equals(lastGatePos) && stepsSinceLastGate <= 3)) {
-        	return;
+        if(stepsSinceLastUpgrade <= 5 || stepsSinceLastGate <= 5) {
+        	while(railOffset.equals(lastPointUpgradePos) ||railOffset.equals(lastUpgradePos) || railOffset.equals(lastGatePos) || railOffset.equals(lastAsteroidPos)) {
+        		railOffset = addRailOffset();
+        	}
         }
         
     	Vector3 asteroidPositon = centerRail.get(centerRail.size()-1).cpy().add(railOffset);
@@ -280,7 +298,7 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
     }
 	
 	public void addRailPosition(Vector3 newRailPosition) {
-		addRandomComponent();
+		addRandomComponents();
 		currentRailEndPoint++;
 	}
 	
@@ -307,6 +325,47 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 		
 		offset.z = MathUtils.random(-1, 1) * railOffset;
 		offset.x = MathUtils.random(-1, 1) * railOffset;
+		
+		return offset;
+	}
+	
+	private int upgradeLine = 3;
+	
+	private Vector3 addPointUpgradeRailOffset() {
+		Vector3 offset = new Vector3();
+		
+		int randomZ = MathUtils.random(-1, 1);
+		int randomX = MathUtils.random(-1, 1);
+		
+		if(upgradeLine <= 0) {
+			offset.z = Math.signum(Math.signum(lastPointUpgradePos.z) + randomZ) * railOffset;
+			offset.x = Math.signum(Math.signum(lastPointUpgradePos.x) + randomX) * railOffset;
+			
+			if((offset.z != lastPointUpgradePos.z) || (offset.x != lastPointUpgradePos.x)) {
+				Vector3 tempOffset = offset.cpy();
+				offset.z = (offset.z + lastPointUpgradePos.z)/2;
+				offset.x = (offset.x + lastPointUpgradePos.x)/2;
+				lastPointUpgradePos = tempOffset;
+			} else {
+				lastPointUpgradePos = offset;
+			}
+			
+			upgradeLine = 3;
+		} else {
+			offset.z = Math.signum(lastPointUpgradePos.z) * railOffset;
+			offset.x = Math.signum(lastPointUpgradePos.x) * railOffset;
+		}
+		
+		upgradeLine--;
+		
+		return offset;
+	}
+	
+	private Vector3 addGateRailOffset() {
+		Vector3 offset = new Vector3();
+		
+		offset.z = Math.signum(lastPointUpgradePos.z) * railOffset;
+		offset.x = Math.signum(lastPointUpgradePos.x) * railOffset;
 		
 		return offset;
 	}

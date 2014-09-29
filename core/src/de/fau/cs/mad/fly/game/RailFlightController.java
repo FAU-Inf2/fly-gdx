@@ -64,7 +64,6 @@ public class RailFlightController extends FlightController{
 		changeRail(delta);
 		
 		if(checkRailPointPassed()) {
-			Gdx.app.log("rail", "railPointPassed");
 			Vector3 nextStep = nextStep();
 			centerRail.add(nextStep);
 			generator.addRailPosition(nextStep);
@@ -75,6 +74,8 @@ public class RailFlightController extends FlightController{
 			centerRail.remove(0);
 			
 		}
+		float speed = player.getPlane().getSpeed() + 0.0001f;
+		player.getPlane().setSpeed(speed);
     }
 	
 	private void initRail() {
@@ -93,9 +94,6 @@ public class RailFlightController extends FlightController{
 		nextPos = endPosition.cpy().add(direction);
 		
 		//change direction?
-		
-		
-		Gdx.app.log("nextStep", "Vec: " + nextPos);
 		
 		endPosition = nextPos;
 		return nextPos;
