@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.PostHighscoreService;
@@ -85,6 +86,11 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         scoreTable.clear();
         contentTable.clear();
         genarateScoreTable();
+        // check if the user name has still its default name and show an
+        // input field in this case
+        if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName().equals(I18n.t("default.playerName"))) {
+            updateUserNameFirst();
+        }
     }
     
     @Override
@@ -175,7 +181,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                                 uploadScoreButton.setDisabled(true);
                             }
                             uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton));
-                            
+
                             scoreTable.add(uploadScoreButton).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, UI.Buttons.SPACE, 40, 120);
                         }
                         scoresUntilLineBreak--;
@@ -194,6 +200,11 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
             });
             
         }
+    }
+    
+    private void updateUserNameFirst() {
+        BasicScreen editPlayerNameFirstScreen = new EditPlayerNameFirstScreen(this, ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen());
+        editPlayerNameFirstScreen.set();
     }
     
     /**
@@ -220,6 +231,12 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         
         @Override
         public void changed(ChangeEvent event, Actor actor) {
+            // check if the user name has still its default name and show an
+            // input field in this case
+            if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName() == I18n.t("default.playerName")) {
+                updateUserNameFirst();
+            }
+            
             final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
             requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
             requestData.LevelID = levelId;

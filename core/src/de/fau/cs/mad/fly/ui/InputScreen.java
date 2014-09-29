@@ -33,7 +33,7 @@ public abstract class InputScreen extends BasicScreen {
     
     private boolean waitForNextKey = false;
     
-    private final BasicScreen screenToGoBack;
+    protected final BasicScreen screenToGoBack;
     
     public InputScreen(BasicScreen screenToGoBack) {
         this.screenToGoBack = screenToGoBack;
