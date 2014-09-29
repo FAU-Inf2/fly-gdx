@@ -50,7 +50,8 @@ public class PostHighscoreService {
         request.setTimeOut(RemoteServices.TIME_OUT);
         request.setHeader("Content-Type", "application/json");
         request.setUrl(RemoteServices.getServerURL() + "/highscores");
-        String res = "{ \"highscore\": { \"points\": " + requestData.Score.getTotalScore() + ", \"user_id\": " + requestData.FlyID + ", \"level_group_id\": " + requestData.LevelgroupID + ", \"level_id\": " + requestData.LevelID + " } }";
+        String serverLevelId = RemoteServices.getServerLevelId(requestData.LevelgroupID, requestData.LevelID);
+        String res = "{ \"highscore\": { \"points\": " + requestData.Score.getTotalScore() + ", \"user_id\": " + requestData.FlyID + ", \"level_group_id\": " + requestData.LevelgroupID + ", \"level_id\": " + serverLevelId + " } }";
         request.setContent(res);
         Gdx.app.log("PostHighscoreService", "send:" + res);
         

@@ -65,7 +65,7 @@ public class GetLevelHighScoreService {
      */
     public void execute(int type, int levelID) {
         HttpRequest request = new HttpRequest(HttpMethods.GET);
-        request.setTimeOut(2000);
+        request.setTimeOut(RemoteServices.TIME_OUT);
         if (type == 1) {
         	String url = RemoteServices.getServerURL() + "/levels/" + levelID + "/highscores?top=" + TOP_SCORE_TO_SHOW;
             Gdx.app.log("GetLevelHighScoreService", "Call: " + url);
@@ -93,7 +93,7 @@ public class GetLevelHighScoreService {
                         res.rank = item.getInt("rank");
                         res.flyID = item.get("user").getInt("id");
                         res.username = item.get("user").getString("name");
-                        int levelID = item.getInt("level_id");
+                        int levelID = RemoteServices.getClientLevelID(item.getInt("level_id"));
                         String levelName = item.getString("level_id");//wont be used
                         response.addRecord(levelID, levelName, res);
                     }
