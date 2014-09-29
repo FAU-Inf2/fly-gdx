@@ -168,13 +168,13 @@ public class ScoreManager {
     }
     
     public void updateIsUploaded(Score score, int playerId, int groupId, int levelId) {
-        String sql = "update score set is_uploaded = " + (score.getIsUploaded() ? "1" : "0") + ",server_score_id = " + score.getScoreDetails() + " where player_id=" + playerId + " and level_id=" + levelId + " and level_group_id=" + groupId;
+        String sql = "update score set is_uploaded = " + (score.getIsUploaded() ? "1" : "0") + " where player_id=" + playerId + " and level_id=" + levelId + " and level_group_id=" + groupId;
         FlyDBManager.getInstance().execSQL(sql);
         
     }
     
     public void updateServerScoreId(Score score, int playerId, int groupId, int levelId) {
-        String sql = "update score set server_score_id = " + score.getScoreDetails() + " where player_id=" + playerId + " and level_id=" + levelId + " and level_group_id=" + groupId;
+        String sql = "update score set server_score_id = " + score.getServerScoreId() + " where player_id=" + playerId + " and level_id=" + levelId + " and level_group_id=" + groupId;
         FlyDBManager.getInstance().execSQL(sql);
     }
 }

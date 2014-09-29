@@ -196,6 +196,7 @@ public class NetHttpsJavaImpl {
 						}
 					} catch (final Exception e) {
 						Gdx.app.log("NetHttpsJavaImpl", e.toString());
+						e.printStackTrace();
 						connection.disconnect();
 						lock.lock();
 						try {
@@ -211,6 +212,7 @@ public class NetHttpsJavaImpl {
 
 		} catch (Exception e) {
 			Gdx.app.log("NetHttpsJavaImpl", e.toString());
+			e.printStackTrace();
 			lock.lock();
 			try {
 				httpResponseListener.failed(e);

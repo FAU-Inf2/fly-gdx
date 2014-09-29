@@ -296,6 +296,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 			int addScore = newScore.getTotalScore() - score0;
 			PlayerProfileManager.getInstance().getCurrentPlayerProfile().addScore(addScore);
 			
+			newScore.setServerScoreId(tmpScore==null?-1:tmpScore.getServerScoreId());
 			ScoreManager.getInstance().saveBestScore(newScore);
 
 			messageTable.row();
