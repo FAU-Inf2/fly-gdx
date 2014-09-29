@@ -1,7 +1,10 @@
 package de.fau.cs.mad.fly.ui;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -9,14 +12,29 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public abstract class BasicScreenWithBackButton extends BasicScreen {
     
-    private static ImageButton backButton;
-    private GenericBackProcessor genericBackProcessor;
+    private Button backButton;
+    private BackProcessor backProcessor;
     protected Table contentTable;
     
     public BasicScreenWithBackButton(BasicScreen screenToReturn) {
         super();
-        genericBackProcessor = new GenericBackProcessor(screenToReturn);
-        inputProcessor = new InputMultiplexer(stage, genericBackProcessor);
+        backProcessor = new GenericBackProcessor(screenToReturn);
+        inputProcessor = new InputMultiplexer(stage, backProcessor);
+    }
+    
+    /**
+     * Overwrites the back processor.
+     * 
+     * @param backProcessor
+     */
+    public void setBackProcessor(BackProcessor backProcessor) {
+        for(InputProcessor processor : inputProcessor.getProcessors()) {
+            if (processor instanceof BackProcessor) {
+                inputProcessor.removeProcessor(processor);
+            }
+        }
+        inputProcessor.addProcessor(backProcessor);
+        this.backProcessor = backProcessor;
     }
     
     /**
@@ -36,7 +54,8 @@ public abstract class BasicScreenWithBackButton extends BasicScreen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                genericBackProcessor.goBack();
+                // trigger the routine to go back to previous screen
+                backProcessor.keyDown(Keys.ESCAPE);
             }
         });
         outerTable.add(backButton).pad(UI.Window.BORDER_SPACE).width(UI.Buttons.IMAGE_BUTTON_WIDTH).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).bottom().left().expand();

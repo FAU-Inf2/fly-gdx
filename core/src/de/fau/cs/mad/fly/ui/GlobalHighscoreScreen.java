@@ -117,7 +117,7 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
         Skin skin = SkinManager.getInstance().getSkin();
         stage.clear();
         infoTable = new Table();
-        infoTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
+        infoTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         infoTable.setFillParent(true);
         
         final ScrollPane statisticsPane = new ScrollPane(infoTable, skin);

@@ -22,6 +22,9 @@ public class Loader implements Loadable<Level> {
     private float progress = 0;
     private AssetDescriptor<Level> target;
     private static Loader instance;
+    private LevelLoadingScreen loadingScreen;
+    private LevelProfile levelProfile;
+    private boolean initProcessStarted = false;
     
     /**
      * The 3D info of the current level the player is playing or just finished.
@@ -70,27 +73,41 @@ public class Loader implements Loadable<Level> {
     }
     
     public void initiate() {
+        progress = 0;
         Assets.manager.load(target);
-        for (ProgressListener<Level> l : listeners)
+        for (ProgressListener<Level> l : listeners) {
             l.progressStarted();
+        }
     }
     
     public void update() {
-        if (!Assets.manager.update()) {
-            float currentProgress = ((float) Assets.manager.getLoadedAssets() / (float) (Assets.manager.getLoadedAssets() + Assets.manager.getQueuedAssets())) * 100f;
-            if (currentProgress > progress) {
-                progress = currentProgress;
-                for (ProgressListener<Level> l : listeners)
-                    l.progressUpdated(currentProgress);
+        if (progress < 100f) {
+            if (!Assets.manager.update()) {
+                float currentProgress = ((float) Assets.manager.getLoadedAssets() / (float) (Assets.manager.getLoadedAssets() + Assets.manager.getQueuedAssets())) * 80f;
+                if (currentProgress > progress) {
+                    progress = currentProgress;
+                    for (ProgressListener<Level> l : listeners)
+                        l.progressUpdated(currentProgress);
+                }
+            } else {
+                if (!initProcessStarted) {
+                    initProcessStarted = true;
+                    Level level = Assets.manager.get(target);
+                    level.getGateCircuit().reset();
+                    level.head.file = levelProfile.file;
+                    setCurrentLevel(level);
+                    Fly fly = (Fly) Gdx.app.getApplicationListener();
+                    fly.initGameController();
+                    progress = 100f;
+                }
+                for (ProgressListener<Level> l : listeners) {
+                    l.progressUpdated(100f);
+                    l.progressFinished(Assets.manager.get(target));
+                }
+                // clean loader
+                initProcessStarted = false;
+                listeners.clear();
             }
-        } else {
-            for (ProgressListener<Level> l : listeners) {
-                l.progressUpdated(100f);
-                l.progressFinished(Assets.manager.get(target));
-            }
-            // clean loader
-            progress = 0;
-            listeners.clear();
         }
     }
     
@@ -109,8 +126,8 @@ public class Loader implements Loadable<Level> {
      * player.
      */
     public void loadLevel(final LevelProfile levelProfile) {
+        this.levelProfile = levelProfile;
         if (getCurrentLevel() != null) {
-            
             String levelPath = getCurrentLevel().head.file;
             Gdx.app.log("Gamescreen.hide", "dispose level: " + levelPath);
             Assets.unload(levelPath);
@@ -118,17 +135,14 @@ public class Loader implements Loadable<Level> {
         }
         
         Loader loader = Loader.create(levelProfile.file);
-        final LevelLoadingScreen loadingScreen = new LevelLoadingScreen(loader);
+        final Fly fly = (Fly) Gdx.app.getApplicationListener();
+        loadingScreen = new LevelLoadingScreen(loader, fly.getMainMenuScreen());
         loader.initiate();
-        ((Fly) Gdx.app.getApplicationListener()).setScreen(loadingScreen);
+        loadingScreen.set();
+        
         loader.addProgressListener(new ProgressListener.ProgressAdapter<Level>() {
             @Override
             public void progressFinished(Level level) {
-                level.getGateCircuit().reset();
-                level.head.file = levelProfile.file;
-                setCurrentLevel(level);
-                ((Fly) Gdx.app.getApplicationListener()).initGameController();
-                
                 loadingScreen.showButton();
             }
         });
@@ -136,6 +150,10 @@ public class Loader implements Loadable<Level> {
     
     public void dispose() {
         instance = null;
+        if (loadingScreen != null) {
+            loadingScreen.dispose();
+            loadingScreen = null;
+        }
         Gdx.app.log("Loader", "loader is disposed");
     }
 }

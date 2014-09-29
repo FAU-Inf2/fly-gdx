@@ -48,7 +48,7 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
         settingTable = new Table();
 
         Skin skin = SkinManager.getInstance().getSkin();
-        settingTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
+        settingTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         contentTable.add(settingTable).center().expand();
         
         // setup help overlay

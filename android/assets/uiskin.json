@@ -32,7 +32,8 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: default-round-large, hScrollKnob: default-round-large, background: transparent-rect, hScroll: default-scroll, vScrollKnob: default-scroll },
 	grey-background: { vScroll: default-round-large, hScrollKnob: default-round-large, background: grey-select-drop-down, hScroll: default-scroll, vScrollKnob: default-scroll },
-	black-background: { vScroll: default-round-large, hScrollKnob: default-round-large, background: button-up, hScroll: default-scroll, vScrollKnob: default-scroll }
+	black-background: { vScroll: default-round-large, hScrollKnob: default-round-large, background: button-up, hScroll: default-scroll, vScrollKnob: default-scroll },
+	semiTransparentBackground: { vScroll: default-round-large, hScrollKnob: default-round-large, background: semiTransparentBackground, hScroll: default-scroll, vScrollKnob: default-scroll }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {

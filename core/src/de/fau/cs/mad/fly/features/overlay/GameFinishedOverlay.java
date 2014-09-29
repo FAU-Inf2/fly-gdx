@@ -80,11 +80,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //Removed by fan, this settings were already set. No need to set it here now.
-            	//Please don't change it back again!
-            	//PlayerProfile profile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-                //profile.setToNextLevel();
-                //profile.saveCurrentLevelProfile();
                 ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             }
         });
