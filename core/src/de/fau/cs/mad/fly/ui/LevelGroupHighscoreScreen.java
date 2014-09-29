@@ -8,7 +8,7 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -22,6 +22,8 @@ import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
 import de.fau.cs.mad.fly.HttpClient.PostHighscoreService;
 import de.fau.cs.mad.fly.HttpClient.PostUserService;
 import de.fau.cs.mad.fly.HttpClient.PutHighscoreService;
+import de.fau.cs.mad.fly.communication.PostScoreHttpRespListener;
+import de.fau.cs.mad.fly.communication.PostUserHttpRespListener;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
@@ -116,7 +118,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         @Override
         public void run() {
             final Skin skin = SkinManager.getInstance().getSkin();
-
+            
             // global high score button
             globalHighScoreButton = new TextButton(I18n.t("GlobalHighscores"), skin);
             globalHighScoreButton.addListener(new ClickListener() {
@@ -193,7 +195,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
     }
     
     /**
-     * Upload score to server if the current user have to fly-id (user id got
+     * Upload score to server if the current user has no fly-id (user id got
      * from server side) in database, then call another service to get fly-id
      * 
      * @author Lenovo
@@ -204,7 +206,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         private int levelgroupId;
         private int levelId;
         private Score score;
-        private TextButton button;
+        private Button button;
         
         public UploadScoreClickListener(int levelgroup, int level, Score score, TextButton button) {
             super();
@@ -216,21 +218,19 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         
         @Override
         public void changed(ChangeEvent event, Actor actor) {
-            button.setDisabled(true);
-            
             final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
             requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
             requestData.LevelID = levelId;
             requestData.Score = score;
             requestData.LevelgroupID = levelgroupId;
-            final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener(requestData, button);
+            final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener(requestData, button, stage);
             final PostHighscoreService postHighscoreService = new PostHighscoreService(postScoreListener, requestData);
             final PutHighscoreService putHighscoreService = new PutHighscoreService(postScoreListener, requestData);
-            // if the current user have to fly-id (user id got from server side)
-            // in database,
-            // then call another service PostUserService to get fly-id
+            // if the current user has no fly-id (user id got from server side)
+            // in the database, then call another service PostUserService to get
+            // fly-id
             if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() <= 0) {
-                FlyHttpResponseListener listener = new PostUserHttpRespListener(requestData, postHighscoreService);
+                FlyHttpResponseListener listener = new PostUserHttpRespListener(requestData, postHighscoreService, stage);
                 PostUserService postUser = new PostUserService(listener);
                 
                 postUser.execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName());
@@ -241,124 +241,5 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
             }
         }
     }
-    
-    /**
-     * call service to get fly-id from server
-     * 
-     * @author Fan
-     * 
-     */
-    public class PostUserHttpRespListener implements FlyHttpResponseListener {
-        final PostHighscoreService.RequestData requestData;
-        final PostHighscoreService postHighscoreService;
-        
-        public PostUserHttpRespListener(PostHighscoreService.RequestData data, PostHighscoreService service) {
-            requestData = data;
-            postHighscoreService = service;
-        }
-        
-        @Override
-        public void successful(Object obj) {
-            int flyID = Integer.valueOf(obj.toString());
-            PlayerProfileManager.getInstance().getCurrentPlayerProfile().setFlyID(flyID);
-            PlayerProfileManager.getInstance().saveFlyID(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
-            requestData.FlyID = flyID;
-            postHighscoreService.execute();
-        }
-        
-        @Override
-        public void failed(String msg) {
-            final String msgg = msg;
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    Skin skin = SkinManager.getInstance().getSkin();
-                    Dialog dialog = new Dialog("", skin, "dialog");
-                    if (msgg != null && msgg.length() > 21) {
-                        dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");
-                    } else {
-                        dialog.text(I18n.t("ConnectServerError") + msgg);
-                    }
-                    TextButton button = new TextButton(I18n.t("ok"), skin);
-                    dialog.button(button);
-                    dialog.show(stage);
-                }
-            });
-        }
-        
-        @Override
-        public void cancelled() {
-        }
-    }
-    
-    /**
-     * call service to upload local highscore to server
-     * 
-     * @author Fan
-     * 
-     */
-    public class PostScoreHttpRespListener implements FlyHttpResponseListener {
-        private TextButton button;
-        private PostHighscoreService.RequestData requestData;
-        
-        public PostScoreHttpRespListener(PostHighscoreService.RequestData requestData, TextButton button) {
-            this.requestData = requestData;
-            this.button = button;
-        }
-        
-        @Override
-        public void successful(Object obj) {
-            button.setDisabled(false);
-            
-            Gdx.app.log("Hallo", "Is Uploaded. levelID: " + requestData.LevelID + ", group: " + requestData.LevelgroupID + ", id: " + requestData.Score.getServerScoreId());
-            requestData.Score.setIsUploaded(true);
-            ScoreManager.getInstance().updateIsUploaded(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), requestData.LevelgroupID, requestData.LevelID);
-            if (requestData.Score.getServerScoreId() <= 0) {
-                PostHighscoreService.ResponseData response = (PostHighscoreService.ResponseData) obj;
-                if (response != null) {
-                    requestData.Score.setServerScoreId(response.scoreID);
-                }
-                ScoreManager.getInstance().updateServerScoreId(requestData.Score, PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId(), requestData.LevelgroupID, requestData.LevelID);
-            }
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    Skin skin = SkinManager.getInstance().getSkin();
-                    button.setDisabled(true);
-                    Dialog dialog = new Dialog("", skin, "dialog");
-                    dialog.text(I18n.t("ScoreUploaded"));
-                    TextButton button = new TextButton(I18n.t("ok"), skin);
-                    dialog.button(button);
-                    dialog.show(stage);
-                }
-            });
-        }
-        
-        @Override
-        public void failed(String msg) {
-            button.setDisabled(false);
-            
-            final String msgg = msg;
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    Skin skin = SkinManager.getInstance().getSkin();
-                    Dialog dialog = new Dialog("", skin, "dialog");
-                    if (msgg != null && msgg.length() > 21) {
-                        dialog.text(I18n.t("ConnectServerError") + msgg.substring(0, 20) + "...");
-                    } else {
-                        dialog.text(I18n.t("ConnectServerError") + msgg);
-                    }
-                    TextButton button = new TextButton(I18n.t("ok"), skin);
-                    dialog.button(button);
-                    dialog.show(stage);
-                }
-            });
-        }
-        
-        @Override
-        public void cancelled() {
-        }
-    };
     
 }

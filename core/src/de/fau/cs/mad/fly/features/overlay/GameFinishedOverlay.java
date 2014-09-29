@@ -300,7 +300,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
 			ScoreManager.getInstance().saveBestScore(newScore);
 
 			messageTable.row();
-			messageTable.add(new Label(I18n.t("newRecord"), skin, "black")).colspan(3);
+			messageTable.add(new Label(I18n.t("newRecord"), skin)).colspan(3);
 		}
         messageTable.row().expand();
     }

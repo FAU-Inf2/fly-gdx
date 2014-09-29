@@ -173,6 +173,15 @@ public class ScoreManager {
         
     }
     
+    /**
+     * Save a score ID for a specific level in a specific group for a specific
+     * player. This indicates weather this score has been uploaded or not.
+     * 
+     * @param score
+     * @param playerId
+     * @param groupId
+     * @param levelId
+     */
     public void updateServerScoreId(Score score, int playerId, int groupId, int levelId) {
         String sql = "update score set server_score_id = " + score.getServerScoreId() + " where player_id=" + playerId + " and level_id=" + levelId + " and level_group_id=" + groupId;
         FlyDBManager.getInstance().execSQL(sql);
