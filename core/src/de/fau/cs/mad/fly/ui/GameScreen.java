@@ -9,16 +9,17 @@ import de.fau.cs.mad.fly.game.GameController.GameState;
 
 /**
  * Provides a screen for the game itself.
+ * <p>
+ * 
+ * Manages the operations when leaving the screen or when the screen is hidden.
  * 
  * @author Tobias Zangl
  */
 public class GameScreen implements Screen {
-    private GameController gameController;
-    private final Fly game;
     
-    public GameScreen(final Fly game) {
-        this.gameController = game.getGameController();
-        this.game = game;
+    private GameController gameController;
+    
+    public GameScreen() {
     }
     
     @Override
@@ -33,7 +34,7 @@ public class GameScreen implements Screen {
     
     @Override
     public void show() {
-        this.gameController = game.getGameController();
+        this.gameController = ((Fly)Gdx.app.getApplicationListener()).getGameController();
     }
     
     @Override

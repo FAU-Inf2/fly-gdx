@@ -195,7 +195,7 @@ public class Fly extends Game implements Loadable<Fly> {
      */
     public void setGameScreen() {
         if (gameScreen == null) {
-            gameScreen = new GameScreen(this);
+            gameScreen = new GameScreen();
         }
         setScreen(gameScreen);
     }
