@@ -111,9 +111,9 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
      */
     public class showScore implements Runnable {
         
-        Map<Integer, Score> scores;
-        long begin, end;
-        boolean newRow = false;
+        private Map<Integer, Score> scores;
+        private int scoresPerRow = 2;
+        private int scoresUntilLineBreak = scoresPerRow;
         
         @Override
         public void run() {
@@ -160,11 +160,16 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                         if (score != null && score.getTotalScore() > 0) {
                             scoresExist = true;
                             String levelname = levelGroup.getLevelName(Integer.valueOf(levelID));
+                            // for longer level-names, make only one score per
+                            // row
+                            if (levelname.length() > 3) {
+                                scoresPerRow = 1;
+                                scoresUntilLineBreak = 1;
+                            }
                             scoreTable.add(new Label(levelname + ":", skin)).pad(UI.Buttons.SPACE, 100, UI.Buttons.SPACE, UI.Buttons.SPACE).right();
                             
                             scoreTable.add(new Label(score.getTotalScore() + "", skin)).pad(UI.Buttons.SPACE, 20, UI.Buttons.SPACE, UI.Buttons.SPACE).right();
                             
-                            Gdx.app.log("timing", " UI one score record UI builded " + (end - begin) + " " + levelID + levelname);
                             uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin);
                             if (score.getIsUploaded()) {
                                 uploadScoreButton.setDisabled(true);
@@ -173,11 +178,10 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                             
                             scoreTable.add(uploadScoreButton).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, UI.Buttons.SPACE, 40, 120);
                         }
-                        if (newRow) {
+                        scoresUntilLineBreak--;
+                        if (scoresUntilLineBreak == 0) {
                             scoreTable.row();
-                            newRow = false;
-                        } else {
-                            newRow = true;
+                            scoresUntilLineBreak = scoresPerRow;
                         }
                     }
                     
