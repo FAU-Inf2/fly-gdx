@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public abstract class BasicScreenWithBackButton extends BasicScreen {
     
     private Button backButton;
-    private BackProcessor backProcessor;
+    protected BackProcessor backProcessor;
     protected Table contentTable;
     
     public BasicScreenWithBackButton(BasicScreen screenToReturn) {

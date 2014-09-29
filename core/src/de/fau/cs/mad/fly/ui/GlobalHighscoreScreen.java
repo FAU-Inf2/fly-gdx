@@ -1,7 +1,9 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,8 +27,6 @@ import de.fau.cs.mad.fly.profile.LevelGroup;
 public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
     
     private Table infoTable;
-    
-    private ScrollPane scrollPane;
     
     /** space between the columns */
     private final float padding = 220;
@@ -58,10 +58,11 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
                     Skin skin = SkinManager.getInstance().getSkin();
                     infoTable.clear();
                     infoTable = new Table();
-                    
+                    ScrollPane scrollPane;
                     scrollPane = new ScrollPane(infoTable, skin, "semiTransparentBackground");
                     scrollPane.setFadeScrollBars(false);
                     scrollPane.setScrollingDisabled(true, false);
+                    contentTable.add(scrollPane);
                     
                     if (results != null && results.records.size() > 0) {
                         for (LevelRecords level : results.records) {
@@ -99,16 +100,20 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
         
         @Override
         public void failed(String msg) {
-            infoTable.clear();
-            infoTable.row().expand();
-            String showmsg;
-            if (msg != null && msg.length() > 21) {
-                showmsg = I18n.t("ConnectServerError") + msg.substring(0, 20) + "...";
-            } else {
-                showmsg = I18n.t("ConnectServerError") + msg;
-            }
-            Skin skin = SkinManager.getInstance().getSkin();
-            infoTable.add(new Label(showmsg, skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+            // debug output
+            Gdx.app.log("PostScoreHttpRespListener", ".failed:" + msg);
+            
+            // show dialog with message for user
+            Dialog uploadFailedMessage = new DialogWithOneButton(I18n.t("ConnectServerError"), I18n.t("ok")) {
+                @Override
+                public void result(Object result) {
+                    // hide dialog
+                    super.result(result);
+                    // trigger the routine to go back to previous screen
+                    backProcessor.keyDown(Keys.ESCAPE);
+                }
+            };
+            uploadFailedMessage.show(stage);
         }
         
         @Override
@@ -130,14 +135,9 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
         infoTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         infoTable.setFillParent(true);
         
-        scrollPane = new ScrollPane(infoTable, skin);
-        scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollingDisabled(true, false);
-        
         infoTable.add(new Label(I18n.t("StatusLoading"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         
         generateBackButton();
-        contentTable.add(scrollPane);
     }
     
     protected void generateContentDynamic() {

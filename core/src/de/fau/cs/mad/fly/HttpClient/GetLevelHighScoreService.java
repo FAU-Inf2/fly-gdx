@@ -52,7 +52,8 @@ public class GetLevelHighScoreService {
     
     private final FlyHttpResponseListener listener;
     
-    private static int TOP = 4;
+    /** These best scores are always shown, weather the own score is in or not */
+    private static int TOP_SCORE_TO_SHOW = 3;
     
     /**
      * sent get level or level group highscores request to server
@@ -64,13 +65,13 @@ public class GetLevelHighScoreService {
      */
     public void execute(int type, int levelID) {
         HttpRequest request = new HttpRequest(HttpMethods.GET);
-        request.setTimeOut(2500);
+        request.setTimeOut(2000);
         if (type == 1) {
-        	String url = RemoteServices.getServerURL() + "/levels/" + levelID + "/highscores?top=" + TOP;
+        	String url = RemoteServices.getServerURL() + "/levels/" + levelID + "/highscores?top=" + TOP_SCORE_TO_SHOW;
             Gdx.app.log("GetLevelHighScoreService", "Call: " + url);
         	request.setUrl(url);
         } else {
-        	String url = RemoteServices.getServerURL() + "/level_groups/" + levelID + "/highscores?top=" + TOP + "&top_by=levels";
+        	String url = RemoteServices.getServerURL() + "/level_groups/" + levelID + "/highscores?top=" + TOP_SCORE_TO_SHOW + "&top_by=levels";
         	Gdx.app.log("GetLevelHighScoreService", "Call: " + url);
         	request.setUrl(url);
         }
