@@ -25,7 +25,7 @@ public class PutHighscoreService {
         String url = RemoteServices.getServerURL() + "/highscores/" + requestData.Score.getServerScoreId();
         Gdx.app.log("PutHighscoreService", "call:" + url);
         request.setUrl(url);
-        String res = "{ \"points\":" + requestData.Score.getTotalScore() + " }";
+        String res = "{ \"highscore\": { \"points\":" + requestData.Score.getTotalScore() + " } }";
         request.setContent(res);
         Gdx.app.log("PutHighscoreService", "send:" + res);
         
