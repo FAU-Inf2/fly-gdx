@@ -7,6 +7,7 @@ import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangeSteeringUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
+import de.fau.cs.mad.fly.game.AudioManager;
 import de.fau.cs.mad.fly.game.FlightController;
 import de.fau.cs.mad.fly.game.GameController;
 
@@ -51,6 +52,7 @@ public class ChangeSteeringUpgradeHandler extends CollectibleObjects implements 
     
     @Override
     protected void handleCollecting(Collectible c) {
+        GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.PICKUP);
         ChangeSteeringUpgrade upgrade = (ChangeSteeringUpgrade) c;
         isCollected = true;
         

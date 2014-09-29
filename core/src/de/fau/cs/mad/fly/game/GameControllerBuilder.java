@@ -89,6 +89,7 @@ public class GameControllerBuilder {
     private TimeController timeController;
     private ScoreController scoreController;
     private EndlessLevelGenerator generator;
+    private AudioManager audioManager;
     
     /**
      * Creates a basic {@link GameController} with a certain level, linked to
@@ -126,6 +127,8 @@ public class GameControllerBuilder {
         timeController = new TimeController();
         
         scoreController = new ScoreController();
+
+        audioManager = new AudioManager();
         
         float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
         float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
@@ -161,6 +164,7 @@ public class GameControllerBuilder {
                 
                 if (!currentPlayer.decreaseLives()) {
                     // Debug.setOverlay(0, "DEAD");
+                    audioManager.playSound(AudioManager.Sounds.CRASH);
                     game.getGameController().finishGame(false);
                 } else {
                     // Debug.setOverlay(0, player.getLives());
@@ -583,11 +587,12 @@ public class GameControllerBuilder {
         gc.player = player;
         gc.flightController = flightController;
         gc.cameraController = cameraController;
-        // gc.batch = new ModelBatch();
+//        gc.batch = new ModelBatch();
         gc.batch = new ModelBatch(null, new FlyShaderProvider(), null);
         gc.setTimeController(timeController);
         gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
+        gc.audioManager = audioManager;
         
         level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override
