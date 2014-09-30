@@ -33,7 +33,7 @@ public abstract class InputScreen extends BasicScreen {
     
     private boolean waitForNextKey = false;
     
-    private final BasicScreen screenToGoBack;
+    protected final BasicScreen screenToGoBack;
     
     public InputScreen(BasicScreen screenToGoBack) {
         this.screenToGoBack = screenToGoBack;
@@ -48,7 +48,7 @@ public abstract class InputScreen extends BasicScreen {
         outerTable.setFillParent(true);
         
         Table contentTable = new Table();
-        contentTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
+        contentTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         
         label = new Label(I18n.t("msgInputNewPlayerName"), skin);
         contentTable.add(label);

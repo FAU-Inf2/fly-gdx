@@ -1,33 +1,48 @@
 package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 
+import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.res.Level;
 
 /**
  * Displays the loading screen with a progress bar.
  * <p>
- * If the value of the progress bar reaches 100f the game screen is loaded.
+ * If the value of the progress bar reaches 100f a button to start the screen is shown.
  * 
  * @author Tobias Zangl, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
 public class LevelLoadingScreen extends LoadingScreen<Level> {
     
-    private boolean add = true;
+    private boolean addButton = true;
     
-    public LevelLoadingScreen(Loader loader) {
-        super(loader);
+    public LevelLoadingScreen(Loader loader, final BasicScreen screenToReturn) {
+        super(loader, screenToReturn);
+        setBackProcessor(new GenericBackProcessor(screenToReturn) {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Keys.ESCAPE || keycode == Keys.BACK) {
+                    screenToReturn.set();
+                    Fly game = (Fly) Gdx.app.getApplicationListener();
+                    game.getGameController().disposeGame();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
     
     public void showButton() {
-        if (add) {
+        if (addButton) {
             progressBar.setVisible(false);
             button.setVisible(true);
+            generateBackButton();
             inputProcessor.addProcessor(stage);
             Gdx.input.setInputProcessor(inputProcessor);
         }
         
-        add = false;
+        addButton = false;
     }
 }

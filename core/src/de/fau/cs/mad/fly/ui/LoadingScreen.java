@@ -19,17 +19,20 @@ import de.fau.cs.mad.fly.settings.SettingManager;
  * 
  * @author Tobias Zangl, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class LoadingScreen<T> extends BasicScreen {
+public class LoadingScreen<T> extends BasicScreenWithBackButton {
+    
     protected ScalableProgressBar progressBar;
     protected final float progressBarWidth = 2000f;
     protected final TextButton button;
     
     protected final Table table;
     
-    protected final Loadable<T> listenable;
+    /** The object that should be loaded during this screen is shown */
+    protected final Loadable<T> loadable;
     
-    public LoadingScreen(Loadable<T> listenable) {
-        this.listenable = listenable;
+    public LoadingScreen(Loadable<T> loadable, BasicScreen screenToReturn) {
+        super(screenToReturn);
+        this.loadable = loadable;
         table = new Table();
         Skin skin = SkinManager.getInstance().getSkin();
         progressBar = new ScalableProgressBar(skin);
@@ -56,7 +59,7 @@ public class LoadingScreen<T> extends BasicScreen {
         
         // add progress bar
         table.add(progressBar).bottom().expand();
-        listenable.addProgressListener(new ProgressListener.ProgressAdapter<T>() {
+        loadable.addProgressListener(new ProgressListener.ProgressAdapter<T>() {
             @Override
             public void progressUpdated(float percent) {
                 progressBar.setProgress(percent / 100f);
@@ -66,7 +69,7 @@ public class LoadingScreen<T> extends BasicScreen {
     
     @Override
     public void render(float delta) {
-        listenable.update();
+        loadable.update();
         super.render(delta);
     }
     

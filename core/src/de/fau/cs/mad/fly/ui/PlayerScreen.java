@@ -84,7 +84,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         final PlayerProfileManager playerProfileManager = PlayerProfileManager.getInstance();
         playerTable = new Table();
         
-        playerTable.setBackground(new NinePatchDrawable(skin.get("button-up", NinePatch.class)));
+        playerTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         
         playerTable.add(new Label(I18n.t("playerNameLableText") + ":", skin)).pad(padding);
         

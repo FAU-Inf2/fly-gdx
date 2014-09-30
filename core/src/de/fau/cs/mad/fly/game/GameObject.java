@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -369,11 +370,12 @@ public class GameObject extends ModelInstance implements Disposable {
      * Removes the rigid body from the collision world and disposes it.
      */
     public void removeRigidBody() {
-        if (rigidBody != null && CollisionDetector.getInstance() != null) {
-            CollisionDetector.getInstance().removeRigidBody(this);
-            rigidBody.dispose();
-            rigidBody = null;
-        }
+        Gdx.app.log("GameObject", "removeRigidBody");
+//        if (rigidBody != null && CollisionDetector.getInstance() != null) {
+//            CollisionDetector.getInstance().removeRigidBody(this);
+//            rigidBody.dispose();
+//            rigidBody = null;
+//        }
     }
     
     @Override

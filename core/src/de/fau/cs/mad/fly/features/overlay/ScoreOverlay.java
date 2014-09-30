@@ -30,7 +30,7 @@ public class ScoreOverlay implements ScoreChangeListener {
         // necessary for adjusting the innerTable on the screen
         final Table outerTable = new Table();
         
-        final NinePatchDrawable backgroundOfInnerTable = new NinePatchDrawable(skin.get("button-up", NinePatch.class));
+        final NinePatchDrawable backgroundOfInnerTable = new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class));
         innerTable.setBackground(backgroundOfInnerTable);
         
         final TextureRegion textureRegionOfScoreIcon = new TextureRegion(skin.getRegion("star"));

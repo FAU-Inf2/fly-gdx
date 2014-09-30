@@ -30,8 +30,7 @@ import de.fau.cs.mad.fly.ui.SkinManager;
  * Includes screens for SplashScreen, LoadingScreen, GameScreen, MainMenuScreen,
  * OptionScreen, HelpScreen and LevelChooserScreen.
  * <p>
- * All screens should be loaded only when they are needed. To create an instance
- * of all of them takes about 4 seconds on a Nex5.
+ * All screens should be loaded only when they are needed.
  * 
  * @author Tobias Zangl
  */
@@ -186,7 +185,7 @@ public class Fly extends Game implements Loadable<Fly> {
      */
     public void setSplashScreen() {
         if (splashScreen == null) {
-            splashScreen = new LoadingScreen<Fly>(this);
+            splashScreen = new LoadingScreen<Fly>(this, null);
         }
         setScreen(splashScreen);
     }
@@ -196,7 +195,7 @@ public class Fly extends Game implements Loadable<Fly> {
      */
     public void setGameScreen() {
         if (gameScreen == null) {
-            gameScreen = new GameScreen(this);
+            gameScreen = new GameScreen();
         }
         setScreen(gameScreen);
     }

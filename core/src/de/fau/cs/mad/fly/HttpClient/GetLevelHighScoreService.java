@@ -12,6 +12,12 @@ import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+/**
+ * Service to recieve the highscores of one {@link LevelGroup}.
+ * 
+ * @author fan, Lukas Hahmann <lukas.hahmann@gmail.com>
+ * 
+ */
 public class GetLevelHighScoreService {
     
     public class ResponseData {
@@ -52,7 +58,8 @@ public class GetLevelHighScoreService {
     
     private final FlyHttpResponseListener listener;
     
-    private static int TOP = 4;
+    /** These best scores are always shown, weather the own score is in or not */
+    private static int TOP_SCORE_TO_SHOW = 3;
     
     /**
      * sent get level or level group highscores request to server
@@ -64,11 +71,15 @@ public class GetLevelHighScoreService {
      */
     public void execute(int type, int levelID) {
         HttpRequest request = new HttpRequest(HttpMethods.GET);
-        request.setTimeOut(2500);
+        request.setTimeOut(RemoteServices.TIME_OUT);
         if (type == 1) {
-            request.setUrl(RemoteServices.getServerURL() + "/levels/" + levelID + "/highscores?top=" + TOP);
+            String url = RemoteServices.getServerURL() + "/levels/" + levelID + "/highscores?top=" + TOP_SCORE_TO_SHOW;
+            Gdx.app.log("GetLevelHighScoreService", "Call: " + url);
+            request.setUrl(url);
         } else {
-            request.setUrl(RemoteServices.getServerURL() + "/level_groups/" + levelID + "/highscores?top=" + TOP);
+            String url = RemoteServices.getServerURL() + "/level_groups/" + levelID + "/highscores?top=" + TOP_SCORE_TO_SHOW + "&top_by=levels";
+            Gdx.app.log("GetLevelHighScoreService", "Call: " + url);
+            request.setUrl(url);
         }
         
         RemoteServices.sendHttpRequest(request, new HttpResponseListener() {
@@ -77,24 +88,25 @@ public class GetLevelHighScoreService {
                 HttpStatus status = httpResponse.getStatus();
                 if (status.getStatusCode() == HttpStatus.SC_OK) {
                     JsonReader reader = new JsonReader();
-                    JsonValue json = reader.parse(httpResponse.getResultAsStream());
+                    String ress = httpResponse.getResultAsString();
+                    Gdx.app.log("GetLevelHighScoreService", "Received:" + ress);
+                    JsonValue json = reader.parse(ress);
                     ResponseData response = new ResponseData();
                     
-                    // List<ResponseItem> results = new
-                    // ArrayList<ResponseItem>();
-                    for (JsonValue item : json) {
-                        RecordItem res = new RecordItem();
-                        res.score = item.getInt("points");
-                        res.rank = item.getInt("rank");
-                        res.flyID = item.get("user").getInt("id");
-                        res.username = item.get("user").getString("name");
-                        int levelID = item.get("level").getInt("id");
-                        String levelName = item.get("level").getString("name");
-                        response.addRecord(levelID, levelName, res);
+                    for (JsonValue jsonScore : json) {
+                        RecordItem score = new RecordItem();
+                        score.score = jsonScore.getInt("points");
+                        score.rank = jsonScore.getInt("rank");
+                        score.flyID = jsonScore.get("user").getInt("id");
+                        score.username = jsonScore.get("user").getString("name");
+                        int levelID = RemoteServices.getClientLevelID(jsonScore.getInt("level_id"));
+                        String levelName = jsonScore.getString("level_id");// wont be
+                                                                      // used
+                        response.addRecord(levelID, levelName, score);
                     }
                     listener.successful(response);
                 } else {
-                	listener.failed(String.valueOf(status.getStatusCode()));
+                    listener.failed(String.valueOf(status.getStatusCode()));
                 }
                 Gdx.app.log("GetLevelHighScoreService", "server return code: " + String.valueOf(status.getStatusCode()));
             }

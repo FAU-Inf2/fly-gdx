@@ -31,12 +31,12 @@ import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
 import de.fau.cs.mad.fly.features.game.EndlessRailLevelGenerator;
+import de.fau.cs.mad.fly.features.overlay.BackButtonOverlay;
 import de.fau.cs.mad.fly.features.overlay.FPSOverlay;
 import de.fau.cs.mad.fly.features.overlay.GameFinishedOverlay;
 import de.fau.cs.mad.fly.features.overlay.GateIndicator;
 import de.fau.cs.mad.fly.features.overlay.InfoButtonOverlay;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
-import de.fau.cs.mad.fly.features.overlay.PauseGameOverlay;
 import de.fau.cs.mad.fly.features.overlay.ScoreOverlay;
 import de.fau.cs.mad.fly.features.overlay.TimeLeftOverlay;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
@@ -61,6 +61,7 @@ import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.BackProcessor;
+import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
@@ -88,6 +89,7 @@ public class GameControllerBuilder {
     private TimeController timeController;
     private ScoreController scoreController;
     private EndlessLevelGenerator generator;
+    private AudioManager audioManager;
     
     /**
      * Creates a basic {@link GameController} with a certain level, linked to
@@ -125,6 +127,8 @@ public class GameControllerBuilder {
         timeController = new TimeController();
         
         scoreController = new ScoreController();
+
+        audioManager = new AudioManager();
         
         float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
         float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
@@ -160,6 +164,7 @@ public class GameControllerBuilder {
                 
                 if (!currentPlayer.decreaseLives()) {
                     // Debug.setOverlay(0, "DEAD");
+                    audioManager.playSound(AudioManager.Sounds.CRASH);
                     game.getGameController().finishGame(false);
                 } else {
                     // Debug.setOverlay(0, player.getLives());
@@ -293,6 +298,7 @@ public class GameControllerBuilder {
         addTimeLeftOverlay();
         addScoreOverlay();
         addInfoOverlays();
+        addBackButtonOverlay();
         
         if (preferences.getBoolean(SettingManager.SHOW_FPS)) {
             addFPSOverlay();
@@ -505,14 +511,24 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Adds a {@link FPSOverlay} to the GameController, that is updated every
+     * Adds a {@link FPSOverlay} to the {@link GameController}, that is updated every
      * frame.
      * 
-     * @return Builder instance with FPSOverlay
+     * @return Builder instance with {@link FPSOverlay}
      */
     private GameControllerBuilder addFPSOverlay() {
         FPSOverlay fpsOverlay = new FPSOverlay(stage);
         addFeatureToLists(fpsOverlay);
+        return this;
+    }
+    
+    /**
+     * Adds {@link BackButtonOverlay} to show a button to return to {@link MainMenuScreen}.
+     * @return Builder instance with {@link BackButtonOverlay}
+     */
+    private GameControllerBuilder addBackButtonOverlay() {
+        BackButtonOverlay backButtonOverlay = new BackButtonOverlay(stage);
+        addFeatureToLists(backButtonOverlay);
         return this;
     }
     
@@ -537,18 +553,6 @@ public class GameControllerBuilder {
     private GameControllerBuilder addGameFinishedOverlay() {
         GameFinishedOverlay gameFinishedOverlay = new GameFinishedOverlay(stage);
         addFeatureToLists(gameFinishedOverlay);
-        return this;
-    }
-    
-    /**
-     * Adds a {@link PauseGameOverlay} to the GameController, that is
-     * initialized and displayed every frame
-     * 
-     * @return Builder instance with PauseGameOverlay
-     */
-    private GameControllerBuilder addPauseGameOverlay() {
-        PauseGameOverlay pauseGameOverlay = new PauseGameOverlay(stage);
-        addFeatureToLists(pauseGameOverlay);
         return this;
     }
     
@@ -584,11 +588,12 @@ public class GameControllerBuilder {
         gc.player = player;
         gc.flightController = flightController;
         gc.cameraController = cameraController;
-        // gc.batch = new ModelBatch();
+//        gc.batch = new ModelBatch();
         gc.batch = new ModelBatch(null, new FlyShaderProvider(), null);
         gc.setTimeController(timeController);
         gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
+        gc.audioManager = audioManager;
         
         level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override

@@ -22,19 +22,24 @@ public class PutHighscoreService {
         HttpRequest request = new HttpRequest(HttpMethods.PUT);
         request.setTimeOut(RemoteServices.TIME_OUT);
         request.setHeader("Content-Type", "application/json");
-        request.setUrl(RemoteServices.getServerURL() + "/highscores/" + requestData.Score.getServerScoreId());
-        String res = "{ \"points\":" + requestData.Score.getTotalScore() + " }";
+        String url = RemoteServices.getServerURL() + "/highscores/" + requestData.Score.getServerScoreId();
+        Gdx.app.log("PutHighscoreService", "call:" + url);
+        request.setUrl(url);
+        String res = "{ \"highscore\": { \"points\":" + requestData.Score.getTotalScore() + " } }";
         request.setContent(res);
-        Gdx.app.log("PutHighscoreService", res);
+        Gdx.app.log("PutHighscoreService", "send:" + res);
         
         RemoteServices.sendHttpRequest(request, new HttpResponseListener() {
             @Override
             public void handleHttpResponse(HttpResponse httpResponse) {
                 HttpStatus status = httpResponse.getStatus();
                 if (status.getStatusCode() == HttpStatus.SC_OK || status.getStatusCode() == HttpStatus.SC_NO_CONTENT) {
-                    // JsonReader reader = new JsonReader();
-                    // JsonValue json =
-                    // reader.parse(httpResponse.getResultAsStream());
+                    
+                	 String ress = httpResponse.getResultAsString();
+                     Gdx.app.log("PutHighscoreService", "Received:" + ress );
+                     
+                	// JsonReader reader = new JsonReader();
+                    // JsonValue json = reader.parse(ress);
                     // ResponseData response = new ResponseData();
                     // //List<ResponseItem> results = new
                     // ArrayList<ResponseItem>();
@@ -64,13 +69,13 @@ public class PutHighscoreService {
                 } else {
                     listener.failed(String.valueOf(status.getStatusCode()));
                 }
-                Gdx.app.log("PostHighscoreService", "server return code: " + String.valueOf(status.getStatusCode()));
+                Gdx.app.log("PutHighscoreService", "server return code: " + String.valueOf(status.getStatusCode()));
             }
             
             @Override
             public void failed(Throwable t) {
                 listener.failed(t.getLocalizedMessage());
-                Gdx.app.log("PostHighscoreService", "server return msg:" + t.getMessage());
+                Gdx.app.log("PutHighscoreService", "server return msg:" + t.getMessage());
             }
             
             @Override

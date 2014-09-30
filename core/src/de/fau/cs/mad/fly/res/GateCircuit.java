@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
+import de.fau.cs.mad.fly.game.AudioManager;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
@@ -210,6 +211,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
      *            The gate that was passed.
      */
     public void activeGatePassed(GateGoal gate) {
+        GameController.getInstance().getAudioManager( ).playSound(AudioManager.Sounds.GATE_PASSED);
         for (GateCircuitListener s : gateCircuitListeners)
             s.onGatePassed(gate);
         virtualGate = gate;
