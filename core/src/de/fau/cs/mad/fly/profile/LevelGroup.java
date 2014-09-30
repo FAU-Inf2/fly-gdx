@@ -79,6 +79,12 @@ public class LevelGroup {
                     levelProfile.id = groupJS.getInt("id");
                     levelProfile.name = groupJS.getString("name");
                     levelProfile.file = path + groupJS.getString("file");
+                    JsonValue type = groupJS.get("type");
+                    if(type == null) {
+                    	levelProfile.type = 0;
+                    } else if(type.asString().equals("tutorial")){
+                    	levelProfile.type = 1;
+                    }
                     levels.add(levelProfile);
                 }
             }

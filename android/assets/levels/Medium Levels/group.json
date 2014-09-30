@@ -30,7 +30,8 @@
 		{
 			"id": 206,
 			"name": "T 6",
-			"file": "pointsTutorial.json"
+			"file": "pointsTutorial.json",
+			"type": "tutorial"
 		},
 		{
 			"id": 207,
@@ -55,7 +56,8 @@
 		{
 			"id": 211,
 			"name": "T 7",
-			"file": "speedTutorial.json"
+			"file": "speedTutorial.json",
+			"type": "tutorial"
 		}
 	]
 }
