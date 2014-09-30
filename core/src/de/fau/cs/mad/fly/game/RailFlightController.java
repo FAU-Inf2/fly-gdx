@@ -7,10 +7,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.game.EndlessLevelGenerator;
 import de.fau.cs.mad.fly.features.game.EndlessRailLevelGenerator;
+import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
+import de.fau.cs.mad.fly.res.GateDisplay;
+import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Perspective;
 
 /**
@@ -18,7 +22,7 @@ import de.fau.cs.mad.fly.res.Perspective;
  * @author Sebastian
  *
  */
-public class RailFlightController extends FlightController{
+public class RailFlightController extends FlightController implements ICollisionListener{
 	
 	private EndlessRailLevelGenerator generator;
 	
@@ -165,6 +169,17 @@ public class RailFlightController extends FlightController{
 		}
 		
 		return false;
+	}
+
+	@Override
+	public void onCollision(GameObject g1, GameObject g2) {
+		// TODO Auto-generated method stub
+		
+		if(g2 instanceof GateDisplay) {
+			player.getPlane().resetOnRail(railX * railOffset, railY * railOffset, currentPosition.y);
+		} else if(!(g2 instanceof GateGoal) && !(g2 instanceof Collectible)) {
+			//asteroid
+		}
 	}
 
 }

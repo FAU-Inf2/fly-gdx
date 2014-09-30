@@ -210,6 +210,7 @@ public class GameControllerBuilder {
         } else if (level.head.isEndlessRails()) {
             generator = new EndlessRailLevelGenerator(Loader.getInstance().getCurrentLevel(), this);
             flightController = new RailFlightController(player, playerProfile, generator, level.start);
+            CollisionDetector.getInstance().getCollisionContactListener().addListener((ICollisionListener) flightController);
             
             gateCircuit.addListener(new GateCircuitAdapter() {
                 @Override

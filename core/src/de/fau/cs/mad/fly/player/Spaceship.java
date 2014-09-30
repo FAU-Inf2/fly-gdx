@@ -239,6 +239,10 @@ public class Spaceship extends GameObject implements IPlane {
     	lastAzimuth = -Math.signum(vector.x);
     }
     
+    public void resetOnRail(float railX, float railY, float railPos) {
+    	
+    }
+    
     @Override
     public int getMaxHealth() {
         return 10;

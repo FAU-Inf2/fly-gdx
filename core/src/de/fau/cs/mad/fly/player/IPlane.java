@@ -158,4 +158,6 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
     public void rotate(float rollDir, float azimuthDir, float deltaFactor);
     
     public void shift(Vector3 vector);
+    
+    public void resetOnRail(float railX, float railY, float railPos);
 }
