@@ -5,17 +5,20 @@
 		{
 			"id": 1,
 			"name": "T 1",
-			"file": "rollTutorial.json"
+			"file": "rollTutorial.json",
+			"type": "tutorial"
 		},
 		{
 			"id": 2,
 			"name": "T 2",
-			"file": "azimuthTutorial.json"
+			"file": "azimuthTutorial.json",
+			"type": "tutorial"
 		},
 		{
 			"id": 3,
 			"name": "T 3",
-			"file": "pointTimeTutorial.json"
+			"file": "pointTimeTutorial.json",
+			"type": "tutorial"
 		},
 		{
 			"id": 4,
@@ -45,7 +48,8 @@
 		{
 			"id": 9,
 			"name": "T 4",
-			"file": "selectGateTutorial.json"
+			"file": "selectGateTutorial.json",
+			"type": "tutorial"
 		},
 		{
 			"id": 10,
@@ -75,7 +79,8 @@
 		{
 			"id": 15,
 			"name": "T 5",
-			"file": "asteroidTutorial.json"
+			"file": "asteroidTutorial.json",
+			"type": "tutorial"
 		},
 		{
 			"id": 16,

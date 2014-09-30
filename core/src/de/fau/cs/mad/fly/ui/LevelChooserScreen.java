@@ -64,6 +64,8 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
             buttonWidth = UI.Buttons.TEXT_BUTTON_WIDTH;
         }
         int maxRows = (int) Math.ceil((float) allLevels.size() / (float) buttonsInARow);
+
+        currentProfile.checkPassedLevelForTutorials();
         
         for (int row = 0; row < maxRows; row++) {
             int maxColumns = Math.min(allLevels.size() - (row * buttonsInARow), buttonsInARow);

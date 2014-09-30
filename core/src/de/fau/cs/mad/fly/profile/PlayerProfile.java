@@ -170,6 +170,16 @@ public class PlayerProfile {
     }
     
     /**
+     * Checks if the levels after the currently passed level are tutorial levels and increases the passed level id until the first non-tutorial level is found.
+     */
+    public void checkPassedLevelForTutorials() {
+        List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
+        for (int level = passedLevelID; level < allLevels.size() && allLevels.get(level-1).isTutorial(); level++) {
+            passedLevelID++;
+        }
+    }
+    
+    /**
      * save max passed level id to database
      */
     public void savePassedLevelID() {
