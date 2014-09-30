@@ -239,8 +239,23 @@ public class Spaceship extends GameObject implements IPlane {
     	lastAzimuth = -Math.signum(vector.x);
     }
     
+    /**
+     * Resets the Spaceship on the specified rail
+     */
     public void resetOnRail(float railX, float railY, float railPos) {
+    	//Vector3 newPosition = new Vector3(railY, railPos, railX);
+    	Vector3 newPosition = new Vector3(-railY, railX, railPos);
+    	Gdx.app.log("reset", ""+newPosition);
     	
+    	Vector3 yPos = new Vector3(0,railPos,0);
+
+        Perspective start = gameController.getLevel().start;
+    	
+    	rotationTransform.setToLookAt(start.viewDirection.cpy().add(yPos), start.upDirection);
+    	rotationTransform.rotate(start.upDirection, 180.0f);
+    	rotationTransform.translate(newPosition);
+        
+    	getRigidBody().setCenterOfMassTransform(rotationTransform);
     }
     
     @Override

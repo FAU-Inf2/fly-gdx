@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.Fly;
@@ -76,6 +77,7 @@ public class RailFlightController extends FlightController implements ICollision
 			generator.removeComponents(centerRail.get(0));
 			
 			centerRail.remove(0);
+			currentPosition = centerRail.get(0);
 			
 		}
 		float speed = player.getPlane().getSpeed() + 0.0001f;
@@ -157,13 +159,7 @@ public class RailFlightController extends FlightController implements ICollision
 		player.getPlane().shift(shiftVector);
 	}
 	
-	private boolean checkRailPointPassed() {
-		/*Vector3 dif = player.getPlane().getPosition().cpy().sub(centerRail.get(0));
-		
-		if(dif.dot(direction) > 0) {
-			return true;
-		}*/
-		
+	private boolean checkRailPointPassed() {		
 		if(player.getPlane().getPosition().y > centerRail.get(0).y + 3) {
 			return true;
 		}
@@ -173,13 +169,51 @@ public class RailFlightController extends FlightController implements ICollision
 
 	@Override
 	public void onCollision(GameObject g1, GameObject g2) {
-		// TODO Auto-generated method stub
 		
 		if(g2 instanceof GateDisplay) {
+			if(generator.checkAsteroidPosition(currentPosition, railX * railOffset, railY * railOffset)) {
+				railX -= changeX;
+				railY -= changeY;
+			} 
+			
 			player.getPlane().resetOnRail(railX * railOffset, railY * railOffset, currentPosition.y);
+			
+			changeX = changeY = 0;
+			changeRailX = changeRailY = false;
+			
 		} else if(!(g2 instanceof GateGoal) && !(g2 instanceof Collectible)) {
 			//asteroid
+			while(generator.checkAsteroidPosition(currentPosition, railX * railOffset, railY * railOffset)) {
+				Vector3 newPos = generateRandomAdjacentPosition();
+			}
+			
+			player.getPlane().resetOnRail(railX * railOffset, railY * railOffset, currentPosition.y);
+			
+			changeX = changeY = 0;
+			changeRailX = changeRailY = false;
 		}
+	}
+	
+	private Vector3 generateRandomAdjacentPosition() {
+		int newRailX;
+		int newRailY;
+		
+		if(Math.abs(railX) > 0) {
+			newRailX = 0;
+		} else {
+			newRailX = (int) Math.signum(MathUtils.random(-1, 1));
+		}
+		
+		if(Math.abs(railY) > 0) {
+			newRailY = 0;
+		} else {
+			newRailY = (int) Math.signum(MathUtils.random(-1, 1));
+		}
+		
+		railX = newRailX;
+		railY = newRailY;
+		
+		return new Vector3(newRailX, newRailY, 0);
 	}
 
 }

@@ -78,6 +78,9 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 		builder.addFeatureToLists(changePointsHandler);
 	}
 	
+	/**
+	 * Adds random Components to the newest RailSegment
+	 */
 	public void addRandomComponents() {
 		
 		int random = MathUtils.random(15);
@@ -99,6 +102,10 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 		stepsSinceLastAsteroid++;
 	}
 	
+	/**
+	 * Removes all Objects on of the railSegment 
+	 * @param railPosition    indicates the position of the railsSegment which has to be removed
+	 */
 	public void removeComponents(Vector3 railPosition) {
 		GameObject o = objects.get(currentRailStartPoint);
 		if(o !=  null) {
@@ -297,25 +304,28 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
     	stepsSinceLastAsteroid = 0;
     }
 	
+    /**
+     * Adds an additional segment to the rails
+     * @param newRailPosition
+     */
 	public void addRailPosition(Vector3 newRailPosition) {
 		addRandomComponents();
 		currentRailEndPoint++;
 	}
 	
-	public void initRail(Vector3 newRailPosition) {
-		centerRail.add(newRailPosition);
-		
-		//level.getGateCircuit().setStartGate(addRandomGate());
-		//level.getGateCircuit().reset();
-		level.getGateCircuit().setVirtualGate(addRandomGate());
-		addRandomGate();
-	}
-	
+	/**
+	 * Setter for the rail
+	 * @param rail
+	 */
 	public void setRail(List<Vector3> rail) {
 		centerRail = rail;
 		currentRailEndPoint = rail.size() - 1;
 	}
 	
+	/**
+	 * Setter of the railOffset
+	 * @param railOffset
+	 */
 	public void setRailOffset(float railOffset) {
 		this.railOffset = railOffset;
 	}
@@ -368,6 +378,27 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 		offset.x = Math.signum(lastPointUpgradePos.x) * railOffset;
 		
 		return offset;
+	}
+	
+	/**
+	 * 
+	 * @param railPosition
+	 * @param railX
+	 * @param railY
+	 * @return false if no asteroid in front of the position on rail (railX,railY)
+	 */
+	public boolean checkAsteroidPosition(Vector3 railPosition, float railX, float railY) {
+		
+		for(int i = 0; i < 3; i++) {
+			GameObject o = objects.get(currentRailStartPoint + i);
+			if(o !=  null) {
+				Vector3 asteroidPosition = o.getPosition();
+				if((asteroidPosition.x == railY) && (asteroidPosition.z == railX)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
