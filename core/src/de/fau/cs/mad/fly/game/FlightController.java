@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 
+import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
@@ -46,7 +47,9 @@ public class FlightController implements InputProcessor {
     protected List<Float> rollInput;
     protected List<Float> pitchInput;
     
+    /** Degree of lifting and leaning the ship */
     protected float roll;
+    /** degree of steering left and right */
     protected float pitch;
     
     protected float maxRotate = 45.f;
@@ -55,16 +58,18 @@ public class FlightController implements InputProcessor {
     protected float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;
     protected float radius = TouchScreenOverlay.RADIUS_OF_STEERING_CIRCLE;
     
+    protected boolean screenRotated;
+    
     public FlightController(Player player, PlayerProfile playerProfile) {
         this.player = player;
-        
         Preferences preferences = playerProfile.getSettingManager().getPreferences();
         this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
         this.invertPitch = preferences.getBoolean(SettingManager.INVERT_PITCH);
-        
         this.bufferSize = 10;
+        screenRotated = ((Fly) Gdx.app.getApplicationListener()).orientationSwapped();
+        Gdx.app.log("orientation", "" + screenRotated);
     }
-
+    
     /**
      * Resets steering and the buffers.
      */
@@ -123,10 +128,10 @@ public class FlightController implements InputProcessor {
      * Resets the Steering with Sensors to the current Smartphone position
      */
     public void resetSteering() {
-        if(invertPitch)
-            startRoll = -Gdx.input.getRoll();
-        else
-            startRoll = Gdx.input.getRoll();
+        startRoll = Gdx.input.getRoll();
+        if (invertPitch && !screenRotated || !invertPitch && screenRotated) {
+            startRoll = -startRoll;
+        }
         startPitch = Gdx.input.getPitch();
     }
     
@@ -154,10 +159,15 @@ public class FlightController implements InputProcessor {
      */
     protected void interpretSensorInput() {
         pitch = Gdx.input.getPitch();
-        if(invertPitch)
-            roll = -Gdx.input.getRoll();
-        else
-            roll = Gdx.input.getRoll();
+        roll = Gdx.input.getRoll();
+        
+        // interpret if screen on smartphone is rotated or not
+        if (invertPitch && !screenRotated || !invertPitch && screenRotated) {
+            roll = roll * -1;
+        }
+        if(screenRotated) {
+            pitch = -pitch;
+        }
         
         // removing oldest element in buffers
         if (rollInput.size() >= bufferSize) {

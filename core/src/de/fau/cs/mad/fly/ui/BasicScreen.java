@@ -98,7 +98,6 @@ public abstract class BasicScreen implements Screen {
     
     @Override
     public void resize(int width, int height) {
-        updateBackground();
         stage.getViewport().update(width, height, true);
     }
     

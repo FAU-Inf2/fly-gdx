@@ -17,7 +17,6 @@ import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GameScreen;
-import de.fau.cs.mad.fly.ui.LevelLoadingScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
@@ -53,7 +52,7 @@ public class Fly extends Game implements Loadable<Fly> {
     private PlaneUpgradeScreen planeUpgradeScreen;
     private GameScreen gameScreen;
     private MainMenuScreen mainMenuScreen;
-
+    
     private GameController gameController;
     
     private List<ProgressListener<Fly>> listeners = new ArrayList<ProgressListener<Fly>>();
@@ -78,7 +77,7 @@ public class Fly extends Game implements Loadable<Fly> {
         addProgressListener(new ProgressListener.ProgressAdapter<Fly>() {
             @Override
             public void progressFinished(Fly fly) {
-                if(mainMenuScreen == null) {
+                if (mainMenuScreen == null) {
                     mainMenuScreen = new MainMenuScreen();
                 }
                 mainMenuScreen.set();
@@ -235,6 +234,8 @@ public class Fly extends Game implements Loadable<Fly> {
     
     protected int current3d2dMode = Mode3d2dChangedEvent.MODE_2D;
     
+    private OrientationProvider orientationProvider;
+    
     public void add3d2dChangedListeners(EventListener listener) {
         if (listener != null) {
             mode3d2dChangedListeners.add(listener);
@@ -266,10 +267,12 @@ public class Fly extends Game implements Loadable<Fly> {
      * @return
      */
     private int getScreenMode(Screen screen) {
-        if (screen == null)
+        if (screen == null) {
             return 0;
-        if (screen instanceof GameScreen || screen instanceof LevelLoadingScreen)
+        }
+        if (screen instanceof GameScreen) {
             return Mode3d2dChangedEvent.MODE_3D;
+        }
         return Mode3d2dChangedEvent.MODE_2D;
     }
     
@@ -286,6 +289,25 @@ public class Fly extends Game implements Loadable<Fly> {
         
         public Mode3d2dChangedEvent(int mode) {
             this.mode = mode;
+        }
+    }
+    
+    /**
+     * This method is called by a component that controls weather the screen may
+     * be swapped or not. It is necessary for {@link #orientationSwapped}.
+     * 
+     * @param orientationProvider
+     */
+    public void addOrientationProvider(OrientationProvider orientationProvider) {
+        this.orientationProvider = orientationProvider;
+    }
+    
+    /** Method to check weather the screen is swapped or not */
+    public boolean orientationSwapped() {
+        if (orientationProvider == null) {
+            return false;
+        } else {
+            return orientationProvider.orientationSwapped();
         }
     }
 }
