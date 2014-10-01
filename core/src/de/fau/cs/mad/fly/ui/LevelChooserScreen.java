@@ -55,16 +55,15 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
         // adjusted
         int buttonsInARow;
         int buttonWidth;
-        if(allLevels.size() > 2) {
+        if (allLevels.size() > 2) {
             buttonsInARow = 9;
             buttonWidth = UI.Buttons.IMAGE_BUTTON_WIDTH;
-        }
-        else {
+        } else {
             buttonsInARow = UI.Buttons.BUTTONS_IN_A_ROW;
             buttonWidth = UI.Buttons.TEXT_BUTTON_WIDTH;
         }
         int maxRows = (int) Math.ceil((float) allLevels.size() / (float) buttonsInARow);
-
+        
         currentProfile.checkPassedLevelForTutorials();
         
         for (int row = 0; row < maxRows; row++) {
@@ -76,17 +75,18 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
                 
                 if (!Fly.DEBUG_MODE && (levelGroup.id > currentProfile.getPassedLevelgroupID() || (levelGroup.id == currentProfile.getPassedLevelgroupID() && level.id > currentProfile.getPassedLevelID()))) {
                     button.setDisabled(true);
+                } else {
+                    button.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            currentProfile.setCurrentLevelGroup(levelGroup);
+                            currentProfile.saveCurrentLevelGroup();
+                            currentProfile.setCurrentLevelProfile(level);
+                            currentProfile.saveCurrentLevelProfile();
+                            Loader.getInstance().loadLevel(level);
+                        }
+                    });
                 }
-                button.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        currentProfile.setCurrentLevelGroup(levelGroup);
-                        currentProfile.saveCurrentLevelGroup();
-                        currentProfile.setCurrentLevelProfile(level);
-                        currentProfile.saveCurrentLevelProfile();
-                        Loader.getInstance().loadLevel(level);
-                    }
-                });
                 buttonTable.add(button).width(buttonWidth).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
             }
             buttonTable.row();

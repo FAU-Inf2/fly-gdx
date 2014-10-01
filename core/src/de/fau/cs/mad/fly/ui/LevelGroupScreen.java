@@ -46,14 +46,14 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
                 final TextButton button = new TextButton(group.name, skin);
                 if (!Fly.DEBUG_MODE && group.id > PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID()) {
                     button.setDisabled(true);
+                } else {   
+                    button.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            setLevelChooserScreen(group);
+                        }
+                    });
                 }
-                
-                button.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        setLevelChooserScreen(group);
-                    }
-                });
                 contentTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
             }
             contentTable.row();
