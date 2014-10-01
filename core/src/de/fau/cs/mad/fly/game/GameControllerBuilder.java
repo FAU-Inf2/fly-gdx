@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
@@ -109,11 +110,11 @@ public class GameControllerBuilder {
         player = new Player();
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         level = Loader.getInstance().getCurrentLevel();
-        if(Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
+        if (Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
             try {
                 Constructor c = Class.forName("de.fau.cs.mad.fly.ios.input.IOSFlightController").getConstructor(Player.class, PlayerProfile.class);
                 flightController = (FlightController) c.newInstance(player, playerProfile);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 throw new GdxRuntimeException("Error instantiating IOSFlightController", e);
             }
@@ -127,7 +128,7 @@ public class GameControllerBuilder {
         timeController = new TimeController();
         
         scoreController = new ScoreController();
-
+        
         audioManager = new AudioManager();
         
         float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
@@ -226,7 +227,6 @@ public class GameControllerBuilder {
             });
         }
         
-        
         checkAndAddSettingFeatures();
         
         checkAndAddUpgradeHandler();
@@ -298,14 +298,17 @@ public class GameControllerBuilder {
         addTimeLeftOverlay();
         addScoreOverlay();
         addInfoOverlays();
-        addBackButtonOverlay();
-        
+        // do not show back button on Android, because there the softkey back
+        // button is available
+        if (!ApplicationType.Android.equals(Gdx.app.getType())) {
+            addBackButtonOverlay();
+        }
         if (preferences.getBoolean(SettingManager.SHOW_FPS)) {
             addFPSOverlay();
         }
         if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
             addTouchScreenOverlay();
-        } 
+        }
         if (preferences.getBoolean(SettingManager.VIBRATE_WHEN_COLLIDE)) {
             CollisionDetector.getInstance().getCollisionContactListener().addListener(new ICollisionListener() {
                 @Override
@@ -511,8 +514,8 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Adds a {@link FPSOverlay} to the {@link GameController}, that is updated every
-     * frame.
+     * Adds a {@link FPSOverlay} to the {@link GameController}, that is updated
+     * every frame.
      * 
      * @return Builder instance with {@link FPSOverlay}
      */
@@ -523,7 +526,9 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Adds {@link BackButtonOverlay} to show a button to return to {@link MainMenuScreen}.
+     * Adds {@link BackButtonOverlay} to show a button to return to
+     * {@link MainMenuScreen}.
+     * 
      * @return Builder instance with {@link BackButtonOverlay}
      */
     private GameControllerBuilder addBackButtonOverlay() {
@@ -588,7 +593,7 @@ public class GameControllerBuilder {
         gc.player = player;
         gc.flightController = flightController;
         gc.cameraController = cameraController;
-//        gc.batch = new ModelBatch();
+        // gc.batch = new ModelBatch();
         gc.batch = new ModelBatch(null, new FlyShaderProvider(), null);
         gc.setTimeController(timeController);
         gc.scoreController = scoreController;
