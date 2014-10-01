@@ -195,6 +195,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 	//it is last level, but not last group, not the first time pass this level
                     showInfoLabel(skin, "level.congratulations");
                 }
+                showLevelMessage(skin);
                 showScore(skin);
                 
                 TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), skin);
@@ -221,6 +222,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             }
             
             showInfoLabel(skin, "level.congratulations");
+            showLevelMessage(skin);
             showScore(skin);
             TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), skin);
             
@@ -236,6 +238,18 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
             messageTable.add();
         }
+    }
+    
+    /**
+     * Shows a message with the level name of the finished level.
+     * 
+     * @param skin		The skin used to display the message.
+     */
+    private void showLevelMessage(Skin skin) {
+        String levelMessage = I18n.t("level.finished.first") + " '" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + "' " + I18n.t("level.finished.last");
+        Label infoLabel = new Label(levelMessage, skin);
+        messageTable.add(infoLabel).colspan(3);
+        messageTable.row();
     }
     
     /**
