@@ -131,11 +131,15 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         Table scrollableTable = new Table(skin);
         scrollableTable.setFillParent(true);
         scrollableTable.pad(UI.Window.BORDER_SPACE);
+        scrollableTable.padTop(UI.Tables.PLANECHOOSERSCREEN_BUTTON_TABLE_TOP_PADDING);
         
         int size = allPlanes.size();
         int passedLevelGroupId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
+        
+        // show the message if you have to unlock a new ship
+        addNextPlaneAvailableInfo(scrollableTable, size);
+        
         for (int i = 1; i <= size; i++) {
-            
             Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(i).modelRef + ".png"));
             TextureRegion image = new TextureRegion(texture1);
             ImageButtonStyle style = new ImageButtonStyle(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
@@ -161,7 +165,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
                 });
             }
             
-            scrollableTable.add(button).bottom().expand();
+            scrollableTable.add(button).expand();
         }
         stage.addActor(scrollableTable);
         
@@ -204,6 +208,43 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         
         // initialize the InputProcessor
         inputProcessor = new InputMultiplexer(stage, this, new BackProcessor());
+    }
+    
+    /**
+     * Returns the message what you have to finish to unlock a new ship or if all ships are already available.
+     * 
+     * @param table			The table to add the message to.
+     * @param size			The count of spaceships in the game to calculate the correct col span.
+     * 
+     * @return the label with the message.
+     */
+    private void addNextPlaneAvailableInfo(Table table, int size) {
+    	if(!checkIfAllShipsAvailable()) {
+            table.add(new Label(I18n.t("planeChooser.unlockShip"), skin)).colspan(size).row();
+    	}/* else {
+    		table.add(new Label(I18n.t("planeChooser.allShips"), skin)).colspan(size).row();
+    	}*/
+    }
+    
+    /**
+     * Checks if all ships are available.
+     * 
+     * @return true if debug mode or all ships are available, false otherwise.
+     */
+    private boolean checkIfAllShipsAvailable() {
+    	if(Fly.DEBUG_MODE) {
+    		return true;
+    	}
+
+    	int size = allPlanes.size();
+    	int passedLevelGroupId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
+    	
+    	for (int i = 1; i <= size; i++) {
+    		if(allPlanes.get(i).levelGroupDependency > passedLevelGroupId) {
+    			return false;
+    		}
+    	}
+    	return true;
     }
     
     private void resetVectors() {
