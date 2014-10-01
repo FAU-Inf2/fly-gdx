@@ -14,6 +14,7 @@ import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.UI.Window;
 
 /**
@@ -63,15 +64,36 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
             buttonsInARow = UI.Buttons.BUTTONS_IN_A_ROW;
             buttonWidth = UI.Buttons.TEXT_BUTTON_WIDTH;
         }
-        int maxRows = (int) Math.ceil((float) allLevels.size() / (float) buttonsInARow);
 
         currentProfile.checkPassedLevelForTutorials();
+        boolean disableTutorials = currentProfile.getSettingManager().getPreferences().getBoolean(SettingManager.DISABLE_TUTORIALS);
+        int size = allLevels.size();
+        int sizeAllLevels = size;
+        if(disableTutorials) {
+        	int sizeWithoutTutorials = 0;
+        	for(int i = 0; i < size; i++) {
+        		if(!allLevels.get(i).isTutorial()) {
+        			sizeWithoutTutorials++;
+        		}
+        	}
+        	size = sizeWithoutTutorials;
+        	System.out.println(size);
+        }
         
+        int maxRows = (int) Math.ceil((float) size / (float) buttonsInARow);
+        
+        int currentLevel = 0;
         for (int row = 0; row < maxRows; row++) {
-            int maxColumns = Math.min(allLevels.size() - (row * buttonsInARow), buttonsInARow);
+            int maxColumns = Math.min(size - (row * buttonsInARow), buttonsInARow);
             // fill a row with buttons
-            for (int column = 0; column < maxColumns; column++) {
-                final LevelProfile level = allLevels.get(row * buttonsInARow + column);
+            for (int column = 0; column < maxColumns && currentLevel < sizeAllLevels; column++) {           	
+                final LevelProfile level = allLevels.get(currentLevel);
+                if(level.isTutorial() && disableTutorials) {
+                	currentLevel++;
+                	column--;
+                	continue;
+                }
+                
                 final TextButton button = new TextButton(level.name, skin);
                 
                 if (!Fly.DEBUG_MODE && (levelGroup.id > currentProfile.getPassedLevelgroupID() || (levelGroup.id == currentProfile.getPassedLevelgroupID() && level.id > currentProfile.getPassedLevelID()))) {
@@ -88,6 +110,7 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
                     }
                 });
                 buttonTable.add(button).width(buttonWidth).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
+                currentLevel++;
             }
             buttonTable.row();
         }
