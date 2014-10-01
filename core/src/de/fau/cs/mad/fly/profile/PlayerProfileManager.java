@@ -128,7 +128,6 @@ public class PlayerProfileManager {
         playerProfiles = new ArrayList<PlayerProfile>();
         final String selectSQL = "select player_id,fly_id,name,total_score,total_geld,current_levelgroup_id,current_level_id,passed_levelgroup_id,passed_level_id from player";
         
-        // FlyDBManager.getInstance().openDatabase();
         DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
         
         if (cursor != null && cursor.getCount() > 0) {

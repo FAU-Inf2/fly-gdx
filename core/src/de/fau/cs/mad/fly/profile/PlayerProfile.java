@@ -466,26 +466,22 @@ public class PlayerProfile {
     /**
      * If possible currentLevelGroup is set to the next level.
      */
-    public boolean setToNextLevelGroup() {
+    public void setToNextLevelGroup() {
         if (this.IsLastLevel() && !this.IsLastLevelGroup()) {
             int currentGroup = 0;
             List<LevelGroup> allGroups = LevelGroupManager.getInstance().getLevelGroups();
-            for (int i = 0; i < allGroups.size(); i++) {
+            
+            for (int i = allGroups.size() -1 ; i >=0 ; i--) {
                 if (allGroups.get(i) == this.getCurrentLevelGroup()) {
                     currentGroup = i;
-                    break;
+                    i = -1;
                 }
             }
             if (currentGroup < (allGroups.size() - 1)) {
-                
                 this.setCurrentLevelGroup(allGroups.get(currentGroup + 1));
                 this.setCurrentLevelProfile(this.getCurrentLevelGroup().getFirstLevel());
-                return true;
             }
-            return false;
         }
-        
-        return false;
     }
     
     /**
