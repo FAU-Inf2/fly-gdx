@@ -51,10 +51,10 @@ public class InfoOverlay implements IFeatureUpdate {
         outerTable = new Table();
         outerTable.setFillParent(true);
         innerTable = new Table();
-        final NinePatchDrawable background = new NinePatchDrawable(skin.get("dialog-background", NinePatch.class));
+        final NinePatchDrawable background = new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class));
         innerTable.setBackground(background);
         
-        infoLabel = new Label("", skin, "black");
+        infoLabel = new Label("", skin);
         infoLabel.setAlignment(Align.center);
         innerTable.add(infoLabel);
         outerTable.add(innerTable).top().pad(UI.Window.BORDER_SPACE).expand();
