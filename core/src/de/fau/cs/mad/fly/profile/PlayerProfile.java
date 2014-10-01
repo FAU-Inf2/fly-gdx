@@ -430,15 +430,11 @@ public class PlayerProfile {
      * If possible currentLevelProfile is set to the next level.
      */
     public boolean setToNextLevel() {
-        int nextLevelIndex = 0;
-        List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
-        for (int level = 0; level < allLevels.size(); level++) {
-            if (allLevels.get(level) == getCurrentLevelProfile()) {
-                nextLevelIndex = level + 1;
-                level = allLevels.size();
-            }
-        }
-        if (nextLevelIndex < allLevels.size()) {
+    	List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
+        int nextLevelIndex = allLevels.indexOf(getCurrentLevelProfile()) + 1;
+        nextLevelIndex = jumpOverTutorials(allLevels, nextLevelIndex);
+        
+        if (nextLevelIndex > 0 && nextLevelIndex < allLevels.size()) {
             setCurrentLevelProfile(allLevels.get(nextLevelIndex));
             return true;
         }
@@ -449,18 +445,32 @@ public class PlayerProfile {
      * If possible return the next level profile of currentLevelProfile
      */
     public LevelProfile getNextLevel() {
-        int nextLevelIndex = 0;
-        List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
-        for (int level = 0; level < allLevels.size(); level++) {
-            if (allLevels.get(level) == getCurrentLevelProfile()) {
-                nextLevelIndex = level + 1;
-                level = allLevels.size();
-            }
-        }
-        if (nextLevelIndex < allLevels.size()) {
+    	List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
+        int nextLevelIndex = allLevels.indexOf(getCurrentLevelProfile()) + 1;
+        nextLevelIndex = jumpOverTutorials(allLevels, nextLevelIndex);
+        
+        if (nextLevelIndex > 0 && nextLevelIndex < allLevels.size()) {
             return allLevels.get(nextLevelIndex);
         }
         return null;
+    }
+    
+    /**
+     * Checks if disable tutorial setting is active and if the current next level is a tutorial level and then jumps over all the tutorial levels until it reaches a non-tutorial level.
+     * 
+     * @param allLevels			All the levels from the current level group.
+     * @param nextLevel			The index of the current next level.
+     * @return index of the next level which is not a tutorial.
+     */
+    private int jumpOverTutorials(List<LevelProfile> allLevels, int nextLevel) {
+    	if(!getSettingManager().getPreferences().getBoolean(SettingManager.DISABLE_TUTORIALS)) {
+    		return nextLevel;
+    	}
+    	
+    	while(nextLevel < allLevels.size() && allLevels.get(nextLevel).isTutorial()) {
+    		nextLevel++;
+    	}
+    	return nextLevel;
     }
     
     /**

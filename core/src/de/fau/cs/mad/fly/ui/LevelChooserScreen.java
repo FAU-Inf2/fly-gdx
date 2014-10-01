@@ -77,7 +77,6 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
         		}
         	}
         	size = sizeWithoutTutorials;
-        	System.out.println(size);
         }
         
         int maxRows = (int) Math.ceil((float) size / (float) buttonsInARow);
