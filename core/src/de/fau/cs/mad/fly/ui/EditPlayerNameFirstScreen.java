@@ -18,6 +18,7 @@ public class EditPlayerNameFirstScreen extends InputScreen {
      */
     protected void validInputAndGoBack() {
         PlayerProfileManager.getInstance().editCurrentPlayerName(textField.getText());
+        textField.getOnscreenKeyboard().show(false);
         screenToGoBack.set();
     }
     
