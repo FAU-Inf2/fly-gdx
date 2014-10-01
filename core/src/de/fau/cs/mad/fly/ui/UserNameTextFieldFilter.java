@@ -20,7 +20,7 @@ public class UserNameTextFieldFilter implements TextFieldFilter {
         if (textField.getText().length() >= PlayerProfile.MAX_NAME_LENGTH) {
             return false;
         } else {
-            return Character.isAlphabetic(c) || Character.isDigit(c);
+            return Character.isLetter(c) || Character.isDigit(c);
         }
     }
 }
