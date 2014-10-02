@@ -163,7 +163,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                     
                     for (Integer levelID : sortedKeys) {
                         Score score = scores.get(levelID);
-                        if (score != null && score.getTotalScore() > 0) {
+                        if (!levelGroup.getLevelProfile(Integer.valueOf(levelID)).isTutorial() && score != null && score.getTotalScore() > 0) {
                             scoresExist = true;
                             String levelname = levelGroup.getLevelName(Integer.valueOf(levelID));
                             // for longer level-names, make only one score per
