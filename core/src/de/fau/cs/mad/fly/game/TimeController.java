@@ -166,7 +166,7 @@ public class TimeController {
                 removeIntegerTimeListener(integerTimeListeners.get(i));
                 size--;
                 i--;
-            }
+            } 
         }
     }
     
