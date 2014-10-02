@@ -82,31 +82,6 @@ public class FlightController implements InputProcessor {
     }
     
     /**
-     * Sets the parameter that indicates whether the player wants to control the
-     * game by sensor or touch-screen
-     * 
-     * @param useSensorData
-     *            True if sensor-values should be used, false if touch-screen
-     *            should be used
-     */
-    public void setUseSensorData(boolean useSensorData) {
-        this.useSensorData = useSensorData;
-    }
-    
-    /**
-     * Setter for the size of buffers used for averaging the sensor values
-     * 
-     * @param bufferSize
-     *            - The size of the buffers used for averaging
-     */
-    public void setBufferSize(int bufferSize) {
-        resetBuffers();
-        
-        this.bufferSize = bufferSize;
-        
-    }
-    
-    /**
      * Getter for the factor by which the player rotate up/down
      * 
      * @return The rollFactor
@@ -327,16 +302,16 @@ public class FlightController implements InputProcessor {
         // changing camera rotation when finger is dragged on the touchscreen
         if (pointer == currentEvent) {
             
-            float xDif = screenX - centerX;
-            float yDif = screenY - centerY;
+            float xDif = centerX - screenX;
+            float yDif = centerY - screenY;
             float length = (float) Math.sqrt(xDif * xDif + yDif * yDif);
             
             if (length <= radius) {
-                setAzimuthFactor(-xDif / radius);
-                setRollFactor(-yDif / radius);
+                setAzimuthFactor(xDif / radius);
+                setRollFactor(yDif / radius);
             } else if (inTouch) {
-                setAzimuthFactor(-xDif / length);
-                setRollFactor(-yDif / length);
+                setAzimuthFactor(xDif / length);
+                setRollFactor(yDif / length);
             }
             
         }
