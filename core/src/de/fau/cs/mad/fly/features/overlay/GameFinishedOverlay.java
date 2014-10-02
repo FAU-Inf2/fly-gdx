@@ -272,11 +272,38 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         // he got in this level
         PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(newScore.getTotalScore());
         
-        Label scoreName = new Label(I18n.t("newScore"), skin);
+        // define some space between the labels and the values
         messageTable.columnDefaults(1).width(50f);
-        messageTable.add(scoreName).right();
-        messageTable.add();
-        messageTable.add(new Label(newScore.getTotalScore() + "", skin)).left();
+        
+        Score recentBestScore = ScoreManager.getInstance().getCurrentLevelBestScore();
+        if ((recentBestScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > recentBestScore.getTotalScore()) {
+            
+            // solution B for totalHighScoreOfall
+            int score0 = (recentBestScore == null) ? 0 : recentBestScore.getTotalScore();
+            int addScore = newScore.getTotalScore() - score0;
+            PlayerProfileManager.getInstance().getCurrentPlayerProfile().addScore(addScore);
+            
+            newScore.setServerScoreId(recentBestScore == null ? -1 : recentBestScore.getServerScoreId());
+            ScoreManager.getInstance().saveBestScore(newScore);
+            
+            messageTable.row();
+            messageTable.add(new Label(I18n.t("newRecord") + ":", skin)).right();
+            messageTable.add();
+            messageTable.add(new Label(String.valueOf(newScore.getTotalScore()), skin)).left();
+        }
+        else {
+            Label scoreName = new Label(I18n.t("newScore"), skin);
+            
+            messageTable.add(scoreName).right();
+            messageTable.add();
+            StringBuilder builder = new StringBuilder();
+            builder.append(newScore.getTotalScore());
+            builder.append(", ");
+            builder.append(I18n.t("record"));
+            builder.append(": ");
+            builder.append(recentBestScore.getTotalScore());
+            messageTable.add(new Label(builder.toString(), skin)).left();
+        }
         messageTable.row().expand();
         
         // gates
@@ -309,21 +336,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         messageTable.add(new Label(I18n.t(detail.getDetailName()), skin, "medium-font")).right();
         messageTable.add();
         messageTable.add(new Label(detail.getValue(), skin, "medium-font")).left();
-        
-        Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
-        if ((tmpScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > tmpScore.getTotalScore()) {
-            
-            // solution B for totalHighScoreOfall
-            int score0 = (tmpScore == null) ? 0 : tmpScore.getTotalScore();
-            int addScore = newScore.getTotalScore() - score0;
-            PlayerProfileManager.getInstance().getCurrentPlayerProfile().addScore(addScore);
-            
-            newScore.setServerScoreId(tmpScore == null ? -1 : tmpScore.getServerScoreId());
-            ScoreManager.getInstance().saveBestScore(newScore);
-            
-            messageTable.row();
-            messageTable.add(new Label(I18n.t("newRecord"), skin)).colspan(3);
-        }
-        messageTable.row().expand();
+        messageTable.row();
     }
 }
