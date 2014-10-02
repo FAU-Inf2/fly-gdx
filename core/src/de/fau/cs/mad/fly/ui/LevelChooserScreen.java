@@ -17,6 +17,7 @@ import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.help.HelpFrameText;
 import de.fau.cs.mad.fly.ui.help.HelpFrameTextWithArrow;
 import de.fau.cs.mad.fly.ui.help.HelpOverlay;
@@ -74,13 +75,34 @@ public class LevelChooserScreen extends BasicScreenWithBackButton implements Wit
         }
         int maxRows = (int) Math.ceil((float) allLevels.size() / (float) buttonsInARow);
         Button button;
-        currentProfile.checkPassedLevelForTutorials();
         
+        currentProfile.checkPassedLevelForTutorials();
+        boolean disableTutorials = currentProfile.getSettingManager().getPreferences().getBoolean(SettingManager.DISABLE_TUTORIALS);
+        int size = allLevels.size();
+        int sizeAllLevels = size;
+        if(disableTutorials) {
+        	int sizeWithoutTutorials = 0;
+        	for(int i = 0; i < size; i++) {
+        		if(!allLevels.get(i).isTutorial()) {
+        			sizeWithoutTutorials++;
+        		}
+        	}
+        	size = sizeWithoutTutorials;
+        }
+        
+        
+        int currentLevel = 0;
         for (int row = 0; row < maxRows; row++) {
-            int maxColumns = Math.min(allLevels.size() - (row * buttonsInARow), buttonsInARow);
+            int maxColumns = Math.min(size - (row * buttonsInARow), buttonsInARow);
             // fill a row with buttons
-            for (int column = 0; column < maxColumns; column++) {
-                final LevelProfile level = allLevels.get(row * buttonsInARow + column);
+            for (int column = 0; column < maxColumns && currentLevel < sizeAllLevels; column++) {           	
+                final LevelProfile level = allLevels.get(currentLevel);
+                if(level.isTutorial() && disableTutorials) {
+                	currentLevel++;
+                	column--;
+                	continue;
+                }
+                
                 button = new TextButton(level.name, skin);
                 
                 // set first tutotrial level
@@ -88,9 +110,7 @@ public class LevelChooserScreen extends BasicScreenWithBackButton implements Wit
                     firstTutorialButton = button;
                 }
                 
-                if (!Fly.DEBUG_MODE && level.id > currentProfile.getPassedLevelID()) {
-                    button.setDisabled(true);
-                } else {
+                if (Fly.DEBUG_MODE || level.isEndless() || level.isEndlessRails() ||level.id <= currentProfile.getPassedLevelID()) {
                     button.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
@@ -101,8 +121,11 @@ public class LevelChooserScreen extends BasicScreenWithBackButton implements Wit
                             Loader.getInstance().loadLevel(level);
                         }
                     });
+                } else {
+                    button.setDisabled(true);
                 }
                 contentTable.add(button).width(buttonWidth).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).expand();
+                currentLevel++;
             }
             contentTable.row();
         }

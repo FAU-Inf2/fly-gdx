@@ -106,4 +106,13 @@ public final class UI {
         
         public static final int PADDING = 100;
     }
+    
+    public static final class Tables {
+    	
+    	/** This class should not be instantiated */
+    	private Tables() {
+    	}
+        
+        public static final float PLANECHOOSERSCREEN_BUTTON_TABLE_TOP_PADDING = 2300;
+    }
 }
