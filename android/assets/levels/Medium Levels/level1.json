@@ -3,12 +3,12 @@
     "components": [
         {
             "id": "border",
-            "ref": "space"
+            "ref": "border"
         }
     ],
     "dependencies": {
+        "border": "spacesphere",
         "hole": "torusHoleBox",
-        "space": "spacesphere",
         "torus": "torus"
     },
     "gates": [
@@ -20,7 +20,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 0,
@@ -39,7 +39,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 90.0
             ],
             "gateId": 1,
@@ -58,7 +58,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 2,
@@ -77,7 +77,7 @@
         {
             "euler": [
                 -90.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 3,
@@ -96,7 +96,7 @@
         {
             "euler": [
                 -90.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 4,
@@ -115,7 +115,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 90.0
             ],
             "gateId": 5,
@@ -185,175 +185,6 @@
             "ref": "torus",
             "refHole": "hole",
             "successors": []
-        },
-        {
-            "euler": [
-                0.0,
-                -0.0,
-                0.0
-            ],
-            "gateId": 9,
-            "id": "Gate.009",
-            "position": [
-                0.0,
-                10.0,
-                0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                10
-            ]
-        },
-        {
-            "euler": [
-                0.0,
-                -0.0,
-                90.0
-            ],
-            "gateId": 10,
-            "id": "Gate.010",
-            "position": [
-                10.0,
-                20.0,
-                0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                11
-            ]
-        },
-        {
-            "euler": [
-                0.0,
-                -0.0,
-                0.0
-            ],
-            "gateId": 11,
-            "id": "Gate.011",
-            "position": [
-                20.0,
-                10.0,
-                0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                12
-            ]
-        },
-        {
-            "euler": [
-                -90.0,
-                -0.0,
-                0.0
-            ],
-            "gateId": 12,
-            "id": "Gate.012",
-            "position": [
-                20.0,
-                0.0,
-                10.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                13
-            ]
-        },
-        {
-            "euler": [
-                -90.0,
-                -0.0,
-                0.0
-            ],
-            "gateId": 13,
-            "id": "Gate.013",
-            "position": [
-                20.0,
-                0.0,
-                20.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                14
-            ]
-        },
-        {
-            "euler": [
-                0.0,
-                -0.0,
-                90.0
-            ],
-            "gateId": 14,
-            "id": "Gate.014",
-            "position": [
-                10.0,
-                0.0,
-                30.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                15
-            ]
-        },
-        {
-            "euler": [
-                -90.0,
-                30.0,
-                0.0
-            ],
-            "gateId": 15,
-            "id": "Gate.015",
-            "position": [
-                0.0,
-                0.0,
-                20.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                16
-            ]
-        },
-        {
-            "euler": [
-                -90.0,
-                30.0,
-                0.0
-            ],
-            "gateId": 16,
-            "id": "Gate.016",
-            "position": [
-                -5.0,
-                0.0,
-                10.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                17
-            ]
-        },
-        {
-            "euler": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "gateId": 17,
-            "id": "Gate.017",
-            "position": [
-                -10.0,
-                0.0,
-                0.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": []
         }
     ],
     "id": 201,
@@ -366,7 +197,7 @@
         },
         "upDirection": {
             "x": 0.0,
-            "y": -0.0,
+            "y": 0.0,
             "z": 1.0
         },
         "viewDirection": {
