@@ -203,7 +203,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     /**
      * Creates the version text.
      * <p>
-     * "Version: Major.Minor.Patch"
+     * "Version: Major.Minor.Commit"
      * 
      * @return version text
      */

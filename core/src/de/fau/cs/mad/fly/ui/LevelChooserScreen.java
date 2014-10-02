@@ -2,9 +2,12 @@ package de.fau.cs.mad.fly.ui;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -14,16 +17,23 @@ import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
-import de.fau.cs.mad.fly.ui.UI.Window;
+import de.fau.cs.mad.fly.ui.help.HelpFrameText;
+import de.fau.cs.mad.fly.ui.help.HelpFrameTextWithArrow;
+import de.fau.cs.mad.fly.ui.help.HelpOverlay;
+import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
 
 /**
  * Offers the levels of one {@link LevelGroup }to start.
  * 
  * @author Lukas Hahmann <lukas.hahmann@gmail.com>
  */
-public class LevelChooserScreen extends BasicScreenWithBackButton {
+public class LevelChooserScreen extends BasicScreenWithBackButton implements WithHelpOverlay {
     
     private LevelGroup levelGroup;
+    private Button helpButton;
+    private HelpOverlay helpOverlay;
+    private boolean showHelpScreen;
+    private Button firstTutorialButton;
     
     public LevelChooserScreen(BasicScreen screenToReturn) {
         super(screenToReturn);
@@ -38,14 +48,14 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
     public void generateDynamicContent() {
         Skin skin = SkinManager.getInstance().getSkin();
         
-        // clear the contentTable so that elements of a previous view are
-        // deleted
         contentTable.clear();
+        // let some space for back button on the buttom border
+        contentTable.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, 2 * UI.Window.BORDER_SPACE + UI.Buttons.IMAGE_BUTTON_HEIGHT, UI.Window.BORDER_SPACE);
+        firstTutorialButton = null;
         
-        Table buttonTable = new Table();
-        Table outerButtonTable = new Table();
-        outerButtonTable.add(buttonTable).width(viewport.getWorldWidth() - 2 * (Window.BORDER_SPACE - UI.Buttons.SPACE));
-        contentTable.add(outerButtonTable);
+        helpButton = new ImageButton(skin.get(UI.Buttons.HELP_BUTTON_STYLE, ImageButtonStyle.class));
+        contentTable.add(helpButton).width(UI.Buttons.IMAGE_BUTTON_WIDTH).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).top().left();
+        contentTable.row();
         
         final PlayerProfile currentProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         
@@ -63,7 +73,7 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
             buttonWidth = UI.Buttons.TEXT_BUTTON_WIDTH;
         }
         int maxRows = (int) Math.ceil((float) allLevels.size() / (float) buttonsInARow);
-        
+        Button button;
         currentProfile.checkPassedLevelForTutorials();
         
         for (int row = 0; row < maxRows; row++) {
@@ -71,9 +81,14 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
             // fill a row with buttons
             for (int column = 0; column < maxColumns; column++) {
                 final LevelProfile level = allLevels.get(row * buttonsInARow + column);
-                final TextButton button = new TextButton(level.name, skin);
+                button = new TextButton(level.name, skin);
                 
-                if (!Fly.DEBUG_MODE && (levelGroup.id > currentProfile.getPassedLevelgroupID() || (levelGroup.id == currentProfile.getPassedLevelgroupID() && level.id > currentProfile.getPassedLevelID()))) {
+                // set first tutotrial level
+                if (level.isTutorial() && firstTutorialButton == null) {
+                    firstTutorialButton = button;
+                }
+                
+                if (!Fly.DEBUG_MODE && level.id > currentProfile.getPassedLevelID()) {
                     button.setDisabled(true);
                 } else {
                     button.addListener(new ClickListener() {
@@ -87,10 +102,26 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
                         }
                     });
                 }
-                buttonTable.add(button).width(buttonWidth).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).pad(UI.Buttons.SPACE).expand();
+                contentTable.add(button).width(buttonWidth).height(UI.Buttons.IMAGE_BUTTON_HEIGHT).expand();
             }
-            buttonTable.row();
+            contentTable.row();
         }
+        createHelp();
+    }
+    
+    /**
+     * Creates the help content for each Actor that is useful for the user.
+     */
+    private void createHelp() {
+        Skin skin = SkinManager.getInstance().getSkin();
+        helpOverlay = new HelpOverlay(this);
+        helpOverlay.addHelpFrame(new HelpFrameText(skin, "chooseLevel"));
+        if (firstTutorialButton != null) {
+            helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "tutorials", firstTutorialButton));
+            helpOverlay.addHelpFrame(new HelpFrameText(skin, "tutorialSetting"));
+        }
+        helpButton.addListener(helpOverlay);
+        showHelpScreen = false;
     }
     
     /**
@@ -105,9 +136,29 @@ public class LevelChooserScreen extends BasicScreenWithBackButton {
     }
     
     @Override
+    public void render(float delta) {
+        super.render(delta);
+        if (showHelpScreen) {
+            helpOverlay.render();
+        }
+    }
+    
+    @Override
     public void show() {
         super.show();
         generateDynamicContent();
+    }
+    
+    @Override
+    public void startHelp() {
+        showHelpScreen = true;
+        Gdx.input.setInputProcessor(helpOverlay);
+    }
+    
+    @Override
+    public void endHelp() {
+        showHelpScreen = false;
+        Gdx.input.setInputProcessor(inputProcessor);
     }
     
 }

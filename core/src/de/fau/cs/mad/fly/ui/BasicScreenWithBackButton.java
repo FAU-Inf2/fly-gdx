@@ -46,7 +46,8 @@ public abstract class BasicScreenWithBackButton extends BasicScreen {
         outerTable.setFillParent(true);
         stage.addActor(outerTable);
         contentTable = new Table();
-        outerTable.add(contentTable).width(viewport.getWorldWidth()).pad(UI.Window.BORDER_SPACE, 0, 0, 0).expand();
+        contentTable.setFillParent(true);
+        stage.addActor(contentTable);
         outerTable.row();
         
         Skin skin = SkinManager.getInstance().getSkin();
