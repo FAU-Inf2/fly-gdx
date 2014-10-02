@@ -40,8 +40,6 @@ public class Spaceship extends GameObject implements IPlane {
     
     private IGravity gravity;
     
-    private boolean useRolling;
-    
     private String modelRef;
     
     private Vector3 movingDir = new Vector3(0, 0, 1);
@@ -147,16 +145,6 @@ public class Spaceship extends GameObject implements IPlane {
         i += delta;
     }
     
-    /**
-     * Setter if rolling should be used.
-     * 
-     * @param rolling
-     *            True if rolling should be used, false otherwise.
-     */
-    public void setRolling(boolean rolling) {
-        this.useRolling = rolling;
-    }
-    
     @Override
     public Head getHead() {
         return head;
@@ -206,11 +194,8 @@ public class Spaceship extends GameObject implements IPlane {
     @Override
     public void rotate(float rollDir, float azimuthDir, float deltaFactor) {
         rotationTransform = getRigidBody().getCenterOfMassTransform();
-        if (!useRolling) {
-            rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
-        } else {
-            rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(movingDir, -azimuthDir * deltaFactor);
-        }
+        rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
+        
         getRigidBody().setCenterOfMassTransform(rotationTransform);
         
         float[] transformValues = rotationTransform.getValues();
@@ -225,49 +210,37 @@ public class Spaceship extends GameObject implements IPlane {
     }
     
     public void shift(Vector3 vector) {
-    	rotationTransform = getRigidBody().getCenterOfMassTransform();
-    	
-    	rotationTransform.trn(vector);
-    	
-    	getRigidBody().setCenterOfMassTransform(rotationTransform);
-    	
-    	float[] transformValues = rotationTransform.getValues();
+        rotationTransform = getRigidBody().getCenterOfMassTransform();
+        
+        rotationTransform.trn(vector);
+        
+        getRigidBody().setCenterOfMassTransform(rotationTransform);
+        
+        float[] transformValues = rotationTransform.getValues();
         linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
         setMovement(linearMovement);
-    	
-    	lastRoll = Math.signum(vector.z);
-    	lastAzimuth = -Math.signum(vector.x);
+        
+        lastRoll = Math.signum(vector.z);
+        lastAzimuth = -Math.signum(vector.x);
     }
     
     /**
      * Resets the Spaceship on the specified rail
      */
     public void resetOnRail(float railX, float railY, float railPos) {
-    	//Vector3 newPosition = new Vector3(railY, railPos, railX);
-    	Vector3 newPosition = new Vector3(-railY, railX, railPos);
-    	Gdx.app.log("reset", ""+newPosition);
-    	
-    	Vector3 yPos = new Vector3(0,railPos,0);
-
-        Perspective start = gameController.getLevel().start;
-    	
-    	rotationTransform.setToLookAt(start.viewDirection.cpy().add(yPos), start.upDirection);
-    	rotationTransform.rotate(start.upDirection, 180.0f);
-    	rotationTransform.translate(newPosition);
+        // Vector3 newPosition = new Vector3(railY, railPos, railX);
+        Vector3 newPosition = new Vector3(-railY, railX, railPos);
+        Gdx.app.log("reset", "" + newPosition);
         
-    	getRigidBody().setCenterOfMassTransform(rotationTransform);
-    }
-    
-    @Override
-    public int getMaxHealth() {
-        return 10;
-    }
-    
-    @Override
-    public void resetSpeed() {
-        speed = 2.0f;
-        azimuthSpeed = 9.0f;
-        rollingSpeed = 9.0f;
+        Vector3 yPos = new Vector3(0, railPos, 0);
+        
+        Perspective start = gameController.getLevel().start;
+        
+        rotationTransform.setToLookAt(start.viewDirection.cpy().add(yPos), start.upDirection);
+        rotationTransform.rotate(start.upDirection, 180.0f);
+        rotationTransform.translate(newPosition);
+        
+        getRigidBody().setCenterOfMassTransform(rotationTransform);
     }
     
     @Override

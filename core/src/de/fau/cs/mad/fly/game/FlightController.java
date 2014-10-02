@@ -52,7 +52,7 @@ public class FlightController implements InputProcessor {
     /** degree of steering left and right */
     protected float pitch;
     
-    protected float maxRotate = 45.f;
+    protected float maxRotate = 55.f;
     
     protected float centerX = TouchScreenOverlay.X_POS_OF_STEERING_CIRCLE + screenWidth / 2;
     protected float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;

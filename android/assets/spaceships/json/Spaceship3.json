@@ -3,10 +3,10 @@
 	"name": "Transporter",
 	"modelRef": "transporter",
 	"levelGroupDependency": 3,
-	"speed": 7,
-	"rollingSpeed": 5,
-	"azimuthSpeed": 5,
-	"lives": 5,
+	"speed": 12,
+	"rollingSpeed": 10,
+	"azimuthSpeed": 10,
+	"lives": 1,
 	"upgrades": [
 		0,
 		2

@@ -4,8 +4,8 @@
 	"modelRef": "rocket",
 	"levelGroupDependency": 4,
 	"speed": 16,
-	"rollingSpeed": 10,
-	"azimuthSpeed": 10,
+	"rollingSpeed": 12,
+	"azimuthSpeed": 12,
 	"lives": 1,
 	"rotation": [ 0.0, 0.0, 50.0 ],
 	"upgrades": [
