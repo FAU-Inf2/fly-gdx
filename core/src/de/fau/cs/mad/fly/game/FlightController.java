@@ -52,7 +52,8 @@ public class FlightController implements InputProcessor {
     /** degree of steering left and right */
     protected float pitch;
     
-    protected float maxRotate = 55.f;
+    /** This member defines the maximum rotation angle of the device that causes a change in steering */
+    protected float maxRotate = 45.f;
     
     protected float centerX = TouchScreenOverlay.X_POS_OF_STEERING_CIRCLE + screenWidth / 2;
     protected float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;
@@ -157,8 +158,6 @@ public class FlightController implements InputProcessor {
         roll = average(rollInput);
         pitch = average(pitchInput);
         
-        // azimuth = computeAzimuth(roll, pitch, azimuth);
-        
         float difRoll = roll - startRoll;
         if (Math.abs(difRoll) > 180) {
             difRoll -= Math.signum(difRoll) * 360;
@@ -169,7 +168,7 @@ public class FlightController implements InputProcessor {
             difPitch -= Math.signum(difPitch) * 360;
         }
         
-        // capping the rotation to a maximum of 90 degrees
+        // capping the rotation to a maximum
         if (Math.abs(difRoll) > maxRotate) {
             difRoll = maxRotate * Math.signum(difRoll);
         }
@@ -219,7 +218,7 @@ public class FlightController implements InputProcessor {
      * @param azimuthFactor
      */
     protected void setAzimuthFactor(float azimuthFactor) {
-        this.azimuthFactor = this.azimuthFactorChange * limitSpeed(azimuthFactor, player.getPlane().getAzimuthSpeed());
+        this.azimuthFactor = azimuthFactor * player.getPlane().getAzimuthSpeed();
     }
     
     /**
@@ -229,7 +228,8 @@ public class FlightController implements InputProcessor {
      * @param rollFactor
      */
     protected void setRollFactor(float rollFactor) {
-        this.rollFactor = this.rollFactorChange * limitSpeed(rollFactor, player.getPlane().getRollingSpeed());
+        this.rollFactor = rollFactor * player.getPlane().getRollingSpeed();
+
     }
     
     protected float average(List<Float> input) {
@@ -316,13 +316,6 @@ public class FlightController implements InputProcessor {
             
         }
         return false;
-    }
-    
-    protected float limitSpeed(float wantedSpeed, float speedLimit) {
-        if (wantedSpeed > 0) {
-            return Math.min(wantedSpeed, speedLimit);
-        }
-        return Math.max(wantedSpeed, -speedLimit);
     }
     
     @Override

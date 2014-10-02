@@ -61,11 +61,9 @@ public class Spaceship extends GameObject implements IPlane {
         super(model, "Spaceship");
         this.head = head;
         
-        // TODO: adjust the speed, currently just divided by 5 because it was
-        // too fast
         this.speed = head.speed / 5;
-        this.azimuthSpeed = head.azimuthSpeed;
-        this.rollingSpeed = head.rollingSpeed;
+        this.azimuthSpeed = head.azimuthSpeed / 10;
+        this.rollingSpeed = head.rollingSpeed / 10;
         
         this.modelRef = head.modelRef;
         
