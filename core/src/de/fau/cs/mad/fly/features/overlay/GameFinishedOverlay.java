@@ -192,11 +192,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                     currentPlayer.setPassedLevelID(currentPlayer.getnextLevelGroup().getFirstLevel().id);
                     currentPlayer.savePassedLevelID();
                     showInfoLabel(skin, "OneGroupPassed");
-                } else {
-                    // it is last level, but not last group, not the first time
-                    // pass this level
-                    showInfoLabel(skin, "level.congratulations");
-                }
+                } 
                 showLevelMessage(skin);
                 showScore(skin);
                 
@@ -223,7 +219,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 currentPlayer.savePassedLevelID();
             }
             
-            showInfoLabel(skin, "level.congratulations");
             showLevelMessage(skin);
             showScore(skin);
             TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), skin);
