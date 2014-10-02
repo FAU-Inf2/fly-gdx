@@ -80,7 +80,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen().set();
+                ((Fly) Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             }
         });
         
@@ -90,7 +90,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         
         if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
             levelSuccessfullyFinished(skin);
-        } else if(gameController.getGameState() == GameState.TIME_OVER) {
+        } else if (gameController.getGameState() == GameState.TIME_OVER) {
             timeOver(skin);
         } else if (gameController.getPlayer().isDead()) {
             playerDead(skin);
@@ -104,13 +104,13 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     }
     
     private void timeOver(Skin skin) {
-
+        
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Fly game = (Fly) Gdx.app.getApplicationListener();
                 game.getGameController().endGame();
-                ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen().set();
+                ((Fly) Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             }
         });
         
@@ -126,7 +126,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         showInfoLabel(skin, "level.time.up");
         messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH);
     }
-
+    
     /**
      * Displays an info label which spans the whole table.
      * 
@@ -148,7 +148,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private void playerDead(Skin skin) {
         showInfoLabel(skin, "ship.destroyed");
         
-        if (gameController.getLevel().head.isEndless()||gameController.getLevel().head.isEndlessRails()) {
+        if (gameController.getLevel().head.isEndless() || gameController.getLevel().head.isEndlessRails()) {
             showScore(skin);
         }
         
@@ -175,7 +175,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         final PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         if (currentPlayer.IsLastLevel()) {
             if (currentPlayer.IsLastLevelGroup()) {
-            	//it is last level of last group
+                // it is last level of last group
                 currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
                 currentPlayer.savePassedLevelID();
                 showInfoLabel(skin, "ALLGroupPassed");
@@ -185,14 +185,16 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 messageTable.add();
             } else {
                 if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id) {
-                	//it is last level, but not last group, the first time pass this level
+                    // it is last level, but not last group, the first time pass
+                    // this level
                     currentPlayer.setPassedLevelgroupID(currentPlayer.getnextLevelGroup().id);
                     currentPlayer.savePassedLevelgroupID();
                     currentPlayer.setPassedLevelID(currentPlayer.getnextLevelGroup().getFirstLevel().id);
                     currentPlayer.savePassedLevelID();
                     showInfoLabel(skin, "OneGroupPassed");
                 } else {
-                	//it is last level, but not last group, not the first time pass this level
+                    // it is last level, but not last group, not the first time
+                    // pass this level
                     showInfoLabel(skin, "level.congratulations");
                 }
                 showLevelMessage(skin);
@@ -243,10 +245,16 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     /**
      * Shows a message with the level name of the finished level.
      * 
-     * @param skin		The skin used to display the message.
+     * @param skin
+     *            The skin used to display the message.
      */
     private void showLevelMessage(Skin skin) {
-        String levelMessage = I18n.t("level.finished.first") + " '" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + "' " + I18n.t("level.finished.last");
+        String levelMessage;
+        if (gameController.getLevel().head.isTutorial()) {
+            levelMessage = I18n.t("tutorial.finished.first") + " '" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + "' " + I18n.t("level.finished.last");
+        } else {
+            levelMessage = I18n.t("level.finished.first") + " '" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + "' " + I18n.t("level.finished.last");
+        }
         Label infoLabel = new Label(levelMessage, skin);
         messageTable.add(infoLabel).colspan(3);
         messageTable.row();
@@ -302,20 +310,20 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         messageTable.add();
         messageTable.add(new Label(detail.getValue(), skin, "medium-font")).left();
         
-		Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
-		if ((tmpScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > tmpScore.getTotalScore()) {
-			
-			//solution B for totalHighScoreOfall
- 			int score0 = (tmpScore == null)? 0 : tmpScore.getTotalScore();
-			int addScore = newScore.getTotalScore() - score0;
-			PlayerProfileManager.getInstance().getCurrentPlayerProfile().addScore(addScore);
-			
-			newScore.setServerScoreId(tmpScore==null?-1:tmpScore.getServerScoreId());
-			ScoreManager.getInstance().saveBestScore(newScore);
-
-			messageTable.row();
-			messageTable.add(new Label(I18n.t("newRecord"), skin)).colspan(3);
-		}
+        Score tmpScore = ScoreManager.getInstance().getCurrentLevelBestScore();
+        if ((tmpScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > tmpScore.getTotalScore()) {
+            
+            // solution B for totalHighScoreOfall
+            int score0 = (tmpScore == null) ? 0 : tmpScore.getTotalScore();
+            int addScore = newScore.getTotalScore() - score0;
+            PlayerProfileManager.getInstance().getCurrentPlayerProfile().addScore(addScore);
+            
+            newScore.setServerScoreId(tmpScore == null ? -1 : tmpScore.getServerScoreId());
+            ScoreManager.getInstance().saveBestScore(newScore);
+            
+            messageTable.row();
+            messageTable.add(new Label(I18n.t("newRecord"), skin)).colspan(3);
+        }
         messageTable.row().expand();
     }
 }
