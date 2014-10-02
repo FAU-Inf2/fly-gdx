@@ -17,6 +17,7 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.help.HelpFrameText;
 import de.fau.cs.mad.fly.ui.help.HelpFrameTextWithArrow;
 import de.fau.cs.mad.fly.ui.help.HelpOverlay;
@@ -104,6 +105,11 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                
+                if(playerProfile.getSettingManager().getPreferences().getBoolean(SettingManager.DISABLE_TUTORIALS) && playerProfile.getCurrentLevelProfile().isTutorial()) {
+                	playerProfile.setToNextLevel();
+                }
+                
                 Loader.getInstance().loadLevel(playerProfile.getCurrentLevelProfile());
             }
         });
