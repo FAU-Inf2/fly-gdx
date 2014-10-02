@@ -32,6 +32,7 @@ public class LevelGroupScreen extends BasicScreenWithBackButton {
     public void generateDynamicContent() {
         
         contentTable.clear();
+        contentTable.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, 2 * UI.Window.BORDER_SPACE + UI.Buttons.IMAGE_BUTTON_HEIGHT, UI.Window.BORDER_SPACE);
         Skin skin = SkinManager.getInstance().getSkin();
         List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
         

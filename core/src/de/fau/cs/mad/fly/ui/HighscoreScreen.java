@@ -38,6 +38,7 @@ public class HighscoreScreen extends BasicScreenWithBackButton {
         Skin skin = SkinManager.getInstance().getSkin();
         Label selectLevelGroup = new Label(I18n.t("selectLevelGroup"), skin);
         selectLevelGroup.setAlignment(Align.center);
+        contentTable.pad(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE, 2 * UI.Window.BORDER_SPACE + UI.Buttons.IMAGE_BUTTON_HEIGHT, UI.Window.BORDER_SPACE);
         contentTable.add(selectLevelGroup).colspan(2).center();
         contentTable.row();
         List<LevelGroup> levelGroups = LevelGroupManager.getInstance().getLevelGroups();
