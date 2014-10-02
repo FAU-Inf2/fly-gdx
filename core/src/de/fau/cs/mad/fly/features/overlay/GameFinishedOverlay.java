@@ -265,6 +265,9 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      * this is shown, too.
      */
     private void showScore(Skin skin) {
+    	if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().isTutorial()) {
+    		return;
+    	}
         
         newScore = gameController.getScoreController().generateEndScore(gameController);
         
