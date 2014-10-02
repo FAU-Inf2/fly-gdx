@@ -266,7 +266,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      */
     private void showScore(Skin skin) {
         
-        newScore = gameController.getScoreController().getEndScore(gameController);
+        newScore = gameController.getScoreController().generateEndScore(gameController);
         
         // adds an amount of money to the players profile that equals the score
         // he got in this level

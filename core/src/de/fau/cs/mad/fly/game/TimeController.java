@@ -12,16 +12,16 @@ import java.util.List;
  */
 public class TimeController {
     
-    private float initTimeInSeconds;
-    private float currentTimeInSeconds;
-    private float timeSinceStartInSeconds;
+    private int initTimeInMilliSeconds;
+    private int currentTimeInMilliSeconds;
+    private float timeSinceStartInMilliSeconds;
     private long initTimeStampInMilliSeconds;
     
     private boolean paused;
     private float pauseTimeInSeconds;
     private long pauseTimeStampInMilliSeconds;
     
-    private float bonusTime;
+    private int bonusTimeInSeconds;
     
     private List<IntegerTimeListener> integerTimeListeners;
     private List<TimeIsUpListener> timeIsUpListeners;
@@ -29,7 +29,7 @@ public class TimeController {
     private int size;
     
     public TimeController() {
-        initTimeInSeconds = 0f;
+        initTimeInMilliSeconds = 0;
         integerTimeListeners = new ArrayList<IntegerTimeListener>();
         timeIsUpListeners = new ArrayList<TimeIsUpListener>();
     }
@@ -40,17 +40,17 @@ public class TimeController {
      * @throws IllegalArgumentException
      *             for negative parameter.
      */
-    public void initAndStartTimer(float seconds) {
+    public void initAndStartTimer(int seconds) {
         if (seconds < 0) {
             throw new IllegalArgumentException("TimeController.initTimer(" + seconds + ") got a negative parameter.");
         }
-        initTimeInSeconds = seconds;
+        initTimeInMilliSeconds = seconds * 1000;
         initTimeStampInMilliSeconds = System.currentTimeMillis();
-        currentTimeInSeconds = initTimeInSeconds;
-        timeSinceStartInSeconds = 0f;
+        currentTimeInMilliSeconds = initTimeInMilliSeconds;
+        timeSinceStartInMilliSeconds = 0f;
         pauseTimeStampInMilliSeconds = 0;
         pauseTimeInSeconds = 0;
-        bonusTime = 0;
+        bonusTimeInSeconds = 0;
         paused = false;
         integerTimeChanged();
     }
@@ -66,14 +66,14 @@ public class TimeController {
      */
     public void checkTime() {
         if (!paused) {
-            int timeBefore = (int) Math.ceil(currentTimeInSeconds);
-            timeSinceStartInSeconds = (System.currentTimeMillis() - initTimeStampInMilliSeconds) / 1000 - pauseTimeInSeconds;
-            currentTimeInSeconds = initTimeInSeconds - (System.currentTimeMillis() - initTimeStampInMilliSeconds) / 1000 + pauseTimeInSeconds + bonusTime;
-            if (currentTimeInSeconds < 1) {
-                currentTimeInSeconds = 0;
+            int timeBeforeInSeconds = currentTimeInMilliSeconds / 1000;
+            timeSinceStartInMilliSeconds = System.currentTimeMillis() - initTimeStampInMilliSeconds - pauseTimeInSeconds;
+            currentTimeInMilliSeconds = (int) (initTimeInMilliSeconds - (System.currentTimeMillis() - initTimeStampInMilliSeconds) + pauseTimeInSeconds * 1000f + bonusTimeInSeconds * 1000f);
+            if (currentTimeInMilliSeconds < 1) {
+                currentTimeInMilliSeconds = 0;
                 timeIsUp();
             }
-            if (timeBefore != (int) Math.ceil(currentTimeInSeconds)) {
+            if (timeBeforeInSeconds != (int) Math.ceil(currentTimeInMilliSeconds / 1000f)) {
                 integerTimeChanged();
             }
         }
@@ -86,7 +86,7 @@ public class TimeController {
      *            The bonus time in seconds to add.
      */
     public void addBonusTime(float bonusTime) {
-        this.bonusTime += bonusTime;
+        this.bonusTimeInSeconds += bonusTime;
     }
     
     /**
@@ -121,7 +121,17 @@ public class TimeController {
      * @return Current integer time in seconds.
      */
     public int getIntegerTime() {
-        return (int) Math.ceil(currentTimeInSeconds);
+        return (int) Math.ceil(currentTimeInMilliSeconds/1000f);
+    }
+    
+    /**
+     * More exact method to get the remaining time, compared to
+     * {@link #getIntegerTime()}
+     * 
+     * @return exact remaining time as float
+     */
+    public float getCurrentTimeInMilliSeconds() {
+        return currentTimeInMilliSeconds;
     }
     
     /**
@@ -130,7 +140,7 @@ public class TimeController {
      * @return Integer time since the start in seconds.
      */
     public int getIntegerTimeSinceStart() {
-        return (int) Math.ceil(timeSinceStartInSeconds);
+        return (int) Math.ceil(timeSinceStartInMilliSeconds/1000);
     }
     
     /** Notifies all {@link TimeIsUpListener}s. */
