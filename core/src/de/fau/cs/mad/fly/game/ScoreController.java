@@ -56,7 +56,7 @@ public class ScoreController extends GateCircuitAdapter {
      *            The game controller.
      * @return the score of the player with score details.
      */
-    public Score getEndScore(GameController gameController) {
+    public Score generateEndScore(GameController gameController) {
         if (gameController.isVictory()) {
             Score newScore = new Score();
             newScore.setReachedDate(new Date());
@@ -64,23 +64,16 @@ public class ScoreController extends GateCircuitAdapter {
             int score = gatePassedScore;
             newScore.getScoreDetails().add(new ScoreDetail(("gates"), score + ""));
             
-            int leftTimeScore = gameController.getTimeController().getIntegerTime() * 20;
+            int leftTimeScore = (int) (gameController.getTimeController().getCurrentTimeInMilliSeconds() * 20f / 1000f);
             newScore.getScoreDetails().add(new ScoreDetail(("leftTime"), leftTimeScore + ""));
             score += leftTimeScore;
-            
-            /*
-             * int leftCollisionTimeScore = leftCollisionTime * 30;
-             * newScore.getScoreDetails().add(new
-             * ScoreDetail(("leftCollisionTime"), leftCollisionTimeScore + ""));
-             * score += leftCollisionTimeScore;
-             */
             
             newScore.getScoreDetails().add(new ScoreDetail(("bonusPoints"), bonusPoints + ""));
             score += bonusPoints;
             
             newScore.setTotalScore(score);
             return newScore;
-        } else if (gameController.getLevel().head.isEndless()||gameController.getLevel().head.isEndlessRails()) {
+        } else if (gameController.getLevel().head.isEndless() || gameController.getLevel().head.isEndlessRails()) {
             Score newScore = new Score();
             newScore.setReachedDate(new Date());
             

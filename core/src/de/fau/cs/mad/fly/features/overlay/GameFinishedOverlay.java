@@ -250,7 +250,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      */
     private void showLevelMessage(Skin skin) {
         String levelMessage;
-        if (gameController.getLevel().head.isTutorial()) {
+        if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().isTutorial()) {
             levelMessage = I18n.t("tutorial.finished.first") + " '" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + "' " + I18n.t("level.finished.last");
         } else {
             levelMessage = I18n.t("level.finished.first") + " '" + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + "' " + I18n.t("level.finished.last");
@@ -266,7 +266,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      */
     private void showScore(Skin skin) {
         
-        newScore = gameController.getScoreController().getEndScore(gameController);
+        newScore = gameController.getScoreController().generateEndScore(gameController);
         
         // adds an amount of money to the players profile that equals the score
         // he got in this level

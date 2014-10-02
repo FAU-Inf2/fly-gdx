@@ -71,7 +71,7 @@ public class GameController implements TimeIsUpListener {
     protected Level level;
     protected Player player;
     protected ScoreController scoreController;
-
+    
     protected AudioManager audioManager;
     
     private GameState gameState;
@@ -90,7 +90,7 @@ public class GameController implements TimeIsUpListener {
      * @return {@link #instance}
      */
     public static GameController getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new GameController();
         }
         return instance;
@@ -197,7 +197,7 @@ public class GameController implements TimeIsUpListener {
      */
     public void startGame() {
         gameState = GameState.RUNNING;
-        timeController.initAndStartTimer(level.getLeftTime());
+        timeController.initAndStartTimer((int) level.getLeftTime());
     }
     
     /**
@@ -343,9 +343,9 @@ public class GameController implements TimeIsUpListener {
         }
         // remove all objects from a previous level
         CollisionDetector.getInstance().dispose();
-
+        
         audioManager.dispose();
-
+        
         optionalFeaturesToLoad.clear();
         optionalFeaturesToInit.clear();
         optionalFeaturesToUpdate.clear();
@@ -384,13 +384,15 @@ public class GameController implements TimeIsUpListener {
     public ScoreController getScoreController() {
         return scoreController;
     }
-
+    
     /**
      * Getter for the audio manager
-     *
+     * 
      * @return {@link #audioManager}
      */
-    public AudioManager getAudioManager() { return audioManager; }
+    public AudioManager getAudioManager() {
+        return audioManager;
+    }
     
     @Override
     public boolean timeIsUp() {
