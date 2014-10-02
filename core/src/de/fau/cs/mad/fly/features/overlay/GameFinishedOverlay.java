@@ -173,8 +173,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      */
     private void levelSuccessfullyFinished(Skin skin) {
         final PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-        if (currentPlayer.IsLastLevel()) {
-            if (currentPlayer.IsLastLevelGroup()) {
+        if (currentPlayer.isLastLevel()) {
+            if (currentPlayer.isLastLevelGroup()) {
                 // it is last level of last group
                 currentPlayer.setPassedLevelID(currentPlayer.getCurrentLevelProfile().id + 1);
                 currentPlayer.savePassedLevelID();

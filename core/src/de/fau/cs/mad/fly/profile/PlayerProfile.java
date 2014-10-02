@@ -18,27 +18,27 @@ public class PlayerProfile {
     /**
      * default passed level group id for a new user
      */
-    public static int DEFAULT_PASSED_LEVELGROUP_ID = 1;
+    private static final int DEFAULT_PASSED_LEVELGROUP_ID = 1;
     
     /**
      * default passed level id for a new user
      */
-    public static int DEFAULT_PASSED_LEVEL_ID = 1;
+    private static final int DEFAULT_PASSED_LEVEL_ID = 1;
     
     /**
      * default chosen level group id for a new user
      */
-    public static int DEFAULT_CHOSEN_LEVELGROUP_ID = 1;
+    private static final int DEFAULT_CHOSEN_LEVELGROUP_ID = 1;
     
     /**
      * default chosen level id for a new user
      */
-    public static int DEFAULT_CHOSEN_LEVEL_ID = 1;
+    private static final int DEFAULT_CHOSEN_LEVEL_ID = 1;
     
     /**
      * maximum length of the name
      */
-    public static int MAX_NAME_LENGTH = 9;
+    public static final int MAX_NAME_LENGTH = 9;
     
     /**
      * The info. read from json of the current level the player is playing or
@@ -52,16 +52,17 @@ public class PlayerProfile {
     private IPlane.Head plane;
     
     /**
-     * The amount of money the player currently has. It is the total score of every single play.
+     * The amount of money the player currently has. It is the total score of
+     * every single play.
      */
     private int money;
     
     /**
-     * The amount of total scores of the highest score of all levels
+     * Sum of all highest scores per level.
      */
     private int totalScoreOfAll = 0;
-
-	/**
+    
+    /**
      * The name of the player profile.
      */
     private String name;
@@ -96,35 +97,57 @@ public class PlayerProfile {
      */
     private int passedLevelID = DEFAULT_PASSED_LEVEL_ID;
     
-	/**
-	 * @return the totalScoreOfAll, solution A
-	 */
-	public int getTotalScoreOfAll_A() {
-		String selectSQL = "select sum(score) from score where player_id=" + this.getId();
-		DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
-		if (cursor != null && cursor.getCount() > 0) {
-			cursor.next();
-			totalScoreOfAll = cursor.getInt(0);
-			cursor.close();
-		}
-		return totalScoreOfAll;
-	}
-
-	/**
-	 * @return the totalScoreOfAll, solution B
-	 */
-	public int getTotalScoreOfAll_B() {
-
-		return totalScoreOfAll;
-	}
-
-	/**
-	 * @param totalScoreOfAll the totalScoreOfAll to set
-	 */
-	public void setTotalScoreOfAll(int totalScoreOfAll) {
-		this.totalScoreOfAll = totalScoreOfAll;
-	}
-	
+    /**
+     * Creates a new profile without any more information.
+     */
+    public PlayerProfile() {
+        this.settingManager = new SettingManager("fly_user_preferences_" + getId());
+    }
+    
+    /**
+     * Creates a new profile.
+     * 
+     * @param name
+     *            Name of the profile.
+     * @param id
+     *            ID of the profile
+     */
+    public PlayerProfile(String name, int id) {
+        this();
+        setName(name);
+        setId(id);
+    }
+    
+    /**
+     * @return the totalScoreOfAll, solution A
+     */
+    public int getTotalScoreOfAll_A() {
+        String selectSQL = "select sum(score) from score where player_id=" + this.getId();
+        DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.next();
+            totalScoreOfAll = cursor.getInt(0);
+            cursor.close();
+        }
+        return totalScoreOfAll;
+    }
+    
+    /**
+     * @return the totalScoreOfAll, solution B
+     */
+    public int getTotalScoreOfAll_B() {
+        
+        return totalScoreOfAll;
+    }
+    
+    /**
+     * @param totalScoreOfAll
+     *            the totalScoreOfAll to set
+     */
+    public void setTotalScoreOfAll(int totalScoreOfAll) {
+        this.totalScoreOfAll = totalScoreOfAll;
+    }
+    
     /**
      * get max passed level group id, default is the beginner group
      * 
@@ -170,11 +193,13 @@ public class PlayerProfile {
     }
     
     /**
-     * Checks if the levels after the currently passed level are tutorial levels and increases the passed level id until the first non-tutorial level is found.
+     * Checks if the levels after the currently passed level are tutorial levels
+     * and increases the passed level id until the first non-tutorial level is
+     * found.
      */
     public void checkPassedLevelForTutorials() {
         List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
-        for (int level = passedLevelID; level < allLevels.size() && allLevels.get(level-1).isTutorial(); level++) {
+        for (int level = passedLevelID; level < allLevels.size() && allLevels.get(level - 1).isTutorial(); level++) {
             passedLevelID++;
         }
     }
@@ -184,27 +209,6 @@ public class PlayerProfile {
      */
     public void savePassedLevelID() {
         PlayerProfileManager.getInstance().updateIntColumn(this, "passed_level_id", passedLevelID);
-    }
-    
-    /**
-     * Creates a new profile without any more information.
-     */
-    public PlayerProfile() {
-        this.settingManager = new SettingManager("fly_user_preferences_" + getId());
-    }
-    
-    /**
-     * Creates a new profile.
-     * 
-     * @param name
-     *            Name of the profile.
-     * @param id
-     *            ID of the profile
-     */
-    public PlayerProfile(String name, int id) {
-        this();
-        setName(name);
-        setId(id);
     }
     
     /**
@@ -241,10 +245,11 @@ public class PlayerProfile {
      * @param name
      */
     public void setName(String name) {
-        if (name.length() <= MAX_NAME_LENGTH)
+        if (name.length() <= MAX_NAME_LENGTH) {
             this.name = name;
-        else
+        } else {
             this.name = name.substring(0, MAX_NAME_LENGTH - 1);
+        }
     }
     
     /**
@@ -304,12 +309,13 @@ public class PlayerProfile {
     }
     
     /**
-     * Adds a certain amount of score to the total scores of the highest score of all levels
+     * Adds a certain amount of score to the total scores of the highest score
+     * of all levels
      * 
      * @param score
      *            The Amount of score to add, may be positive or negative
-     * @return false if the new amount of score would be negative, the total scores of all
-     *         then remains unchanged
+     * @return false if the new amount of score would be negative, the total
+     *         scores of all then remains unchanged
      */
     public boolean addScore(int score) {
         int newScore = this.totalScoreOfAll + score;
@@ -405,7 +411,7 @@ public class PlayerProfile {
      * 
      * @return
      */
-    public boolean IsLastLevel() {
+    public boolean isLastLevel() {
         List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
         if (getCurrentLevelProfile() == allLevels.get(allLevels.size() - 1)) {
             return true;
@@ -418,7 +424,7 @@ public class PlayerProfile {
      * 
      * @return
      */
-    public boolean IsLastLevelGroup() {
+    public boolean isLastLevelGroup() {
         List<LevelGroup> allGroups = LevelGroupManager.getInstance().getLevelGroups();
         if (this.getCurrentLevelGroup() == allGroups.get(allGroups.size() - 1)) {
             return true;
@@ -430,7 +436,7 @@ public class PlayerProfile {
      * If possible currentLevelProfile is set to the next level.
      */
     public boolean setToNextLevel() {
-    	List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
+        List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
         int nextLevelIndex = allLevels.indexOf(getCurrentLevelProfile()) + 1;
         nextLevelIndex = jumpOverTutorials(allLevels, nextLevelIndex);
         
@@ -445,7 +451,7 @@ public class PlayerProfile {
      * If possible return the next level profile of currentLevelProfile
      */
     public LevelProfile getNextLevel() {
-    	List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
+        List<LevelProfile> allLevels = getCurrentLevelGroup().getLevels();
         int nextLevelIndex = allLevels.indexOf(getCurrentLevelProfile()) + 1;
         nextLevelIndex = jumpOverTutorials(allLevels, nextLevelIndex);
         
@@ -456,37 +462,39 @@ public class PlayerProfile {
     }
     
     /**
-     * Checks if disable tutorial setting is active and if the current next level is a tutorial level and then jumps over all the tutorial levels until it reaches a non-tutorial level.
+     * Checks if disable tutorial setting is active and if the current next
+     * level is a tutorial level and then jumps over all the tutorial levels
+     * until it reaches a non-tutorial level.
      * 
-     * @param allLevels			All the levels from the current level group.
-     * @param nextLevel			The index of the current next level.
+     * @param allLevels
+     *            All the levels from the current level group.
+     * @param nextLevel
+     *            The index of the current next level.
      * @return index of the next level which is not a tutorial.
      */
     private int jumpOverTutorials(List<LevelProfile> allLevels, int nextLevel) {
-    	if(!getSettingManager().getPreferences().getBoolean(SettingManager.DISABLE_TUTORIALS)) {
-    		return nextLevel;
-    	}
-    	
-    	while(nextLevel < allLevels.size() && allLevels.get(nextLevel).isTutorial()) {
-    		nextLevel++;
-    	}
-    	return nextLevel;
+        if (!getSettingManager().getPreferences().getBoolean(SettingManager.DISABLE_TUTORIALS)) {
+            return nextLevel;
+        }
+        int nextLevelAfterTutorials = nextLevel;
+        while (nextLevelAfterTutorials < allLevels.size() && allLevels.get(nextLevelAfterTutorials).isTutorial()) {
+            nextLevelAfterTutorials++;
+        }
+        return nextLevelAfterTutorials;
     }
     
     /**
      * If possible currentLevelGroup is set to the next level.
      */
     public void setToNextLevelGroup() {
-        if (this.IsLastLevel() && !this.IsLastLevelGroup()) {
+        if (this.isLastLevel() && !this.isLastLevelGroup()) {
             int currentGroup = 0;
             List<LevelGroup> allGroups = LevelGroupManager.getInstance().getLevelGroups();
             
-            for (int i = allGroups.size() -1 ; i >=0 ; i--) {
-                if (allGroups.get(i) == this.getCurrentLevelGroup()) {
-                    currentGroup = i;
-                    i = -1;
-                }
+            while(allGroups.get(currentGroup) != this.getCurrentLevelGroup()) {
+                currentGroup++;
             }
+            
             if (currentGroup < (allGroups.size() - 1)) {
                 this.setCurrentLevelGroup(allGroups.get(currentGroup + 1));
                 this.setCurrentLevelProfile(this.getCurrentLevelGroup().getFirstLevel());
@@ -549,10 +557,15 @@ public class PlayerProfile {
     
     @Override
     public boolean equals(Object o) {
-        if(o != null && o instanceof PlayerProfile) {
+        if (o instanceof PlayerProfile) {
             return this.getName().equals(((PlayerProfile) o).getName());
         }
         return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return 7 + getName().hashCode();
     }
     
     @Override
