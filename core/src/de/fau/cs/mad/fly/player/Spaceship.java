@@ -40,8 +40,6 @@ public class Spaceship extends GameObject implements IPlane {
     
     private IGravity gravity;
     
-    private boolean useRolling;
-    
     private String modelRef;
     
     private Vector3 movingDir = new Vector3(0, 0, 1);
@@ -63,13 +61,11 @@ public class Spaceship extends GameObject implements IPlane {
     public Spaceship(GameModel model, IPlane.Head head) {
         super(model, "Spaceship");
         this.head = head;
-        
-        // TODO: adjust the speed, currently just divided by 5 because it was
-        // too fast
+
         this.planeSpeed = head.speed / 5;
         this.currentSpeed = this.planeSpeed;
-        this.azimuthSpeed = head.azimuthSpeed;
-        this.rollingSpeed = head.rollingSpeed;
+        this.azimuthSpeed = head.azimuthSpeed / 10;
+        this.rollingSpeed = head.rollingSpeed / 10;
         
         this.modelRef = head.modelRef;
         
@@ -149,16 +145,6 @@ public class Spaceship extends GameObject implements IPlane {
         i += delta;
     }
     
-    /**
-     * Setter if rolling should be used.
-     * 
-     * @param rolling
-     *            True if rolling should be used, false otherwise.
-     */
-    public void setRolling(boolean rolling) {
-        this.useRolling = rolling;
-    }
-    
     @Override
     public Head getHead() {
         return head;
@@ -218,11 +204,7 @@ public class Spaceship extends GameObject implements IPlane {
     @Override
     public void rotate(float rollDir, float azimuthDir, float deltaFactor) {
         rotationTransform = getRigidBody().getCenterOfMassTransform();
-        if (!useRolling) {
-            rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
-        } else {
-            rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(movingDir, -azimuthDir * deltaFactor);
-        }
+        rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
         getRigidBody().setCenterOfMassTransform(rotationTransform);
         
         float[] transformValues = rotationTransform.getValues();
@@ -257,9 +239,9 @@ public class Spaceship extends GameObject implements IPlane {
     public void resetOnRail(float railX, float railY, float railPos) {
     	//Vector3 newPosition = new Vector3(railY, railPos, railX);
     	Vector3 newPosition = new Vector3(-railY, railX, railPos);
-    	Gdx.app.log("reset", ""+newPosition);
+    	Gdx.app.log("reset", "" + newPosition);
     	
-    	Vector3 yPos = new Vector3(0,railPos,0);
+    	Vector3 yPos = new Vector3(0, railPos, 0);
 
         Perspective start = gameController.getLevel().start;
     	
@@ -268,19 +250,6 @@ public class Spaceship extends GameObject implements IPlane {
     	rotationTransform.translate(newPosition);
         
     	getRigidBody().setCenterOfMassTransform(rotationTransform);
-    }
-    
-    @Override
-    public int getMaxHealth() {
-        return 10;
-    }
-    
-    @Override
-    public void resetSpeed() {
-        this.planeSpeed = head.speed / 5;
-        this.currentSpeed = this.planeSpeed;
-        this.azimuthSpeed = head.azimuthSpeed;
-        this.rollingSpeed = head.rollingSpeed;
     }
     
     @Override
