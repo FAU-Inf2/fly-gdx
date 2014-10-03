@@ -54,7 +54,8 @@ public class Spaceship extends GameObject implements IPlane {
     private Matrix4 storedTransform;
     private Matrix4 displayTransform = new Matrix4();
     
-    private float speed;
+    private float currentSpeed;
+    private float planeSpeed;
     private float azimuthSpeed;
     private float rollingSpeed;
     private IPlane.Head head;
@@ -65,7 +66,8 @@ public class Spaceship extends GameObject implements IPlane {
         
         // TODO: adjust the speed, currently just divided by 5 because it was
         // too fast
-        this.speed = head.speed / 5;
+        this.planeSpeed = head.speed / 5;
+        this.currentSpeed = this.planeSpeed;
         this.azimuthSpeed = head.azimuthSpeed;
         this.rollingSpeed = head.rollingSpeed;
         
@@ -168,13 +170,23 @@ public class Spaceship extends GameObject implements IPlane {
     }
     
     @Override
-    public void setSpeed(float speed) {
-        this.speed = speed;
+    public void setCurrentSpeed(float speed) {
+        this.currentSpeed = speed;
     }
     
     @Override
-    public float getSpeed() {
-        return speed;
+    public float getCurrentSpeed() {
+        return currentSpeed;
+    }
+    
+    @Override
+    public void setPlaneSpeed(float speed) {
+        this.planeSpeed = speed;
+    }
+    
+    @Override
+    public float getPlaneSpeed() {
+        return planeSpeed;
     }
     
     @Override
@@ -199,7 +211,7 @@ public class Spaceship extends GameObject implements IPlane {
         getRigidBody().setCenterOfMassTransform(startTransform);
         
         transformValues = startTransform.getValues();
-        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(speed);
+        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getCurrentSpeed());
         setMovement(linearMovement);
     }
     
@@ -214,7 +226,7 @@ public class Spaceship extends GameObject implements IPlane {
         getRigidBody().setCenterOfMassTransform(rotationTransform);
         
         float[] transformValues = rotationTransform.getValues();
-        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
+        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getCurrentSpeed());
         
         gravity.applyGravity(transform, linearMovement);
         
@@ -232,7 +244,7 @@ public class Spaceship extends GameObject implements IPlane {
     	getRigidBody().setCenterOfMassTransform(rotationTransform);
     	
     	float[] transformValues = rotationTransform.getValues();
-        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
+        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getCurrentSpeed());
         setMovement(linearMovement);
     	
     	lastRoll = Math.signum(vector.z);
@@ -265,9 +277,10 @@ public class Spaceship extends GameObject implements IPlane {
     
     @Override
     public void resetSpeed() {
-        speed = 2.0f;
-        azimuthSpeed = 9.0f;
-        rollingSpeed = 9.0f;
+        this.planeSpeed = head.speed / 5;
+        this.currentSpeed = this.planeSpeed;
+        this.azimuthSpeed = head.azimuthSpeed;
+        this.rollingSpeed = head.rollingSpeed;
     }
     
     @Override

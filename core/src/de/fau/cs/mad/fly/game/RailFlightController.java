@@ -80,8 +80,8 @@ public class RailFlightController extends FlightController implements ICollision
 			currentPosition = centerRail.get(0);
 			
 		}
-		float speed = player.getPlane().getSpeed() + 0.0001f;
-		player.getPlane().setSpeed(speed);
+		float speed = player.getPlane().getCurrentSpeed() + 0.0001f;
+		player.getPlane().setCurrentSpeed(speed);
     }
 	
 	private void initRail() {

@@ -13,6 +13,8 @@ import de.fau.cs.mad.fly.player.IPlane;
 
 /**
  * Used to display and handle instant speed upgrades.
+ * <p>
+ * Do not mix instant speed upgrades with a linear speed upgrade.
  * 
  * @author Tobi
  * 
@@ -80,8 +82,8 @@ public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IF
             isInfinite = true;
         }
         
-        oldSpeed = plane.getSpeed();
-        plane.setSpeed(oldSpeed * upgradeSpeedFactor);
+        oldSpeed = plane.getPlaneSpeed();
+        plane.setCurrentSpeed(oldSpeed * upgradeSpeedFactor);
         duration = 0.0f;
         
         InfoOverlay.getInstance().setOverlay(I18n.t("speedUpgradeCollected") + "\n" + I18n.t("bonus") + " " + ((int) (upgradeSpeedFactor * 100.0f) + "% " + I18n.t("for") + " " + (int) upgradeDuration) + "s.", 3);
@@ -96,7 +98,7 @@ public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IF
         duration += delta;
         
         if (!isInfinite && duration >= upgradeDuration) {
-            plane.setSpeed(plane.getSpeed() / upgradeSpeedFactor);
+            plane.setCurrentSpeed(oldSpeed);
             isCollected = false;
         }
     }
