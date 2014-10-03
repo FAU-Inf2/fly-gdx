@@ -52,6 +52,7 @@ public class FlightController implements InputProcessor {
     /** degree of steering left and right */
     protected float pitch;
     
+    /** This member defines the maximum rotation angle of the device that causes a change in steering */
     protected float maxRotate = 45.f;
     
     protected float centerX = TouchScreenOverlay.X_POS_OF_STEERING_CIRCLE + screenWidth / 2;
@@ -79,31 +80,6 @@ public class FlightController implements InputProcessor {
             resetSteering();
             resetBuffers();
         }
-    }
-    
-    /**
-     * Sets the parameter that indicates whether the player wants to control the
-     * game by sensor or touch-screen
-     * 
-     * @param useSensorData
-     *            True if sensor-values should be used, false if touch-screen
-     *            should be used
-     */
-    public void setUseSensorData(boolean useSensorData) {
-        this.useSensorData = useSensorData;
-    }
-    
-    /**
-     * Setter for the size of buffers used for averaging the sensor values
-     * 
-     * @param bufferSize
-     *            - The size of the buffers used for averaging
-     */
-    public void setBufferSize(int bufferSize) {
-        resetBuffers();
-        
-        this.bufferSize = bufferSize;
-        
     }
     
     /**
@@ -182,8 +158,6 @@ public class FlightController implements InputProcessor {
         roll = average(rollInput);
         pitch = average(pitchInput);
         
-        // azimuth = computeAzimuth(roll, pitch, azimuth);
-        
         float difRoll = roll - startRoll;
         if (Math.abs(difRoll) > 180) {
             difRoll -= Math.signum(difRoll) * 360;
@@ -194,7 +168,7 @@ public class FlightController implements InputProcessor {
             difPitch -= Math.signum(difPitch) * 360;
         }
         
-        // capping the rotation to a maximum of 90 degrees
+        // capping the rotation to a maximum
         if (Math.abs(difRoll) > maxRotate) {
             difRoll = maxRotate * Math.signum(difRoll);
         }
@@ -244,7 +218,7 @@ public class FlightController implements InputProcessor {
      * @param azimuthFactor
      */
     protected void setAzimuthFactor(float azimuthFactor) {
-        this.azimuthFactor = this.azimuthFactorChange * limitSpeed(azimuthFactor, player.getPlane().getAzimuthSpeed());
+        this.azimuthFactor = azimuthFactor * player.getPlane().getAzimuthSpeed();
     }
     
     /**
@@ -254,7 +228,8 @@ public class FlightController implements InputProcessor {
      * @param rollFactor
      */
     protected void setRollFactor(float rollFactor) {
-        this.rollFactor = this.rollFactorChange * limitSpeed(rollFactor, player.getPlane().getRollingSpeed());
+        this.rollFactor = rollFactor * player.getPlane().getRollingSpeed();
+
     }
     
     protected float average(List<Float> input) {
@@ -327,27 +302,20 @@ public class FlightController implements InputProcessor {
         // changing camera rotation when finger is dragged on the touchscreen
         if (pointer == currentEvent) {
             
-            float xDif = screenX - centerX;
-            float yDif = screenY - centerY;
+            float xDif = centerX - screenX;
+            float yDif = centerY - screenY;
             float length = (float) Math.sqrt(xDif * xDif + yDif * yDif);
             
             if (length <= radius) {
-                setAzimuthFactor(-xDif / radius);
-                setRollFactor(-yDif / radius);
+                setAzimuthFactor(xDif / radius);
+                setRollFactor(yDif / radius);
             } else if (inTouch) {
-                setAzimuthFactor(-xDif / length);
-                setRollFactor(-yDif / length);
+                setAzimuthFactor(xDif / length);
+                setRollFactor(yDif / length);
             }
             
         }
         return false;
-    }
-    
-    protected float limitSpeed(float wantedSpeed, float speedLimit) {
-        if (wantedSpeed > 0) {
-            return Math.min(wantedSpeed, speedLimit);
-        }
-        return Math.max(wantedSpeed, -speedLimit);
     }
     
     @Override

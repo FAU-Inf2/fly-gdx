@@ -82,13 +82,6 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
     public Model getModel();
     
     /**
-     * Getter for the maximum health of the spaceship.
-     * 
-     * @return maximum health of the spaceship.
-     */
-    public int getMaxHealth();
-    
-    /**
      * Setter for the current speed of the plane.
      * 
      * @param speed
@@ -144,10 +137,6 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
      */
     public float getRollingSpeed();
     
-    /**
-     * Resets the speed to the normal plane value without upgrades.
-     */
-    public void resetSpeed();
     
     /**
      * Returns the transformation matrix.

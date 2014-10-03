@@ -41,15 +41,6 @@ public class Player {
         this.plane = new Spaceship(model, head);
         
         setLives(plane.getHead().lives);
-        // resetLives();
-    }
-    
-    /**
-     * Resets the lives of the player to the max health of the currently used
-     * plane.
-     */
-    public void resetLives() {
-        lives = plane.getMaxHealth();
     }
     
     /**
