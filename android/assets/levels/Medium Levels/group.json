@@ -58,6 +58,11 @@
 			"name": "T 7",
 			"file": "speedTutorial.json",
 			"type": "tutorial"
+		},		
+		{
+			"id": 212,
+			"name": "10",
+			"file": "level10.json"
 		}
 	]
 }
