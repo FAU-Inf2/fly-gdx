@@ -203,6 +203,7 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
         }
     }
     
+    private int gateCount = 0;
     /**
      * Calls the gate circuit listeners for a passed gate and finishes the
      * circuit if it was the last gate and it has no successors.
@@ -211,11 +212,20 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
      *            The gate that was passed.
      */
     public void activeGatePassed(GateGoal gate) {
-        GameController.getInstance().getAudioManager( ).playSound(AudioManager.Sounds.GATE_PASSED);
+        boolean finished = gate.successors.length == 0;
+        if ( !finished && !gate.equals(virtualGate) ) {
+            gateCount++;
+            GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.HITMARKER);
+            if ( gateCount == 3 )
+                GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.TRIPLE);
+            else if ( gateCount == 6 )
+                GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.OH_YEAH);
+        }
         for (GateCircuitListener s : gateCircuitListeners)
             s.onGatePassed(gate);
         virtualGate = gate;
-        if (gate.successors.length == 0) {
+        if ( finished ) {
+            GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.CAMERA);
             reachedLastGate = true;
             circuitFinished();
         }
