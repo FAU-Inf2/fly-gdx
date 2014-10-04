@@ -52,7 +52,8 @@ public class Spaceship extends GameObject implements IPlane {
     private Matrix4 storedTransform;
     private Matrix4 displayTransform = new Matrix4();
     
-    private float speed;
+    private float currentSpeed;
+    private float planeSpeed;
     private float azimuthSpeed;
     private float rollingSpeed;
     private IPlane.Head head;
@@ -60,8 +61,9 @@ public class Spaceship extends GameObject implements IPlane {
     public Spaceship(GameModel model, IPlane.Head head) {
         super(model, "Spaceship");
         this.head = head;
-        
-        this.speed = head.speed / 5;
+
+        this.planeSpeed = head.speed / 5;
+        this.currentSpeed = this.planeSpeed;
         this.azimuthSpeed = head.azimuthSpeed / 10;
         this.rollingSpeed = head.rollingSpeed / 10;
         
@@ -154,13 +156,23 @@ public class Spaceship extends GameObject implements IPlane {
     }
     
     @Override
-    public void setSpeed(float speed) {
-        this.speed = speed;
+    public void setCurrentSpeed(float speed) {
+        this.currentSpeed = speed;
     }
     
     @Override
-    public float getSpeed() {
-        return speed;
+    public float getCurrentSpeed() {
+        return currentSpeed;
+    }
+    
+    @Override
+    public void setPlaneSpeed(float speed) {
+        this.planeSpeed = speed;
+    }
+    
+    @Override
+    public float getPlaneSpeed() {
+        return planeSpeed;
     }
     
     @Override
@@ -185,7 +197,7 @@ public class Spaceship extends GameObject implements IPlane {
         getRigidBody().setCenterOfMassTransform(startTransform);
         
         transformValues = startTransform.getValues();
-        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(speed);
+        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getCurrentSpeed());
         setMovement(linearMovement);
     }
     
@@ -193,11 +205,10 @@ public class Spaceship extends GameObject implements IPlane {
     public void rotate(float rollDir, float azimuthDir, float deltaFactor) {
         rotationTransform = getRigidBody().getCenterOfMassTransform();
         rotationTransform.rotate(movingDir.cpy().crs(up), rollDir * deltaFactor).rotate(up, azimuthDir * deltaFactor);
-        
         getRigidBody().setCenterOfMassTransform(rotationTransform);
         
         float[] transformValues = rotationTransform.getValues();
-        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
+        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getCurrentSpeed());
         
         gravity.applyGravity(transform, linearMovement);
         
@@ -208,37 +219,37 @@ public class Spaceship extends GameObject implements IPlane {
     }
     
     public void shift(Vector3 vector) {
-        rotationTransform = getRigidBody().getCenterOfMassTransform();
-        
-        rotationTransform.trn(vector);
-        
-        getRigidBody().setCenterOfMassTransform(rotationTransform);
-        
-        float[] transformValues = rotationTransform.getValues();
-        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getSpeed());
+    	rotationTransform = getRigidBody().getCenterOfMassTransform();
+    	
+    	rotationTransform.trn(vector);
+    	
+    	getRigidBody().setCenterOfMassTransform(rotationTransform);
+    	
+    	float[] transformValues = rotationTransform.getValues();
+        linearMovement.set(transformValues[8], transformValues[9], transformValues[10]).scl(getCurrentSpeed());
         setMovement(linearMovement);
-        
-        lastRoll = Math.signum(vector.z);
-        lastAzimuth = -Math.signum(vector.x);
+    	
+    	lastRoll = Math.signum(vector.z);
+    	lastAzimuth = -Math.signum(vector.x);
     }
     
     /**
      * Resets the Spaceship on the specified rail
      */
     public void resetOnRail(float railX, float railY, float railPos) {
-        // Vector3 newPosition = new Vector3(railY, railPos, railX);
-        Vector3 newPosition = new Vector3(-railY, railX, railPos);
-        Gdx.app.log("reset", "" + newPosition);
-        
-        Vector3 yPos = new Vector3(0, railPos, 0);
-        
+    	//Vector3 newPosition = new Vector3(railY, railPos, railX);
+    	Vector3 newPosition = new Vector3(-railY, railX, railPos);
+    	Gdx.app.log("reset", "" + newPosition);
+    	
+    	Vector3 yPos = new Vector3(0, railPos, 0);
+
         Perspective start = gameController.getLevel().start;
+    	
+    	rotationTransform.setToLookAt(start.viewDirection.cpy().add(yPos), start.upDirection);
+    	rotationTransform.rotate(start.upDirection, 180.0f);
+    	rotationTransform.translate(newPosition);
         
-        rotationTransform.setToLookAt(start.viewDirection.cpy().add(yPos), start.upDirection);
-        rotationTransform.rotate(start.upDirection, 180.0f);
-        rotationTransform.translate(newPosition);
-        
-        getRigidBody().setCenterOfMassTransform(rotationTransform);
+    	getRigidBody().setCenterOfMassTransform(rotationTransform);
     }
     
     @Override

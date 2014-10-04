@@ -11,6 +11,8 @@ import de.fau.cs.mad.fly.player.IPlane;
 
 /**
  * Used to display and handle linear increasing and decreasing speed upgrades.
+ * <p>
+ * Do not mix linear speed upgrades or a linear speed upgrade with instant speed upgrades.
  * 
  * @author Tobi
  * 
@@ -77,7 +79,7 @@ public class LinearSpeedUpgradeHandler extends CollectibleObjects implements IFe
         
         isCollected = true;
         
-        oldSpeed = plane.getSpeed();
+        oldSpeed = plane.getPlaneSpeed();
         duration = 0.0f;
         
         upgradeIncreaseFactor = upgrade.getIncreaseFactor();
@@ -95,13 +97,13 @@ public class LinearSpeedUpgradeHandler extends CollectibleObjects implements IFe
         
         if (duration <= upgradeIncreaseDuration) {
             maxSpeed = oldSpeed + duration * upgradeIncreaseFactor;
-            plane.setSpeed(maxSpeed);
+            plane.setCurrentSpeed(maxSpeed);
         } else if (duration > upgradeIncreaseDuration) {
-            if (plane.getSpeed() < oldSpeed) {
-                plane.setSpeed(oldSpeed);
+            if (plane.getCurrentSpeed() < oldSpeed) {
+                plane.setCurrentSpeed(oldSpeed);
                 isCollected = false;
             } else {
-                plane.setSpeed(maxSpeed - (duration - upgradeIncreaseDuration) * upgradeDecreaseFactor);
+                plane.setCurrentSpeed(maxSpeed - (duration - upgradeIncreaseDuration) * upgradeDecreaseFactor);
             }
         }
     }
