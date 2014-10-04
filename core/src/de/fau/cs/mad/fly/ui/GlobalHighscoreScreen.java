@@ -25,8 +25,10 @@ import de.fau.cs.mad.fly.profile.LevelGroup;
  * 
  */
 public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
+
+    private Table outerTable;
     
-    private Table infoTable;
+    private ScrollPane loadingPane;
     
     /** space between the columns */
     private final float padding = 220;
@@ -56,13 +58,14 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
                 @Override
                 public void run() {
                     Skin skin = SkinManager.getInstance().getSkin();
-                    infoTable.clear();
-                    infoTable = new Table();
+                    loadingPane.remove();
+
+                    Table infoTable = new Table();
                     ScrollPane scrollPane;
                     scrollPane = new ScrollPane(infoTable, skin, "semiTransparentBackground");
                     scrollPane.setFadeScrollBars(false);
                     scrollPane.setScrollingDisabled(true, false);
-                    contentTable.add(scrollPane);
+                    //contentTable.add(scrollPane);
                     
                     if (results != null && results.records.size() > 0) {
                         for (LevelRecords level : results.records) {
@@ -89,10 +92,10 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
                         infoTable.row();
                         infoTable.add(new Label(I18n.t("noScore"), skin, "darkGrey")).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                     }
-                    Table outerTable = new Table();
+                    
+                    outerTable.clear();
                     outerTable.setFillParent(true);
-                    outerTable.add(scrollPane).pad(UI.Window.BORDER_SPACE);
-                    stage.addActor(outerTable);
+                    outerTable.add(scrollPane);
                 }
             });
             
@@ -131,11 +134,17 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
     protected void generateContent() {
         Skin skin = SkinManager.getInstance().getSkin();
         stage.clear();
-        infoTable = new Table();
-        infoTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
-        infoTable.setFillParent(true);
+        outerTable = new Table();
+        outerTable.setFillParent(true);
+
+        Table loadingInfoTable = new Table();
+        loadingPane = new ScrollPane(loadingInfoTable, skin, "semiTransparentBackground");
+        loadingPane.setFadeScrollBars(false);
+        loadingPane.setScrollingDisabled(true, true);
+        loadingInfoTable.add(new Label(I18n.t("StatusLoading"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+        outerTable.add(loadingPane);
         
-        infoTable.add(new Label(I18n.t("StatusLoading"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+        stage.addActor(outerTable);
         
         generateBackButton();
     }
