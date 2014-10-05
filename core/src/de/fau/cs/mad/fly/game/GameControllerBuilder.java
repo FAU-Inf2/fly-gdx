@@ -165,6 +165,7 @@ public class GameControllerBuilder {
                 
                 if (!currentPlayer.decreaseLives()) {
                     // Debug.setOverlay(0, "DEAD");
+                    audioManager.playSound(AudioManager.Sounds.SADVIOLIN);
                     audioManager.playSound(AudioManager.Sounds.CRASH);
                     game.getGameController().finishGame(false);
                 } else {

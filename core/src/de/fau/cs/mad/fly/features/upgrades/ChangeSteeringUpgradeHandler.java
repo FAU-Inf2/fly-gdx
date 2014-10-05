@@ -52,7 +52,7 @@ public class ChangeSteeringUpgradeHandler extends CollectibleObjects implements 
     
     @Override
     protected void handleCollecting(Collectible c) {
-        GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.PICKUP);
+        GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.DAMN_SON);
         ChangeSteeringUpgrade upgrade = (ChangeSteeringUpgrade) c;
         isCollected = true;
         

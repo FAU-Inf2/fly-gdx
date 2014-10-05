@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 
@@ -14,6 +15,7 @@ import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
+
 
 /**
  * Controls the flight of the player regarding to user-input
@@ -122,7 +124,7 @@ public class FlightController implements InputProcessor {
         if (useSensorData) {
             interpretSensorInput();
         }
-        player.getPlane().rotate(rollFactor, azimuthFactor, delta * 60.f);
+        player.getPlane().rotate(rollFactor, azimuthFactor, 60 * delta);
     }
     
     protected void resetBuffers() {
@@ -244,19 +246,48 @@ public class FlightController implements InputProcessor {
     
     @Override
     public boolean keyDown(int keycode) {
-        // nothing should happen here
+        switch(keycode) {
+            case Keys.LEFT:
+            case Keys.A:
+                setAzimuthFactor(1);
+                break;
+            case Keys.RIGHT:
+            case Keys.D:
+                setAzimuthFactor(-1);
+                break;
+            case Keys.DOWN:
+            case Keys.S:
+                setRollFactor(-1);
+                break;
+            case Keys.UP:
+            case Keys.W:
+                setRollFactor(1);
+                break;
+        }
         return false;
     }
-    
+
     @Override
     public boolean keyUp(int keycode) {
-        // nothing should happen here
+        switch ( keycode ) {
+            case Keys.A:
+            case Keys.D:
+            case Keys.LEFT:
+            case Keys.RIGHT:
+                setAzimuthFactor(0);
+                break;
+            case Keys.W:
+            case Keys.S:
+            case Keys.UP:
+            case Keys.DOWN:
+                setRollFactor(0);
+                break;
+        }
         return false;
     }
     
     @Override
     public boolean keyTyped(char character) {
-        // nothing should happen here
         return false;
     }
     

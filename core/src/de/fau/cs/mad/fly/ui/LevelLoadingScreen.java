@@ -6,6 +6,8 @@ import com.badlogic.gdx.Input.Keys;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.settings.SettingManager;
 
 /**
  * Displays the loading screen with a progress bar.
@@ -28,6 +30,12 @@ public class LevelLoadingScreen extends LoadingScreen<Level> {
                     Fly game = (Fly) Gdx.app.getApplicationListener();
                     game.getGameController().disposeGame();
                     return true;
+                } else if ( keycode == Keys.ENTER || keycode == Keys.SPACE ) {
+                    Fly app = ((Fly) Gdx.app.getApplicationListener());
+                    app.setGameScreen();
+                    app.getGameController().initGame();
+                    if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences().getBoolean(SettingManager.USE_TOUCH))
+                        app.getGameController().getFlightController().init();
                 }
                 return false;
             }

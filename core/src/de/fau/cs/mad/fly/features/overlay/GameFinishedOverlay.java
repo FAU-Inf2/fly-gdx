@@ -1,8 +1,10 @@
 package de.fau.cs.mad.fly.features.overlay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -49,6 +51,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     public void init(final GameController gameController) {
         this.gameController = gameController;
     }
+
+    private final void loadNextLevel() {
+        LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
+        Loader.getInstance().loadLevel(levelHead);
+    }
     
     /**
      * When the game is finished, 5 states are possible:
@@ -80,20 +87,45 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).getMainMenuScreen().set();
+                Fly game = (Fly) Gdx.app.getApplicationListener();
+                game.getGameController().endGame();
+                game.getMainMenuScreen().set();
+            }
+        });
+
+        stage.addCaptureListener(new InputListener() {
+            public boolean keyDown( InputEvent e, int keycode ) {
+                if ( keycode == Keys.SPACE || keycode == Keys.ENTER )
+                    loadNextLevel();
+                return false;
             }
         });
         
         messageTable = new Table();
+
         NinePatchDrawable background = new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class));
         messageTable.setBackground(background);
         
+        String textKey = "";
         if (gameController.getLevel().getGateCircuit().isReachedLastGate()) {
-            levelSuccessfullyFinished(skin);
+            textKey = levelSuccessfullyFinished(skin);
         } else if (gameController.getGameState() == GameState.TIME_OVER) {
-            timeOver(skin);
+            textKey = timeOver(skin);
         } else if (gameController.getPlayer().isDead()) {
-            playerDead(skin);
+            textKey = playerDead(skin);
+        }
+
+        if ( textKey != null ) {
+            TextButton variableButton = new TextButton(I18n.t(textKey), skin);
+            variableButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    loadNextLevel();
+                }
+            });
+
+            messageTable.add(variableButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+            messageTable.add();
         }
         
         messageTable.add(backToMainMenuButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
@@ -102,31 +134,12 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         Fly game = (Fly) Gdx.app.getApplicationListener();
         game.onMode3d2dChanged(Mode3d2dChangedEvent.MODE_2D);
     }
-    
-    private void timeOver(Skin skin) {
-        
-        backToMainMenuButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Fly game = (Fly) Gdx.app.getApplicationListener();
-                game.getGameController().endGame();
-                ((Fly) Gdx.app.getApplicationListener()).getMainMenuScreen().set();
-            }
-        });
-        
-        TextButton restartButton = new TextButton(I18n.t("restart"), skin);
-        restartButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
-                Loader.getInstance().loadLevel(levelHead);
-            }
-        });
-        
+
+    private String timeOver(Skin skin) {
         showInfoLabel(skin, "level.time.up");
-        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH);
+        return "restart";
     }
-    
+
     /**
      * Displays an info label which spans the whole table.
      * 
@@ -145,25 +158,13 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      * <p>
      * In case of an EndlessLevel, the score is shown, too.
      */
-    private void playerDead(Skin skin) {
+    private String playerDead(Skin skin) {
         showInfoLabel(skin, "ship.destroyed");
-        
-        if (gameController.getLevel().head.isEndless() || gameController.getLevel().head.isEndlessRails()) {
+
+        if (gameController.getLevel().head.isEndless() || gameController.getLevel().head.isEndlessRails())
             showScore(skin);
-        }
         
-        TextButton restartButton = new TextButton(I18n.t("restart"), skin);
-        restartButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // reload the level
-                LevelProfile levelHead = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile();
-                Loader.getInstance().loadLevel(levelHead);
-            }
-        });
-        
-        messageTable.add(restartButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-        messageTable.add();
+        return "restart";
     }
     
     /**
@@ -171,7 +172,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
      * to go back to the {@link MainMenuScreen}. If there exists a next Level, a
      * button which leads to this level is shown.
      */
-    private void levelSuccessfullyFinished(Skin skin) {
+    private String levelSuccessfullyFinished(Skin skin) {
         final PlayerProfile currentPlayer = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         if (currentPlayer.isLastLevel()) {
             if (currentPlayer.isLastLevelGroup()) {
@@ -183,6 +184,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 // add some space to avoid crappy layout
                 messageTable.add().pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
                 messageTable.add();
+                return null;
             } else {
                 if (currentPlayer.getPassedLevelgroupID() == currentPlayer.getCurrentLevelGroup().id) {
                     // it is last level, but not last group, the first time pass
@@ -196,21 +198,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 showLevelMessage(skin);
                 showScore(skin);
                 
-                TextButton nextGroupButton = new TextButton(I18n.t("nextLevelGroup"), skin);
-                
-                currentPlayer.setToNextLevelGroup();
-                currentPlayer.saveCurrentLevelGroup();
-                currentPlayer.saveCurrentLevelProfile();
-                nextGroupButton.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        // set and load new level
-                        Loader.getInstance().loadLevel(currentPlayer.getCurrentLevelProfile());
-                    }
-                });
-                
-                messageTable.add(nextGroupButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-                messageTable.add();
+                return "nextLevelGroup";
             }
             
         } else {
@@ -221,19 +209,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             
             showLevelMessage(skin);
             showScore(skin);
-            TextButton nextLevelButton = new TextButton(I18n.t("nextLevel"), skin);
-            
+
             currentPlayer.setToNextLevel();
             currentPlayer.saveCurrentLevelProfile();
-            nextLevelButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    // load new level
-                    Loader.getInstance().loadLevel(currentPlayer.getCurrentLevelProfile());
-                }
-            });
-            messageTable.add(nextLevelButton).pad(UI.Buttons.SPACE_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-            messageTable.add();
+
+            return "nextLevel";
         }
     }
     
