@@ -36,6 +36,7 @@ public class LevelLoadingScreen extends LoadingScreen<Level> {
                     app.getGameController().initGame();
                     if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences().getBoolean(SettingManager.USE_TOUCH))
                         app.getGameController().getFlightController().init();
+                    return true;
                 }
                 return false;
             }
