@@ -2,10 +2,13 @@ package de.fau.cs.mad.fly.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 
@@ -29,6 +32,8 @@ public class FlightController implements InputProcessor {
     protected boolean inTouch = false;
     protected boolean invertPitch;
     
+    Set<Integer> pressedKeys = new HashSet<Integer>();
+
     protected Player player;
     
     protected float startRoll, startPitch;
@@ -90,7 +95,7 @@ public class FlightController implements InputProcessor {
      * @return The rollFactor
      */
     public float getRollFactor() {
-        return rollFactor;
+        return rollFactor / player.getPlane().getRollingSpeed();
     }
     
     /**
@@ -99,7 +104,7 @@ public class FlightController implements InputProcessor {
      * @return
      */
     public float getAzimuthFactor() {
-        return azimuthFactor;
+        return azimuthFactor / player.getPlane().getAzimuthSpeed();
     }
     
     /**
@@ -121,12 +126,11 @@ public class FlightController implements InputProcessor {
      */
     public void update(float delta) {
         // rotating the camera according to UserInput
-        if (useSensorData) {
+        if (useSensorData)
             interpretSensorInput();
-        }
         player.getPlane().rotate(rollFactor, azimuthFactor, 60 * delta);
     }
-    
+
     protected void resetBuffers() {
         rollInput = new ArrayList<Float>();
         pitchInput = new ArrayList<Float>();
@@ -243,54 +247,42 @@ public class FlightController implements InputProcessor {
         
         return result / (float) input.size();
     }
+
+    private void evaluateKeyboardInput() {
+        setAzimuthFactor(0);
+        setRollFactor(0);
+        for ( Integer keycode : pressedKeys )
+            switch ( keycode ) {
+                case Keys.A:
+                case Keys.LEFT:
+                    setAzimuthFactor(getAzimuthFactor() + 1);
+                    break;
+                case Keys.D:
+                case Keys.RIGHT:
+                    setAzimuthFactor(getAzimuthFactor() - 1);
+                    break;
+                case Keys.W:
+                case Keys.UP:
+                    setRollFactor(getRollFactor() + 1);
+                    break;
+                case Keys.S:
+                case Keys.DOWN:
+                    setRollFactor(getRollFactor() - 1);
+                    break;
+            }
+    }
     
     @Override
     public boolean keyDown(int keycode) {
-        switch(keycode) {
-            case Keys.LEFT:
-            case Keys.A:
-                setAzimuthFactor(1);
-                break;
-            case Keys.RIGHT:
-            case Keys.D:
-                setAzimuthFactor(-1);
-                break;
-            case Keys.DOWN:
-            case Keys.S:
-                setRollFactor(-1);
-                break;
-            case Keys.UP:
-            case Keys.W:
-                setRollFactor(1);
-                break;
-        }
+        pressedKeys.add(keycode);
+        evaluateKeyboardInput();
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        switch ( keycode ) {
-            case Keys.A:
-            case Keys.LEFT:
-                if ( getAzimuthFactor() > 0 )
-                    setAzimuthFactor(0);
-                break;
-            case Keys.D:
-            case Keys.RIGHT:
-                if ( getAzimuthFactor() < 0 )
-                    setAzimuthFactor(0);
-                break;
-            case Keys.S:
-            case Keys.DOWN:
-                if ( getRollFactor() < 0 )
-                    setRollFactor(0);
-                break;
-            case Keys.W:
-            case Keys.UP:
-                if ( getRollFactor() > 0 )
-                    setRollFactor(0);
-                break;
-        }
+        pressedKeys.remove(keycode);
+        evaluateKeyboardInput();
         return false;
     }
     

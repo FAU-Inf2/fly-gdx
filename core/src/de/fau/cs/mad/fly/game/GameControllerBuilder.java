@@ -110,16 +110,17 @@ public class GameControllerBuilder {
         player = new Player();
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         level = Loader.getInstance().getCurrentLevel();
-        if (Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
-            try {
-                Constructor c = Class.forName("de.fau.cs.mad.fly.ios.input.IOSFlightController").getConstructor(Player.class, PlayerProfile.class);
-                flightController = (FlightController) c.newInstance(player, playerProfile);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new GdxRuntimeException("Error instantiating IOSFlightController", e);
-            }
-        } else {
-            flightController = new FlightController(player, playerProfile);
+        switch( Gdx.app.getType() ) {
+            case iOS:
+                try {
+                    Constructor c = Class.forName("de.fau.cs.mad.fly.ios.input.IOSFlightController").getConstructor(Player.class, PlayerProfile.class);
+                    flightController = (FlightController) c.newInstance(player, playerProfile);
+                } catch (Exception e) {
+                    throw new GdxRuntimeException("Error instantiating IOSFlightController", e);
+                }
+                break;
+            default:
+                flightController = new FlightController(player, playerProfile);
         }
         flightController.init();
         cameraController = new CameraController(player, playerProfile);
