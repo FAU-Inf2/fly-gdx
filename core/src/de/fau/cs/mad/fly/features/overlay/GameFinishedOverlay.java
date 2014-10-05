@@ -196,7 +196,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 } 
                 showLevelMessage(skin);
                 showScore(skin);
-                
+
+                currentPlayer.setToNextLevelGroup();
+                currentPlayer.saveCurrentLevelGroup();
+                currentPlayer.saveCurrentLevelProfile();
+
                 return "nextLevelGroup";
             }
             

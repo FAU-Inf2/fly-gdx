@@ -271,16 +271,24 @@ public class FlightController implements InputProcessor {
     public boolean keyUp(int keycode) {
         switch ( keycode ) {
             case Keys.A:
-            case Keys.D:
             case Keys.LEFT:
+                if ( getAzimuthFactor() > 0 )
+                    setAzimuthFactor(0);
+                break;
+            case Keys.D:
             case Keys.RIGHT:
-                setAzimuthFactor(0);
+                if ( getAzimuthFactor() < 0 )
+                    setAzimuthFactor(0);
+                break;
+            case Keys.S:
+            case Keys.DOWN:
+                if ( getRollFactor() < 0 )
+                    setRollFactor(0);
                 break;
             case Keys.W:
-            case Keys.S:
             case Keys.UP:
-            case Keys.DOWN:
-                setRollFactor(0);
+                if ( getRollFactor() > 0 )
+                    setRollFactor(0);
                 break;
         }
         return false;
