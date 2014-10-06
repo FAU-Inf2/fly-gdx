@@ -18,6 +18,7 @@ import de.fau.cs.mad.fly.features.IFeatureRender;
 import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.sound.AudioManager;
 
 /**
  * Manages the Player, the Level, the UI, the CameraController and all the

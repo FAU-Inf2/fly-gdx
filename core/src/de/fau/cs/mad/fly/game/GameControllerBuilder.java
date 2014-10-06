@@ -61,6 +61,8 @@ import de.fau.cs.mad.fly.res.GateCircuitListener;
 import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
+import de.fau.cs.mad.fly.sound.AudioManager;
+import de.fau.cs.mad.fly.sound.Playable;
 import de.fau.cs.mad.fly.ui.BackProcessor;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
@@ -166,10 +168,10 @@ public class GameControllerBuilder {
                 
                 if (!currentPlayer.decreaseLives()) {
                     // Debug.setOverlay(0, "DEAD");
-                    for ( com.badlogic.gdx.audio.Music m: audioManager.allMusic() )
-                        m.stop();
-                    audioManager.playMusic(AudioManager.Musics.SAD_VIOLIN);
-                    audioManager.playSound(AudioManager.Sounds.CRASH);
+                    for ( Playable p : audioManager.allSounds() )
+                        p.stop();
+                    audioManager.play(AudioManager.Sounds.SAD_VIOLIN);
+                    audioManager.play(AudioManager.Sounds.CRASH);
                     game.getGameController().finishGame(false);
                 } else {
                     // Debug.setOverlay(0, player.getLives());

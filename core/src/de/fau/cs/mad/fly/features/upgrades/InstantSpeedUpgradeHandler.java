@@ -7,9 +7,10 @@ import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
-import de.fau.cs.mad.fly.game.AudioManager;
+import de.fau.cs.mad.fly.sound.AudioManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.IPlane;
+import de.fau.cs.mad.fly.sound.Playback;
 
 /**
  * Used to display and handle instant speed upgrades.
@@ -57,6 +58,8 @@ public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IF
      */
     private float duration;
 
+    private Playback sound;
+
     /**
      * Creates a new instant speed upgrade handler.
      */
@@ -71,7 +74,8 @@ public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IF
     
     @Override
     protected void handleCollecting(Collectible c) {
-        GameController.getInstance().getAudioManager().get(AudioManager.Musics.SONIC).play();
+        sound = GameController.getInstance().getAudioManager().play(AudioManager.Sounds.SONIC);
+        sound.setVolume(0.3f);
         InstantSpeedUpgrade upgrade = (InstantSpeedUpgrade) c;
         
         isCollected = true;
@@ -100,7 +104,7 @@ public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IF
         
         if (!isInfinite && duration >= upgradeDuration) {
             plane.setCurrentSpeed(oldSpeed);
-            GameController.getInstance().getAudioManager().get(AudioManager.Musics.SONIC).stop();
+            sound.stop();
             isCollected = false;
         }
     }
