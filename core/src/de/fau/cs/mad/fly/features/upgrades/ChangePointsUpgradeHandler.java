@@ -5,7 +5,7 @@ import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangePointsUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
-import de.fau.cs.mad.fly.game.AudioManager;
+import de.fau.cs.mad.fly.sound.AudioManager;
 import de.fau.cs.mad.fly.game.GameController;
 
 /**
@@ -24,7 +24,7 @@ public class ChangePointsUpgradeHandler extends CollectibleObjects {
     
     @Override
     protected void handleCollecting(Collectible c) {
-        GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.PICKUP);
+        GameController.getInstance().getAudioManager().play(AudioManager.Sounds.DAMN_SON);
         ChangePointsUpgrade upgrade = (ChangePointsUpgrade) c;
         GameController.getInstance().getScoreController().addBonusPoints(upgrade.getPointsChange());
         InfoOverlay.getInstance().setOverlay(I18n.t("pointUpgradeCollected") + "\n" + I18n.t("bonus") + " " + upgrade.getPointsChange() + "", 3);

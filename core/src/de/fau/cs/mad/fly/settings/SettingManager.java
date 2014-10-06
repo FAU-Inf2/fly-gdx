@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Application.ApplicationType.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
@@ -25,6 +25,7 @@ public class SettingManager {
     public static final String INVERT_PITCH = "invertPitch";
     public static final String CHOSEN_PLANE_ID = "chosenPlaneID";
     public static final String DISABLE_TUTORIALS = "disableTutorials";
+    public static final String DISABLE_SOUND = "disableSound";
     
     private Preferences prefs;
     private Map<String, ISetting> settingMap;
@@ -124,18 +125,22 @@ public class SettingManager {
      * {@link ui#SettingScreen}.
      */
     private void createSettings() {
-        ApplicationType type = Gdx.app.getType();
-        if (Application.ApplicationType.Android.equals(type) || Application.ApplicationType.iOS.equals(type)) {
-            addBooleanSetting(VIBRATE_WHEN_COLLIDE, true, "helpVibrate", false);
-            addBooleanSetting(USE_TOUCH, false, "helpTouch", false);
-            addBooleanSetting(INVERT_PITCH, false, "helpPitch", false);
-        } else if (Application.ApplicationType.Desktop.equals(type)) {
-            Gdx.app.log("Setting", "desktop");
-            addBooleanSetting(USE_TOUCH, true, "helpTouch", true);
-            addBooleanSetting(INVERT_PITCH, false, "helpPitch", false);
+        switch (Gdx.app.getType()) {
+            case Android:
+            case iOS:
+                addBooleanSetting(VIBRATE_WHEN_COLLIDE, true, "helpVibrate", false);
+                addBooleanSetting(USE_TOUCH, false, "helpTouch", false);
+                addBooleanSetting(INVERT_PITCH, false, "helpPitch", false);
+                break;
+            case Desktop:
+                Gdx.app.log("Setting", "desktop");
+                addBooleanSetting(USE_TOUCH, true, "helpTouch", true);
+                addBooleanSetting(INVERT_PITCH, false, "helpPitch", false);
+                break;
         }
         // addBooleanSetting(SHOW_PAUSE, false);
         addBooleanSetting(SHOW_FPS, false, "helpShowFPS", false);
         addBooleanSetting(DISABLE_TUTORIALS, false, "helpDisableTutorials", false);
+        addBooleanSetting(DISABLE_SOUND, false, "helpDisableSound", false);
     }
 }

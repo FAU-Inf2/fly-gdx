@@ -635,8 +635,8 @@
             "successors": []
         }
     ],
-    "id": 24,
-    "name": "Level 24",
+    "id": 25,
+    "name": "20",
     "start": {
         "position": {
             "x": 0.0,
@@ -654,6 +654,6 @@
             "z": 0.0
         }
     },
-    "time": 65,
+    "time": 80,
     "upgrades": []
 }

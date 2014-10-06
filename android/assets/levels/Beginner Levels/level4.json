@@ -3,12 +3,12 @@
     "components": [
         {
             "id": "border",
-            "ref": "space"
+            "ref": "border"
         }
     ],
     "dependencies": {
+        "border": "spacesphere",
         "hole": "torusHoleBox",
-        "space": "spacesphere",
         "torus": "torus"
     },
     "gates": [
@@ -151,7 +151,7 @@
         }
     ],
     "id": 7,
-    "name": "Level 4",
+    "name": "4",
     "start": {
         "position": {
             "x": 0.0,
@@ -169,6 +169,6 @@
             "z": 0.0
         }
     },
-    "time": 52,
+    "time": 60,
     "upgrades": []
 }

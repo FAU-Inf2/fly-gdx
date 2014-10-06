@@ -3,12 +3,12 @@
 	"name": "Endless Levels",
 	"levels": [
 		{
-			"id": 100,
+			"id": 1,
 			"name": "Endless",
 			"file": "randomEndlessLevel.json"
 		},
 		{
-			"id": 101,
+			"id": 2,
 			"name": "EndlessRails",
 			"file": "randomEndlessRailLevel.json"
 		}

@@ -2,9 +2,14 @@ package de.fau.cs.mad.fly.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 
@@ -14,6 +19,7 @@ import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
+
 
 /**
  * Controls the flight of the player regarding to user-input
@@ -25,8 +31,11 @@ public class FlightController implements InputProcessor {
     
     protected boolean useSensorData;
     protected boolean inTouch = false;
-    protected boolean invertPitch;
+    protected int inversionFactor;
+    protected int rotationFactor;
     
+    Set<Integer> pressedKeys = new HashSet<Integer>();
+
     protected Player player;
     
     protected float startRoll, startPitch;
@@ -59,16 +68,15 @@ public class FlightController implements InputProcessor {
     protected float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;
     protected float radius = TouchScreenOverlay.RADIUS_OF_STEERING_CIRCLE;
     
-    protected boolean screenRotated;
     
     public FlightController(Player player, PlayerProfile playerProfile) {
         this.player = player;
         Preferences preferences = playerProfile.getSettingManager().getPreferences();
-        this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
-        this.invertPitch = preferences.getBoolean(SettingManager.INVERT_PITCH);
+        this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH) && !Gdx.app.getType().equals(ApplicationType.Desktop);
+        this.inversionFactor = preferences.getBoolean(SettingManager.INVERT_PITCH) ? -1 : 1;
         this.bufferSize = 10;
-        screenRotated = ((Fly) Gdx.app.getApplicationListener()).orientationSwapped();
-        Gdx.app.log("orientation", "" + screenRotated);
+        this.rotationFactor = ((Fly) Gdx.app.getApplicationListener()).orientationSwapped() ? -1 : 1;
+        Gdx.app.log("orientation", "" + rotationFactor);
     }
     
     /**
@@ -88,7 +96,7 @@ public class FlightController implements InputProcessor {
      * @return The rollFactor
      */
     public float getRollFactor() {
-        return rollFactor;
+        return rollFactor / player.getPlane().getRollingSpeed();
     }
     
     /**
@@ -97,7 +105,7 @@ public class FlightController implements InputProcessor {
      * @return
      */
     public float getAzimuthFactor() {
-        return azimuthFactor;
+        return azimuthFactor / player.getPlane().getAzimuthSpeed();
     }
     
     /**
@@ -105,9 +113,7 @@ public class FlightController implements InputProcessor {
      */
     public void resetSteering() {
         startRoll = Gdx.input.getRoll();
-        if (invertPitch && !screenRotated || !invertPitch && screenRotated) {
-            startRoll = -startRoll;
-        }
+        startRoll *= inversionFactor * rotationFactor;
         startPitch = Gdx.input.getPitch();
     }
     
@@ -119,12 +125,11 @@ public class FlightController implements InputProcessor {
      */
     public void update(float delta) {
         // rotating the camera according to UserInput
-        if (useSensorData) {
+        if (useSensorData)
             interpretSensorInput();
-        }
-        player.getPlane().rotate(rollFactor, azimuthFactor, delta * 60.f);
+        player.getPlane().rotate(rollFactor, azimuthFactor, 60 * delta);
     }
-    
+
     protected void resetBuffers() {
         rollInput = new ArrayList<Float>();
         pitchInput = new ArrayList<Float>();
@@ -138,12 +143,8 @@ public class FlightController implements InputProcessor {
         roll = Gdx.input.getRoll();
         
         // interpret if screen on smartphone is rotated or not
-        if (invertPitch && !screenRotated || !invertPitch && screenRotated) {
-            roll = roll * -1;
-        }
-        if(screenRotated) {
-            pitch = -pitch;
-        }
+        roll *= inversionFactor * rotationFactor;
+        pitch *= rotationFactor;
         
         // removing oldest element in buffers
         if (rollInput.size() >= bufferSize) {
@@ -241,22 +242,47 @@ public class FlightController implements InputProcessor {
         
         return result / (float) input.size();
     }
-    
-    @Override
-    public boolean keyDown(int keycode) {
-        // nothing should happen here
-        return false;
+
+    private void evaluateKeyboardInput() {
+        setAzimuthFactor(0);
+        setRollFactor(0);
+        for ( Integer keycode : pressedKeys )
+            switch ( keycode ) {
+                case Keys.A:
+                case Keys.LEFT:
+                    setAzimuthFactor(getAzimuthFactor() + 1);
+                    break;
+                case Keys.D:
+                case Keys.RIGHT:
+                    setAzimuthFactor(getAzimuthFactor() - 1);
+                    break;
+                case Keys.W:
+                case Keys.UP:
+                    setRollFactor(getRollFactor() + 1 * inversionFactor);
+                    break;
+                case Keys.S:
+                case Keys.DOWN:
+                    setRollFactor(getRollFactor() - 1 * inversionFactor);
+                    break;
+            }
     }
     
     @Override
+    public boolean keyDown(int keycode) {
+        pressedKeys.add(keycode);
+        evaluateKeyboardInput();
+        return false;
+    }
+
+    @Override
     public boolean keyUp(int keycode) {
-        // nothing should happen here
+        pressedKeys.remove(keycode);
+        evaluateKeyboardInput();
         return false;
     }
     
     @Override
     public boolean keyTyped(char character) {
-        // nothing should happen here
         return false;
     }
     
