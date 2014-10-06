@@ -88,6 +88,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Fly game = (Fly) Gdx.app.getApplicationListener();
+                System.out.println(game.getScreen());
                 game.getMainMenuScreen().set();
             }
         });

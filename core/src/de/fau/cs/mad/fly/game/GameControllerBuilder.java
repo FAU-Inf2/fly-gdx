@@ -166,7 +166,9 @@ public class GameControllerBuilder {
                 
                 if (!currentPlayer.decreaseLives()) {
                     // Debug.setOverlay(0, "DEAD");
-                    audioManager.playSound(AudioManager.Sounds.SADVIOLIN);
+                    for ( com.badlogic.gdx.audio.Music m: audioManager.allMusic() )
+                        m.stop();
+                    audioManager.playMusic(AudioManager.Musics.SAD_VIOLIN);
                     audioManager.playSound(AudioManager.Sounds.CRASH);
                     game.getGameController().finishGame(false);
                 } else {

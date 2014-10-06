@@ -56,7 +56,7 @@ public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IF
      * The duration the speed upgrade was already used.
      */
     private float duration;
-    
+
     /**
      * Creates a new instant speed upgrade handler.
      */
@@ -71,7 +71,7 @@ public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IF
     
     @Override
     protected void handleCollecting(Collectible c) {
-        GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.SONIC);
+        GameController.getInstance().getAudioManager().get(AudioManager.Musics.SONIC).play();
         InstantSpeedUpgrade upgrade = (InstantSpeedUpgrade) c;
         
         isCollected = true;
@@ -96,9 +96,11 @@ public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IF
         }
         
         duration += delta;
+
         
         if (!isInfinite && duration >= upgradeDuration) {
             plane.setCurrentSpeed(oldSpeed);
+            GameController.getInstance().getAudioManager().get(AudioManager.Musics.SONIC).stop();
             isCollected = false;
         }
     }
