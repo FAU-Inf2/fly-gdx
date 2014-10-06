@@ -40,12 +40,17 @@ public class FlightController implements InputProcessor {
     
     protected float startRoll, startPitch;
     
+    /** */
     protected float rollFactor = 0.0f;
+    /** */
     protected float azimuthFactor = 0.0f;
     
+    /** Indicates a change to the rollFactor. 0 means that steering in rollDirection is disabled*/
     protected float rollFactorChange = 1.0f;
+    /** Indicates a change to the azimuthFactor. 0 means that steering in azimuthDirection is disabled*/
     protected float azimuthFactorChange = 1.0f;
     
+    /** The pointer to the current touchEvent*/
     protected int currentEvent = -1;
     
     protected float screenHeight = Gdx.graphics.getHeight();
@@ -219,7 +224,7 @@ public class FlightController implements InputProcessor {
      * @param azimuthFactor
      */
     protected void setAzimuthFactor(float azimuthFactor) {
-        this.azimuthFactor = azimuthFactor * player.getPlane().getAzimuthSpeed();
+        this.azimuthFactor = azimuthFactorChange * azimuthFactor * player.getPlane().getAzimuthSpeed();
     }
     
     /**
@@ -229,7 +234,7 @@ public class FlightController implements InputProcessor {
      * @param rollFactor
      */
     protected void setRollFactor(float rollFactor) {
-        this.rollFactor = rollFactor * player.getPlane().getRollingSpeed();
+        this.rollFactor = rollFactorChange * rollFactor * player.getPlane().getRollingSpeed();
 
     }
     
