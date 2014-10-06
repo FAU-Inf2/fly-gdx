@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.sound;
 import com.badlogic.gdx.audio.Sound;
 
 public interface Playback {
+  public Playable source();
   public void pause();
   public void resume();
   public void stop();
@@ -12,41 +13,48 @@ public interface Playback {
 }
 
 class SoundPlayback implements Playback {
-  private final Sound target;
+  private final SoundPlayable source;
   private final long id;
 
-  public SoundPlayback(Sound target, float volume) {
-    this.target = target;
-    this.id = target.play(volume);
+  public SoundPlayback(SoundPlayable source) {
+    this.source = source;
+    this.id = source.target.play();
+    setVolume(1.0f);
+    setLooping(source.defaultLooping);
+  }
+
+  @Override
+  public Playable source() {
+    return source;
   }
 
   @Override
   public void pause() {
-    target.pause(id);
+    source.target.pause(id);
   }
 
   @Override
   public void resume() {
-    target.resume(id);
+    source.target.resume(id);
   }
 
   @Override
   public void stop() {
-    target.stop(id);
+    source.target.stop(id);
   }
 
   @Override
   public void setVolume(float volume) {
-    target.setVolume(id, volume);
+    source.target.setVolume(id, source.defaultVolume * volume * source.manager().volume);
   }
 
   @Override
   public void setLooping(boolean looping) {
-    target.setLooping(id, looping);
+    source.target.setLooping(id, looping);
   }
 
   @Override
   public void setPan(float pan, float volume) {
-    target.setPan(id, pan, volume);
+    source.target.setPan(id, pan, volume);
   }
 }

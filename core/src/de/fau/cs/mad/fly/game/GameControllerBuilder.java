@@ -164,14 +164,11 @@ public class GameControllerBuilder {
                 if (g.isDummy()) {
                     return;
                 }
+                audioManager.play(AudioManager.Sounds.CRASH);
                 Player currentPlayer = GameController.getInstance().getPlayer();
-                
+
                 if (!currentPlayer.decreaseLives()) {
                     // Debug.setOverlay(0, "DEAD");
-                    for ( Playable p : audioManager.allSounds() )
-                        p.stop();
-                    audioManager.play(AudioManager.Sounds.SAD_VIOLIN);
-                    audioManager.play(AudioManager.Sounds.CRASH);
                     game.getGameController().finishGame(false);
                 } else {
                     // Debug.setOverlay(0, player.getLives());

@@ -19,6 +19,7 @@ import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.sound.AudioManager;
+import de.fau.cs.mad.fly.sound.Playable;
 
 /**
  * Manages the Player, the Level, the UI, the CameraController and all the
@@ -217,10 +218,14 @@ public class GameController implements TimeIsUpListener {
      *            or he is dead.
      */
     public void finishGame(boolean victory) {
+        for ( Playable p : audioManager.allSounds() )
+            if ( p.isMusic() )
+                p.stop();
         if (victory) {
             gameState = GameState.VICTORY;
         } else {
             gameState = GameState.NO_LIVES;
+            audioManager.play(AudioManager.Sounds.SAD_VIOLIN).setLooping(true);
         }
         
         endGame();

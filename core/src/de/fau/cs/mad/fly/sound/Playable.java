@@ -5,25 +5,52 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.audio.Music;
 
 public interface Playable extends Disposable {
-  public Playback play(float volume);
+  public Playback play();
 
   public void resume();
 
   public void stop();
 
   public void pause();
+
+  public boolean isSoundEffect();
+
+  public boolean isMusic();
+
+  public AudioManager manager();
 }
 
 class SoundPlayable implements Playable {
-  private final Sound target;
+  final Sound target;
+  final float defaultVolume;
+  final boolean defaultLooping;
+  private final AudioManager manager;
 
-  public SoundPlayable(Sound target) {
+  public SoundPlayable(Sound target, float defaultVolume, boolean defaultLooping, AudioManager manager) {
     this.target = target;
+    this.defaultVolume = defaultVolume;
+    this.defaultLooping = defaultLooping;
+    this.manager = manager;
   }
 
   @Override
-  public Playback play(float volume) {
-    return new SoundPlayback(target, volume);
+  public AudioManager manager() {
+    return manager;
+  }
+
+  @Override
+  public Playback play() {
+    return new SoundPlayback(this);
+  }
+
+  @Override
+  public boolean isSoundEffect() {
+    return true;
+  }
+
+  @Override
+  public boolean isMusic() {
+    return false;
   }
 
   @Override
@@ -49,23 +76,40 @@ class SoundPlayable implements Playable {
 
 class MusicPlayable implements Playable, Playback {
   private final Music target;
-  private float volume;
+  private final float defaultVolume;
+  private final AudioManager manager;
 
-  public MusicPlayable(Music target, float volume) {
+  public MusicPlayable(Music target, float defaultVolume, boolean defaultLooping, AudioManager manager) {
     this.target = target;
-    this.volume = volume;
+    this.manager = manager;
+    this.defaultVolume = defaultVolume;
+    setLooping(defaultLooping);
   }
 
   @Override
-  public Playback play(float volume) {
-    this.volume = volume;
-    return play();
+  public AudioManager manager() {
+    return manager;
   }
 
+  public boolean isMusic() {
+    return true;
+  }
+
+  @Override
+  public boolean isSoundEffect() {
+    return false;
+  }
+
+  @Override
+  public Playable source() {
+    return this;
+  }
+
+  @Override
   public Playback play() {
       if(!target.isPlaying()) {
-          setVolume(volume);
           target.play();
+          setVolume(1.0f);
       }
       return this;
   }
@@ -87,8 +131,7 @@ class MusicPlayable implements Playable, Playback {
 
   @Override
   public void setVolume(float volume) {
-    this.volume = volume;
-    target.setVolume(volume);
+    target.setVolume(volume * defaultVolume * manager.volume);
   }
 
   @Override

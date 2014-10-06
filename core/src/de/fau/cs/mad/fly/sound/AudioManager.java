@@ -30,19 +30,20 @@ public class AudioManager implements Disposable {
 
     private Map<Sounds, Playable> soundMap = new HashMap<Sounds, Playable>();
 
-    private float volume = 1.0f;
+    float volume = 1.0f;
 
     public AudioManager() {
-        soundMap.put(Sounds.CRASH, create(CRASH_SOUND));
-        soundMap.put(Sounds.GATE_PASSED, create(GATE_PASSED_SOUND));
-        soundMap.put(Sounds.PICKUP, create(PICKUP));
-        soundMap.put(Sounds.TRIPLE, create(TRIPLE));
-        soundMap.put(Sounds.CAMERA, create(CAMERA));
-        soundMap.put(Sounds.HITMARKER, create(HITMARKER));
-        soundMap.put(Sounds.OH_YEAH, create(OH_YEAH));
-        soundMap.put(Sounds.DAMN_SON, create(DAMN_SON, Types.Music));
-        soundMap.put(Sounds.SONIC, create(SONIC, Types.Music));
-        soundMap.put(Sounds.SAD_VIOLIN, create(SAD_VIOLIN, Types.Music));
+        soundMap.put(Sounds.CRASH,       create(CRASH_SOUND,       1.0f, false, Types.Sound));
+        soundMap.put(Sounds.GATE_PASSED, create(GATE_PASSED_SOUND, 1.0f, false, Types.Sound));
+        soundMap.put(Sounds.PICKUP,      create(PICKUP,            1.0f, false, Types.Sound));
+        soundMap.put(Sounds.TRIPLE,      create(TRIPLE,            1.0f, false, Types.Sound));
+        soundMap.put(Sounds.CAMERA,      create(CAMERA,            1.0f, false, Types.Sound));
+        soundMap.put(Sounds.HITMARKER,   create(HITMARKER,         1.0f, false, Types.Sound));
+        soundMap.put(Sounds.OH_YEAH,     create(OH_YEAH,           1.0f, false, Types.Sound));
+        soundMap.put(Sounds.DAMN_SON,    create(DAMN_SON,          1.0f, false, Types.Sound));
+
+        soundMap.put(Sounds.SONIC,       create(SONIC,             0.3f, true,  Types.Music));
+        soundMap.put(Sounds.SAD_VIOLIN,  create(SAD_VIOLIN,        1.0f, true,  Types.Music));
     }
 
     public Playable get(Sounds sound) {
@@ -50,7 +51,7 @@ public class AudioManager implements Disposable {
     }
 
     public Playback play(Sounds sound) {
-        return get(sound).play(volume);
+        return get(sound).play();
     }
 
     public Playback playSound(Sounds sound) {
@@ -69,21 +70,17 @@ public class AudioManager implements Disposable {
 
     private static enum Types { Sound, Music };
 
-    private Playable create(FileHandle fileHandle, Types type) {
+    private Playable create(FileHandle fileHandle, float defaultVolume, boolean defaultLooping, Types type) {
         switch( type ) {
             case Music:
-                return new MusicPlayable(Gdx.audio.newMusic(fileHandle), volume);
+                return new MusicPlayable(Gdx.audio.newMusic(fileHandle), defaultVolume, defaultLooping, this);
             default:
-                return new SoundPlayable(Gdx.audio.newSound(fileHandle));
+                return new SoundPlayable(Gdx.audio.newSound(fileHandle), defaultVolume, defaultLooping, this);
         }
     }
 
-    private Playable create(String file, Types type) {
-        return create(Gdx.files.internal(file), type);
-    }
-
-    private Playable create(String file) {
-        return create(file, Types.Sound);
+    private Playable create(String file, float defaultVolume, boolean defaultLooping, Types type) {
+        return create(Gdx.files.internal(file), defaultVolume, defaultLooping, type);
     }
 
     public void mute() {
