@@ -15,9 +15,9 @@ class SoundPlayback implements Playback {
   private final Sound target;
   private final long id;
 
-  public SoundPlayback(Sound target) {
+  public SoundPlayback(Sound target, float volume) {
     this.target = target;
-    this.id = target.play();
+    this.id = target.play(volume);
   }
 
   @Override

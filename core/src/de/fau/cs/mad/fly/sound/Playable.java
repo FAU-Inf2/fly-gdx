@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.audio.Music;
 
 public interface Playable extends Disposable {
-  public Playback play();
+  public Playback play(float volume);
 
   public void resume();
 
@@ -22,8 +22,8 @@ class SoundPlayable implements Playable {
   }
 
   @Override
-  public Playback play() {
-    return new SoundPlayback(target);
+  public Playback play(float volume) {
+    return new SoundPlayback(target, volume);
   }
 
   @Override
@@ -49,16 +49,25 @@ class SoundPlayable implements Playable {
 
 class MusicPlayable implements Playable, Playback {
   private final Music target;
+  private float volume;
 
-  public MusicPlayable(Music target) {
+  public MusicPlayable(Music target, float volume) {
     this.target = target;
+    this.volume = volume;
   }
 
   @Override
+  public Playback play(float volume) {
+    this.volume = volume;
+    return play();
+  }
+
   public Playback play() {
-    if ( !target.isPlaying() )
-      target.play();
-    return this;
+      if(!target.isPlaying()) {
+          setVolume(volume);
+          target.play();
+      }
+      return this;
   }
 
   @Override
@@ -78,6 +87,7 @@ class MusicPlayable implements Playable, Playback {
 
   @Override
   public void setVolume(float volume) {
+    this.volume = volume;
     target.setVolume(volume);
   }
 

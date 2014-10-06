@@ -335,6 +335,9 @@ public class GameControllerBuilder {
                 }
             });
         }
+        if(preferences.getBoolean(SettingManager.DISABLE_SOUND)) {
+            audioManager.mute();
+        }
         addGameFinishedOverlay();
     }
     
@@ -605,7 +608,7 @@ public class GameControllerBuilder {
         gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
         gc.audioManager = audioManager;
-        
+
         level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override
             public void onFinished() {

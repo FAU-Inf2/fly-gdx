@@ -30,6 +30,8 @@ public class AudioManager implements Disposable {
 
     private Map<Sounds, Playable> soundMap = new HashMap<Sounds, Playable>();
 
+    private float volume = 1.0f;
+
     public AudioManager() {
         soundMap.put(Sounds.CRASH, create(CRASH_SOUND));
         soundMap.put(Sounds.GATE_PASSED, create(GATE_PASSED_SOUND));
@@ -48,7 +50,7 @@ public class AudioManager implements Disposable {
     }
 
     public Playback play(Sounds sound) {
-        return get(sound).play();
+        return get(sound).play(volume);
     }
 
     public Playback playSound(Sounds sound) {
@@ -70,7 +72,7 @@ public class AudioManager implements Disposable {
     private Playable create(FileHandle fileHandle, Types type) {
         switch( type ) {
             case Music:
-                return new MusicPlayable(Gdx.audio.newMusic(fileHandle));
+                return new MusicPlayable(Gdx.audio.newMusic(fileHandle), volume);
             default:
                 return new SoundPlayable(Gdx.audio.newSound(fileHandle));
         }
@@ -82,5 +84,13 @@ public class AudioManager implements Disposable {
 
     private Playable create(String file) {
         return create(file, Types.Sound);
+    }
+
+    public void mute() {
+        volume = 0.0f;
+    }
+
+    public void unmute() {
+        volume = 1.0f;
     }
 }
