@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -30,7 +31,8 @@ public class FlightController implements InputProcessor {
     
     protected boolean useSensorData;
     protected boolean inTouch = false;
-    protected boolean invertPitch;
+    protected int inversionFactor;
+    protected int rotationFactor;
     
     Set<Integer> pressedKeys = new HashSet<Integer>();
 
@@ -66,16 +68,15 @@ public class FlightController implements InputProcessor {
     protected float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;
     protected float radius = TouchScreenOverlay.RADIUS_OF_STEERING_CIRCLE;
     
-    protected boolean screenRotated;
     
     public FlightController(Player player, PlayerProfile playerProfile) {
         this.player = player;
         Preferences preferences = playerProfile.getSettingManager().getPreferences();
-        this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH);
-        this.invertPitch = preferences.getBoolean(SettingManager.INVERT_PITCH);
+        this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH) && !Gdx.app.getType().equals(ApplicationType.Desktop);
+        this.inversionFactor = preferences.getBoolean(SettingManager.INVERT_PITCH) ? -1 : 1;
         this.bufferSize = 10;
-        screenRotated = ((Fly) Gdx.app.getApplicationListener()).orientationSwapped();
-        Gdx.app.log("orientation", "" + screenRotated);
+        this.rotationFactor = ((Fly) Gdx.app.getApplicationListener()).orientationSwapped() ? -1 : 1;
+        Gdx.app.log("orientation", "" + rotationFactor);
     }
     
     /**
@@ -112,9 +113,7 @@ public class FlightController implements InputProcessor {
      */
     public void resetSteering() {
         startRoll = Gdx.input.getRoll();
-        if (invertPitch && !screenRotated || !invertPitch && screenRotated) {
-            startRoll = -startRoll;
-        }
+        startRoll *= inversionFactor * rotationFactor;
         startPitch = Gdx.input.getPitch();
     }
     
@@ -144,12 +143,8 @@ public class FlightController implements InputProcessor {
         roll = Gdx.input.getRoll();
         
         // interpret if screen on smartphone is rotated or not
-        if (invertPitch && !screenRotated || !invertPitch && screenRotated) {
-            roll = roll * -1;
-        }
-        if(screenRotated) {
-            pitch = -pitch;
-        }
+        roll *= inversionFactor * rotationFactor;
+        pitch *= rotationFactor;
         
         // removing oldest element in buffers
         if (rollInput.size() >= bufferSize) {
@@ -263,11 +258,11 @@ public class FlightController implements InputProcessor {
                     break;
                 case Keys.W:
                 case Keys.UP:
-                    setRollFactor(getRollFactor() + 1);
+                    setRollFactor(getRollFactor() + 1 * inversionFactor);
                     break;
                 case Keys.S:
                 case Keys.DOWN:
-                    setRollFactor(getRollFactor() - 1);
+                    setRollFactor(getRollFactor() - 1 * inversionFactor);
                     break;
             }
     }
