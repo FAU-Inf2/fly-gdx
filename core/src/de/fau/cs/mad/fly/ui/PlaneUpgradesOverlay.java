@@ -112,8 +112,6 @@ public class PlaneUpgradesOverlay {
      *            the current Plane the Player has chosen and should be upgraded
      */
     public void createButtons(IPlane.Head plane) {
-        int[] upgradeTypes = plane.upgradeTypes;
-        int size = upgradeTypes.length;
         final Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
         
         scrollableTable.add().space(300);
@@ -121,30 +119,25 @@ public class PlaneUpgradesOverlay {
         
         // Creates one Button for each Upgrade
         for (final PlaneUpgrade upgrade : upgrades) {
-            for (int i = 0; i < size; i++) {
-                if (upgrade.type == upgradeTypes[i]) {
-                    
-                    final String name = I18n.t(upgrade.name);
-                    final TextButton button = new TextButton(name, skin);
-                    button.pad(10);
-                    
-                    button.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            scrollableTable.clear();
-                            currentUpgrade = upgrade;
-                            stage.clear();
-                            stage.addActor(scrollPane);
-                            addButtons();
-                        }
-                    });
-                    
-                    scrollableTable.add(button).space(20).left();
-                    scrollableTable.row();
-                    
-                    upgradeButtons.add(button);
+            final String name = I18n.t(upgrade.name);
+            final TextButton button = new TextButton(name, skin);
+            button.pad(10);
+            
+            button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    scrollableTable.clear();
+                    currentUpgrade = upgrade;
+                    stage.clear();
+                    stage.addActor(scrollPane);
+                    addButtons();
                 }
-            }
+            });
+            
+            scrollableTable.add(button).space(20).left();
+            scrollableTable.row();
+            
+            upgradeButtons.add(button);
         }
         
         // Creates a Button to get back to the PlaneChooserScreen

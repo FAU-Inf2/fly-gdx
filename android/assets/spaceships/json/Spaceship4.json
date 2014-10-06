@@ -8,9 +8,6 @@
 	"azimuthSpeed": 12,
 	"lives": 1,
 	"rotation": [ 0.0, 0.0, 50.0 ],
-	"upgrades": [
-		0
-	],
 	"particleOffset": [
 		0, 0, -0.3
 	]

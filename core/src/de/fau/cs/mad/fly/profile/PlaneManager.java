@@ -79,9 +79,7 @@ public class PlaneManager {
                     planeHead.particleOffset = new Vector3(particleOffset.getFloat(0), particleOffset.getFloat(1), particleOffset.getFloat(2));
                 }
                 
-                planeHead.file = file;                
-                int[] upgradeTypes = json.get("upgrades").asIntArray();
-                planeHead.upgradeTypes = upgradeTypes;
+                planeHead.file = file;
                 planes.put(id, planeHead);
             }
             initPlayerUpdateAndEquiped(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId());
