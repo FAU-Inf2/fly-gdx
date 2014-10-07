@@ -75,6 +75,7 @@ public class LinearSpeedUpgradeHandler extends CollectibleObjects implements IFe
     @Override
     protected void handleCollecting(Collectible c) {
         GameController.getInstance().getAudioManager().play(AudioManager.Sounds.DAMN_SON);
+        GameController.getInstance().getAudioManager().play(AudioManager.Sounds.PICKUP);
         LinearSpeedUpgrade upgrade = (LinearSpeedUpgrade) c;
         
         isCollected = true;

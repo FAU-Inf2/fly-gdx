@@ -36,13 +36,13 @@ public class AudioManager implements Disposable {
         soundMap.put(Sounds.CRASH,       create(CRASH_SOUND,       1.0f, false, Types.Sound));
         soundMap.put(Sounds.GATE_PASSED, create(GATE_PASSED_SOUND, 1.0f, false, Types.Sound));
         soundMap.put(Sounds.PICKUP,      create(PICKUP,            1.0f, false, Types.Sound));
-        soundMap.put(Sounds.TRIPLE,      create(TRIPLE,            1.0f, false, Types.Sound));
-        soundMap.put(Sounds.CAMERA,      create(CAMERA,            1.0f, false, Types.Sound));
-        soundMap.put(Sounds.HITMARKER,   create(HITMARKER,         1.0f, false, Types.Sound));
-        soundMap.put(Sounds.OH_YEAH,     create(OH_YEAH,           1.0f, false, Types.Sound));
-        soundMap.put(Sounds.DAMN_SON,    create(DAMN_SON,          1.0f, false, Types.Sound));
+        soundMap.put(Sounds.TRIPLE,      create(TRIPLE,            0.0f, false, Types.Sound));
+        soundMap.put(Sounds.CAMERA,      create(CAMERA,            0.0f, false, Types.Sound));
+        soundMap.put(Sounds.HITMARKER,   create(HITMARKER,         0.0f, false, Types.Sound));
+        soundMap.put(Sounds.OH_YEAH,     create(OH_YEAH,           0.0f, false, Types.Sound));
+        soundMap.put(Sounds.DAMN_SON,    create(DAMN_SON,          0.0f, false, Types.Sound));
 
-        soundMap.put(Sounds.SONIC,       create(SONIC,             0.3f, true,  Types.Music));
+        soundMap.put(Sounds.SONIC,       create(SONIC,             0.0f, true,  Types.Music));
         soundMap.put(Sounds.SAD_VIOLIN,  create(SAD_VIOLIN,        1.0f, true,  Types.Music));
     }
 
