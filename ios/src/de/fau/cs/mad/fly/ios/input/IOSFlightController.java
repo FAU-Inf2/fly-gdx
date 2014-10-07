@@ -44,7 +44,7 @@ public class IOSFlightController extends FlightController{
         CMDeviceMotion motion = motionManager.getDeviceMotion();
         Gdx.app.log("IOSFlightController.resetSteering", "motion object null: " + Boolean.toString(motion == null));
         currentAttitude = motionManager.getDeviceMotion().getAttitude();
-        startRoll = -(float) (currentAttitude.getRoll() * 180 / Math.PI) * inversionFactor;
+        startRoll = (float) (currentAttitude.getRoll() * 180 / Math.PI) * inversionFactor;
         startPitch = -(float) (currentAttitude.getPitch() * 180 / Math.PI);
     }
 
