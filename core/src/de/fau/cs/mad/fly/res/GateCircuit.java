@@ -157,6 +157,8 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
      */
     public void setGates(Map<Integer, GateGoal> gates) {
         this.gates = gates;
+        allGateGoals.clear();
+        allGateDisplays.clear();
         allGateGoals.addAll(gates.values());
         
         Collections.sort(allGateGoals, goalComparator);

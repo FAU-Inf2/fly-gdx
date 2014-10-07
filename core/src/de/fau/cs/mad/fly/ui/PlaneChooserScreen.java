@@ -53,10 +53,13 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
    
     private static PlaneChooserScreen instance;
     
+    /** A list of all planes*/
     private Map<Integer, IPlane.Head> allPlanes;
     
+    /** The current plane*/
     private GameObject currentSpaceship;
     
+    /** The IPlane.Head of the current plane*/
     private IPlane.Head currentPlane;
     
     private Skin skin;
@@ -67,28 +70,37 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     private Batch backgroundBatch;
     private Sprite background;
     
-    private Label nameLabel, speedLabel, rollingSpeedLabel, azimuthSpeedLabel, livesLabel;
-    
     private InputMultiplexer inputProcessor;
-    
-    private Vector3 xAxis = new Vector3(1.f, 0.f, 0.f);
-    private Vector3 yAxis = new Vector3(0.f, 1.f, 0.f);
-    private Vector3 xRotationAxis = new Vector3(1.f, 0.f, 0.f);
-    private Vector3 yRotationAxis = new Vector3(0.f, 1.f, 0.f);
-    private Vector3 camVec;
     
     private Environment environment;
     private PerspectiveCamera camera;
     private float screenHeight = Gdx.graphics.getHeight();
     private float screenWidth = Gdx.graphics.getWidth();
     
-    private int xDif, yDif;
+    // variables for rotation with touchScreen
+    /** Indicates whether the touchScreen is currently touched or not*/
     private boolean touched;
+    /** Difference between the last and the current position touched on the tochScreen*/
+    private int xDif, yDif;
+    /** Factors to indicate the strength of the rotation*/
     private float xFactor = 0.f, yFactor = 0.f, touchDistance;
+    /** Last position of the touchEvent*/
     private int lastX = 0, lastY = 0;
+    
+    private Vector3 xAxis = new Vector3(1.f, 0.f, 0.f);
+    private Vector3 yAxis = new Vector3(0.f, 1.f, 0.f);
+    private Vector3 xRotationAxis = new Vector3(1.f, 0.f, 0.f);
+    private Vector3 yRotationAxis = new Vector3(0.f, 1.f, 0.f);
+    /** Vector to help with the calculation of the new cameraPosition*/
+    private Vector3 camVec;
+    
+    /** The current scaling of the shown plane*/
     private float absScale = 1;
     
+    /** Name of one of the Labels to show the currents stats of the current plane*/
     private String name, speed, pitch, turnSpeed, lives;
+    /** Labels to show the currents stats of the current plane*/
+    private Label nameLabel, speedLabel, rollingSpeedLabel, azimuthSpeedLabel, livesLabel;
     
     
     public static PlaneChooserScreen getInstance() {
@@ -457,6 +469,8 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
             
             currentSpaceship.transform.rotate(yRotationAxis, xFactor * 360);
             currentSpaceship.transform.rotate(xRotationAxis, yFactor * 360);
+            
+            // rotate the rotationAxises so that the rotation stays correct
             yAxis = yRotationAxis;
             xAxis = xRotationAxis;
             xRotationAxis.rotate(yAxis, -xFactor * 360);
@@ -465,6 +479,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
             lastX = screenX;
             lastY = screenY;
         }
+        // second finger on touchScreen
         if (pointer == 1 && touched) {
             float xDif = lastX - screenX;
             float yDif = lastY - screenY;
@@ -491,7 +506,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        // TODO Auto-generated method stub
+        // nothing to do here
         return false;
     }
     

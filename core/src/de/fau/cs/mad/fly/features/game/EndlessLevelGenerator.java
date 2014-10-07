@@ -100,7 +100,9 @@ public class EndlessLevelGenerator {
         this.gateGoals = level.getGateCircuit().allGateGoals();
         int size = gateGoals.size();
         
-        lastGate = gateGoals.get(size - 1);
+        if(size > 0) {
+        	lastGate = gateGoals.get(size - 1);
+        }
         if (size > 1) {
             lastDirection = lastGate.getPosition().cpy().sub(gateGoals.get(size - 2).getPosition());
         } else {
