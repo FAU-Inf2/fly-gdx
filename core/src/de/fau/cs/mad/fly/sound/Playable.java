@@ -108,8 +108,8 @@ class MusicPlayable implements Playable, Playback {
   @Override
   public Playback play() {
       if(!target.isPlaying()) {
-          target.play();
           setVolume(1.0f);
+          target.play();
       }
       return this;
   }

@@ -18,8 +18,7 @@ class SoundPlayback implements Playback {
 
   public SoundPlayback(SoundPlayable source) {
     this.source = source;
-    this.id = source.target.play();
-    setVolume(1.0f);
+    this.id = source.target.play(1.0f * source.defaultVolume * source.manager().volume);
     setLooping(source.defaultLooping);
   }
 

@@ -75,6 +75,7 @@ public class InstantSpeedUpgradeHandler extends CollectibleObjects implements IF
     @Override
     protected void handleCollecting(Collectible c) {
         sound = GameController.getInstance().getAudioManager().play(AudioManager.Sounds.SONIC);
+        GameController.getInstance().getAudioManager().play(AudioManager.Sounds.PICKUP);
         InstantSpeedUpgrade upgrade = (InstantSpeedUpgrade) c;
         
         isCollected = true;
