@@ -8,7 +8,7 @@ import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.features.upgrades.types.ResizeGatesUpgrade;
-import de.fau.cs.mad.fly.game.AudioManager;
+import de.fau.cs.mad.fly.sound.AudioManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.res.GateCircuit;
 import de.fau.cs.mad.fly.res.GateGoal;
@@ -36,7 +36,7 @@ public class ResizeGatesUpgradeHandler extends CollectibleObjects implements IFe
     
     @Override
     protected void handleCollecting(Collectible c) {
-        GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.DAMN_SON);
+        GameController.getInstance().getAudioManager().play(AudioManager.Sounds.DAMN_SON);
         ResizeGatesUpgrade upgrade = (ResizeGatesUpgrade) c;
         resizeGates(upgrade.getScale());
         InfoOverlay.getInstance().setOverlay(I18n.t("resizeGatesUpgradeCollected"), 3);

@@ -36,8 +36,6 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public Vector3 rotation = null;
         public Vector3 particleOffset = null;
         public FileHandle file;
-        public int[] upgradeTypes;
-        public List<String> upgrades;
         
         private Map<String, Integer> upgradesBought = new HashMap<String, Integer>();
         

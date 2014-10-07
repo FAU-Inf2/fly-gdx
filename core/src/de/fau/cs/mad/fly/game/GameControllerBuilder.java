@@ -61,6 +61,8 @@ import de.fau.cs.mad.fly.res.GateCircuitListener;
 import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
+import de.fau.cs.mad.fly.sound.AudioManager;
+import de.fau.cs.mad.fly.sound.Playable;
 import de.fau.cs.mad.fly.ui.BackProcessor;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
@@ -110,16 +112,17 @@ public class GameControllerBuilder {
         player = new Player();
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         level = Loader.getInstance().getCurrentLevel();
-        if (Gdx.app.getType().equals(Application.ApplicationType.iOS)) {
-            try {
-                Constructor c = Class.forName("de.fau.cs.mad.fly.ios.input.IOSFlightController").getConstructor(Player.class, PlayerProfile.class);
-                flightController = (FlightController) c.newInstance(player, playerProfile);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new GdxRuntimeException("Error instantiating IOSFlightController", e);
-            }
-        } else {
-            flightController = new FlightController(player, playerProfile);
+        switch( Gdx.app.getType() ) {
+            case iOS:
+                try {
+                    Constructor c = Class.forName("de.fau.cs.mad.fly.ios.input.IOSFlightController").getConstructor(Player.class, PlayerProfile.class);
+                    flightController = (FlightController) c.newInstance(player, playerProfile);
+                } catch (Exception e) {
+                    throw new GdxRuntimeException("Error instantiating IOSFlightController", e);
+                }
+                break;
+            default:
+                flightController = new FlightController(player, playerProfile);
         }
         flightController.init();
         cameraController = new CameraController(player, playerProfile);
@@ -161,12 +164,11 @@ public class GameControllerBuilder {
                 if (g.isDummy()) {
                     return;
                 }
+                audioManager.play(AudioManager.Sounds.CRASH);
                 Player currentPlayer = GameController.getInstance().getPlayer();
-                
+
                 if (!currentPlayer.decreaseLives()) {
                     // Debug.setOverlay(0, "DEAD");
-                    audioManager.playSound(AudioManager.Sounds.SADVIOLIN);
-                    audioManager.playSound(AudioManager.Sounds.CRASH);
                     game.getGameController().finishGame(false);
                 } else {
                     // Debug.setOverlay(0, player.getLives());
@@ -329,6 +331,9 @@ public class GameControllerBuilder {
                     Gdx.input.vibrate(500);
                 }
             });
+        }
+        if(preferences.getBoolean(SettingManager.DISABLE_SOUND)) {
+            audioManager.mute();
         }
         addGameFinishedOverlay();
     }
@@ -600,7 +605,7 @@ public class GameControllerBuilder {
         gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
         gc.audioManager = audioManager;
-        
+
         level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override
             public void onFinished() {

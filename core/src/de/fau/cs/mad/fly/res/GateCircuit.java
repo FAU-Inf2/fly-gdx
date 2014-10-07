@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 
 import de.fau.cs.mad.fly.features.ICollisionListener;
 import de.fau.cs.mad.fly.features.IFeatureLoad;
-import de.fau.cs.mad.fly.game.AudioManager;
+import de.fau.cs.mad.fly.sound.AudioManager;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameObject;
@@ -213,24 +213,23 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
      */
     public void activeGatePassed(GateGoal gate) {
         boolean finished = gate.successors.length == 0;
-        if ( !finished && !gate.equals(virtualGate) ) {
-            gateCount++;
-            GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.HITMARKER);
-            if ( gateCount == 3 )
-                GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.TRIPLE);
-            else if ( gateCount == 6 )
-                GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.OH_YEAH);
-        }
         for (GateCircuitListener s : gateCircuitListeners)
             s.onGatePassed(gate);
-        virtualGate = gate;
         if ( finished ) {
-            GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.CAMERA);
+            GameController.getInstance().getAudioManager().play(AudioManager.Sounds.CAMERA);
             reachedLastGate = true;
             circuitFinished();
+        } else if ( !gate.equals(virtualGate) ) {
+            gateCount++;
+            GameController.getInstance().getAudioManager().play(AudioManager.Sounds.HITMARKER);
+            if ( gateCount == 3 )
+                GameController.getInstance().getAudioManager().play(AudioManager.Sounds.TRIPLE);
+            else if ( gateCount == 6 )
+                GameController.getInstance().getAudioManager().play(AudioManager.Sounds.OH_YEAH);
         }
+        virtualGate = gate;
     }
-    
+
     /**
      * Sets the VirtualGate and marks all its successors 
      * @param gate

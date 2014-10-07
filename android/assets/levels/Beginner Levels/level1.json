@@ -3,12 +3,12 @@
     "components": [
         {
             "id": "border",
-            "ref": "space"
+            "ref": "border"
         }
     ],
     "dependencies": {
+        "border": "spacesphere",
         "hole": "torusHoleBox",
-        "space": "spacesphere",
         "torus": "torus"
     },
     "gates": [
@@ -20,7 +20,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 0,
@@ -39,7 +39,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 45.0
             ],
             "gateId": 1,
@@ -58,7 +58,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 90.0
             ],
             "gateId": 2,
@@ -74,7 +74,7 @@
         }
     ],
     "id": 4,
-    "name": "Level 1",
+    "name": "1",
     "start": {
         "position": {
             "x": 0.0,
@@ -83,7 +83,7 @@
         },
         "upDirection": {
             "x": 0.0,
-            "y": -0.0,
+            "y": 0.0,
             "z": 1.0
         },
         "viewDirection": {
@@ -92,6 +92,6 @@
             "z": 0.0
         }
     },
-    "time": 18,
+    "time": 26,
     "upgrades": []
 }

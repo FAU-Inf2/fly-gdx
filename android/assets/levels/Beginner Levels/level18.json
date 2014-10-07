@@ -513,7 +513,7 @@
         }
     ],
     "id": 23,
-    "name": "Level 18",
+    "name": "18",
     "start": {
         "position": {
             "x": 0.0,
@@ -531,6 +531,6 @@
             "z": 0.0
         }
     },
-    "time": 60,
+    "time": 76,
     "upgrades": []
 }

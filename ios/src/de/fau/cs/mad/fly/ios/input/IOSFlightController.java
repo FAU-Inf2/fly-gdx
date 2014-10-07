@@ -44,20 +44,14 @@ public class IOSFlightController extends FlightController{
         CMDeviceMotion motion = motionManager.getDeviceMotion();
         Gdx.app.log("IOSFlightController.resetSteering", "motion object null: " + Boolean.toString(motion == null));
         currentAttitude = motionManager.getDeviceMotion().getAttitude();
-        if(invertPitch)
-            startRoll = -(float) (currentAttitude.getRoll() * 180 / Math.PI);
-        else
-            startRoll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
+        startRoll = (float) (currentAttitude.getRoll() * 180 / Math.PI) * inversionFactor;
         startPitch = -(float) (currentAttitude.getPitch() * 180 / Math.PI);
     }
 
     @Override
     protected void interpretSensorInput() {
         currentAttitude = motionManager.getDeviceMotion().getAttitude();
-        if(invertPitch)
-            roll = -(float) (currentAttitude.getRoll() * 180 / Math.PI);
-        else
-            roll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
+        roll = (float) (currentAttitude.getRoll() * 180 / Math.PI) * inversionFactor;
         pitch = -(float) (currentAttitude.getPitch() * 180 / Math.PI);
 
         Gdx.app.log("IOSFlightController.interpretSensorInput", "Current roll: " + roll + "\nCurrent pitch: " + pitch + "\nStarting roll: " + startRoll + ". Starting pitch: " + startPitch);

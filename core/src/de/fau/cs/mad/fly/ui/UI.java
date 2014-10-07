@@ -113,6 +113,6 @@ public final class UI {
     	private Tables() {
     	}
         
-        public static final float PLANECHOOSERSCREEN_BUTTON_TABLE_TOP_PADDING = 2300;
+        public static final float PLANECHOOSERSCREEN_BUTTON_TABLE_TOP_PADDING = 2000;
     }
 }

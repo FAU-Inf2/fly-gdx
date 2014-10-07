@@ -193,7 +193,7 @@
         }
     ],
     "id": 11,
-    "name": "Level 7",
+    "name": "7",
     "start": {
         "position": {
             "x": 0.0,
@@ -211,6 +211,6 @@
             "z": 0.0
         }
     },
-    "time": 44,
+    "time": 51,
     "upgrades": []
 }

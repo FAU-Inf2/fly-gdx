@@ -7,10 +7,6 @@
 	"rollingSpeed": 10,
 	"azimuthSpeed": 10,
 	"lives": 1,
-	"upgrades": [
-		0,
-		2
-	],
 	"particleOffset": [
 		0, 0, -0.36
 	]

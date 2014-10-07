@@ -6,7 +6,7 @@ import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
-import de.fau.cs.mad.fly.game.AudioManager;
+import de.fau.cs.mad.fly.sound.AudioManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.TimeController;
 
@@ -39,7 +39,7 @@ public class ChangeTimeUpgradeHandler extends CollectibleObjects implements IFea
     
     @Override
     protected void handleCollecting(Collectible c) {
-        GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.DAMN_SON);
+        GameController.getInstance().getAudioManager().play(AudioManager.Sounds.DAMN_SON);
         ChangeTimeUpgrade upgrade = (ChangeTimeUpgrade) c;
         timeController.addBonusTime(upgrade.getTimeChange());
         InfoOverlay.getInstance().setOverlay(I18n.t("timeUpgradeCollected") + "\n" + I18n.t("bonus") + " " + (upgrade.getTimeChange()) + "s", 3);

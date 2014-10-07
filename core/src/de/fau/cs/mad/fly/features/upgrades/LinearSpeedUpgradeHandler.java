@@ -5,7 +5,7 @@ import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.features.game.CollectibleObjects;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
 import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
-import de.fau.cs.mad.fly.game.AudioManager;
+import de.fau.cs.mad.fly.sound.AudioManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.IPlane;
 
@@ -74,7 +74,7 @@ public class LinearSpeedUpgradeHandler extends CollectibleObjects implements IFe
     
     @Override
     protected void handleCollecting(Collectible c) {
-        GameController.getInstance().getAudioManager().playSound(AudioManager.Sounds.DAMN_SON);
+        GameController.getInstance().getAudioManager().play(AudioManager.Sounds.DAMN_SON);
         LinearSpeedUpgrade upgrade = (LinearSpeedUpgrade) c;
         
         isCollected = true;

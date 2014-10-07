@@ -88,7 +88,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Fly game = (Fly) Gdx.app.getApplicationListener();
-                game.getGameController().endGame();
+                System.out.println(game.getScreen());
                 game.getMainMenuScreen().set();
             }
         });
@@ -197,7 +197,11 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
                 } 
                 showLevelMessage(skin);
                 showScore(skin);
-                
+
+                currentPlayer.setToNextLevelGroup();
+                currentPlayer.saveCurrentLevelGroup();
+                currentPlayer.saveCurrentLevelProfile();
+
                 return "nextLevelGroup";
             }
             

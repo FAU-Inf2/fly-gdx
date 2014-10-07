@@ -25,6 +25,7 @@ public class SettingManager {
     public static final String INVERT_PITCH = "invertPitch";
     public static final String CHOSEN_PLANE_ID = "chosenPlaneID";
     public static final String DISABLE_TUTORIALS = "disableTutorials";
+    public static final String DISABLE_SOUND = "disableSound";
     
     private Preferences prefs;
     private Map<String, ISetting> settingMap;
@@ -140,5 +141,6 @@ public class SettingManager {
         // addBooleanSetting(SHOW_PAUSE, false);
         addBooleanSetting(SHOW_FPS, false, "helpShowFPS", false);
         addBooleanSetting(DISABLE_TUTORIALS, false, "helpDisableTutorials", false);
+        addBooleanSetting(DISABLE_SOUND, false, "helpDisableSound", false);
     }
 }

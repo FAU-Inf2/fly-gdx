@@ -125,7 +125,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         
         batch = new ModelBatch(null, new FlyShaderProvider(), null);
         backgroundBatch = new SpriteBatch();
-        Assets.load(new AssetDescriptor<Texture>("spaceships/previews/background.jpg", Texture.class));
+        Assets.load(new AssetDescriptor<Texture>("background.jpg", Texture.class));
         
         // adding the table containing the buttons with preview of every plane
         Table scrollableTable = new Table(skin);
@@ -174,7 +174,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         initOverlay();
         
         // adding the background
-        background = new Sprite(Assets.manager.get(new AssetDescriptor<Texture>("spaceships/previews/background.jpg", Texture.class)));
+        background = new Sprite(Assets.manager.get(new AssetDescriptor<Texture>("background.jpg", Texture.class)));
         float xSkalingFactor = Gdx.graphics.getWidth() / background.getWidth();
         float ySkalingFactor = Gdx.graphics.getHeight() / background.getHeight();
         float deltaX = 0f;
@@ -329,7 +329,7 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
      * spaceship
      */
     private void initOverlay() {
-        LabelStyle labelStyle = skin.get("red", LabelStyle.class);
+        LabelStyle labelStyle = skin.get(LabelStyle.class);
         nameLabel = new Label("", labelStyle);
         stage.addActor(nameLabel);
         nameLabel.setPosition(100, viewport.getWorldHeight() - 200);

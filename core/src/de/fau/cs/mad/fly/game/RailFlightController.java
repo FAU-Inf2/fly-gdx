@@ -107,7 +107,7 @@ public class RailFlightController extends FlightController implements ICollision
 	
 	private void changeRail(float delta) {
 		Vector3 shiftVector = new Vector3();
-		if(Math.abs(rollFactor) > 0.5) {
+		if(Math.abs(getRollFactor()) > 0.5) {
 			if(Math.abs(railX + Math.signum(rollFactor)) <= 1.f && !changeRailX) {
 				//shiftVector.z += Math.signum(rollFactor);
 				railX += Math.signum(rollFactor);
@@ -115,7 +115,7 @@ public class RailFlightController extends FlightController implements ICollision
 				changeTimeX = 1f;
 			}
 		} 
-		if(Math.abs(azimuthFactor) > 0.5) {
+		if(Math.abs(getAzimuthFactor()) > 0.5) {
 			if(Math.abs(railY - Math.signum(azimuthFactor)) <= 1.f && !changeRailY) {
 				//shiftVector.x -= Math.signum(azimuthFactor);
 				railY -= Math.signum(azimuthFactor);

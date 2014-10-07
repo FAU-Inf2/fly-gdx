@@ -7,8 +7,5 @@
 	"rollingSpeed": 6,
 	"azimuthSpeed": 6,
 	"lives": 1,
-	"rotation": [ 0.0, 10.0, 0.0 ],
-	"upgrades": [
-		0
-	]
+	"rotation": [ 0.0, 10.0, 0.0 ]
 }

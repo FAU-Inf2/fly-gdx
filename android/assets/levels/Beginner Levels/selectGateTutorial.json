@@ -135,8 +135,8 @@
             "successors": []
         }
     ],
-    "id": 7,
-    "name": "Tutorial 4",
+    "id": 9,
+    "name": "T 4",
     "start": {
         "position": {
             "x": 0.0,
@@ -154,6 +154,6 @@
             "z": 0.0
         }
     },
-    "time": 20,
+    "time": 28,
     "upgrades": []
 }

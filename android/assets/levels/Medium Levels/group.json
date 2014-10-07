@@ -3,58 +3,58 @@
 	"name": "Medium Levels",
 	"levels": [
 		{
-			"id": 201,
+			"id": 1,
 			"name": "1",
 			"file": "level1.json"
 		},
 		{
-			"id": 202,
+			"id": 2,
 			"name": "2",
 			"file": "level2.json"
 		},
 		{
-			"id": 203,
+			"id": 3,
 			"name": "3",
 			"file": "level3.json"
 		},
 		{
-			"id": 204,
+			"id": 4,
 			"name": "4",
 			"file": "level4.json"
 		},
 		{
-			"id": 205,
+			"id": 5,
 			"name": "5",
 			"file": "level5.json"
 		},
 		{
-			"id": 206,
+			"id": 6,
 			"name": "T 6",
 			"file": "pointsTutorial.json",
 			"type": "tutorial"
 		},
 		{
-			"id": 207,
+			"id": 7,
 			"name": "6",
 			"file": "level6.json"
 		},
 		{
-			"id": 208,
+			"id": 8,
 			"name": "7",
 			"file": "level7.json"
 		},
 		{
-			"id": 209,
+			"id": 9,
 			"name": "8",
 			"file": "level8.json"
 		},		
 		{
-			"id": 210,
+			"id": 10,
 			"name": "9",
 			"file": "level9.json"
 		},		
 		{
-			"id": 211,
+			"id": 11,
 			"name": "T 7",
 			"file": "speedTutorial.json",
 			"type": "tutorial"
