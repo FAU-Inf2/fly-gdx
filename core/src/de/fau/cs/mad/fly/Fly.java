@@ -9,8 +9,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
@@ -50,8 +48,7 @@ public class Fly extends Game implements Loadable<Fly> {
     public static boolean DEBUG_MODE = true;
     
     private LoadingScreen<Fly> splashScreen;
-    private PlaneChooserScreen planeChooserScreen;
-    private PlaneUpgradeScreen planeUpgradeScreen;
+    
     private GameScreen gameScreen;
     private MainMenuScreen mainMenuScreen;
     
@@ -85,9 +82,6 @@ public class Fly extends Game implements Loadable<Fly> {
                 mainMenuScreen.set();
             }
         });
-
-		com.badlogic.gdx.utils.Json j = new Json();
-
         
         Runnable runnable = new Runnable() {
             @Override
@@ -164,25 +158,9 @@ public class Fly extends Game implements Loadable<Fly> {
         return gameController;
     }
     
-    /**
-     * Switches the current screen to the {@link PlaneChooserScreen}.
-     */
-    public void setPlaneChoosingScreen() {
-        if (planeChooserScreen == null) {
-            planeChooserScreen = new PlaneChooserScreen();
-        }
-        setScreen(planeChooserScreen);
-    }
+   
     
-    /**
-     * Switches the current screen to the {@link PlaneUpgradeScreen}.
-     */
-    public void setPlaneUpgradeScreen() {
-        if (planeUpgradeScreen == null) {
-            planeUpgradeScreen = new PlaneUpgradeScreen();
-        }
-        setScreen(planeUpgradeScreen);
-    }
+   
     
     /**
      * Switches the current screen to the {@link LoadingScreen}.

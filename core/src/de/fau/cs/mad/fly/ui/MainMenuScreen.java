@@ -46,6 +46,18 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
     private SettingScreen settingScreen;
     private PlayerScreen playerScreen;
     
+    private PlaneChooserScreen planeChooserScreen;
+    
+    /**
+     * Switches the current screen to the {@link PlaneChooserScreen}.
+     */
+    public void setPlaneChoosingScreen() {
+        if (planeChooserScreen == null) {
+            planeChooserScreen = new PlaneChooserScreen(this);
+        }
+        planeChooserScreen.set();
+    }
+    
     private void setLevelGroupScreen() {
         if (levelGroupScreen == null) {
             levelGroupScreen = new LevelGroupScreen(this);
@@ -96,7 +108,8 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         choosePlaneButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setPlaneChoosingScreen();
+            	setPlaneChoosingScreen();
+                //((Fly) Gdx.app.getApplicationListener()).setPlaneChoosingScreen();
                 
             }
         });

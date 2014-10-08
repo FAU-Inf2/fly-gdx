@@ -1,7 +1,6 @@
 package de.fau.cs.mad.fly.player;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.files.FileHandle;
@@ -38,8 +37,8 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public FileHandle file;
         
         private Map<String, Integer> upgradesBought = new HashMap<String, Integer>();
-
-		@Override
+        
+    	@Override
 		public String toString() {
 			return "Head{" +
 					"id=" + id +
@@ -58,8 +57,8 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 					", upgradesEquiped=" + upgradesEquiped +
 					'}';
 		}
-
-		/**
+    	
+        /**
          * @return the upgradesBought
          */
         public Map<String, Integer> getUpgradesBought() {
@@ -83,6 +82,20 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 //            upgradesEquiped.put(name, value);
 //        }
         
+		public int getEquipedUpgradeCount(String name) {
+			if (upgradesEquiped.containsKey(name)) {
+				return upgradesEquiped.get(name);
+			}
+			return 0;
+		}
+
+		public int getBoughtUpgradeCount(String name) {
+			if (upgradesBought.containsKey(name)) {
+				return upgradesBought.get(name);
+			}
+			return 0;
+
+		}
     }
     
     /**

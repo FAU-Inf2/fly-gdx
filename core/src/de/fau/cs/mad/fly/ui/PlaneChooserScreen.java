@@ -7,12 +7,8 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -20,7 +16,6 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -49,9 +44,9 @@ import de.fau.cs.mad.fly.res.Assets;
  * @author Sebastian
  * 
  */
-public class PlaneChooserScreen implements Screen, InputProcessor {
-   
-    private static PlaneChooserScreen instance;
+public class PlaneChooserScreen extends BasicScreenWithBackButton  implements Screen, InputProcessor {
+	
+    //private static PlaneChooserScreen instance;
     
     /** A list of all planes*/
     private Map<Integer, IPlane.Head> allPlanes;
@@ -64,13 +59,11 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     
     private Skin skin;
     
-    private Stage stage;
+   // private Stage stage;
     private Viewport viewport;
     private ModelBatch batch;
-    private Batch backgroundBatch;
-    private Sprite background;
     
-    private InputMultiplexer inputProcessor;
+    //private InputMultiplexer inputProcessor;
     
     private Environment environment;
     private PerspectiveCamera camera;
@@ -91,44 +84,32 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     private Vector3 yAxis = new Vector3(0.f, 1.f, 0.f);
     private Vector3 xRotationAxis = new Vector3(1.f, 0.f, 0.f);
     private Vector3 yRotationAxis = new Vector3(0.f, 1.f, 0.f);
+    
     /** Vector to help with the calculation of the new cameraPosition*/
     private Vector3 camVec;
     
     /** The current scaling of the shown plane*/
     private float absScale = 1;
     
-    /** Name of one of the Labels to show the currents stats of the current plane*/
-    private String name, speed, pitch, turnSpeed, lives;
-    /** Labels to show the currents stats of the current plane*/
+    /** Labels to show the currents status of the current plane*/
     private Label nameLabel, speedLabel, rollingSpeedLabel, azimuthSpeedLabel, livesLabel;
     
+    private PlaneUpgradeScreen planeUpgradeScreen;
     
-    public static PlaneChooserScreen getInstance() {
-        if(instance == null) {
-            instance = new PlaneChooserScreen();
-        }
-        return instance;
-    }
-    
-    public PlaneChooserScreen() {
-        
+    public PlaneChooserScreen(BasicScreen screenToGoBack) {
+        super(screenToGoBack);
+        generateBackButton();
         environment = new Environment();
-        
-        name = I18n.t("name");
-        speed = I18n.t("speed");
-        pitch = I18n.t("pitch");
-        turnSpeed = I18n.t("turnSpeed");
-        lives = I18n.t("lives");
         
         setUpEnvironment();
         setUpCamera();
         
         allPlanes = PlaneManager.getInstance().getSpaceshipList();
-
-		skin = SkinManager.getInstance().getSkin();
         
-        // initialize the stage
-        stage = new Stage();
+        currentPlane = PlaneManager.getInstance().getChosenPlane();
+        
+        skin = SkinManager.getInstance().getSkin();
+        
         float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) screenWidth;
         float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) screenHeight;
         float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
@@ -136,90 +117,43 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         stage.setViewport(viewport);
         
         batch = new ModelBatch(null, new FlyShaderProvider(), null);
-        backgroundBatch = new SpriteBatch();
         Assets.load(new AssetDescriptor<Texture>("background.jpg", Texture.class));
         
         // adding the table containing the buttons with preview of every plane
-        Table scrollableTable = new Table(skin);
-        scrollableTable.setFillParent(true);
-        scrollableTable.pad(UI.Window.BORDER_SPACE);
-        scrollableTable.padTop(UI.Tables.PLANECHOOSERSCREEN_BUTTON_TABLE_TOP_PADDING);
+        initPlaneListTable();
         
-        int size = allPlanes.size();
-        int passedLevelGroupId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
+        // initializing the overlay which contains the details of the current spaceship
+        initChosenPlaneDetail();
         
-        // show the message if you have to unlock a new ship
-        addNextPlaneAvailableInfo(scrollableTable, size);
+        initUpgradeButton();
         
-        for (int i = 1; i <= size; i++) {
-            Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(i).modelRef + ".png"));
-            TextureRegion image = new TextureRegion(texture1);
-            ImageButtonStyle style = new ImageButtonStyle(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
-            style.imageUp = new TextureRegionDrawable(image);
-            style.imageDown = new TextureRegionDrawable(image);
-            
-            ImageButton button = new ImageButton(style);
-            if (!Fly.DEBUG_MODE && allPlanes.get(i).levelGroupDependency > passedLevelGroupId) {
-                button.setDisabled(true);
-                Gdx.app.log("PlaneChooserScreen", "disabled");
-            } else {
-                final int index = i;
-                
-                button.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        currentPlane = allPlanes.get(index);
-                        PlaneManager.getInstance().setChosenPlane(currentPlane);
-                        resetVectors();
-                        loadCurrentPlane();
-                        updateOverlay();
-                    }
-                });
-            }
-            
-            scrollableTable.add(button).expand();
-        }
-        stage.addActor(scrollableTable);
-        
-        // initializing the overlay which contains the details of the current
-        // spaceship
-        initOverlay();
-        
-        // adding the background
-        background = new Sprite(Assets.manager.get(new AssetDescriptor<Texture>("background.jpg", Texture.class)));
-        float xSkalingFactor = Gdx.graphics.getWidth() / background.getWidth();
-        float ySkalingFactor = Gdx.graphics.getHeight() / background.getHeight();
-        float deltaX = 0f;
-        float deltaY = 0f;
-        background.setOrigin(0, 0);
-        if (xSkalingFactor >= ySkalingFactor) {
-            background.setScale(xSkalingFactor);
-            deltaY = (Gdx.graphics.getHeight() - background.getHeight() * xSkalingFactor) / 2.0f;
-        } else {
-            background.setScale(ySkalingFactor);
-            deltaX = (Gdx.graphics.getWidth() - background.getWidth() * ySkalingFactor) / 2.0f;
-        }
-        background.setPosition(deltaX, deltaY);
-        
-        // adding the button that opens the UpgradeScreen
+        // initialize the InputProcessor
+       inputProcessor = new InputMultiplexer(stage, this, this.backProcessor);
+    }
+    
+	private void initUpgradeButton(){
+		// adding the button that opens the UpgradeScreen
         ImageButton openButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
         
         Table table = new Table(skin);
         table.setFillParent(true);
         table.top().right().pad(UI.Window.BORDER_SPACE);
-        table.add(openButton);
-        
+        table.add(openButton).width(UI.Buttons.IMAGE_BUTTON_WIDTH).height(UI.Buttons.IMAGE_BUTTON_HEIGHT);
         stage.addActor(table);
         
         openButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Fly) Gdx.app.getApplicationListener()).setPlaneUpgradeScreen();
+            	setPlaneUpgradeScreen();
             }
         });
-        
-        // initialize the InputProcessor
-        inputProcessor = new InputMultiplexer(stage, this, new BackProcessor());
+	}
+    
+    public void setPlaneUpgradeScreen() {
+        if (planeUpgradeScreen == null) {
+        	planeUpgradeScreen = new PlaneUpgradeScreen(this);
+        }
+        planeUpgradeScreen.set();
     }
     
     /**
@@ -280,33 +214,27 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         yRotationAxis.rotate(xRotationAxis, 20.f);
     }
     
+    
     @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 0);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        
-        // Steady rotation if the Player doesn't touch the Touchscreen
-        if (!touched) {
-            currentSpaceship.transform.rotate(yRotationAxis, 0.2f);
-            xRotationAxis.rotate(yRotationAxis, -0.2f);
-        }
-        backgroundBatch.begin();
-        background.draw(backgroundBatch);
-        backgroundBatch.end();
-        
-        batch.begin(camera);
-        currentSpaceship.render(batch, environment, camera);
-        batch.end();
-        
-        stage.act(delta);
-        stage.draw();
-    }
+	public void render(float delta) {
+		super.render(delta);
+
+		// Steady rotation if the Player doesn't touch the Touch screen
+		if (!touched) {
+			currentSpaceship.transform.rotate(yRotationAxis, 0.2f);
+			xRotationAxis.rotate(yRotationAxis, -0.2f);
+		}
+
+		batch.begin(camera);
+		currentSpaceship.render(batch, environment, camera);
+		batch.end();
+	}
     
     /**
      * Updates the Overlay of the Screen
      */
     public void update() {
-        updateOverlay();
+        updateChosenPlaneDetail();
     }
     
     @Override
@@ -320,73 +248,102 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(inputProcessor);
         
         currentPlane = PlaneManager.getInstance().getChosenPlane();
+        loadCurrentPlane();       
         
-        // adding the preview of the first plane
-        String ref = "models/planes/" + currentPlane.modelRef + "/" + currentPlane.modelRef;
-        Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
-        GameModel model = Assets.manager.get(ref, GameModel.class);
-        
-        currentSpaceship = new GameObject(model, "spaceship");
-        
-        currentSpaceship.transform.rotate(yRotationAxis, 180.f);
-        xRotationAxis.rotate(yRotationAxis, -180.f);
-        currentSpaceship.transform.rotate(xRotationAxis, -20.f);
-        yRotationAxis.rotate(xRotationAxis, 20.f);
-        
-        updateOverlay();
+        updateChosenPlaneDetail();
     }
+    
+	private void initPlaneListTable() {
+		// adding the table containing the buttons with preview of every plane
+		Table planeListTable = new Table(skin);
+		planeListTable.setFillParent(true);
+
+		int size = allPlanes.size();
+		int passedLevelGroupId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
+
+		// show the message if you have to unlock a new ship
+		addNextPlaneAvailableInfo(planeListTable, size);
+
+		planeListTable.add().bottom().expand();
+		for (int i = 1; i <= size; i++) {
+			Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(i).modelRef + ".png"));
+			TextureRegion image = new TextureRegion(texture1);
+			ImageButtonStyle style = new ImageButtonStyle(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+			style.imageUp = new TextureRegionDrawable(image);
+			style.imageDown = new TextureRegionDrawable(image);
+
+			ImageButton button = new ImageButton(style);
+			if (!Fly.DEBUG_MODE && allPlanes.get(i).levelGroupDependency > passedLevelGroupId) {
+				button.setDisabled(true);
+				Gdx.app.log("PlaneChooserScreen", "disabled");
+			} else {
+				final int index = i;
+
+				button.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						currentPlane = allPlanes.get(index);
+						PlaneManager.getInstance().setChosenPlane(currentPlane);
+						resetVectors();
+						loadCurrentPlane();
+						updateChosenPlaneDetail();
+					}
+				});
+			}
+
+			planeListTable.add(button).bottom().expand();// .pad(UI.Tables.PADDING_L);//.expand();
+		}
+
+		stage.addActor(planeListTable);
+	}
     
     /**
      * Initializes the overlay which contains the details of the current
      * spaceship
      */
-    private void initOverlay() {
+    private void initChosenPlaneDetail() {
         LabelStyle labelStyle = skin.get(LabelStyle.class);
+        Table outTable = new Table();
+        outTable.setFillParent(true);
+        Table planeDetailTable = new Table();
+        
+        planeDetailTable.add(new Label(I18n.t("name") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
         nameLabel = new Label("", labelStyle);
-        stage.addActor(nameLabel);
-        nameLabel.setPosition(100, viewport.getWorldHeight() - 200);
+        planeDetailTable.add(nameLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
         
+        planeDetailTable.add(new Label(I18n.t("speed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
         speedLabel = new Label("", labelStyle);
-        stage.addActor(speedLabel);
-        speedLabel.setPosition(100, viewport.getWorldHeight() - 400);
+        planeDetailTable.add(speedLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
         
+        planeDetailTable.add(new Label(I18n.t("pitch") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
         rollingSpeedLabel = new Label("", labelStyle);
-        stage.addActor(rollingSpeedLabel);
-        rollingSpeedLabel.setPosition(100, viewport.getWorldHeight() - 600);
+        planeDetailTable.add(rollingSpeedLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
         
+        planeDetailTable.add(new Label(I18n.t("turnSpeed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
         azimuthSpeedLabel = new Label("", labelStyle);
-        stage.addActor(azimuthSpeedLabel);
-        azimuthSpeedLabel.setPosition(100, viewport.getWorldHeight() - 800);
+        planeDetailTable.add(azimuthSpeedLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
         
+        planeDetailTable.add(new Label(I18n.t("lives") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
         livesLabel = new Label("", labelStyle);
-        stage.addActor(livesLabel);
-        livesLabel.setPosition(100, viewport.getWorldHeight() - 1000);
+        planeDetailTable.add(livesLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
+        outTable.add(planeDetailTable).top().left().expand().pad(100f);
+        stage.addActor(outTable);
     }
     
     /**
      * Updates the overlay with the details of the current plane
      */
-    private void updateOverlay() {
-        nameLabel.setText(name + ": " + currentPlane.name);
-        speedLabel.setText(speed + ": " + Float.toString(currentPlane.speed));
-        rollingSpeedLabel.setText(pitch + ": " + Float.toString(currentPlane.rollingSpeed));
-        azimuthSpeedLabel.setText(turnSpeed + ": " + Float.toString(currentPlane.azimuthSpeed));
-        livesLabel.setText(lives + ": " + Integer.toString(currentPlane.lives));
-    }
-    
-    @Override
-    public void hide() {
-        
-    }
-    
-    @Override
-    public void pause() {
-        
-    }
-    
-    @Override
-    public void resume() {
-        
+    private void updateChosenPlaneDetail() {
+        nameLabel.setText(currentPlane.name);
+        speedLabel.setText(Float.toString(currentPlane.speed));
+        rollingSpeedLabel.setText(Float.toString(currentPlane.rollingSpeed));
+        azimuthSpeedLabel.setText(Float.toString(currentPlane.azimuthSpeed));
+        livesLabel.setText(Integer.toString(currentPlane.lives));
     }
     
     @Override
@@ -469,7 +426,6 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
             
             currentSpaceship.transform.rotate(yRotationAxis, xFactor * 360);
             currentSpaceship.transform.rotate(xRotationAxis, yFactor * 360);
-            
             // rotate the rotationAxises so that the rotation stays correct
             yAxis = yRotationAxis;
             xAxis = xRotationAxis;
@@ -506,8 +462,8 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
     
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        // nothing to do here
-        return false;
+    	 // nothing to do here
+    	return false;
     }
     
     @Override
