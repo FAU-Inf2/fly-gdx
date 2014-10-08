@@ -9,6 +9,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
@@ -83,6 +85,9 @@ public class Fly extends Game implements Loadable<Fly> {
                 mainMenuScreen.set();
             }
         });
+
+		com.badlogic.gdx.utils.Json j = new Json();
+
         
         Runnable runnable = new Runnable() {
             @Override

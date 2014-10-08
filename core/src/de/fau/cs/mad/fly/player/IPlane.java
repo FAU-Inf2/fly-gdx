@@ -38,8 +38,28 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public FileHandle file;
         
         private Map<String, Integer> upgradesBought = new HashMap<String, Integer>();
-        
-        /**
+
+		@Override
+		public String toString() {
+			return "Head{" +
+					"id=" + id +
+					", name='" + name + '\'' +
+					", modelRef='" + modelRef + '\'' +
+					", levelGroupDependency=" + levelGroupDependency +
+					", speed=" + speed +
+					", rollingSpeed=" + rollingSpeed +
+					", azimuthSpeed=" + azimuthSpeed +
+					", lives=" + lives +
+					", rotationSpeed=" + rotationSpeed +
+					", rotation=" + rotation +
+					", particleOffset=" + particleOffset +
+					", file=" + file +
+					", upgradesBought=" + upgradesBought +
+					", upgradesEquiped=" + upgradesEquiped +
+					'}';
+		}
+
+		/**
          * @return the upgradesBought
          */
         public Map<String, Integer> getUpgradesBought() {

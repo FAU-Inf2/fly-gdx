@@ -19,7 +19,7 @@ public class FlyDBManager {
     private static final int DATABASE_VERSION = 1;
     private static final int LASTEST_DATABASE_VERSION = 1;
     
-    Database dbHandler;
+    final Database dbHandler;
     
     private FlyDBManager() {
         Gdx.app.log("FlyDBManager", "setupDatabase begin " + System.currentTimeMillis());
@@ -27,22 +27,21 @@ public class FlyDBManager {
         String createTableScore = "create table if not exists score(player_id integer not null, level_group_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date, is_uploaded integer not null default 0, server_score_id integer)";
         // String createTableScoreDetail =
         // "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, level_group_id integer not null, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
-        String createTavlePlaneEquiped = "create table if not exists fly_plane_Equiped(player_id integer not null, plane_id integer, equiped_name text not null, _count integer not null default 0)";
-        String createTavlePlaneUpdates = "create table if not exists fly_plane_upgrade(player_id integer not null, plane_id integer, update_name text not null, _count integer not null default 0)";
-        String createTavleVersion = "create table if not exists fly_db_version(_version interger not null)";
+        String createTablePlaneEquiped = "create table if not exists fly_plane_equiped(player_id integer not null, plane_id integer, equiped_name text not null, _count integer not null default 0)";
+        String createTablePlaneUpdates = "create table if not exists fly_plane_upgrade(player_id integer not null, plane_id integer, update_name text not null, _count integer not null default 0)";
+        String createTableVersion = "create table if not exists fly_db_version(_version integer not null)";
         String insertDBVersion = "insert into fly_db_version values(1)";
         
         List<String> createSQLs = new ArrayList<String>();
         createSQLs.add(createTablePlayer);
         createSQLs.add(createTableScore);
         // createSQLs.add(createTableScoreDetail);
-        createSQLs.add(createTavlePlaneEquiped);
-        createSQLs.add(createTavlePlaneUpdates);
-        createSQLs.add(createTavleVersion);
+        createSQLs.add(createTablePlaneEquiped);
+        createSQLs.add(createTablePlaneUpdates);
+        createSQLs.add(createTableVersion);
         createSQLs.add(insertDBVersion);
-        
-        List<String> upgradeSQLs = null;
-        dbHandler = DatabaseFactory.getNewDatabase(DATABASE_NAME, DATABASE_VERSION, createSQLs, upgradeSQLs);
+
+        dbHandler = DatabaseFactory.getNewDatabase(DATABASE_NAME, DATABASE_VERSION, createSQLs, null);
         
         synchronized (dbHandler) {
             dbHandler.setupDatabase();
@@ -128,11 +127,9 @@ public class FlyDBManager {
     
     protected void closeDatabase() {
         try {
-            if (dbHandler != null) {
-                synchronized (dbHandler) {
-                    dbHandler.closeDatabase();
-                }
-            }
+			synchronized (dbHandler) {
+				dbHandler.closeDatabase();
+			}
         } catch (Exception e) {
             Gdx.app.error("FlyDBManager.closeDatabase", e.toString());
         }

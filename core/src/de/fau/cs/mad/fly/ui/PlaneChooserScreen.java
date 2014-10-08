@@ -124,8 +124,8 @@ public class PlaneChooserScreen implements Screen, InputProcessor {
         setUpCamera();
         
         allPlanes = PlaneManager.getInstance().getSpaceshipList();
-        
-        skin = SkinManager.getInstance().getSkin();
+
+		skin = SkinManager.getInstance().getSkin();
         
         // initialize the stage
         stage = new Stage();
