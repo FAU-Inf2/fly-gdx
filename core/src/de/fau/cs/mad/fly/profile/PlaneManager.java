@@ -65,7 +65,7 @@ public class PlaneManager {
                 planeHead.modelRef = json.getString("modelRef");
                 planeHead.levelGroupDependency = json.getInt("levelGroupDependency");
                 planeHead.speed = json.getFloat("speed");
-                planeHead.rollingSpeed = json.getFloat("rollingSpeed");
+                planeHead.setRollingSpeed(json.getFloat("rollingSpeed"));
                 planeHead.azimuthSpeed = json.getFloat("azimuthSpeed");
                 planeHead.lives = json.getInt("lives");
                 JsonValue rotation = json.get("rotation");
@@ -232,7 +232,7 @@ public class PlaneManager {
 		int[] values = upgrade.upgradeValues;
 
 		plane.speed += values[0] * signum;
-		plane.rollingSpeed += values[1] * signum;
+		plane.setRollingSpeed(plane.getRollingSpeed() + values[1] * signum);
 		plane.azimuthSpeed += values[2] * signum;
 		plane.lives += values[3] * signum;
 

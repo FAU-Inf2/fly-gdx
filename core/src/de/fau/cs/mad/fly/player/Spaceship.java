@@ -65,7 +65,7 @@ public class Spaceship extends GameObject implements IPlane {
         this.planeSpeed = head.speed / 5;
         this.currentSpeed = this.planeSpeed;
         this.azimuthSpeed = head.azimuthSpeed / 10;
-        this.rollingSpeed = head.rollingSpeed / 10;
+        this.rollingSpeed = head.getRollingSpeed() / 10;
         
         this.modelRef = head.modelRef;
         
