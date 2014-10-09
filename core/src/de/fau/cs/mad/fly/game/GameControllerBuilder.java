@@ -294,7 +294,7 @@ public class GameControllerBuilder {
     private void checkAndAddSettingFeatures() {
         // if needed for debugging: Debug.init(game.getSkin(), stage, 1);
         
-        Preferences preferences = playerProfile.getSettingManager().getPreferences();
+        SettingManager settings = playerProfile.getSettingManager();
         addGateIndicator();
         addTimeLeftOverlay();
         addScoreOverlay();
@@ -304,13 +304,13 @@ public class GameControllerBuilder {
         if (!ApplicationType.Android.equals(Gdx.app.getType())) {
             addBackButtonOverlay();
         }
-        if (preferences.getBoolean(SettingManager.SHOW_FPS)) {
+        if (settings.getBoolean(SettingManager.SHOW_FPS)) {
             addFPSOverlay();
         }
-        if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
+        if (settings.getBoolean(SettingManager.USE_TOUCH)) {
             addTouchScreenOverlay();
         }
-        if (preferences.getBoolean(SettingManager.VIBRATE_WHEN_COLLIDE)) {
+        if (settings.getBoolean(SettingManager.VIBRATE_WHEN_COLLIDE)) {
             CollisionDetector.getInstance().getCollisionContactListener().addListener(new ICollisionListener() {
                 @Override
                 public void onCollision(GameObject g1, GameObject g2) {
@@ -330,9 +330,7 @@ public class GameControllerBuilder {
                 }
             });
         }
-        if(preferences.getBoolean(SettingManager.DISABLE_SOUND)) {
-            audioManager.mute();
-        }
+		audioManager.use(settings);
         addGameFinishedOverlay();
     }
     
@@ -377,7 +375,7 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Checks the {@link Level. levelClass} value and uses the default class
+     * Checks the {@link Level#levelClass} value and uses the default class
      * features or the features of a given class if found and invoked correctly.
      * 
      * @param level

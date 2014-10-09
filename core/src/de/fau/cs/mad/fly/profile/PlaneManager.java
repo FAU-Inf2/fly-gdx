@@ -168,13 +168,8 @@ public class PlaneManager {
     
 	public IPlane.Head getChosenPlane() {
 		if (chosenPlane == null) {
-			Preferences appPrefs = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences();
-			if (!appPrefs.contains(SettingManager.CHOSEN_PLANE_ID)) {
-				appPrefs.putInteger(SettingManager.CHOSEN_PLANE_ID, 0);
-				appPrefs.flush();
-			}
-
-			int planeID = appPrefs.getInteger(SettingManager.CHOSEN_PLANE_ID);
+			SettingManager settings = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager();
+			int planeID = settings.getInteger(SettingManager.CHOSEN_PLANE_ID, 0);
 			for (IPlane.Head plane : getSpaceshipList().values()) {
 				if (plane.id == planeID) {
 					chosenPlane = plane;
@@ -213,9 +208,7 @@ public class PlaneManager {
     
 	public void setChosenPlane(IPlane.Head plane) {
 		chosenPlane = plane;
-		Preferences appPrefs = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences();
-		appPrefs.putInteger(SettingManager.CHOSEN_PLANE_ID, plane.id);
-		appPrefs.flush();
+		PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().set(SettingManager.CHOSEN_PLANE_ID, plane.id);
 	}
     
     public IPlane.Head upgradePlane(String upgradeName, int signum) {

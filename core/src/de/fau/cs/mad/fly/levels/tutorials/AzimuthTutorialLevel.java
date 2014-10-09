@@ -32,8 +32,8 @@ public class AzimuthTutorialLevel implements ILevel, IFeatureInit, GateCircuitLi
     public void init(GameController game) {
         game.getFlightController().setRollFactorChange(0.0f);
         
-        Preferences preferences = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences();
-        if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
+        SettingManager settings = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager();
+        if (settings.getBoolean(SettingManager.USE_TOUCH)) {
             InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.azimuth.touch"), 5);
         } else {
             InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.azimuth.sensor"), 5);
