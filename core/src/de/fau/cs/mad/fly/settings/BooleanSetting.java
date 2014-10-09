@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import de.fau.cs.mad.fly.ui.SkinManager;
 
 /**
- * This class contains a Setting with a {@link #CheckBox} to manage a string.
+ * This class contains a Setting with a {@link #checkBox} to manage a string.
  * 
  * @author Lukas Hahmann <lukas.hahmann@gmail.com>
  * 
@@ -52,8 +52,7 @@ public class BooleanSetting extends ChangeListener implements ISetting {
      * permanently.
      */
     private void save() {
-        settingManager.getPreferences().putBoolean(id, value);
-        settingManager.getPreferences().flush();
+        settingManager.set(id, value);
     }
     
     /**

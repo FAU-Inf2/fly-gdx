@@ -70,7 +70,7 @@ public class Fly extends Game implements Loadable<Fly> {
         time = System.currentTimeMillis();
         SkinManager.getInstance();
         Gdx.app.log("timing", "Fly.create creating skin manager: " + String.valueOf(System.currentTimeMillis() - time));
-        
+
         addProgressListener(new ProgressListener.ProgressAdapter<Fly>() {
             @Override
             public void progressFinished(Fly fly) {
@@ -87,7 +87,7 @@ public class Fly extends Game implements Loadable<Fly> {
                 init();
             }
         };
-        
+
         Thread loadingThread = new Thread(runnable);
         loadingThread.start();
         

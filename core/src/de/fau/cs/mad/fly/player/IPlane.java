@@ -28,8 +28,8 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public String modelRef;
         public int levelGroupDependency;
         public float speed;
-        public float rollingSpeed;
-        public float azimuthSpeed;
+        private float rollingSpeed;
+		public float azimuthSpeed;
         public int lives;
         public float rotationSpeed = 0.0f;
         public Vector3 rotation = null;
@@ -37,7 +37,22 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public FileHandle file;
         
         private Map<String, Integer> upgradesBought = new HashMap<String, Integer>();
-        
+
+		/**
+		 * @return the rollingSpeed, which is actually the azimuthSpeed.
+		 */
+		public float getRollingSpeed() {
+			return azimuthSpeed;
+		}
+
+		/**
+		 * @param rollingSpeed
+		 *            the rollingSpeed to set
+		 */
+		public void setRollingSpeed(float rollingSpeed) {
+			this.rollingSpeed = rollingSpeed;
+		}
+      		
     	@Override
 		public String toString() {
 			return "Head{" +

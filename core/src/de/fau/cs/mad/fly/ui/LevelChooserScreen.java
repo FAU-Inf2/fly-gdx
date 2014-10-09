@@ -77,7 +77,7 @@ public class LevelChooserScreen extends BasicScreenWithBackButton implements Wit
         Button button;
         
         currentProfile.checkPassedLevelForTutorials();
-        boolean disableTutorials = currentProfile.getSettingManager().getPreferences().getBoolean(SettingManager.DISABLE_TUTORIALS);
+        boolean disableTutorials = currentProfile.getSettingManager().getBoolean(SettingManager.DISABLE_TUTORIALS);
         int size = allLevels.size();
         int sizeAllLevels = size;
         if(disableTutorials) {

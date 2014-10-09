@@ -473,7 +473,7 @@ public class PlayerProfile {
      * @return index of the next level which is not a tutorial.
      */
     private int jumpOverTutorials(List<LevelProfile> allLevels, int nextLevel) {
-        if (!getSettingManager().getPreferences().getBoolean(SettingManager.DISABLE_TUTORIALS)) {
+        if (!getSettingManager().getBoolean(SettingManager.DISABLE_TUTORIALS)) {
             return nextLevel;
         }
         int nextLevelAfterTutorials = nextLevel;
@@ -551,10 +551,9 @@ public class PlayerProfile {
      * Clear the SettingManager.
      */
     public void clearSettingManager() {
-        settingManager.getPreferences().clear();
-        settingManager.getPreferences().flush();
+        settingManager.clear();
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof PlayerProfile) {

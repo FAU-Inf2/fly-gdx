@@ -119,7 +119,7 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             public void clicked(InputEvent event, float x, float y) {
                 PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
                 
-                if(playerProfile.getSettingManager().getPreferences().getBoolean(SettingManager.DISABLE_TUTORIALS) && playerProfile.getCurrentLevelProfile().isTutorial()) {
+                if(playerProfile.getSettingManager().getBoolean(SettingManager.DISABLE_TUTORIALS) && playerProfile.getCurrentLevelProfile().isTutorial()) {
                 	playerProfile.setToNextLevel();
                 }
                 

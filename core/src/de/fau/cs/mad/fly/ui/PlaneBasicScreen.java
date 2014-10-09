@@ -53,7 +53,7 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
     final LabelStyle labelStyle;
     
     /** Labels to show the currents status of the current plane*/
-    private Label nameLabel, speedLabel, rollingSpeedLabel, azimuthSpeedLabel, livesLabel;
+    private Label nameLabel, speedLabel, azimuthSpeedLabel, livesLabel;//, rollingSpeedLabel;
 
     //private PlaneUpgradeDetailScreen planeUpgradeDetailScreen;
     
@@ -98,10 +98,10 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         planeDetailTable.add(speedLabel).pad(UI.Tables.PADDING).left();
         planeDetailTable.row().left().top().expand();
         
-        planeDetailTable.add(new Label(I18n.t("pitch") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
-        rollingSpeedLabel = new Label("", labelStyle);
-        planeDetailTable.add(rollingSpeedLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
+//        planeDetailTable.add(new Label(I18n.t("pitch") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
+//        rollingSpeedLabel = new Label("", labelStyle);
+//        planeDetailTable.add(rollingSpeedLabel).pad(UI.Tables.PADDING).left();
+//        planeDetailTable.row().left().top().expand();
         
         planeDetailTable.add(new Label(I18n.t("turnSpeed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
         azimuthSpeedLabel = new Label("", labelStyle);
@@ -122,7 +122,7 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
     protected void updateChosenPlaneDetail() {
         nameLabel.setText(currentPlane.name);
         speedLabel.setText(Float.toString(currentPlane.speed));
-        rollingSpeedLabel.setText(Float.toString(currentPlane.rollingSpeed));
+        //rollingSpeedLabel.setText(Float.toString(currentPlane.rollingSpeed));
         azimuthSpeedLabel.setText(Float.toString(currentPlane.azimuthSpeed));
         livesLabel.setText(Integer.toString(currentPlane.lives));
     }

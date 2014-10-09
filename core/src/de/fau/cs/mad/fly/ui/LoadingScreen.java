@@ -49,7 +49,7 @@ public class LoadingScreen<T> extends BasicScreenWithBackButton {
                 Fly app = ((Fly) Gdx.app.getApplicationListener());
                 app.setGameScreen();
                 app.getGameController().initGame();
-                if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences().getBoolean(SettingManager.USE_TOUCH))
+                if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getBoolean(SettingManager.USE_TOUCH))
                     app.getGameController().getFlightController().init();
             }
         });

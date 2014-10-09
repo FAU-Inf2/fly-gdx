@@ -1,5 +1,6 @@
 package de.fau.cs.mad.fly.settings;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -56,14 +57,13 @@ public class FloatSetting extends ChangeListener implements ISetting {
      * permanently.
      */
     private void save() {
-        settingManager.getPreferences().putFloat(id, value);
-        settingManager.getPreferences().flush();
+        settingManager.set(id, value);
     }
     
     @Override
     public void changed(ChangeEvent event, Actor actor) {
         value = slider.getValue();
-        save();
+		save();
     }
 
 	@Override
