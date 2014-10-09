@@ -229,7 +229,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
             JsonValue quaternion = e.get("quaternion");
             if (euler != null) {
                 Quaternion quat = new Quaternion();
-                quat.setEulerAngles(-euler.getFloat(0), euler.getFloat(1), euler.getFloat(2));
+                quat.setEulerAngles(euler.getFloat(1), euler.getFloat(0), euler.getFloat(2));
                 o.transform.set(pos, quat, new Vector3(1.0f, 1.0f, 1.0f));
             } else if (quaternion != null) {
                 Quaternion quat = new Quaternion(quaternion.getFloat(0), quaternion.getFloat(1), quaternion.getFloat(2), quaternion.getFloat(3));
