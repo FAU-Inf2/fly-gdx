@@ -5,37 +5,21 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
-import de.fau.cs.mad.fly.game.GameModel;
-import de.fau.cs.mad.fly.game.GameObject;
-import de.fau.cs.mad.fly.graphics.shaders.FlyShaderProvider;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
-import de.fau.cs.mad.fly.res.Assets;
 
 /**
  * Shows all available Spaceships and gives the user the ability to choose the
@@ -44,31 +28,10 @@ import de.fau.cs.mad.fly.res.Assets;
  * @author Sebastian
  * 
  */
-public class PlaneChooserScreen extends BasicScreenWithBackButton  implements Screen, InputProcessor {
+public class PlaneChooserScreen extends PlaneBasicScreen  implements  InputProcessor {
 	
-    //private static PlaneChooserScreen instance;
-    
     /** A list of all planes*/
     private Map<Integer, IPlane.Head> allPlanes;
-    
-    /** The current plane*/
-    private GameObject currentSpaceship;
-    
-    /** The IPlane.Head of the current plane*/
-    private IPlane.Head currentPlane;
-    
-    private Skin skin;
-    
-   // private Stage stage;
-    private Viewport viewport;
-    private ModelBatch batch;
-    
-    //private InputMultiplexer inputProcessor;
-    
-    private Environment environment;
-    private PerspectiveCamera camera;
-    private float screenHeight = Gdx.graphics.getHeight();
-    private float screenWidth = Gdx.graphics.getWidth();
     
     // variables for rotation with touchScreen
     /** Indicates whether the touchScreen is currently touched or not*/
@@ -82,8 +45,6 @@ public class PlaneChooserScreen extends BasicScreenWithBackButton  implements Sc
     
     private Vector3 xAxis = new Vector3(1.f, 0.f, 0.f);
     private Vector3 yAxis = new Vector3(0.f, 1.f, 0.f);
-    private Vector3 xRotationAxis = new Vector3(1.f, 0.f, 0.f);
-    private Vector3 yRotationAxis = new Vector3(0.f, 1.f, 0.f);
     
     /** Vector to help with the calculation of the new cameraPosition*/
     private Vector3 camVec;
@@ -91,44 +52,19 @@ public class PlaneChooserScreen extends BasicScreenWithBackButton  implements Sc
     /** The current scaling of the shown plane*/
     private float absScale = 1;
     
-    /** Labels to show the currents status of the current plane*/
-    private Label nameLabel, speedLabel, rollingSpeedLabel, azimuthSpeedLabel, livesLabel;
-    
     private PlaneUpgradeScreen planeUpgradeScreen;
     
     public PlaneChooserScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
-        generateBackButton();
-        environment = new Environment();
-        
-        setUpEnvironment();
-        setUpCamera();
-        
         allPlanes = PlaneManager.getInstance().getSpaceshipList();
-        
-        currentPlane = PlaneManager.getInstance().getChosenPlane();
-        
-        skin = SkinManager.getInstance().getSkin();
-        
-        float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) screenWidth;
-        float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) screenHeight;
-        float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
-        viewport = new FillViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
-        stage.setViewport(viewport);
-        
-        batch = new ModelBatch(null, new FlyShaderProvider(), null);
-        Assets.load(new AssetDescriptor<Texture>("background.jpg", Texture.class));
-        
+        camVec = camera.position.cpy();
         // adding the table containing the buttons with preview of every plane
-        initPlaneListTable();
-        
-        // initializing the overlay which contains the details of the current spaceship
-        initChosenPlaneDetail();
-        
+        initPlaneListTable();        
         initUpgradeButton();
         
         // initialize the InputProcessor
        inputProcessor = new InputMultiplexer(stage, this, this.backProcessor);
+       generateBackButton();
     }
     
 	private void initUpgradeButton(){
@@ -200,21 +136,6 @@ public class PlaneChooserScreen extends BasicScreenWithBackButton  implements Sc
         yAxis.set(0.f, 1.f, 0.f);
     }
     
-    private void loadCurrentPlane() {
-        String ref = "models/planes/" + currentPlane.modelRef + "/" + currentPlane.modelRef;
-        
-        Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
-        GameModel model = Assets.manager.get(ref, GameModel.class);
-        
-        currentSpaceship = new GameObject(model, "spaceship");
-        
-        currentSpaceship.transform.rotate(yRotationAxis, 180.f);
-        xRotationAxis.rotate(yRotationAxis, -180.f);
-        currentSpaceship.transform.rotate(xRotationAxis, -20.f);
-        yRotationAxis.rotate(xRotationAxis, 20.f);
-    }
-    
-    
     @Override
 	public void render(float delta) {
 		super.render(delta);
@@ -224,34 +145,7 @@ public class PlaneChooserScreen extends BasicScreenWithBackButton  implements Sc
 			currentSpaceship.transform.rotate(yRotationAxis, 0.2f);
 			xRotationAxis.rotate(yRotationAxis, -0.2f);
 		}
-
-		batch.begin(camera);
-		currentSpaceship.render(batch, environment, camera);
-		batch.end();
 	}
-    
-    /**
-     * Updates the Overlay of the Screen
-     */
-    public void update() {
-        updateChosenPlaneDetail();
-    }
-    
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-    
-    @Override
-    public void show() {
-        Gdx.input.setCatchBackKey(true);
-        Gdx.input.setInputProcessor(inputProcessor);
-        
-        currentPlane = PlaneManager.getInstance().getChosenPlane();
-        loadCurrentPlane();       
-        
-        updateChosenPlaneDetail();
-    }
     
 	private void initPlaneListTable() {
 		// adding the table containing the buttons with preview of every plane
@@ -296,83 +190,6 @@ public class PlaneChooserScreen extends BasicScreenWithBackButton  implements Sc
 
 		stage.addActor(planeListTable);
 	}
-    
-    /**
-     * Initializes the overlay which contains the details of the current
-     * spaceship
-     */
-    private void initChosenPlaneDetail() {
-        LabelStyle labelStyle = skin.get(LabelStyle.class);
-        Table outTable = new Table();
-        outTable.setFillParent(true);
-        Table planeDetailTable = new Table();
-        
-        planeDetailTable.add(new Label(I18n.t("name") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
-        nameLabel = new Label("", labelStyle);
-        planeDetailTable.add(nameLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
-        
-        planeDetailTable.add(new Label(I18n.t("speed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
-        speedLabel = new Label("", labelStyle);
-        planeDetailTable.add(speedLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
-        
-        planeDetailTable.add(new Label(I18n.t("pitch") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
-        rollingSpeedLabel = new Label("", labelStyle);
-        planeDetailTable.add(rollingSpeedLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
-        
-        planeDetailTable.add(new Label(I18n.t("turnSpeed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
-        azimuthSpeedLabel = new Label("", labelStyle);
-        planeDetailTable.add(azimuthSpeedLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
-        
-        planeDetailTable.add(new Label(I18n.t("lives") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
-        livesLabel = new Label("", labelStyle);
-        planeDetailTable.add(livesLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
-        outTable.add(planeDetailTable).top().left().expand().pad(100f);
-        stage.addActor(outTable);
-    }
-    
-    /**
-     * Updates the overlay with the details of the current plane
-     */
-    private void updateChosenPlaneDetail() {
-        nameLabel.setText(currentPlane.name);
-        speedLabel.setText(Float.toString(currentPlane.speed));
-        rollingSpeedLabel.setText(Float.toString(currentPlane.rollingSpeed));
-        azimuthSpeedLabel.setText(Float.toString(currentPlane.azimuthSpeed));
-        livesLabel.setText(Integer.toString(currentPlane.lives));
-    }
-    
-    @Override
-    public void dispose() {
-        stage.dispose();
-    }
-    
-    /**
-     * Sets up the environment for the level with its light.
-     */
-    private void setUpEnvironment() {
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-    }
-    
-    /**
-     * Sets up the camera for the initial view.
-     */
-    private final void setUpCamera() {
-        camera = new PerspectiveCamera(67, screenWidth, screenHeight);
-        
-        camera.position.set(0.f, 0.f, -2.f);
-        camera.lookAt(0.f, 0.f, 0.f);
-        camera.near = 0.1f;
-        camera.far = 100.f;
-        camera.update();
-        
-        camVec = camera.position.cpy();
-    }
     
     @Override
     public boolean keyDown(int keycode) {
