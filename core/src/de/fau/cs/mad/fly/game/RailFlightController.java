@@ -31,31 +31,33 @@ public class RailFlightController extends FlightController implements ICollision
 	private Vector3 endPosition; 
 	private Vector3 currentPosition; 
 	
-	private int listSize = 20;
+	private int listSize = 40;
 	
+	/** The center rail*/
 	private List<Vector3> centerRail;
+	/** Offset by which the other rails are shifted from the center rail*/
 	private float railOffset = 3.f;
-	
+	/** Indicates the current Rail*/
 	private int railX, railY;
 	
+	// Variables that control the changing of the current rail to an other one
 	private boolean changeRailX, changeRailY = false;
 	private float changeTimeX, changeTimeY = 0;
 	private float changeX, changeY;
+	
+	/** Speed of the current plane*/
+	private float planeSpeed, rollSpeed, azimuthSpeed;
 
 	public RailFlightController(Player player, PlayerProfile playerProfile, EndlessLevelGenerator generator, Perspective perspective) {
 		super(player, playerProfile);
 		this.generator = (EndlessRailLevelGenerator) generator;
 		
 		this.direction = perspective.viewDirection;
-		this.endPosition = perspective.position;
-		this.currentPosition = perspective.position;
+		this.currentPosition = perspective.position.cpy();
+		this.endPosition = this.currentPosition.cpy();
 		
 		centerRail = new ArrayList<Vector3>();
 		centerRail.add(currentPosition);
-		//this.generator.addRailPosition(currentPosition);
-		//this.generator.initRail(currentPosition);
-		
-		initRail();
 		
 		this.railX = this.railY = 0;
 	}
@@ -65,6 +67,10 @@ public class RailFlightController extends FlightController implements ICollision
 		if (useSensorData) {
             super.interpretSensorInput();
         }
+		
+		if(endPosition.equals(currentPosition)) {
+			initRail();
+		}
 		
 		changeRail(delta);
 		
@@ -80,18 +86,24 @@ public class RailFlightController extends FlightController implements ICollision
 			currentPosition = centerRail.get(0);
 			
 		}
-		float speed = player.getPlane().getCurrentSpeed() + 0.0001f;
-		player.getPlane().setCurrentSpeed(speed);
+		// increase the speed of the plane
+		planeSpeed = player.getPlane().getCurrentSpeed() + 0.0001f;
+		player.getPlane().setCurrentSpeed(planeSpeed);
     }
 	
 	private void initRail() {
+		generator.setRail(centerRail);
+		generator.setRailOffset(railOffset);
+		
+		this.currentPosition.add(direction.cpy().scl(5));
+		this.endPosition = this.currentPosition.cpy();
+		
 		for(int i = 1; i < listSize; i++) {
 			Vector3 nextStep = nextStep();
 			centerRail.add(nextStep);
-			//generator.addRailPosition(nextStep);
+			generator.addRailPosition(nextStep);
 		}
-		generator.setRail(centerRail);
-		generator.setRailOffset(railOffset);
+		generator.endInit();
 	}
 	
 	private Vector3 nextStep() {
@@ -99,17 +111,17 @@ public class RailFlightController extends FlightController implements ICollision
 		
 		nextPos = endPosition.cpy().add(direction);
 		
-		//change direction?
-		
 		endPosition = nextPos;
 		return nextPos;
 	}
 	
 	private void changeRail(float delta) {
+		rollSpeed = player.getPlane().getRollingSpeed();
+		azimuthSpeed = player.getPlane().getAzimuthSpeed();
+		
 		Vector3 shiftVector = new Vector3();
 		if(Math.abs(getRollFactor()) > 0.5) {
 			if(Math.abs(railX + Math.signum(rollFactor)) <= 1.f && !changeRailX) {
-				//shiftVector.z += Math.signum(rollFactor);
 				railX += Math.signum(rollFactor);
 				changeX = Math.signum(rollFactor);
 				changeTimeX = 1f;
@@ -117,7 +129,6 @@ public class RailFlightController extends FlightController implements ICollision
 		} 
 		if(Math.abs(getAzimuthFactor()) > 0.5) {
 			if(Math.abs(railY - Math.signum(azimuthFactor)) <= 1.f && !changeRailY) {
-				//shiftVector.x -= Math.signum(azimuthFactor);
 				railY -= Math.signum(azimuthFactor);
 				changeY = -Math.signum(azimuthFactor);
 				changeTimeY = 1f;
@@ -131,27 +142,27 @@ public class RailFlightController extends FlightController implements ICollision
 		if(changeTimeY == 1f) {
 			changeRailY = true;
 		}
-		
+		Gdx.app.log("rails", "" + planeSpeed);
 		if(changeRailX) {
-			if(changeTimeX - delta <= 0) {
-				shiftVector.z = changeX * changeTimeX * railOffset;
+			if(changeTimeX - delta * rollSpeed <= 0) {
+				shiftVector.z = changeX * changeTimeX * railOffset * rollSpeed;
 				changeRailX = false;
 				changeX = 0;
 			} else {
-				changeTimeX -= delta;
-				shiftVector.z = changeX * delta * railOffset;
+				changeTimeX -= delta * rollSpeed;
+				shiftVector.z = changeX * delta * railOffset * rollSpeed;
 			}
 			
 		}
 		
 		if(changeRailY) {
-			if(changeTimeY - delta <= 0) {
-				shiftVector.x = changeY * changeTimeY * railOffset;
+			if(changeTimeY - delta * azimuthSpeed <= 0) {
+				shiftVector.x = changeY * changeTimeY * railOffset * azimuthSpeed;
 				changeRailY = false;
 				changeY = 0;
 			} else {
-				changeTimeY -= delta;
-				shiftVector.x = changeY * delta * railOffset;
+				changeTimeY -= delta * azimuthSpeed;
+				shiftVector.x = changeY * delta * railOffset * azimuthSpeed;
 			}
 			
 		}

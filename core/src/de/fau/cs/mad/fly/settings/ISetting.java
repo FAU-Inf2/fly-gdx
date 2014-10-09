@@ -12,8 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
  * 
  */
 public interface ISetting {
-    public Label getLabel();
-    
+	public static enum Groups {
+		GENERAL, AUDIO, CONTROLS
+	}
+    public String getDescription();
+
     public Actor getActor();
     
     /**
@@ -21,4 +24,8 @@ public interface ISetting {
      * the I18N
      */
     public String getHelpingText();
+
+	public boolean isHidden();
+
+	public Groups group();
 }

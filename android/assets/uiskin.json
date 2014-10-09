@@ -16,9 +16,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 , down: button-down, checked: button-up }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { up: button-up
-, down: button-down, checked: button-up
-, font: default-font, fontColor: white, disabled: button-disabled, disabledFontColor: lightGrey }
+	default: { up: button-up, down: button-down, checked: button-up, font: default-font, fontColor: white, disabled: button-disabled, disabledFontColor: lightGrey },
+	toggle: { up: button-up, down: button-down, checked: button-up, font: default-font, fontColor: white, disabled: button-disabled, disabledFontColor: lightGrey, checkedFontColor: red }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	settings: { up: button-up, down: button-down, checked: button-up, imageUp: gear, imageDown: gear, disabled: button-disabled },

@@ -35,15 +35,14 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 	private float railOffset = 1.f;
 	
 	private GateGoal lastGate;
+	private GateGoal firstGate;
 	
 	private int asteroidCount = 0;
 	
     protected ChangePointsUpgradeHandler changePointsHandler;
     
-    private int lastUpgrade;
 	private int stepsSinceLastGate = 0;
 	private int stepsSinceLastUpgrade = 10;
-	private int stepsSinceLastPointUpgrade = 10;
 	private int stepsSinceLastTimeUpgrade = 10;
 	private int stepsSinceLastSpeedUpgrade = 10;
 	private int stepsSinceLastAsteroid = 10;
@@ -61,8 +60,6 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 	public EndlessRailLevelGenerator(Level level, GameControllerBuilder builder) {
 		super(level, builder);
 		
-		//centerRail = new ArrayList<Vector3>();
-		
 		manager.load(new AssetDescriptor<GameModel>("models/asteroid/asteroid", GameModel.class));
 		manager.load(new AssetDescriptor<GameModel>("models/pointsUpgrade/pointsUpgrade", GameModel.class));
 		
@@ -72,6 +69,8 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 		
 		this.changePointsHandler = new ChangePointsUpgradeHandler();
 		builder.addFeatureToLists(changePointsHandler);
+		
+		
 	}
 	
 	/**
@@ -80,10 +79,10 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 	public void addRandomComponents() {
 		
 		int random = MathUtils.random(15);
-		if((random - stepsSinceLastAsteroid) < 0/* && stepsSinceLastAsteroid > 3*/) {
+		if((random - stepsSinceLastAsteroid) < 0) {
 			addRandomAsteroid();
 		}
-		
+
 		if(stepsSinceLastGate >= 10) {
 			addRandomGate();
 		}
@@ -92,7 +91,6 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 		
 		stepsSinceLastGate++;
 		stepsSinceLastUpgrade++;
-		stepsSinceLastPointUpgrade++;
 		stepsSinceLastTimeUpgrade++;
 		stepsSinceLastSpeedUpgrade++;
 		stepsSinceLastAsteroid++;
@@ -142,9 +140,6 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
     			return null;
     		}
     	}
-        /*if(railOffset.equals(stepsSinceLastAsteroid)) {
-        	return null;
-        }*/
         
 		Vector3 gatePositon = centerRail.get(centerRail.size()-1).cpy().add(railOffset);
 		newDisplay.transform.setToTranslation(gatePositon);
@@ -156,10 +151,14 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 		
         level.getGateCircuit().addGate(newGoal);
         gates.put(currentRailEndPoint, newGoal);
-		
+
+    	Gdx.app.log("virtGate", "" + newGoal);
         if(lastGate != null) {
         	int[] successors = {currGate};
         	lastGate.setSuccessors(successors);
+        	if(firstGate == null) {
+        		firstGate = lastGate;
+        	}
         } 
 		
 		Gdx.app.log("rails", "addGate: " + currGate + " an Position: " + gatePositon);
@@ -224,12 +223,6 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
         
         if (c != null) {
         	Vector3 railOffset;
-        	/*if(lastUpgrade == 2 && random == 2 && stepsSinceLastPointUpgrade <= 5) {
-        		// setting pointsUpgrades right behind each other
-        		railOffset = lastUpgradePos;
-        	} else {*/
-        		//railOffset = addUpgradeRailOffset();
-        	//}
         	
         	if(random == 2) {
         		railOffset = addPointUpgradeRailOffset();
@@ -259,15 +252,10 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
             case 1:
             	stepsSinceLastSpeedUpgrade = 0;
                 break;
-            case 2:
-            	stepsSinceLastPointUpgrade = 0;
-                break;
             default:
                 break;
             }
             stepsSinceLastUpgrade = 0;
-            lastUpgrade = random;
-            //lastUpgradePos = railOffset;
         }
     }
     
@@ -319,6 +307,13 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
 	public void setRail(List<Vector3> rail) {
 		centerRail = rail;
 		currentRailEndPoint = rail.size() - 1;
+		
+		level.getGateCircuit().setGates(new HashMap<Integer,GateGoal>());
+		addRandomGate();
+	}
+	
+	public void endInit() {
+		level.getGateCircuit().setVirtualGate(firstGate);
 	}
 	
 	/**

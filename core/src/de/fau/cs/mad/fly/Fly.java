@@ -19,8 +19,6 @@ import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GameScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
-import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
-import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 
 /**
@@ -45,11 +43,10 @@ public class Fly extends Game implements Loadable<Fly> {
      * <p>
      * Currently debug mode only disables the level dependencies.
      */
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
     
     private LoadingScreen<Fly> splashScreen;
-    private PlaneChooserScreen planeChooserScreen;
-    private PlaneUpgradeScreen planeUpgradeScreen;
+    
     private GameScreen gameScreen;
     private MainMenuScreen mainMenuScreen;
     
@@ -159,25 +156,9 @@ public class Fly extends Game implements Loadable<Fly> {
         return gameController;
     }
     
-    /**
-     * Switches the current screen to the {@link PlaneChooserScreen}.
-     */
-    public void setPlaneChoosingScreen() {
-        if (planeChooserScreen == null) {
-            planeChooserScreen = new PlaneChooserScreen();
-        }
-        setScreen(planeChooserScreen);
-    }
+   
     
-    /**
-     * Switches the current screen to the {@link PlaneUpgradeScreen}.
-     */
-    public void setPlaneUpgradeScreen() {
-        if (planeUpgradeScreen == null) {
-            planeUpgradeScreen = new PlaneUpgradeScreen();
-        }
-        setScreen(planeUpgradeScreen);
-    }
+   
     
     /**
      * Switches the current screen to the {@link LoadingScreen}.

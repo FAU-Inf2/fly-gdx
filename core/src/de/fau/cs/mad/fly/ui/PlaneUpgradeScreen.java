@@ -1,25 +1,23 @@
 package de.fau.cs.mad.fly.ui;
 
+import java.util.Collection;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -29,7 +27,9 @@ import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.graphics.shaders.FlyShaderProvider;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlaneManager;
+import de.fau.cs.mad.fly.profile.PlaneUpgradeManager;
 import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.res.PlaneUpgrade;
 
 /**
  * The Screen in which the Player can upgrade his Planes
@@ -37,23 +37,13 @@ import de.fau.cs.mad.fly.res.Assets;
  * @author Sebastian
  * 
  */
-public class PlaneUpgradeScreen implements Screen {
-    private PlaneUpgradesOverlay upgradeOverlay;
-    
-    private Skin skin;
-    private Stage stage;
-    private Viewport viewport;
-    protected final Color backgroundColor;
-    private Batch backgroundBatch;
-    private Sprite background;
-    
-    private InputMultiplexer inputProcessor;
+public class PlaneUpgradeScreen extends BasicScreenWithBackButton implements Screen {
+
+	private Skin skin;
+    private Viewport viewport;    
     
     private float screenHeight = Gdx.graphics.getHeight();
     private float screenWidth = Gdx.graphics.getWidth();
-    
-    private Label nameLabel, speedLabel, rollingSpeedLabel, azimuthSpeedLabel, livesLabel;
-    private String name, speed, pitch, turnSpeed, lives;
     
     private IPlane.Head currentPlane;
     
@@ -65,91 +55,130 @@ public class PlaneUpgradeScreen implements Screen {
     private Vector3 xRotationAxis = new Vector3(1.f, 0.f, 0.f);
     private Vector3 yRotationAxis = new Vector3(0.f, 1.f, 0.f);
     
-    public PlaneUpgradeScreen() {
+    private Table upgradesListTable;
+    final LabelStyle labelStyle;
+    
+    /** Labels to show the currents status of the current plane*/
+    private Label nameLabel, speedLabel, rollingSpeedLabel, azimuthSpeedLabel, livesLabel;
+
+    private PlaneUpgradeDetailScreen planeUpgradeDetailScreen;
+    
+	public PlaneUpgradeScreen(BasicScreen screenToGoBack) {
+        super(screenToGoBack);
         
         currentPlane = PlaneManager.getInstance().getChosenPlane();
-        
-        name = I18n.t("name");
-        speed = I18n.t("speed");
-        pitch = I18n.t("pitch");
-        turnSpeed = I18n.t("turnSpeed");
-        lives = I18n.t("lives");
-        
+
         setUpEnvironment();
         setUpCamera();
         
-        skin = SkinManager.getInstance().getSkin();
-        backgroundColor = skin.getColor(UI.Window.BACKGROUND_COLOR);
-        
-        backgroundBatch = new SpriteBatch();
+        skin = SkinManager.getInstance().getSkin();       
+        labelStyle = skin.get( LabelStyle.class);
         
         batch = new ModelBatch(null, new FlyShaderProvider(), null);
         
-        // initialize the stage
-        stage = new Stage();
         float widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) screenWidth;
         float heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) screenHeight;
         float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
         viewport = new FillViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
         stage.setViewport(viewport);
         
-        // adding the background
-        initBackground();
+        upgradesListTable = new Table();
         
-        // load the plane
-        loadCurrentPlane();
-        
-        // initialize the upgradeOverlay
-        upgradeOverlay = new PlaneUpgradesOverlay(skin, stage, this);
-        upgradeOverlay.init();
-        
-        // initializing the overlay which contains the details of the current
-        // spaceship
-        initOverlay();
-        
-        // initialize the InputProcessor
-        inputProcessor = new InputMultiplexer(stage, new BackProcessor());
+        initChosenPlaneDetail();
+        initUpgradeButtons();
+        generateBackButton();       
     }
     
-    /**
-     * Getter for the UpgradesOverlay
-     * 
-     * @return The Overlay that contains the Buttons and Labels for the Upgrades
+	private void initUpgradeButtons() {
+		Table outTable = new Table();
+		outTable.setFillParent(true);
+		outTable.pad(0f);
+		
+		ScrollPane scrollPane = new ScrollPane(outTable, skin);
+		scrollPane.setFillParent(true);
+		scrollPane.setFadeScrollBars(false);
+
+		final Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
+
+		// Creates one Button for each Upgrade
+		for (final PlaneUpgrade upgrade : upgrades) {
+			final TextButton button = new TextButton(I18n.t(upgrade.name), skin);
+			button.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {					
+					openUpgradeDetailScreen(upgrade);
+				}
+			});
+
+			upgradesListTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).pad(15f);
+			upgradesListTable.row();
+		}
+
+		
+		outTable.add(upgradesListTable).right().top().padRight(25f).padTop(0f).expand();
+		stage.addActor(scrollPane);
+	}
+	
+	 /**
+     * Initializes the overlay which contains the details of the current
+     * spaceship
      */
-    public PlaneUpgradesOverlay getOverlay() {
-        return upgradeOverlay;
-    }
-    
-    /**
-     * Updates the overlay to the current status of the current plane
-     */
-    public void update() {
-        updateOverlay();
-    }
-    
-    /**
-     * Initiates the background of the screen
-     */
-    private void initBackground() {
-        Assets.load(new AssetDescriptor<Texture>("background.jpg", Texture.class));
+    private void initChosenPlaneDetail() {
+        LabelStyle labelStyle = skin.get(LabelStyle.class);
+        Table outTable = new Table();
+        outTable.setFillParent(true);
+        Table planeDetailTable = new Table();
         
-        background = new Sprite(Assets.manager.get(new AssetDescriptor<Texture>("background.jpg", Texture.class)));
-        float xSkalingFactor = Gdx.graphics.getWidth() / background.getWidth();
-        float ySkalingFactor = Gdx.graphics.getHeight() / background.getHeight();
-        float deltaX = 0f;
-        float deltaY = 0f;
-        background.setOrigin(0, 0);
-        if (xSkalingFactor >= ySkalingFactor) {
-            background.setScale(xSkalingFactor);
-            deltaY = (Gdx.graphics.getHeight() - background.getHeight() * xSkalingFactor) / 2.0f;
-        } else {
-            background.setScale(ySkalingFactor);
-            deltaX = (Gdx.graphics.getWidth() - background.getWidth() * ySkalingFactor) / 2.0f;
-        }
-        background.setPosition(deltaX, deltaY);
+        planeDetailTable.add(new Label(I18n.t("name") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
+        nameLabel = new Label("", labelStyle);
+        planeDetailTable.add(nameLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
+        
+        planeDetailTable.add(new Label(I18n.t("speed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
+        speedLabel = new Label("", labelStyle);
+        planeDetailTable.add(speedLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
+        
+        planeDetailTable.add(new Label(I18n.t("pitch") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
+        rollingSpeedLabel = new Label("", labelStyle);
+        planeDetailTable.add(rollingSpeedLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
+        
+        planeDetailTable.add(new Label(I18n.t("turnSpeed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
+        azimuthSpeedLabel = new Label("", labelStyle);
+        planeDetailTable.add(azimuthSpeedLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
+        
+        planeDetailTable.add(new Label(I18n.t("lives") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
+        livesLabel = new Label("", labelStyle);
+        planeDetailTable.add(livesLabel).pad(UI.Tables.PADDING).left();
+        planeDetailTable.row().left().top().expand();
+        outTable.add(planeDetailTable).top().left().expand().pad(100f);
+        stage.addActor(outTable);
     }
+   
+	 /**
+     * Updates the overlay with the details of the current plane
+     */
+    private void updateChosenPlaneDetail() {
+        nameLabel.setText(currentPlane.name);
+        speedLabel.setText(Float.toString(currentPlane.speed));
+        rollingSpeedLabel.setText(Float.toString(currentPlane.rollingSpeed));
+        azimuthSpeedLabel.setText(Float.toString(currentPlane.azimuthSpeed));
+        livesLabel.setText(Integer.toString(currentPlane.lives));
+    }
+    
+    private void openUpgradeDetailScreen(PlaneUpgrade upgrade){
+    	if( planeUpgradeDetailScreen == null ){
+    		planeUpgradeDetailScreen = new PlaneUpgradeDetailScreen(this, upgrade);
+    	}
+    	planeUpgradeDetailScreen.setChosenUpgrade(upgrade);
+    	planeUpgradeDetailScreen.set();
+    }
+	
     
     private void loadCurrentPlane() {
+    	 // adding the preview of the first plane
         String ref = "models/planes/" + currentPlane.modelRef + "/" + currentPlane.modelRef;
         
         Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
@@ -161,59 +190,6 @@ public class PlaneUpgradeScreen implements Screen {
         xRotationAxis.rotate(yRotationAxis, -180.f);
         currentSpaceship.transform.rotate(xRotationAxis, -20.f);
         yRotationAxis.rotate(xRotationAxis, 20.f);
-    }
-    
-    /**
-     * Initializes the overlay which contains the details of the current
-     * spaceship
-     */
-    public void initOverlay() {
-        // Calculates the Position to put the Overlay, so that it doesn't
-        // overlap with the Buttons
-        float xPos = Gdx.graphics.getWidth()*0.65f;//upgradeOverlay.getButtonWidth() * 2.8f;
-        
-        LabelStyle labelStyle = skin.get(LabelStyle.class);
-        nameLabel = new Label("", labelStyle);
-        stage.addActor(nameLabel);
-        nameLabel.setPosition(xPos, 1000);
-        
-        speedLabel = new Label("", labelStyle);
-        stage.addActor(speedLabel);
-        speedLabel.setPosition(xPos, 800);
-        
-        rollingSpeedLabel = new Label("", labelStyle);
-        stage.addActor(rollingSpeedLabel);
-        rollingSpeedLabel.setPosition(xPos, 600);
-        
-        azimuthSpeedLabel = new Label("", labelStyle);
-        stage.addActor(azimuthSpeedLabel);
-        azimuthSpeedLabel.setPosition(xPos, 400);
-        
-        livesLabel = new Label("", labelStyle);
-        stage.addActor(livesLabel);
-        livesLabel.setPosition(xPos, 200);
-    }
-    
-    /**
-     * Updates the overlay with the details of the current plane
-     */
-    private void updateOverlay() {
-        nameLabel.setText(name + ": " + currentPlane.name);
-        speedLabel.setText(speed + ": " + Float.toString(currentPlane.speed));
-        rollingSpeedLabel.setText(pitch + ": " + Float.toString(currentPlane.rollingSpeed));
-        azimuthSpeedLabel.setText(turnSpeed + ": " + Float.toString(currentPlane.azimuthSpeed));
-        livesLabel.setText(lives + ": " + Integer.toString(currentPlane.lives));
-    }
-    
-    /**
-     * Adds the Overlay with information about the current plane to the screen
-     */
-    public void addOverlay() {
-        stage.addActor(nameLabel);
-        stage.addActor(speedLabel);
-        stage.addActor(rollingSpeedLabel);
-        stage.addActor(azimuthSpeedLabel);
-        stage.addActor(livesLabel);
     }
     
     /**
@@ -241,72 +217,31 @@ public class PlaneUpgradeScreen implements Screen {
     }
     
     @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        
-        backgroundBatch.begin();
-        background.draw(backgroundBatch);
-        backgroundBatch.end();
+    public void render(float delta) {        
+       super.render(delta);
         
         batch.begin(camera);
         currentSpaceship.render(batch, environment, camera);
         batch.end();
-        
-        stage.act(delta);
-        stage.draw();
     }
-    
     
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
     
-    @Override
-    public void show() {
-        currentPlane = PlaneManager.getInstance().getChosenPlane();
-        
-        initBackground();
-        
-        Gdx.input.setCatchBackKey(true);
-        Gdx.input.setInputProcessor(inputProcessor);
-        
-        // adding the preview of the first plane
-        String ref = "models/planes/" + currentPlane.modelRef + "/" + currentPlane.modelRef;
-        Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
-        GameModel model = Assets.manager.get(ref, GameModel.class);
-        
-        currentSpaceship = new GameObject(model, "spaceship");
-        
-        currentSpaceship.transform.rotate(yRotationAxis, 180.f);
-        xRotationAxis.rotate(yRotationAxis, -180.f);
-        currentSpaceship.transform.rotate(xRotationAxis, -20.f);
-        yRotationAxis.rotate(xRotationAxis, 20.f);
-        
-        addOverlay();
-        update();
-        upgradeOverlay.show();
-    }
-    
-    @Override
-    public void hide() {
-        
-    }
-    
-    @Override
-    public void pause() {
-        
-    }
-    
-    @Override
-    public void resume() {
-        
-    }
+	@Override
+	public void show() {
+		Gdx.input.setCatchBackKey(true);
+		Gdx.input.setInputProcessor(inputProcessor);
+		currentPlane = PlaneManager.getInstance().getChosenPlane();
+		loadCurrentPlane();
+
+		updateChosenPlaneDetail();
+	}
     
     @Override
     public void dispose() {
         stage.dispose();
     }
-    
 }

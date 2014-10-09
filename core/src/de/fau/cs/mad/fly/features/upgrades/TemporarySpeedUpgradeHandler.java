@@ -70,10 +70,10 @@ public class TemporarySpeedUpgradeHandler extends CollectibleObjects implements 
             builder.append("\n");
             builder.append(I18n.t("bonus"));
             builder.append(" ");
-            DecimalFormat df = new DecimalFormat("0.0");
+            DecimalFormat df = new DecimalFormat("0");
             String factorRounded = df.format(upgrade.getEffect().getMaxSpeedupFactor() * 100f);
             builder.append(factorRounded);
-            builder.append("%.");
+            builder.append(" %");
             InfoOverlay.getInstance().setOverlay(builder.toString(), 3);
             
             // start playing sound if not yet playing

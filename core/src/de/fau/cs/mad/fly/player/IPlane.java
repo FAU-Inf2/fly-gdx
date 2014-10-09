@@ -38,6 +38,26 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         
         private Map<String, Integer> upgradesBought = new HashMap<String, Integer>();
         
+    	@Override
+		public String toString() {
+			return "Head{" +
+					"id=" + id +
+					", name='" + name + '\'' +
+					", modelRef='" + modelRef + '\'' +
+					", levelGroupDependency=" + levelGroupDependency +
+					", speed=" + speed +
+					", rollingSpeed=" + rollingSpeed +
+					", azimuthSpeed=" + azimuthSpeed +
+					", lives=" + lives +
+					", rotationSpeed=" + rotationSpeed +
+					", rotation=" + rotation +
+					", particleOffset=" + particleOffset +
+					", file=" + file +
+					", upgradesBought=" + upgradesBought +
+					", upgradesEquiped=" + upgradesEquiped +
+					'}';
+		}
+    	
         /**
          * @return the upgradesBought
          */
@@ -62,6 +82,20 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
 //            upgradesEquiped.put(name, value);
 //        }
         
+		public int getEquipedUpgradeCount(String name) {
+			if (upgradesEquiped.containsKey(name)) {
+				return upgradesEquiped.get(name);
+			}
+			return 0;
+		}
+
+		public int getBoughtUpgradeCount(String name) {
+			if (upgradesBought.containsKey(name)) {
+				return upgradesBought.get(name);
+			}
+			return 0;
+
+		}
     }
     
     /**

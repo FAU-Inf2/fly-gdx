@@ -91,8 +91,7 @@ public class PlaneManager {
 		if (planes == null) {
 			getSpaceshipList();
 		}
-		for (Entry<Integer, Head> entry : planes.entrySet()) {
-			IPlane.Head planeHead = entry.getValue();
+		for (IPlane.Head planeHead  : planes.values()) {
 			Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
 			planeHead.getUpgradesBought().clear();
 			planeHead.getUpgradesEquiped().clear();
@@ -100,21 +99,17 @@ public class PlaneManager {
 			Map<String, Integer> upgradeDB = getUpgradesFromDB(planeHead.id);
 			Map<String, Integer> equipedDB = getEquipedsFromDB(planeHead.id);
 
+
 			for (PlaneUpgrade upgrade : upgrades) {
-				// for (int i = 0; i < upgradeTypes.length; i++) {
-				// if (upgrade.name == upgradeTypes[i]) {
-				if (upgradeDB.get(upgrade.name) != null) {
-					planeHead.getUpgradesBought().put(upgrade.name, upgradeDB.get(upgrade.name));
-				} else {
+				Integer upgradeAmount = upgradeDB.get(upgrade.name);
+				if (upgradeAmount != null)
+					planeHead.getUpgradesBought().put(upgrade.name, upgradeAmount);
+				else
 					planeHead.getUpgradesBought().put(upgrade.name, 0);
-				}
-				if (equipedDB.get(upgrade.name) != null) {
-					planeHead.getUpgradesEquiped().put(upgrade.name, equipedDB.get(upgrade.name));
-				} else {
-					planeHead.getUpgradesEquiped().put(upgrade.name, 0);
-				}
-				// }
-				// }
+				planeHead.getUpgradesEquiped().put(upgrade.name, 0);
+				Integer equippedAmount = equipedDB.get(upgrade.name);
+				if (equippedAmount != null)
+					upgradePlane(planeHead, upgrade.name, equippedAmount);
 			}
 		}
 	}
@@ -224,27 +219,31 @@ public class PlaneManager {
 	}
     
     public IPlane.Head upgradePlane(String upgradeName, int signum) {
-        PlaneUpgrade upgrade = PlaneUpgradeManager.getInstance().getUpgrade(upgradeName);
-        
+        return upgradePlane(chosenPlane, upgradeName, signum);
+    }
+
+	public IPlane.Head upgradePlane(IPlane.Head plane, String upgradeName, int signum) {
+		PlaneUpgrade upgrade = PlaneUpgradeManager.getInstance().getUpgrade(upgradeName);
+
         /*
          * int size = upgrade.upgradeValues.length; for(int i = 0; i < size;
          * i++) { plane. }
          */
-        int[] values = upgrade.upgradeValues;
-        
-        chosenPlane.speed += values[0] * signum;
-        chosenPlane.rollingSpeed += values[1] * signum;
-        chosenPlane.azimuthSpeed += values[2] * signum;
-        chosenPlane.lives += values[3] * signum;
-        
-        int oldValue = chosenPlane.getUpgradesEquiped().get(upgradeName);
-        chosenPlane.getUpgradesEquiped().put(upgradeName, oldValue + signum);
-        this.updateEquiped(chosenPlane.id, upgradeName, oldValue + signum);
-        
-        planes.put(chosenPlane.id, chosenPlane);
-        
-        return chosenPlane;
-    }
+		int[] values = upgrade.upgradeValues;
+
+		plane.speed += values[0] * signum;
+		plane.rollingSpeed += values[1] * signum;
+		plane.azimuthSpeed += values[2] * signum;
+		plane.lives += values[3] * signum;
+
+		int oldValue = plane.getUpgradesEquiped().get(upgradeName);
+		plane.getUpgradesEquiped().put(upgradeName, oldValue + signum);
+		this.updateEquiped(plane.id, upgradeName, oldValue + signum);
+
+		planes.put(plane.id, plane);
+
+		return plane;
+	}
     
     public void buyUpgradeForPlane(String upgradeName) {
         int currentUpgradeBought = chosenPlane.getUpgradesBought().get(upgradeName);

@@ -157,6 +157,8 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
      */
     public void setGates(Map<Integer, GateGoal> gates) {
         this.gates = gates;
+        allGateGoals.clear();
+        allGateDisplays.clear();
         allGateGoals.addAll(gates.values());
         
         Collections.sort(allGateGoals, goalComparator);
@@ -217,10 +219,12 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
             s.onGatePassed(gate);
         if ( finished ) {
             GameController.getInstance().getAudioManager().play(AudioManager.Sounds.CAMERA);
+            GameController.getInstance().getAudioManager().play(AudioManager.Sounds.GATE_PASSED);
             reachedLastGate = true;
             circuitFinished();
         } else if ( !gate.equals(virtualGate) ) {
             gateCount++;
+            GameController.getInstance().getAudioManager().play(AudioManager.Sounds.GATE_PASSED);
             GameController.getInstance().getAudioManager().play(AudioManager.Sounds.HITMARKER);
             if ( gateCount == 3 )
                 GameController.getInstance().getAudioManager().play(AudioManager.Sounds.TRIPLE);

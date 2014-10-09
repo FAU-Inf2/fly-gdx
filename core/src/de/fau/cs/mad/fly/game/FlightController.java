@@ -31,7 +31,8 @@ public class FlightController implements InputProcessor {
     
     protected boolean useSensorData;
     protected boolean inTouch = false;
-    protected int inversionFactor;
+	protected int invertXFactor;
+    protected int invertYFactor;
     protected int rotationFactor;
     
     Set<Integer> pressedKeys = new HashSet<Integer>();
@@ -72,15 +73,25 @@ public class FlightController implements InputProcessor {
     protected float centerX = TouchScreenOverlay.X_POS_OF_STEERING_CIRCLE + screenWidth / 2;
     protected float centerY = -TouchScreenOverlay.Y_POS_OF_STEERING_CIRCLE + screenHeight / 2;
     protected float radius = TouchScreenOverlay.RADIUS_OF_STEERING_CIRCLE;
+
+	private final int upKey;
+	private final int leftKey;
+	private final int downKey;
+	private final int rightKey;
     
     
     public FlightController(Player player, PlayerProfile playerProfile) {
         this.player = player;
         Preferences preferences = playerProfile.getSettingManager().getPreferences();
-        this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH) && !Gdx.app.getType().equals(ApplicationType.Desktop);
-        this.inversionFactor = preferences.getBoolean(SettingManager.INVERT_PITCH) ? -1 : 1;
+        this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH) && Gdx.app.getType() != ApplicationType.Desktop;
+		this.invertXFactor = preferences.getBoolean(SettingManager.INVERT_X) ? -1 : 1;
+		this.invertYFactor = preferences.getBoolean(SettingManager.INVERT_Y) ? -1 : 1;
         this.bufferSize = 10;
         this.rotationFactor = ((Fly) Gdx.app.getApplicationListener()).orientationSwapped() ? -1 : 1;
+		this.upKey = preferences.getInteger(SettingManager.MOVE_UP);
+		this.leftKey = preferences.getInteger(SettingManager.MOVE_LEFT);
+		this.downKey = preferences.getInteger(SettingManager.MOVE_DOWN);
+		this.rightKey = preferences.getInteger(SettingManager.MOVE_RIGHT);
         Gdx.app.log("orientation", "" + rotationFactor);
     }
     
@@ -88,7 +99,6 @@ public class FlightController implements InputProcessor {
      * Resets steering and the buffers.
      */
     public void init() {
-        useSensorData = !PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getPreferences().getBoolean(SettingManager.USE_TOUCH);
         if (useSensorData) {
             resetSteering();
             resetBuffers();
@@ -118,7 +128,7 @@ public class FlightController implements InputProcessor {
      */
     public void resetSteering() {
         startRoll = Gdx.input.getRoll();
-        startRoll *= inversionFactor * rotationFactor;
+        startRoll *= rotationFactor;
         startPitch = Gdx.input.getPitch();
     }
     
@@ -132,7 +142,7 @@ public class FlightController implements InputProcessor {
         // rotating the camera according to UserInput
         if (useSensorData)
             interpretSensorInput();
-        player.getPlane().rotate(rollFactor, azimuthFactor, 60 * delta);
+        player.getPlane().rotate(rollFactor * invertYFactor, azimuthFactor * invertXFactor, 60 * delta);
     }
 
     protected void resetBuffers() {
@@ -148,7 +158,7 @@ public class FlightController implements InputProcessor {
         roll = Gdx.input.getRoll();
         
         // interpret if screen on smartphone is rotated or not
-        roll *= inversionFactor * rotationFactor;
+        roll *= rotationFactor;
         pitch *= rotationFactor;
         
         // removing oldest element in buffers
@@ -252,24 +262,14 @@ public class FlightController implements InputProcessor {
         setAzimuthFactor(0);
         setRollFactor(0);
         for ( Integer keycode : pressedKeys )
-            switch ( keycode ) {
-                case Keys.A:
-                case Keys.LEFT:
-                    setAzimuthFactor(getAzimuthFactor() + 1);
-                    break;
-                case Keys.D:
-                case Keys.RIGHT:
-                    setAzimuthFactor(getAzimuthFactor() - 1);
-                    break;
-                case Keys.W:
-                case Keys.UP:
-                    setRollFactor(getRollFactor() + 1 * inversionFactor);
-                    break;
-                case Keys.S:
-                case Keys.DOWN:
-                    setRollFactor(getRollFactor() - 1 * inversionFactor);
-                    break;
-            }
+            if ( keycode == leftKey )
+				setAzimuthFactor(getAzimuthFactor() + 1);
+            else if ( keycode == rightKey )
+				setAzimuthFactor(getAzimuthFactor() - 1);
+			else if ( keycode == upKey )
+				setRollFactor(getRollFactor() + 1);
+            else if ( keycode == downKey )
+				setRollFactor(getRollFactor() - 1);
     }
     
     @Override
@@ -295,7 +295,7 @@ public class FlightController implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         // using the touchscreen to rotate camera
         
-        if (button == Buttons.LEFT && !useSensorData) {
+        if (button == Buttons.LEFT) {
             
             float xDif = screenX - centerX;
             float yDif = screenY - centerY;

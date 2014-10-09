@@ -21,8 +21,10 @@ public class FloatSetting extends ChangeListener implements ISetting {
     private float value;
     private SettingManager settingManager;
     private Slider slider;
-    private Label label;
+    private String description;
     private String helpingText;
+	private boolean hidden;
+	private Groups group;
     
     /**
      * Initializes the class with the {@link #id}. Also a {@link Slider} object
@@ -33,18 +35,19 @@ public class FloatSetting extends ChangeListener implements ISetting {
      * @param description
      * @param value
      */
-    public FloatSetting(SettingManager settingManager, String id, String description, float value, float minValue, float maxValue, float stepSize, String helpingText) {
+    public FloatSetting(SettingManager settingManager, String id, String description, float value, float minValue, float maxValue, float stepSize, String helpingText, boolean hidden, Groups group) {
         this.settingManager = settingManager;
         this.id = id;
         this.helpingText = helpingText;
-        
-        Skin skin = SkinManager.getInstance().getSkin();
-        this.label = new Label(description, skin);
+
+		this.description = description;
         
         this.value = value;
-        slider = new Slider(minValue, maxValue, stepSize, false, skin);
+        slider = new Slider(minValue, maxValue, stepSize, false, SkinManager.getInstance().getSkin());
         slider.setValue(value);
         this.slider.addListener(this);
+		this.hidden = hidden;
+		this.group = group;
     }
     
     /**
@@ -62,13 +65,13 @@ public class FloatSetting extends ChangeListener implements ISetting {
         value = slider.getValue();
         save();
     }
-    
-    @Override
-    public Label getLabel() {
-        return label;
-    }
-    
-    @Override
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
     public Actor getActor() {
         return slider;
     }
@@ -77,5 +80,15 @@ public class FloatSetting extends ChangeListener implements ISetting {
     public String getHelpingText() {
         return helpingText;
     }
-    
+
+	@Override
+	public boolean isHidden() {
+		return hidden;
+	}
+
+	@Override
+	public Groups group() {
+		return group;
+	}
+
 }
