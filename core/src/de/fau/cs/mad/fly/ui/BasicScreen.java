@@ -51,10 +51,6 @@ public abstract class BasicScreen implements Screen {
         generateContent();
     }
 
-	public Stage getStage() {
-		return stage;
-	}
-    
     private void initialize() {
         batch = new SpriteBatch();
         Assets.load(Assets.background);

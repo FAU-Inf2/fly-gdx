@@ -131,8 +131,6 @@ public class SettingManager {
 
 						@Override
 						public void changed(ChangeEvent event, Actor actor) {
-							Fly fly = (Fly) Gdx.app.getApplicationListener();
-							BasicScreen screen = (BasicScreen) fly.getScreen();
 							final Dialog dialog = new Dialog("Press a key\n", skin);
 							dialog.addListener(new InputListener() {
 
@@ -145,7 +143,7 @@ public class SettingManager {
 									return false;
 								}
 							});
-							dialog.show(screen.getStage());
+							dialog.show(event.getStage());
 						}
 					});
 				}
