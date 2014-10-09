@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.features.game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,18 +7,15 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 
 import de.fau.cs.mad.fly.features.upgrades.ChangePointsUpgradeHandler;
-import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangePointsUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
-import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
-import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.SpeedUpgradeEffect;
+import de.fau.cs.mad.fly.features.upgrades.types.TemporarySpeedUpgrade;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.game.GameModel;
@@ -191,8 +187,6 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
         
         Collectible c = null;
         
-        float speedFactor = MathUtils.random(0.1f, 0.5f);
-        
         if(stepsSinceLastGate == 0) {
         	return;
         }
@@ -209,8 +203,13 @@ public class EndlessRailLevelGenerator extends EndlessLevelGenerator {
         	if(stepsSinceLastTimeUpgrade <= 20 || stepsSinceLastSpeedUpgrade <= 20) {
         		return;
         	}
-            c = new InstantSpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), speedFactor + 1.f, 10.f);
-            instantSpeedHandler.addObject(c);
+        	float maxSpeedupFactor = MathUtils.random(0.9f, 2.0f);
+            int speedupTimeInMilliSeconds = 200;
+            int maxSpeedTimeInMilliSeconds = MathUtils.random(500, 10000);
+            int slowdownTimeInMilliSeconds = 200;
+            SpeedUpgradeEffect effect = new SpeedUpgradeEffect(maxSpeedupFactor, speedupTimeInMilliSeconds, maxSpeedTimeInMilliSeconds, slowdownTimeInMilliSeconds);
+            c = new TemporarySpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), effect);
+            temporarySpeedHandler.addObject(c);
             break;
         case 2:
         case 3:

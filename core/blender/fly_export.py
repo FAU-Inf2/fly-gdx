@@ -215,17 +215,12 @@ class LevelExporter:
 				up['time'] = item['time']
 				self.addInfo(up, item)
 				upgrades.append(up)
-			elif "instantSpeedUpgrade" in item.name:
-				up['type'] = "InstantSpeedUpgrade"
-				up['duration'] = item['duration']
-				up['speedFactor'] = item['speedFactor']
-				self.addInfo(up, item)
-				upgrades.append(up)
-			elif "linearSpeedUpgrade" in item.name:
-				up['type'] = "LinearSpeedUpgrade"
-				up['increaseFactor'] = item['increaseFactor']
-				up['increaseDuration'] = item['increaseDuration']
-				up['decreaseFactor'] = item['decreaseFactor']
+			elif "temporarySpeedUpgrade" in item.name:
+				up['type'] = "TemporarySpeedUpgrade"
+				up['maxSpeedupFactor'] = item['maxSpeedupFactor']
+				up['speedupTimeInMilliSeconds'] = item['speedupTimeInMilliSeconds']
+				up['maxSpeedTimeInMilliSeconds'] = item['maxSpeedTimeInMilliSeconds']
+				up['slowdownTimeInMilliSeconds'] = item['slowdownTimeInMilliSeconds']
 				self.addInfo(up, item)
 				upgrades.append(up)
 			elif "resizeGatesUpgrade" in item.name:

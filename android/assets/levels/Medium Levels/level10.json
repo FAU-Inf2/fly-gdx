@@ -307,21 +307,23 @@
                 0.0,
                 1.0
             ],
-            "duration": 6,
             "euler": [
                 -85.0,
                 0.0,
                 0.0
             ],
-            "id": "instantSpeedUpgrade",
+            "id": "temporarySpeedUpgrade",
+            "maxSpeedTimeInMilliSeconds": 5000,
+            "maxSpeedupFactor": 1.600000023841858,
             "position": [
                 2.0,
                 20.0,
                 1.0
             ],
             "ref": "speedUpgrade",
-            "speedFactor": 1.5,
-            "type": "InstantSpeedUpgrade"
+            "slowdownTimeInMilliSeconds": 200,
+            "speedupTimeInMilliSeconds": 200,
+            "type": "TemporarySpeedUpgrade"
         },
         {
             "angular_velocity": [
@@ -329,65 +331,23 @@
                 0.0,
                 1.0
             ],
-            "duration": 6,
-            "euler": [
-                -85.0,
-                -0.1,
-                45.2
-            ],
-            "id": "instantSpeedUpgrade.001",
-            "position": [
-                -8.6,
-                35.5,
-                2.0
-            ],
-            "ref": "speedUpgrade",
-            "speedFactor": 1.5,
-            "type": "InstantSpeedUpgrade"
-        },
-        {
-            "angular_velocity": [
-                2.0,
-                0.0,
-                1.0
-            ],
-            "duration": 6,
-            "euler": [
-                -85.0,
-                0.0,
-                90.0
-            ],
-            "id": "instantSpeedUpgrade.002",
-            "position": [
-                -29.6,
-                42.4,
-                4.0
-            ],
-            "ref": "speedUpgrade",
-            "speedFactor": 1.5,
-            "type": "InstantSpeedUpgrade"
-        },
-        {
-            "angular_velocity": [
-                2.0,
-                0.0,
-                1.0
-            ],
-            "duration": 5,
             "euler": [
                 -90.0,
-                0.0,
-                0.0
+                -0.2,
+                -0.1
             ],
-            "id": "instantSpeedUpgrade.003",
+            "id": "temporarySpeedUpgrade.001",
+            "maxSpeedTimeInMilliSeconds": 5000,
+            "maxSpeedupFactor": 1.600000023841858,
             "position": [
                 0.0,
                 10.0,
                 0.0
             ],
             "ref": "speedUpgrade",
-            "speedFactor": 1.5,
-            "type": "InstantSpeedUpgrade"
+            "slowdownTimeInMilliSeconds": 200,
+            "speedupTimeInMilliSeconds": 200,
+            "type": "TemporarySpeedUpgrade"
         },
         {
             "angular_velocity": [
@@ -395,21 +355,47 @@
                 0.0,
                 1.0
             ],
-            "duration": 5,
             "euler": [
-                -85.0,
-                0.0,
-                135.0
+                -90.0,
+                -0.2,
+                -0.1
             ],
-            "id": "instantSpeedUpgrade.004",
+            "id": "temporarySpeedUpgrade.002",
+            "maxSpeedTimeInMilliSeconds": 5000,
+            "maxSpeedupFactor": 1.600000023841858,
             "position": [
-                -45.7,
-                34.1,
-                6.0
+                -8.6,
+                35.2,
+                1.9
             ],
             "ref": "speedUpgrade",
-            "speedFactor": 1.5,
-            "type": "InstantSpeedUpgrade"
+            "slowdownTimeInMilliSeconds": 200,
+            "speedupTimeInMilliSeconds": 200,
+            "type": "TemporarySpeedUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                -0.2,
+                -0.1
+            ],
+            "id": "temporarySpeedUpgrade.003",
+            "maxSpeedTimeInMilliSeconds": 5000,
+            "maxSpeedupFactor": 1.600000023841858,
+            "position": [
+                -29.0,
+                38.0,
+                4.1
+            ],
+            "ref": "speedUpgrade",
+            "slowdownTimeInMilliSeconds": 200,
+            "speedupTimeInMilliSeconds": 200,
+            "type": "TemporarySpeedUpgrade"
         }
     ]
 }

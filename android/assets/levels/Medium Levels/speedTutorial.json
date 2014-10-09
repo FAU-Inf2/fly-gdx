@@ -75,8 +75,8 @@
             "successors": []
         }
     ],
-    "id": 11,
-    "name": "T 7",
+    "id": 5,
+    "name": "Speed Tutorial",
     "start": {
         "position": {
             "x": 0.0,
@@ -102,21 +102,23 @@
                 0.0,
                 1.0
             ],
-            "duration": 20,
             "euler": [
                 -90.0,
                 0.0,
                 0.0
             ],
-            "id": "instantSpeedUpgrade",
+            "id": "temporarySpeedUpgrade",
+            "maxSpeedTimeInMilliSeconds": 20000,
+            "maxSpeedupFactor": 4.0,
             "position": [
                 5.0,
                 20.0,
                 0.0
             ],
             "ref": "speedUpgrade",
-            "speedFactor": 4.0,
-            "type": "InstantSpeedUpgrade"
+            "slowdownTimeInMilliSeconds": 200,
+            "speedupTimeInMilliSeconds": 200,
+            "type": "TemporarySpeedUpgrade"
         }
     ]
 }

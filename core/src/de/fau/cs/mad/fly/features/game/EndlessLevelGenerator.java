@@ -11,12 +11,11 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
-import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgradeHandler;
-import de.fau.cs.mad.fly.features.upgrades.LinearSpeedUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.TemporarySpeedUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
-import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
-import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.SpeedUpgradeEffect;
+import de.fau.cs.mad.fly.features.upgrades.types.TemporarySpeedUpgrade;
 import de.fau.cs.mad.fly.game.CollisionDetector;
 import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.game.GameModel;
@@ -35,8 +34,7 @@ public class EndlessLevelGenerator {
     
 	protected AssetManager manager;
     
-	protected LinearSpeedUpgradeHandler linearSpeedHandler;
-	protected InstantSpeedUpgradeHandler instantSpeedHandler;
+	protected TemporarySpeedUpgradeHandler temporarySpeedHandler;
 	protected ChangeTimeUpgradeHandler changeTimeHandler;
     
 	protected Level level;
@@ -75,12 +73,10 @@ public class EndlessLevelGenerator {
         manager.load(new AssetDescriptor<GameModel>("models/speedUpgrade/speedUpgrade", GameModel.class));
         
         // Adds the necessary Handlers for the Upgrades to the Builder
-        this.linearSpeedHandler = new LinearSpeedUpgradeHandler();
-        this.instantSpeedHandler = new InstantSpeedUpgradeHandler();
+        this.temporarySpeedHandler = new TemporarySpeedUpgradeHandler();
         this.changeTimeHandler = new ChangeTimeUpgradeHandler();
         
-        builder.addFeatureToLists(linearSpeedHandler);
-        builder.addFeatureToLists(instantSpeedHandler);
+        builder.addFeatureToLists(temporarySpeedHandler);
         builder.addFeatureToLists(changeTimeHandler);
         
         this.level = level;
@@ -295,11 +291,9 @@ public class EndlessLevelGenerator {
      *            predecessors
      */
     private void addRandomUpgrade(Matrix4 matrix, float distance) {
-        int random = MathUtils.random(2);
+        int random = MathUtils.random(1);
         
         Collectible c = null;
-        
-        float speedFactor = MathUtils.random(0.1f, 0.5f);
         
         switch (random) {
         case 0:
@@ -307,12 +301,13 @@ public class EndlessLevelGenerator {
             changeTimeHandler.addObject(c);
             break;
         case 1:
-            c = new InstantSpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), speedFactor + 1.f, 10.f);
-            instantSpeedHandler.addObject(c);
-            break;
-        case 2:
-            c = new LinearSpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), speedFactor, 5.f, speedFactor);
-            linearSpeedHandler.addObject(c);
+            float maxSpeedupFactor = MathUtils.random(0.9f, 2.0f);
+            int speedupTimeInMilliSeconds = 200;
+            int maxSpeedTimeInMilliSeconds = MathUtils.random(500, 10000);
+            int slowdownTimeInMilliSeconds = 200;
+            SpeedUpgradeEffect effect = new SpeedUpgradeEffect(maxSpeedupFactor, speedupTimeInMilliSeconds, maxSpeedTimeInMilliSeconds, slowdownTimeInMilliSeconds);
+            c = new TemporarySpeedUpgrade(manager.get("models/speedUpgrade/speedUpgrade", GameModel.class), effect);
+            temporarySpeedHandler.addObject(c);
             break;
         default:
             break;

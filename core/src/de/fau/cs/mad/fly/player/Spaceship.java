@@ -53,7 +53,7 @@ public class Spaceship extends GameObject implements IPlane {
     private Matrix4 displayTransform = new Matrix4();
     
     private float currentSpeed;
-    private float planeSpeed;
+    private float baseSpeed;
     private float azimuthSpeed;
     private float rollingSpeed;
     private IPlane.Head head;
@@ -62,8 +62,8 @@ public class Spaceship extends GameObject implements IPlane {
         super(model, "Spaceship");
         this.head = head;
 
-        this.planeSpeed = head.speed / 5;
-        this.currentSpeed = this.planeSpeed;
+        this.baseSpeed = head.speed / 5;
+        this.currentSpeed = this.baseSpeed;
         this.azimuthSpeed = head.azimuthSpeed / 10;
         this.rollingSpeed = head.rollingSpeed / 10;
         
@@ -166,13 +166,13 @@ public class Spaceship extends GameObject implements IPlane {
     }
     
     @Override
-    public void setPlaneSpeed(float speed) {
-        this.planeSpeed = speed;
+    public void setBaseSpeed(float speed) {
+        this.baseSpeed = speed;
     }
     
     @Override
-    public float getPlaneSpeed() {
-        return planeSpeed;
+    public float getBaseSpeed() {
+        return baseSpeed;
     }
     
     @Override

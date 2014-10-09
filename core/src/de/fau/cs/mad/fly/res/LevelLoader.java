@@ -28,9 +28,9 @@ import de.fau.cs.mad.fly.features.upgrades.types.ChangePointsUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangeSteeringUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.ChangeTimeUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.Collectible;
-import de.fau.cs.mad.fly.features.upgrades.types.InstantSpeedUpgrade;
-import de.fau.cs.mad.fly.features.upgrades.types.LinearSpeedUpgrade;
 import de.fau.cs.mad.fly.features.upgrades.types.ResizeGatesUpgrade;
+import de.fau.cs.mad.fly.features.upgrades.types.SpeedUpgradeEffect;
+import de.fau.cs.mad.fly.features.upgrades.types.TemporarySpeedUpgrade;
 import de.fau.cs.mad.fly.game.GameModel;
 import de.fau.cs.mad.fly.game.GameObject;
 import de.fau.cs.mad.fly.game.object.RotationMover;
@@ -127,7 +127,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
      * Parses the gates in the level file and creates a gate circuit.
      * 
      * @return GateCircuit
-     * @throws LevelLoadingException 
+     * @throws LevelLoadingException
      */
     private GateCircuit parseGates() {
         Map<Integer, GateGoal> gateMap = new HashMap<Integer, GateGoal>();
@@ -323,10 +323,14 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                     c = new ChangeTimeUpgrade(models.get(ref), jsonUpgrade.get("time").asInt());
                 } else if (type.equals("ChangePointsUpgrade")) {
                     c = new ChangePointsUpgrade(models.get(ref), jsonUpgrade.get("points").asInt());
-                } else if (type.equals("InstantSpeedUpgrade")) {
-                    c = new InstantSpeedUpgrade(models.get(ref), jsonUpgrade.get("speedFactor").asFloat(), jsonUpgrade.get("duration").asFloat());
-                } else if (type.equals("LinearSpeedUpgrade")) {
-                    c = new LinearSpeedUpgrade(models.get(ref), jsonUpgrade.get("increaseFactor").asFloat(), jsonUpgrade.get("increaseDuration").asFloat(), jsonUpgrade.get("decreaseFactor").asFloat());
+                } else if (type.equals(TemporarySpeedUpgrade.TYPE)) {
+                    float maxSpeedupFactor = jsonUpgrade.get("maxSpeedupFactor").asFloat();
+                    int speedupTimeInMilliSeconds = jsonUpgrade.get("speedupTimeInMilliSeconds").asInt();
+                    int maxSpeedTimeInMilliSeconds = jsonUpgrade.get("maxSpeedTimeInMilliSeconds").asInt();
+                    int slowdownTimeInMilliSeconds = jsonUpgrade.get("slowdownTimeInMilliSeconds").asInt();
+                    SpeedUpgradeEffect effect = new SpeedUpgradeEffect(maxSpeedupFactor, speedupTimeInMilliSeconds, maxSpeedTimeInMilliSeconds, slowdownTimeInMilliSeconds);
+                    c = new TemporarySpeedUpgrade(models.get(ref), effect);
+                    
                 } else if ("ResizeGatesUpgrade".equals(type)) {
                     JsonValue jsonScale = jsonUpgrade.get("scale");
                     Vector3 scale = new Vector3(jsonScale.getFloat(0), jsonScale.getFloat(1), jsonScale.getFloat(2));
