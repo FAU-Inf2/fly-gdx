@@ -50,6 +50,10 @@ public abstract class BasicScreen implements Screen {
         inputProcessor = new InputMultiplexer(stage, new BackProcessor());
         generateContent();
     }
+
+	public Stage getStage() {
+		return stage;
+	}
     
     private void initialize() {
         batch = new SpriteBatch();

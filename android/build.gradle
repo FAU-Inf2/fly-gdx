@@ -104,7 +104,9 @@ def updateAndroidVersion() {
 }
 
 task run(type: Exec) {
-	updateAndroidVersion()
+    def dirty = "git status --short".execute()
+    if ( dirty.text )
+	   updateAndroidVersion()
     def adb = "$System.env.ANDROID_HOME/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'de.fau.cs.mad.fly.android/de.fau.cs.mad.fly.android.AndroidLauncher'
 }

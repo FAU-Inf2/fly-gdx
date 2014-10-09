@@ -20,8 +20,10 @@ public class BooleanSetting extends ChangeListener implements ISetting {
     private boolean value;
     private SettingManager settingManager;
     private CheckBox checkBox;
-    private Label label;
+    private String description;
     private String helpingText;
+	private boolean hidden;
+	private Groups group;
     
     /**
      * Initializes the class with the {@link #id}. Also a {@link CheckBox}
@@ -32,14 +34,16 @@ public class BooleanSetting extends ChangeListener implements ISetting {
      * @param description
      * @param value
      */
-    public BooleanSetting(SettingManager settingManager, String id, String description, boolean value, String helpingText) {
+    public BooleanSetting(SettingManager settingManager, String id, String description, boolean value, String helpingText, boolean hidden, Groups group) {
         this.settingManager = settingManager;
         this.id = id;
         
-        this.label = new Label(description, SkinManager.getInstance().getSkin());
+        this.description = description;
         
         this.value = value;
         this.helpingText = helpingText;
+		this.hidden = hidden;
+		this.group = group;
     }
     
     /**
@@ -59,19 +63,29 @@ public class BooleanSetting extends ChangeListener implements ISetting {
     public String getHelpingText() {
         return helpingText;
     }
-    
-    @Override
+
+	@Override
+	public boolean isHidden() {
+		return hidden;
+	}
+
+	@Override
+	public Groups group() {
+		return group;
+	}
+
+	@Override
     public void changed(ChangeEvent event, Actor actor) {
         value = checkBox.isChecked();
         save();
     }
     
     @Override
-    public Label getLabel() {
-        return label;
+    public String getDescription() {
+        return description;
     }
-    
-    @Override
+
+	@Override
     public Actor getActor() {
         if (checkBox == null) {
             this.checkBox = new CheckBox("", SkinManager.getInstance().getSkin());

@@ -32,7 +32,9 @@ def updateDesktopVersion() {
 }
 
 task run(dependsOn: classes, type: JavaExec) {
-	updateDesktopVersion()
+    def dirty = "git status --short".execute()
+    if ( dirty.text )
+        updateDesktopVersion()
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
