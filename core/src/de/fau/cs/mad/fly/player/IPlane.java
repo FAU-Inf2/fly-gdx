@@ -146,14 +146,14 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
      * 
      * @param speed
      */
-    public void setPlaneSpeed(float speed);
+    public void setBaseSpeed(float speed);
     
     /**
      * Getter for the normal speed of the plane.
      * 
      * @return planeSpeed
      */
-    public float getPlaneSpeed();
+    public float getBaseSpeed();
     
     /**
      * Setter for the gravity of the plane.

@@ -4,9 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.settings.ISetting;
+import de.fau.cs.mad.fly.settings.SettingManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Collection;
 
@@ -44,7 +51,7 @@ public class AudioManager implements Disposable {
 
         soundMap.put(Sounds.SONIC,       create(SONIC,             0.0f, true,  Types.Music));
         soundMap.put(Sounds.SAD_VIOLIN,  create(SAD_VIOLIN,        1.0f, true,  Types.Music));
-    }
+	}
 
     public Playable get(Sounds sound) {
         return soundMap.get(sound);
@@ -82,6 +89,17 @@ public class AudioManager implements Disposable {
     private Playable create(String file, float defaultVolume, boolean defaultLooping, Types type) {
         return create(Gdx.files.internal(file), defaultVolume, defaultLooping, type);
     }
+
+	public void use(final SettingManager settings) {
+		volume = settings.getFloat(SettingManager.MASTER_VOLUME);
+		SettingManager.SettingListener listener = new SettingManager.SettingListener() {
+			@Override
+			public void settingChanged(String id, Object value) {
+				volume = settings.getFloat(SettingManager.MASTER_VOLUME);
+			}
+		};
+		settings.addListener(SettingManager.MASTER_VOLUME, listener);
+	}
 
     public void mute() {
         volume = 0.0f;

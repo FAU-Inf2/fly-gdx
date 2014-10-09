@@ -19,8 +19,6 @@ import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.ui.GameScreen;
 import de.fau.cs.mad.fly.ui.LoadingScreen;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
-import de.fau.cs.mad.fly.ui.PlaneChooserScreen;
-import de.fau.cs.mad.fly.ui.PlaneUpgradeScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 
 /**
@@ -72,7 +70,7 @@ public class Fly extends Game implements Loadable<Fly> {
         time = System.currentTimeMillis();
         SkinManager.getInstance();
         Gdx.app.log("timing", "Fly.create creating skin manager: " + String.valueOf(System.currentTimeMillis() - time));
-        
+
         addProgressListener(new ProgressListener.ProgressAdapter<Fly>() {
             @Override
             public void progressFinished(Fly fly) {
@@ -89,7 +87,7 @@ public class Fly extends Game implements Loadable<Fly> {
                 init();
             }
         };
-        
+
         Thread loadingThread = new Thread(runnable);
         loadingThread.start();
         

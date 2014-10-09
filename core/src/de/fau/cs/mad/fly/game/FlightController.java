@@ -82,16 +82,16 @@ public class FlightController implements InputProcessor {
     
     public FlightController(Player player, PlayerProfile playerProfile) {
         this.player = player;
-        Preferences preferences = playerProfile.getSettingManager().getPreferences();
-        this.useSensorData = !preferences.getBoolean(SettingManager.USE_TOUCH) && Gdx.app.getType() != ApplicationType.Desktop;
-		this.invertXFactor = preferences.getBoolean(SettingManager.INVERT_X) ? -1 : 1;
-		this.invertYFactor = preferences.getBoolean(SettingManager.INVERT_Y) ? -1 : 1;
+        SettingManager settings = playerProfile.getSettingManager();
+        this.useSensorData = !settings.getBoolean(SettingManager.USE_TOUCH) && Gdx.app.getType() != ApplicationType.Desktop;
+		this.invertXFactor = settings.getBoolean(SettingManager.INVERT_X) ? -1 : 1;
+		this.invertYFactor = settings.getBoolean(SettingManager.INVERT_Y) ? -1 : 1;
         this.bufferSize = 10;
         this.rotationFactor = ((Fly) Gdx.app.getApplicationListener()).orientationSwapped() ? -1 : 1;
-		this.upKey = preferences.getInteger(SettingManager.MOVE_UP);
-		this.leftKey = preferences.getInteger(SettingManager.MOVE_LEFT);
-		this.downKey = preferences.getInteger(SettingManager.MOVE_DOWN);
-		this.rightKey = preferences.getInteger(SettingManager.MOVE_RIGHT);
+		this.upKey = settings.getInteger(SettingManager.MOVE_UP);
+		this.leftKey = settings.getInteger(SettingManager.MOVE_LEFT);
+		this.downKey = settings.getInteger(SettingManager.MOVE_DOWN);
+		this.rightKey = settings.getInteger(SettingManager.MOVE_RIGHT);
         Gdx.app.log("orientation", "" + rotationFactor);
     }
     
@@ -274,7 +274,8 @@ public class FlightController implements InputProcessor {
     
     @Override
     public boolean keyDown(int keycode) {
-        pressedKeys.add(keycode);
+		Gdx.app.log("FlightController.keyDown", "[keycode=" + keycode + "]");
+		pressedKeys.add(keycode);
         evaluateKeyboardInput();
         return false;
     }

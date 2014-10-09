@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -44,9 +43,9 @@ import de.fau.cs.mad.fly.features.overlay.TouchScreenOverlay;
 import de.fau.cs.mad.fly.features.upgrades.ChangePointsUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.ChangeSteeringUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
-import de.fau.cs.mad.fly.features.upgrades.InstantSpeedUpgradeHandler;
-import de.fau.cs.mad.fly.features.upgrades.LinearSpeedUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.ResizeGatesUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.TemporarySpeedUpgradeHandler;
+import de.fau.cs.mad.fly.features.upgrades.types.TemporarySpeedUpgrade;
 import de.fau.cs.mad.fly.graphics.shaders.FlyShaderProvider;
 import de.fau.cs.mad.fly.levels.DefaultLevel;
 import de.fau.cs.mad.fly.levels.ILevel;
@@ -62,7 +61,6 @@ import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.sound.AudioManager;
-import de.fau.cs.mad.fly.sound.Playable;
 import de.fau.cs.mad.fly.ui.BackProcessor;
 import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
@@ -296,7 +294,7 @@ public class GameControllerBuilder {
     private void checkAndAddSettingFeatures() {
         // if needed for debugging: Debug.init(game.getSkin(), stage, 1);
         
-        Preferences preferences = playerProfile.getSettingManager().getPreferences();
+        SettingManager settings = playerProfile.getSettingManager();
         addGateIndicator();
         addTimeLeftOverlay();
         addScoreOverlay();
@@ -306,13 +304,13 @@ public class GameControllerBuilder {
         if (!ApplicationType.Android.equals(Gdx.app.getType())) {
             addBackButtonOverlay();
         }
-        if (preferences.getBoolean(SettingManager.SHOW_FPS)) {
+        if (settings.getBoolean(SettingManager.SHOW_FPS)) {
             addFPSOverlay();
         }
-        if (preferences.getBoolean(SettingManager.USE_TOUCH)) {
+        if (settings.getBoolean(SettingManager.USE_TOUCH)) {
             addTouchScreenOverlay();
         }
-        if (preferences.getBoolean(SettingManager.VIBRATE_WHEN_COLLIDE)) {
+        if (settings.getBoolean(SettingManager.VIBRATE_WHEN_COLLIDE)) {
             CollisionDetector.getInstance().getCollisionContactListener().addListener(new ICollisionListener() {
                 @Override
                 public void onCollision(GameObject g1, GameObject g2) {
@@ -332,9 +330,7 @@ public class GameControllerBuilder {
                 }
             });
         }
-        if(preferences.getBoolean(SettingManager.DISABLE_SOUND)) {
-            audioManager.mute();
-        }
+		audioManager.use(settings);
         addGameFinishedOverlay();
     }
     
@@ -343,8 +339,8 @@ public class GameControllerBuilder {
      * controller.
      */
     private void checkAndAddUpgradeHandler() {
-        if (checkUpgrade("InstantSpeedUpgrade")) {
-            addFeatureToLists(new InstantSpeedUpgradeHandler());
+        if (checkUpgrade(TemporarySpeedUpgrade.TYPE)) {
+            addFeatureToLists(new TemporarySpeedUpgradeHandler());
         }
         if (checkUpgrade("ChangeTimeUpgrade")) {
             addFeatureToLists(new ChangeTimeUpgradeHandler());
@@ -357,9 +353,6 @@ public class GameControllerBuilder {
         }
         if (checkUpgrade("ChangeSteeringUpgrade")) {
             addFeatureToLists(new ChangeSteeringUpgradeHandler());
-        }
-        if (checkUpgrade("LinearSpeedUpgrade")) {
-            addFeatureToLists(new LinearSpeedUpgradeHandler());
         }
     }
     
@@ -382,7 +375,7 @@ public class GameControllerBuilder {
     }
     
     /**
-     * Checks the {@link Level. levelClass} value and uses the default class
+     * Checks the {@link Level#levelClass} value and uses the default class
      * features or the features of a given class if found and invoked correctly.
      * 
      * @param level
