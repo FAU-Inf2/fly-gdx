@@ -257,13 +257,12 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         // define some space between the labels and the values
         messageTable.columnDefaults(1).width(50f);
         
+        int gainMoney = 0;
+        
         Score recentBestScore = ScoreManager.getInstance().getCurrentLevelBestScore();
         if ((recentBestScore == null && newScore.getTotalScore() > 0) || newScore.getTotalScore() > recentBestScore.getTotalScore()) {
             
-            // solution B for totalHighScoreOfall
-            int score0 = (recentBestScore == null) ? 0 : recentBestScore.getTotalScore();
-            int addScore = newScore.getTotalScore() - score0;
-            PlayerProfileManager.getInstance().getCurrentPlayerProfile().addScore(addScore);
+        	gainMoney = (int)(newScore.getTotalScore() * PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelGroup().getMoneyFactor());
             
             newScore.setServerScoreId(recentBestScore == null ? -1 : recentBestScore.getServerScoreId());
             ScoreManager.getInstance().saveBestScore(newScore);
@@ -274,6 +273,9 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             messageTable.add(new Label(String.valueOf(newScore.getTotalScore()), skin)).left();
         }
         else {
+        	gainMoney = (int)(newScore.getTotalScore() * PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelGroup().getMoneyFactor()*0.25);
+            
+          
             Label scoreName = new Label(I18n.t("newScore"), skin);
             
             messageTable.add(scoreName).right();
@@ -287,6 +289,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
             messageTable.add(new Label(builder.toString(), skin)).left();
         }
         messageTable.row().expand();
+        
+        PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(gainMoney);
         
         // gates
         ScoreDetail detail = newScore.getScoreDetails().get(0);
@@ -319,5 +323,13 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         messageTable.add();
         messageTable.add(new Label(detail.getValue(), skin, "medium-font")).left();
         messageTable.row();
+        
+        //gain money
+        messageTable.row().expand();        
+        messageTable.add(new Label(I18n.t("gainMoney"), skin)).right();
+        messageTable.add();
+        messageTable.add(new Label(gainMoney+"", skin)).left();
+        messageTable.row();
+        
     }
 }

@@ -46,6 +46,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
     
     private Label totalScoreValueLabel;
     private Label lastLevelValueLabel;
+    private Label totalMoneyValueLabel;
     
     public final static int MAX_NAME_WIDTH = 1650;
     
@@ -166,9 +167,15 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         
         PlayerProfile playerProfile = playerProfileManager.getCurrentPlayerProfile();
         
+        //show fly id
+        playerTable.add(new Label(I18n.t("labelFlyId"), skin)).pad(padding);
+        Label tmp = new Label("" + playerProfile.getFlyID(), skin);//msgGetFlyId
+        playerTable.add(tmp).pad(padding);
+        playerTable.row();
+        
         // show total score
         playerTable.add(new Label(I18n.t("labelTotalScore"), skin)).pad(padding);
-        totalScoreValueLabel = new Label("" + playerProfile.getMoney(), skin);
+        totalScoreValueLabel = new Label("" + playerProfile.getTotalScoreOfAll(), skin);
         playerTable.add(totalScoreValueLabel).pad(padding);
         playerProfileManager.addPlayerChangedListener(new ChangeListener<PlayerProfile>() {
             
@@ -179,7 +186,12 @@ public class PlayerScreen extends BasicScreenWithBackButton {
             }
             
         });
-        // TODO: do not use money for that!
+        playerTable.row();
+        
+        //show money
+        playerTable.add(new Label(I18n.t("currentMoney") + ":", skin)).pad(padding);
+        totalMoneyValueLabel = new Label("" + playerProfile.getMoney(), skin);
+        playerTable.add(totalMoneyValueLabel).pad(padding);
         playerTable.row();
         
         // show passed group and level
@@ -237,7 +249,8 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         super.show();
         if (totalScoreValueLabel != null) {
             PlayerProfile currentPlayerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-            totalScoreValueLabel.setText(String.valueOf(currentPlayerProfile.getMoney()));
+            totalScoreValueLabel.setText(String.valueOf(currentPlayerProfile.getTotalScoreOfAll()));
+            totalMoneyValueLabel.setText(currentPlayerProfile.getMoney() + "");
             updateLastLevelGroup(currentPlayerProfile);
         }
     }
