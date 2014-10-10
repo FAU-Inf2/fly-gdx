@@ -161,7 +161,7 @@ public class PlaneChooserScreen extends PlaneBasicScreen implements InputProcess
                         StringBuilder message = new StringBuilder();
                         message.append(I18n.t("minLevelGroupForShip1"));
                         message.append(" ");
-                        message.append(LevelGroupManager.getInstance().getLevelGroups().get(levelId).name);
+                        message.append(LevelGroupManager.getInstance().getLevelGroups().get(levelId-1).name);
                         message.append(" ");
                         message.append(I18n.t("minLevelGroupForShip2"));
                         message.append(".");

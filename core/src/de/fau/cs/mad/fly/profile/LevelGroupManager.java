@@ -81,7 +81,7 @@ public class LevelGroupManager {
                     LevelGroup group = new LevelGroup();
                     JsonValue groupJS = groups.get(i);
                     group.id = groupJS.getInt("id");
-                    group.name = groupJS.getString(I18n.t("name"));
+                    group.name = I18n.t(groupJS.getString("name"));
                     group.path = LEVEL_FOLDER + groupJS.getString("path");
                     levelGroups.add(group);
                 }
