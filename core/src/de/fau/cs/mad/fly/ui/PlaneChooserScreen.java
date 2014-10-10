@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
@@ -24,6 +25,7 @@ import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.ui.help.HelpFrameTextWithArrow;
 import de.fau.cs.mad.fly.ui.help.HelpOverlay;
+import de.fau.cs.mad.fly.ui.help.OverlayFrame;
 import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
 
 /**
@@ -314,8 +316,11 @@ public class PlaneChooserScreen extends PlaneBasicScreen implements InputProcess
         showHelpScreen = true;
         Gdx.input.setInputProcessor(helpOverlay);
     }
-    
-    @Override
+
+	@Override
+	public void step(OverlayFrame frame) {}
+
+	@Override
     public void endHelp() {
         showHelpScreen = false;
         Gdx.input.setInputProcessor(inputProcessor);

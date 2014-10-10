@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.ui;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -18,10 +19,7 @@ import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
-import de.fau.cs.mad.fly.ui.help.HelpFrameText;
-import de.fau.cs.mad.fly.ui.help.HelpFrameTextWithArrow;
-import de.fau.cs.mad.fly.ui.help.HelpOverlay;
-import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
+import de.fau.cs.mad.fly.ui.help.*;
 
 /**
  * Displays the main menu with Start, Options, Help and Exit buttons.
@@ -260,8 +258,11 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         showHelpScreen = true;
         Gdx.input.setInputProcessor(helpOverlay);
     }
-    
-    @Override
+
+	@Override
+	public void step(OverlayFrame frame) {}
+
+	@Override
     public void endHelp() {
         showHelpScreen = false;
         Gdx.input.setInputProcessor(inputProcessor);

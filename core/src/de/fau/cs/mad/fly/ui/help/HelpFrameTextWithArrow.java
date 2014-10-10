@@ -245,6 +245,10 @@ public class HelpFrameTextWithArrow extends OverlayFrame {
         helpingTextTable.setBounds(labelXPos - PADDING_OF_LABEL, labelYPos - PADDING_OF_LABEL, label.getWidth() + 2 * PADDING_OF_LABEL, label.getHeight() + 2 * PADDING_OF_LABEL);
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
+
+	public Actor getActor() {
+		return actor;
+	}
     
     @Override
     /**
