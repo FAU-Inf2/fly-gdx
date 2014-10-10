@@ -1,10 +1,11 @@
 package de.fau.cs.mad.fly.ui.help;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -18,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class HelpOverlay extends ClickListener implements InputProcessor {
     
     private final WithHelpOverlay backListener;
-    private final ArrayList<OverlayFrame> helpFrames;
+    private final List<OverlayFrame> helpFrames;
     private int currentHelpFrame;
     
     /**

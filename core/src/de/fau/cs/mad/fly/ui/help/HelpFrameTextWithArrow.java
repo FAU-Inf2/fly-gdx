@@ -48,10 +48,13 @@ import de.fau.cs.mad.fly.ui.UI;
  */
 public class HelpFrameTextWithArrow extends OverlayFrame {
     
-    protected final int PADDING_OF_LABEL = 70;
+    private static final int PADDING_OF_LABEL = 70;
     
     /** Space between arrow and actor / message box */
-    private final static float PADDING = 10f;
+    private static final float PADDING = 10f;
+    
+    
+    private static final int ORIGINAL_HEIGHT_OF_ARROW = 250;
     
     /**
      * arrow that points to the actor that is described by this
@@ -126,9 +129,6 @@ public class HelpFrameTextWithArrow extends OverlayFrame {
     
     /** Local copy of the label text */
     private final String labelText;
-    
-    private final int HEIGHT = 250;
-    private final int WIDTH = 172;
     
     /**
      * Initialize only the necessary members.
@@ -207,13 +207,13 @@ public class HelpFrameTextWithArrow extends OverlayFrame {
         // assume the actor is visible
         
         // calculate horizontal position for arrow
-        arrowXPos = actorPos.x + 0.5f * actor.getWidth() - 0.5f * WIDTH;
+        arrowXPos = actorPos.x + 0.5f * actor.getWidth() - 0.5f * arrow.getRegionWidth();
         float leftBorder = UI.Window.BORDER_SPACE + PADDING_OF_LABEL;
         float rightBorder = viewport.getWorldWidth() - leftBorder;
         if (arrowXPos < leftBorder) {
             arrowXPos = leftBorder;
-        } else if (arrowXPos + WIDTH > rightBorder) {
-            arrowXPos = rightBorder - WIDTH;
+        } else if (arrowXPos + arrow.getRegionWidth() > rightBorder) {
+            arrowXPos = rightBorder - arrow.getRegionWidth();
         }
         arrowXPos /= scalingFactor;
         
@@ -226,17 +226,17 @@ public class HelpFrameTextWithArrow extends OverlayFrame {
         }
         
         // check if above is possible
-        float minSpaceAbove = label.getHeight() + UI.Window.BORDER_SPACE + HEIGHT + 2 * PADDING;
+        float minSpaceAbove = label.getHeight() + UI.Window.BORDER_SPACE + ORIGINAL_HEIGHT_OF_ARROW + 2 * PADDING;
         float topEdgeOfActor = actorPos.y + actor.getHeight();
-        if (viewport.getWorldHeight() - (topEdgeOfActor + UI.Window.BORDER_SPACE + HEIGHT) > minSpaceAbove) {
+        if (viewport.getWorldHeight() - (topEdgeOfActor + UI.Window.BORDER_SPACE + ORIGINAL_HEIGHT_OF_ARROW) > minSpaceAbove) {
             // put label and arrow above
             arrowYPos = (topEdgeOfActor + PADDING) / scalingFactor;
-            labelYPos = topEdgeOfActor + HEIGHT + PADDING_OF_LABEL + 2 * PADDING;
+            labelYPos = topEdgeOfActor + ORIGINAL_HEIGHT_OF_ARROW + PADDING_OF_LABEL + 2 * PADDING;
             // pointing downwards corresponds to 90°
             arrowRotation = 90;
         } else {
             // put label and arrow below
-            float buttomEdgeOfArrow = actorPos.y - HEIGHT;
+            float buttomEdgeOfArrow = actorPos.y - ORIGINAL_HEIGHT_OF_ARROW;
             arrowYPos = (buttomEdgeOfArrow - PADDING) / scalingFactor;
             labelYPos = buttomEdgeOfArrow - label.getHeight() - PADDING_OF_LABEL - 2 * PADDING;
             // pointing upwards corresponds to 270°
