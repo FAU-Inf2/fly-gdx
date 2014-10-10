@@ -165,7 +165,9 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                 parseTransform(display, jsonGate);
                 goal.transform = display.transform.cpy();
                 parseVelocity(display, jsonGate);
-                goal.setMover(display.getMover());
+                if(display.getMover() != null) {
+                	goal.setMover(display.getMover().getCopy(goal));
+                }
                 gateMap.put(gateId.asInt(), goal);
             } else {
                 goal = new GateGoal(-1, models.get("hole"), 0, null);

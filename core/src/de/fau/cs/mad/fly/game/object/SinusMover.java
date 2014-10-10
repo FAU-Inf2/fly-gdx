@@ -45,4 +45,12 @@ public class SinusMover implements IGameObjectMover {
         i += delta;
     }
     
+	@Override
+	public IGameObjectMover getCopy(GameObject gameObject) {
+		SinusMover mover = new SinusMover(gameObject);
+		mover.X = this.X;
+		mover.Y = this.Y;
+		mover.Z = this.Z;
+		return mover;
+	}
 }
