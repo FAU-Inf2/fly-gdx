@@ -37,6 +37,13 @@ public class HelpOverlay extends ClickListener implements InputProcessor {
     }
     
     /**
+     * Clears the list of all {@link OverlayFrame}s.
+     */
+    public void clearListOfFrames() {
+        helpFrames.clear();
+    }
+    
+    /**
      * Adds a new {@link OverlayFrame} to this overlay.
      * <p>
      * The order of how {@link OverlayFrame}s are added is the order the

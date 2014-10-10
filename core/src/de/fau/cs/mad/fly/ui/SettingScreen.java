@@ -128,7 +128,7 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
 				Table settingTable = settingsMap.get(setting.group());
                 settingTable.row().expand();
                 if (!helpScreenCreated) {
-                    helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, setting.getHelpingText(), setting.getActor()));
+                    helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t(setting.getHelpingText()), setting.getActor()));
                 }
 				Label label = new Label(setting.getDescription(), skin);
                 settingTable.add(label).right().pad(padding);

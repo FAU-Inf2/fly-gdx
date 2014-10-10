@@ -140,7 +140,6 @@ public class HelpFrameTextWithArrow extends OverlayFrame {
      * @param skin
      *            is used to get the label style and the background of the label
      * @param labelText
-     *            String identifier to get the describing Text out of the I18N
      * @param actorToBeDescribed
      *            actor that is described by this help frame
      */
@@ -157,7 +156,7 @@ public class HelpFrameTextWithArrow extends OverlayFrame {
     private void initialize() {
         super.setupBatchAndStage();
         
-        label = new Label(I18n.t(labelText), skin, "black");
+        label = new Label(labelText, skin, "black");
         label.setAlignment(Align.center);
         helpingTextTable = new Table();
         final NinePatchDrawable background = new NinePatchDrawable(skin.get("dialog-background", NinePatch.class));

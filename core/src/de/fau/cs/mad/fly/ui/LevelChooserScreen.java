@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelProfile;
@@ -138,10 +139,10 @@ public class LevelChooserScreen extends BasicScreenWithBackButton implements Wit
     private void createHelp() {
         Skin skin = SkinManager.getInstance().getSkin();
         helpOverlay = new HelpOverlay(this);
-        helpOverlay.addHelpFrame(new HelpFrameText(skin, "chooseLevel"));
+        helpOverlay.addHelpFrame(new HelpFrameText(skin, I18n.t("chooseLevel")));
         if (firstTutorialButton != null) {
-            helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "tutorials", firstTutorialButton));
-            helpOverlay.addHelpFrame(new HelpFrameText(skin, "tutorialSetting"));
+            helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t("tutorials"), firstTutorialButton));
+            helpOverlay.addHelpFrame(new HelpFrameText(skin, I18n.t("tutorialSetting")));
         }
         helpButton.addListener(helpOverlay);
         showHelpScreen = false;

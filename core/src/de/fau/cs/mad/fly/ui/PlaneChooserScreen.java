@@ -11,64 +11,80 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.player.IPlane;
+import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.ui.help.HelpFrameTextWithArrow;
+import de.fau.cs.mad.fly.ui.help.HelpOverlay;
+import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
 
 /**
  * Shows all available Spaceships and gives the user the ability to choose the
  * one he wants to use
  * 
- * @author Sebastian
+ * @author Sebastian, Lukas Hahmann <lukas.hahmann@gmail.com>
  * 
  */
-public class PlaneChooserScreen extends PlaneBasicScreen  implements  InputProcessor {
-	
-    /** A list of all planes*/
+public class PlaneChooserScreen extends PlaneBasicScreen implements InputProcessor, WithHelpOverlay {
+    
+    /** A list of all planes */
     private Map<Integer, IPlane.Head> allPlanes;
     
     // variables for rotation with touchScreen
-    /** Indicates whether the touchScreen is currently touched or not*/
+    /** Indicates whether the touchScreen is currently touched or not */
     private boolean touched;
-    /** Difference between the last and the current position touched on the tochScreen*/
+    /**
+     * Difference between the last and the current position touched on the
+     * tochScreen
+     */
     private int xDif, yDif;
-    /** Factors to indicate the strength of the rotation*/
+    /** Factors to indicate the strength of the rotation */
     private float xFactor = 0.f, yFactor = 0.f, touchDistance;
-    /** Last position of the touchEvent*/
+    /** Last position of the touchEvent */
     private int lastX = 0, lastY = 0;
     
     private Vector3 xAxis = new Vector3(1.f, 0.f, 0.f);
     private Vector3 yAxis = new Vector3(0.f, 1.f, 0.f);
     
-    /** Vector to help with the calculation of the new cameraPosition*/
+    /** Vector to help with the calculation of the new cameraPosition */
     private Vector3 camVec;
     
-    /** The current scaling of the shown plane*/
+    /** The current scaling of the shown plane */
     private float absScale = 1;
     
     private PlaneUpgradeScreen planeUpgradeScreen;
+    
+    /** flag to indicate weather to render the help or not */
+    private boolean showHelpScreen;
+    
+    /** help overlay to indicate that some spaceships may not be available */
+    private HelpOverlay helpOverlay;
     
     public PlaneChooserScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
         allPlanes = PlaneManager.getInstance().getSpaceshipList();
         camVec = camera.position.cpy();
         // adding the table containing the buttons with preview of every plane
-        initPlaneListTable();        
+        initPlaneListTable();
         initUpgradeButton();
         
+        helpOverlay = new HelpOverlay(this);
+        
         // initialize the InputProcessor
-       inputProcessor = new InputMultiplexer(stage, this, this.backProcessor);
-       generateBackButton();
+        inputProcessor = new InputMultiplexer(stage, this, this.backProcessor);
+        generateBackButton();
     }
     
-	private void initUpgradeButton(){
-		// adding the button that opens the UpgradeScreen
+    private void initUpgradeButton() {
+        // adding the button that opens the UpgradeScreen
         ImageButton openButton = new ImageButton(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
         
         Table table = new Table(skin);
@@ -80,53 +96,16 @@ public class PlaneChooserScreen extends PlaneBasicScreen  implements  InputProce
         openButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	setPlaneUpgradeScreen();
+                setPlaneUpgradeScreen();
             }
         });
-	}
+    }
     
     public void setPlaneUpgradeScreen() {
         if (planeUpgradeScreen == null) {
-        	planeUpgradeScreen = new PlaneUpgradeScreen(this);
+            planeUpgradeScreen = new PlaneUpgradeScreen(this);
         }
         planeUpgradeScreen.set();
-    }
-    
-    /**
-     * Returns the message what you have to finish to unlock a new ship or if all ships are already available.
-     * 
-     * @param table			The table to add the message to.
-     * @param size			The count of spaceships in the game to calculate the correct col span.
-     * 
-     * @return the label with the message.
-     */
-    private void addNextPlaneAvailableInfo(Table table, int size) {
-    	if(!checkIfAllShipsAvailable()) {
-            table.add(new Label(I18n.t("planeChooser.unlockShip"), skin)).colspan(size).row();
-    	}/* else {
-    		table.add(new Label(I18n.t("planeChooser.allShips"), skin)).colspan(size).row();
-    	}*/
-    }
-    
-    /**
-     * Checks if all ships are available.
-     * 
-     * @return true if debug mode or all ships are available, false otherwise.
-     */
-    private boolean checkIfAllShipsAvailable() {
-    	if(Fly.DEBUG_MODE) {
-    		return true;
-    	}
-
-    	int size = allPlanes.size();
-    	int passedLevelGroupId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
-    	
-    	for (int i = 1; i <= size; i++) {
-    		if(allPlanes.get(i).levelGroupDependency > passedLevelGroupId) {
-    			return false;
-    		}
-    	}
-    	return true;
     }
     
     private void resetVectors() {
@@ -137,59 +116,82 @@ public class PlaneChooserScreen extends PlaneBasicScreen  implements  InputProce
     }
     
     @Override
-	public void render(float delta) {
-		super.render(delta);
-
-		// Steady rotation if the Player doesn't touch the Touch screen
-		if (!touched) {
-			currentSpaceship.transform.rotate(yRotationAxis, 0.2f);
-			xRotationAxis.rotate(yRotationAxis, -0.2f);
-		}
-	}
+    public void render(float delta) {
+        super.render(delta);
+        
+        // Steady rotation if the Player doesn't touch the Touch screen
+        if (!touched) {
+            currentSpaceship.transform.rotate(yRotationAxis, 0.2f);
+            xRotationAxis.rotate(yRotationAxis, -0.2f);
+        }
+        
+        if (showHelpScreen) {
+            helpOverlay.render();
+        }
+    }
     
-	private void initPlaneListTable() {
-		// adding the table containing the buttons with preview of every plane
-		Table planeListTable = new Table(skin);
-		planeListTable.setFillParent(true);
-
-		int size = allPlanes.size();
-		int passedLevelGroupId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
-
-		// show the message if you have to unlock a new ship
-		addNextPlaneAvailableInfo(planeListTable, size);
-
-		planeListTable.add().bottom().expand();
-		for (int i = 1; i <= size; i++) {
-			Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(i).modelRef + ".png"));
-			TextureRegion image = new TextureRegion(texture1);
-			ImageButtonStyle style = new ImageButtonStyle(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
-			style.imageUp = new TextureRegionDrawable(image);
-			style.imageDown = new TextureRegionDrawable(image);
-
-			ImageButton button = new ImageButton(style);
-			if (!Fly.DEBUG_MODE && allPlanes.get(i).levelGroupDependency > passedLevelGroupId) {
-				button.setDisabled(true);
-				Gdx.app.log("PlaneChooserScreen", "disabled");
-			} else {
-				final int index = i;
-
-				button.addListener(new ClickListener() {
-					@Override
-					public void clicked(InputEvent event, float x, float y) {
-						currentPlane = allPlanes.get(index);
-						PlaneManager.getInstance().setChosenPlane(currentPlane);
-						resetVectors();
-						loadCurrentPlane();
-						updateChosenPlaneDetail();
-					}
-				});
-			}
-
-			planeListTable.add(button).bottom().expand();// .pad(UI.Tables.PADDING_L);//.expand();
-		}
-
-		stage.addActor(planeListTable);
-	}
+    private void initPlaneListTable() {
+        // adding the table containing the buttons with preview of every plane
+        Table planeListTable = new Table(skin);
+        planeListTable.setFillParent(true);
+        
+        int size = allPlanes.size();
+        int passedLevelGroupId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
+        
+        // add some space to avoid that back button and ship selection button
+        // overlapp
+        planeListTable.add().width(300).bottom().expand();
+        for (int i = 1; i <= size; i++) {
+            Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(i).modelRef + ".png"));
+            TextureRegion image = new TextureRegion(texture1);
+            ImageButtonStyle style = new ImageButtonStyle(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
+            style.imageUp = new TextureRegionDrawable(image);
+            style.imageDown = new TextureRegionDrawable(image);
+            
+            final ImageButton button = new ImageButton(style);
+            if (!Fly.DEBUG_MODE && allPlanes.get(i).levelGroupDependency > passedLevelGroupId) {
+                button.setDisabled(true);
+                final int levelId = i;
+                button.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        Skin skin = SkinManager.getInstance().getSkin();
+                        helpOverlay.clearListOfFrames();
+                        
+                        StringBuilder message = new StringBuilder();
+                        message.append(I18n.t("minLevelGroupForShip1"));
+                        message.append(" ");
+                        message.append(LevelGroupManager.getInstance().getLevelGroups().get(levelId).name);
+                        message.append(" ");
+                        message.append(I18n.t("minLevelGroupForShip2"));
+                        message.append(".");
+                        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, message.toString(), button));
+                        showHelpScreen = true;
+                        helpOverlay.clicked(null, 0, 0);
+                    }
+                });
+                
+                // TODO: add listener to show message
+            } else {
+                final int index = i;
+                
+                button.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        currentPlane = allPlanes.get(index);
+                        PlaneManager.getInstance().setChosenPlane(currentPlane);
+                        resetVectors();
+                        loadCurrentPlane();
+                        updateChosenPlaneDetail();
+                    }
+                });
+            }
+            
+            planeListTable.add(button).bottom().pad(UI.Window.BORDER_SPACE).expand();
+        }
+        
+        stage.addActor(planeListTable);
+    }
     
     @Override
     public boolean keyDown(int keycode) {
@@ -279,8 +281,8 @@ public class PlaneChooserScreen extends PlaneBasicScreen  implements  InputProce
     
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-    	 // nothing to do here
-    	return false;
+        // nothing to do here
+        return false;
     }
     
     @Override
@@ -299,5 +301,23 @@ public class PlaneChooserScreen extends PlaneBasicScreen  implements  InputProce
         camera.translate(camVec.cpy().scl(scale));
         camera.update();
         return false;
+    }
+    
+    @Override
+    public void show() {
+        super.show();
+        showHelpScreen = false;
+    }
+    
+    @Override
+    public void startHelp() {
+        showHelpScreen = true;
+        Gdx.input.setInputProcessor(helpOverlay);
+    }
+    
+    @Override
+    public void endHelp() {
+        showHelpScreen = false;
+        Gdx.input.setInputProcessor(inputProcessor);
     }
 }

@@ -201,18 +201,18 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         Skin skin = SkinManager.getInstance().getSkin();
         
         helpOverlay = new HelpOverlay(this);
-        helpOverlay.addHelpFrame(new HelpFrameText(skin, "welcome"));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlay", continueButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectLevel", chooseLevelButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSelectShip", choosePlaneButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpHighscore", highscoreButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpSettings", settingsButton));
-        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, "helpPlayer", playerButton));
+        helpOverlay.addHelpFrame(new HelpFrameText(skin, I18n.t("welcome")));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t("helpPlay"), continueButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t("helpSelectLevel"), chooseLevelButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t("helpSelectShip"), choosePlaneButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t("helpHighscore"), highscoreButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t("helpSettings"), settingsButton));
+        helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t("helpPlayer"), playerButton));
         if(Gdx.app.getType() == ApplicationType.Desktop) {
-            helpOverlay.addHelpFrame(new HelpFrameText(skin, "helpEndGameDesktop"));
+            helpOverlay.addHelpFrame(new HelpFrameText(skin, I18n.t("helpEndGameDesktop")));
         }
         else {
-            helpOverlay.addHelpFrame(new HelpFrameText(skin, "helpEndGameMobile"));
+            helpOverlay.addHelpFrame(new HelpFrameText(skin, I18n.t("helpEndGameMobile")));
         }
         
         helpButton.addListener(helpOverlay);

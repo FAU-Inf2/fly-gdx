@@ -46,7 +46,7 @@ public class HelpFrameText extends OverlayFrame {
      */
     private void initialize() {
         super.setupBatchAndStage();
-        Label label = new Label(I18n.t(text), skin, "black");
+        Label label = new Label(text, skin, "black");
         label.setAlignment(Align.center);
         Table helpingTextTable = new Table();
         helpingTextTable.setBackground(new NinePatchDrawable(skin.get("dialog-background", NinePatch.class)));
