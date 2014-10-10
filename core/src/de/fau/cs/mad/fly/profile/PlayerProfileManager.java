@@ -137,7 +137,6 @@ public class PlayerProfileManager {
                 playerProfile.setFlyID(cursor.getInt(1));
                 playerProfile.setName(cursor.getString(2));
                 playerProfile.setMoney(cursor.getInt(3));
-                playerProfile.setTotalScoreOfAll(cursor.getInt(4));
                 playerProfile.setCurrentLevelGroup(LevelGroupManager.getInstance().getLevelGroup(cursor.getInt(5)));
                 playerProfile.setCurrentLevelProfile(cursor.getInt(6));
                 playerProfile.setPassedLevelgroupID(cursor.getInt(7));

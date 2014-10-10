@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.JsonValue;
  * 
  */
 public class LevelGroup {
+	private int moneyFactor = 1;
     public int id;
     public String name;
     private List<LevelProfile> levels;
@@ -70,6 +71,8 @@ public class LevelGroup {
         FileHandle handle = dirHandle.child("group.json");
         if (handle != null) {
             JsonValue json = reader.parse(handle);
+            if(json.has("moneyFactor"))
+            	moneyFactor = json.getInt("moneyFactor");
             JsonValue groups = json.get("levels");
             if (groups != null) {
                 for (int i = 0; i < groups.size; i++) {
@@ -100,4 +103,9 @@ public class LevelGroup {
         }
         return Integer.toString(levelID);
     }
+    
+    public double getMoneyFactor(){
+    	return Math.sqrt(this.moneyFactor);
+    }
+    
 }

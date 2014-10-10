@@ -121,7 +121,7 @@ public class PlayerProfile {
     /**
      * @return the totalScoreOfAll, solution A
      */
-    public int getTotalScoreOfAll_A() {
+    public int getTotalScoreOfAll() {
         String selectSQL = "select sum(score) from score where player_id=" + this.getId();
         DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
         if (cursor != null && cursor.getCount() > 0) {
@@ -130,22 +130,6 @@ public class PlayerProfile {
             cursor.close();
         }
         return totalScoreOfAll;
-    }
-    
-    /**
-     * @return the totalScoreOfAll, solution B
-     */
-    public int getTotalScoreOfAll_B() {
-        
-        return totalScoreOfAll;
-    }
-    
-    /**
-     * @param totalScoreOfAll
-     *            the totalScoreOfAll to set
-     */
-    public void setTotalScoreOfAll(int totalScoreOfAll) {
-        this.totalScoreOfAll = totalScoreOfAll;
     }
     
     /**
