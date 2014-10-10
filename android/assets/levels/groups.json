@@ -2,17 +2,17 @@
 	"groups": [
 		{
 			"id": 1,
-			"name": "Beginner Levels",
+			"name": "BeginnerLevels",
 			"path": "Beginner Levels/"
 		},
 		{
 			"id": 0,
-			"name": "Endless Levels",
+			"name": "EndlessLevels",
 			"path": "Endless/"
 		},
 		{
 			"id": 2,
-			"name": "Medium Levels",
+			"name": "MediumLevels",
 			"path": "Medium Levels/"
 		}
 	]

@@ -21,7 +21,6 @@ public class LevelGroup {
     public int id;
     public String name;
     private List<LevelProfile> levels;
-    // public FileHandle groupFileHandle;
     public String path;
     
     /**

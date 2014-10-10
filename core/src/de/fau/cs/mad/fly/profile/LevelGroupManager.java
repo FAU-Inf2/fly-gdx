@@ -10,6 +10,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+import de.fau.cs.mad.fly.I18n;
+
 /**
  * Manage read all levels and level group from json files, nothing more.
  * 
@@ -79,38 +81,13 @@ public class LevelGroupManager {
                     LevelGroup group = new LevelGroup();
                     JsonValue groupJS = groups.get(i);
                     group.id = groupJS.getInt("id");
-                    group.name = groupJS.getString("name");
+                    group.name = groupJS.getString(I18n.t("name"));
                     group.path = LEVEL_FOLDER + groupJS.getString("path");
                     levelGroups.add(group);
                 }
             }
         }
         Collections.sort(levelGroups, levelGroupComparator);
-    }
-    
-    /**
-     * Reads all levels of the current directory and puts them in one level
-     * group.
-     * 
-     * @param dirHandle
-     *            The current directory.
-     */
-    private void readLevelGroup(FileHandle dirHandle) {
-        LevelGroup group = new LevelGroup();
-        group.name = dirHandle.name();
-        group.id = 0;
-        group.path = dirHandle.path();
-        
-        JsonReader reader = new JsonReader();
-        // check for group.json in the directory
-        FileHandle handle = dirHandle.child("group.json");
-        if (handle != null) {
-            JsonValue json = reader.parse(handle);
-            group.name = json.getString("name");
-            group.id = json.getInt("id") * 100;
-            Gdx.app.log("timing", handle.name() + "is loaded");
-        }
-        levelGroups.add(group);
     }
     
     /**
