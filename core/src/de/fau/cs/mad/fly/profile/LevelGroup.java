@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.JsonValue;
  * 
  */
 public class LevelGroup {
-	private int moneyFactor = 1;
+    private int moneyFactor = 1;
     public int id;
     public String name;
     private List<LevelProfile> levels;
@@ -59,7 +59,11 @@ public class LevelGroup {
     }
     
     public LevelProfile getLastLevelProfile() {
-    	return getLevels().get(getLevels().size()-1);
+        if (getLevels().size() > 0) {
+            return getLevels().get(getLevels().size() - 1);
+        } else {
+            return getLevels().get(getLevels().size());
+        }
     }
     
     private void readLevelGroup() {
@@ -71,8 +75,8 @@ public class LevelGroup {
         FileHandle handle = dirHandle.child("group.json");
         if (handle != null) {
             JsonValue json = reader.parse(handle);
-            if(json.has("moneyFactor"))
-            	moneyFactor = json.getInt("moneyFactor");
+            if (json.has("moneyFactor"))
+                moneyFactor = json.getInt("moneyFactor");
             JsonValue groups = json.get("levels");
             if (groups != null) {
                 for (int i = 0; i < groups.size; i++) {
@@ -82,10 +86,10 @@ public class LevelGroup {
                     levelProfile.name = groupJS.getString("name");
                     levelProfile.file = path + groupJS.getString("file");
                     JsonValue type = groupJS.get("type");
-                    if(type == null) {
-                    	levelProfile.type = 0;
-                    } else if(type.asString().equals("tutorial")){
-                    	levelProfile.type = 1;
+                    if (type == null) {
+                        levelProfile.type = 0;
+                    } else if (type.asString().equals("tutorial")) {
+                        levelProfile.type = 1;
                     }
                     levels.add(levelProfile);
                 }
@@ -104,8 +108,8 @@ public class LevelGroup {
         return Integer.toString(levelID);
     }
     
-    public double getMoneyFactor(){
-    	return Math.sqrt(this.moneyFactor);
+    public double getMoneyFactor() {
+        return Math.sqrt(this.moneyFactor);
     }
     
 }

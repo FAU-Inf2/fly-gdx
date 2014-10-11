@@ -1,0 +1,97 @@
+{
+    "class": "",
+    "components": [
+        {
+            "id": "border",
+            "ref": "border"
+        }
+    ],
+    "dependencies": {
+        "border": "spacesphere",
+        "hole": "torusHoleBox",
+        "torus": "torus"
+    },
+    "gates": [
+        {
+            "successors": [
+                0
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                1
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                45.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                -6.0,
+                20.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                90.0
+            ],
+            "gateId": 2,
+            "id": "Gate.002",
+            "position": [
+                -16.0,
+                25.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": []
+        }
+    ],
+    "id": 4,
+    "name": "1",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 26,
+    "upgrades": []
+}

@@ -191,6 +191,7 @@ public class PlayerProfileManager {
         if (!currentPlayerProfile.getName().equals(newPlayerProfileName)) {
             updateIntColumn(currentPlayerProfile, "name", newPlayerProfileName);
             currentPlayerProfile.setName(newPlayerProfileName);
+            currentPlayerProfile.setNameChangedSinceLastUpload(true);
             currentPlayerProfileChanged();
         }
     }

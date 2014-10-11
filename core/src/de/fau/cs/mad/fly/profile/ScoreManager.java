@@ -38,7 +38,7 @@ public class ScoreManager {
         
         String insertScore = "insert into score(player_id, level_group_id, level_id, score, compare_score,is_uploaded,server_score_id) values ("
         // todo+ ", " + FlyDBManager.SCORE_COLUMN_REACHEDDATE
-                + playerProfile.getId() + ", " + levelgroupID + ", " + level.id + "," + score.getTotalScore() + ", '" + score.getCompareScore() + "'," + (score.getIsUploaded() ? "1" : "0") + "," + score.getServerScoreId() + ") ";
+                + playerProfile.getId() + ", " + levelgroupID + ", " + level.id + "," + score.getTotalScore() + ", '" + score.getCompareScore() + "'," + (score.isUploaded() ? "1" : "0") + "," + score.getServerScoreId() + ") ";
         
         // FlyDBManager.getInstance().openDatabase();
         // FlyDBManager.getInstance().execSQL(deleteDetail);
@@ -122,7 +122,7 @@ public class ScoreManager {
     }
     
     public void updateIsUploaded(Score score, int playerId, int groupId, int levelId) {
-        String sql = "update score set is_uploaded = " + (score.getIsUploaded() ? "1" : "0") + " where player_id=" + playerId + " and level_id=" + levelId + " and level_group_id=" + groupId;
+        String sql = "update score set is_uploaded = " + (score.isUploaded() ? "1" : "0") + " where player_id=" + playerId + " and level_id=" + levelId + " and level_group_id=" + groupId;
         FlyDBManager.getInstance().execSQL(sql);
         
     }

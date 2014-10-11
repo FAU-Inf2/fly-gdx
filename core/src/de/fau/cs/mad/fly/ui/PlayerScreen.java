@@ -87,7 +87,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         
         playerTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         
-        playerTable.add(new Label(I18n.t("playerNameLableText") + ":", skin)).pad(padding);
+        playerTable.add(new Label(I18n.t("playerNameLableText") + ":", skin)).pad(padding).right();
         
         // add all users to userList and set the current user to display value
         userSelectBox = new SelectBox<String>(skin);
@@ -168,13 +168,13 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         PlayerProfile playerProfile = playerProfileManager.getCurrentPlayerProfile();
         
         //show fly id
-        playerTable.add(new Label(I18n.t("labelFlyId"), skin)).pad(padding);
+        playerTable.add(new Label(I18n.t("labelFlyId") + ":", skin)).pad(padding).right();
         Label tmp = new Label("" + playerProfile.getFlyID(), skin);//msgGetFlyId
         playerTable.add(tmp).pad(padding);
         playerTable.row();
         
         // show total score
-        playerTable.add(new Label(I18n.t("labelTotalScore"), skin)).pad(padding);
+        playerTable.add(new Label(I18n.t("labelTotalScore"), skin)).pad(padding).right();
         totalScoreValueLabel = new Label("" + playerProfile.getTotalScoreOfAll(), skin);
         playerTable.add(totalScoreValueLabel).pad(padding);
         playerProfileManager.addPlayerChangedListener(new ChangeListener<PlayerProfile>() {
@@ -189,7 +189,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         playerTable.row();
         
         //show money
-        playerTable.add(new Label(I18n.t("currentMoney") + ":", skin)).pad(padding);
+        playerTable.add(new Label(I18n.t("gainMoney"), skin)).pad(padding).right();
         totalMoneyValueLabel = new Label("" + playerProfile.getMoney(), skin);
         playerTable.add(totalMoneyValueLabel).pad(padding);
         playerTable.row();
@@ -221,7 +221,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
      * @param skin
      */
     private void addLastLevel(PlayerProfile playerProfile, Skin skin) {
-        playerTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+        playerTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT).right();
         lastLevelValueLabel = new Label("", skin);
         playerTable.add(lastLevelValueLabel);
         updateLastLevelGroup(playerProfile);
@@ -253,5 +253,6 @@ public class PlayerScreen extends BasicScreenWithBackButton {
             totalMoneyValueLabel.setText(currentPlayerProfile.getMoney() + "");
             updateLastLevelGroup(currentPlayerProfile);
         }
+        updateUserTable(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
     }
 }

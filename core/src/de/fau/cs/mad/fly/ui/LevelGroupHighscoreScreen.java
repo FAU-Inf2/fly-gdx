@@ -177,7 +177,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                             scoreTable.add(new Label(score.getTotalScore() + "", skin)).pad(UI.Buttons.SPACE, 20, UI.Buttons.SPACE, UI.Buttons.SPACE).right();
                             
                             uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin);
-                            if (score.getIsUploaded()) {
+                            if (score.isUploaded()) {
                                 uploadScoreButton.setDisabled(true);
                             }
                             uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton));

@@ -1,0 +1,11 @@
+{
+	"id": 3,
+	"name": "Hard Levels",
+	"levels": [
+		{
+			"id": 1,
+			"name": "1",
+			"file": "level1.json"
+		}
+	]
+}

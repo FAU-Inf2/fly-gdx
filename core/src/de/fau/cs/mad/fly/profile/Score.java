@@ -39,7 +39,7 @@ public class Score {
     /**
      * @return the isUploaded
      */
-    public boolean getIsUploaded() {
+    public boolean isUploaded() {
         return isUploaded;
     }
     
