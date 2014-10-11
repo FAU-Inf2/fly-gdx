@@ -74,4 +74,14 @@ public class SinusRotationMover implements IGameObjectMover {
         i += delta;
     }
     
+	@Override
+	public IGameObjectMover getCopy(GameObject gameObject) {
+		SinusRotationMover mover = new SinusRotationMover(gameObject);
+		mover.setRotation(rotation, degrees);
+		mover.X = this.X;
+		mover.Y = this.Y;
+		mover.Z = this.Z;
+		return mover;
+	}
+    
 }

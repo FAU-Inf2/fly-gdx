@@ -56,5 +56,12 @@ public class RotationMover implements IGameObjectMover {
         gameObject.transform.rotate(rotation, degrees * delta * 10.0f);
         gameObject.getRigidBody().setWorldTransform(gameObject.transform);
     }
-    
+
+	@Override
+	public IGameObjectMover getCopy(GameObject gameObject) {
+		RotationMover mover = new RotationMover(gameObject);
+		mover.setRotation(rotation, degrees);
+		return mover;
+	}
+
 }

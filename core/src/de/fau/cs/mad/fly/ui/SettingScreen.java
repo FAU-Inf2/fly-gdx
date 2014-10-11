@@ -15,6 +15,7 @@ import de.fau.cs.mad.fly.settings.ISetting;
 import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.ui.help.HelpFrameTextWithArrow;
 import de.fau.cs.mad.fly.ui.help.HelpOverlay;
+import de.fau.cs.mad.fly.ui.help.OverlayFrame;
 import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
 
 import java.util.HashMap;
@@ -26,10 +27,9 @@ import java.util.Map;
  * @author Tobias Zangl, Lukas Hahmann <lukas.hahmann@gmail.com>
  */
 public class SettingScreen extends BasicScreenWithBackButton implements WithHelpOverlay {
-    
-    private SettingManager settingManager;
-    private float padding = 20;
+
 	private Map<ISetting.Groups, Table> settingsMap;
+	private Map<ISetting.Groups, Button> groupButtons;
     private String displayPlayer = "";
     private boolean showHelpScreen = false;
     private HelpOverlay helpOverlay;
@@ -49,6 +49,7 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
     protected void generateContent() {
         generateBackButton();
 		settingsMap = new HashMap<ISetting.Groups, Table>();
+		groupButtons = new HashMap<ISetting.Groups, Button>();
 
 		final Table generalContent = new Table();
 		final Table audioContent = new Table();
@@ -71,6 +72,10 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
 		tabs.add(tab2).pad(50);
 		tabs.add(tab3).pad(50);
 		top.addActor(tabs);
+
+		groupButtons.put(ISetting.Groups.GENERAL, tab1);
+		groupButtons.put(ISetting.Groups.AUDIO, tab2);
+		groupButtons.put(ISetting.Groups.CONTROLS, tab3);
 
 		ChangeListener tabListener = new ChangeListener(){
 			@Override
@@ -121,7 +126,7 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
         if (displayPlayer == null || (!displayPlayer.equals(playerProfile.getName()))) {
             for ( Table settingTable : settingsMap.values() )
             	settingTable.clear();
-            settingManager = playerProfile.getSettingManager();
+			SettingManager settingManager = playerProfile.getSettingManager();
             for (ISetting setting : settingManager.getSettings()) {
 				if ( setting.isHidden() )
 					continue;
@@ -130,14 +135,30 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
                 if (!helpScreenCreated) {
                     helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t(setting.getHelpingText()), setting.getActor()));
                 }
+				float padding = 20;
 				Label label = new Label(setting.getDescription(), skin);
-                settingTable.add(label).right().pad(padding);
+				settingTable.add(label).right().pad(padding);
                 settingTable.add(setting.getActor()).pad(padding, 3 * padding, padding, padding).width(500f);
             }
             displayPlayer = playerProfile.getName();
         }
         helpScreenCreated = true;
     }
+
+	public void enableGroup(ISetting.Groups group) {
+		groupButtons.get(group).setChecked(true);
+	}
+
+	@Override
+	public void step(OverlayFrame frame) {
+		HelpFrameTextWithArrow f = (HelpFrameTextWithArrow) frame;
+		SettingManager manager = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager();
+		for ( ISetting setting : manager.getSettings() )
+			if ( setting.getActor() == f.getActor() ) {
+				enableGroup(setting.group());
+				break;
+			}
+	}
     
     @Override
     public void show() {
@@ -157,10 +178,9 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
     public void startHelp() {
         showHelpScreen = true;
         Gdx.input.setInputProcessor(helpOverlay);
-        
     }
-    
-    @Override
+
+	@Override
     public void endHelp() {
         showHelpScreen = false;
         Gdx.input.setInputProcessor(inputProcessor);

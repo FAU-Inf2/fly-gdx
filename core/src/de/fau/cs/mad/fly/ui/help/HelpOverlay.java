@@ -33,7 +33,7 @@ public class HelpOverlay extends ClickListener implements InputProcessor {
     public HelpOverlay(WithHelpOverlay screen) {
         this.backListener = screen;
         helpFrames = new ArrayList<OverlayFrame>();
-        currentHelpFrame = 0;
+        currentHelpFrame = -1;
     }
     
     /**
@@ -61,11 +61,13 @@ public class HelpOverlay extends ClickListener implements InputProcessor {
      * help if the last {@link OverlayFrame} is reached.
      */
     private void switchFrameOrQuit() {
-        if (currentHelpFrame < helpFrames.size() - 1) {
-            currentHelpFrame++;
-            helpFrames.get(currentHelpFrame).generateContent();
-        } else {
-            currentHelpFrame = 0;
+		currentHelpFrame++;
+        if (currentHelpFrame < helpFrames.size()) {
+            OverlayFrame f = helpFrames.get(currentHelpFrame);
+            f.generateContent();
+			backListener.step(f);
+		} else {
+            currentHelpFrame = -1;
             backListener.endHelp();
         }
     }
@@ -140,7 +142,7 @@ public class HelpOverlay extends ClickListener implements InputProcessor {
     @Override
     public void clicked(InputEvent event, float x, float y) {
         backListener.startHelp();
-        helpFrames.get(currentHelpFrame).generateContent();
+		switchFrameOrQuit();
         Gdx.input.setInputProcessor(this);
     }
 }
