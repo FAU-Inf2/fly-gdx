@@ -9,7 +9,6 @@
     "dependencies": {
         "border": "spacesphere",
         "hole": "torusHoleBox",
-        "pointsUpgrade": "pointsUpgrade",
         "timeUpgrade": "timeUpgrade",
         "torus": "torusTex"
     },
@@ -379,71 +378,8 @@
             "z": 0.0
         }
     },
-    "time": 150,
+    "time": 120,
     "upgrades": [
-        {
-            "angular_velocity": [
-                2.0,
-                0.0,
-                1.0
-            ],
-            "euler": [
-                -90.0,
-                0.0,
-                0.0
-            ],
-            "id": "changePointsUpgrade",
-            "points": 20,
-            "position": [
-                -4.0,
-                4.0,
-                -4.0
-            ],
-            "ref": "pointsUpgrade",
-            "type": "ChangePointsUpgrade"
-        },
-        {
-            "angular_velocity": [
-                2.0,
-                0.0,
-                1.0
-            ],
-            "euler": [
-                -90.0,
-                0.0,
-                0.0
-            ],
-            "id": "changePointsUpgrade.001",
-            "points": 20,
-            "position": [
-                4.0,
-                -4.0,
-                -4.0
-            ],
-            "ref": "pointsUpgrade",
-            "type": "ChangePointsUpgrade"
-        },
-        {
-            "angular_velocity": [
-                2.0,
-                0.0,
-                1.0
-            ],
-            "euler": [
-                -90.0,
-                0.0,
-                0.0
-            ],
-            "id": "changePointsUpgrade.002",
-            "points": 20,
-            "position": [
-                0.0,
-                0.0,
-                7.0
-            ],
-            "ref": "pointsUpgrade",
-            "type": "ChangePointsUpgrade"
-        },
         {
             "angular_velocity": [
                 1.0,
