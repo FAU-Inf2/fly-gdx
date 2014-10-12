@@ -87,7 +87,7 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
                                     styleName = "darkGrey";
                                 }
                                 infoTable.add(new Label(user.rank + "", skin, styleName)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-                                infoTable.add(new Label(user.username + " (" + user.flyID + ")", skin, styleName)).left().pad(0, padding, 0, padding);
+                                infoTable.add(new Label(user.username + "#" + user.flyID, skin, styleName)).left().pad(0, padding, 0, padding);
                                 infoTable.add(new Label(user.score + "", skin, styleName)).right().pad(0, 0, 0, padding);
                             }
                             infoTable.row();
