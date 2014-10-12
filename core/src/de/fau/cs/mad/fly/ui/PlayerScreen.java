@@ -231,7 +231,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
     private void updateLastLevelGroup(PlayerProfile playerProfile) {
         int group = playerProfile.getPassedLevelgroupID();
         int level = playerProfile.getPassedLevelID();
-        if (level > LevelGroupManager.getInstance().getLastGroup().getLastLevelProfile().id) {
+        if (group >= LevelGroupManager.getInstance().getLastGroup().id && level > LevelGroupManager.getInstance().getLastGroup().getLastLevelProfile().id) {
             
             lastLevelValueLabel.setText(I18n.t("ALLGroupPassed"));
         } else {

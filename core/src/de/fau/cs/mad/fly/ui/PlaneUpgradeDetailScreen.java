@@ -134,7 +134,7 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
                 if (equiped != bought) {
                     if (equiped == 0) {
                         downgradeButton.setText(I18n.t("unequip"));
-                        downgradeButton.setDisabled(false);//.setColor(Color.WHITE);
+                        downgradeButton.setDisabled(false);
                     }
                     
                     PlaneManager.getInstance().upgradePlane(name, 1);
@@ -142,8 +142,7 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
                     updateChosenPlaneDetail();
                     
                     if (equiped + 1 == bought) {
-                        upgradeButton.setDisabled(true);//.setText(I18n.t("allreadyMaximal"));
-                        //upgradeButton.setColor(Color.GRAY);
+                        upgradeButton.setDisabled(true);
                     }
                 }
             }

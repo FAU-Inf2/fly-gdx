@@ -30,11 +30,15 @@ public interface IPlane extends IFeatureLoad, IFeatureInit, IFeatureUpdate, IFea
         public float speed;
         private float rollingSpeed;
 		public float azimuthSpeed;
+		public float basicAzimuthSpeed;
         public int lives;
+        public int basicLives;
         public float rotationSpeed = 0.0f;
         public Vector3 rotation = null;
         public Vector3 particleOffset = null;
         public FileHandle file;
+        
+        public float basicSpeed;
         
         private Map<String, Integer> upgradesBought = new HashMap<String, Integer>();
 
