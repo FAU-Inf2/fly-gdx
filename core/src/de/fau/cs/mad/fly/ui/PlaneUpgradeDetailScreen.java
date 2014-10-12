@@ -257,7 +257,7 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
 		upgradeDetailTable.add(upgradeCostLabel).left();
 		upgradeDetailTable.row();
 
-		upgradeDetailTable.add(new Label(I18n.t("currentMoney") + ": ", skin)).right();
+		upgradeDetailTable.add(new Label(I18n.t("gainMoney") + ": ", skin)).right();
 		currentMoneyLabel.setText("" + money);
 		upgradeDetailTable.add(currentMoneyLabel).left();
 		upgradeDetailTable.row();

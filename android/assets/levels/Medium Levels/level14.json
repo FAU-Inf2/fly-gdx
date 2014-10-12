@@ -1,0 +1,313 @@
+{
+    "class": "medium.DoNotPickUpgradesLevel",
+    "components": [
+        {
+            "id": "border",
+            "ref": "border"
+        }
+    ],
+    "dependencies": {
+        "border": "spacesphere",
+        "hole": "torusHoleBox",
+        "pointsUpgrade": "pointsUpgrade",
+        "speedUpgrade": "speedUpgrade",
+        "torus": "torusTex"
+    },
+    "gates": [
+        {
+            "successors": [
+                0
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                1
+            ]
+        },
+        {
+            "euler": [
+                20.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                22.0,
+                2.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 2,
+            "id": "Gate.002",
+            "position": [
+                0.0,
+                27.0,
+                2.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                3
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                -25.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                2.0,
+                34.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                4
+            ]
+        },
+        {
+            "euler": [
+                -100.0,
+                90.0,
+                0.0
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                9.0,
+                37.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                -180.0,
+                90.0,
+                0.0
+            ],
+            "gateId": 5,
+            "id": "Gate.005",
+            "position": [
+                18.0,
+                37.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": []
+        }
+    ],
+    "id": 16,
+    "name": "14",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 27,
+    "upgrades": [
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changePointsUpgrade",
+            "points": -50,
+            "position": [
+                0.0,
+                24.6,
+                2.3
+            ],
+            "ref": "pointsUpgrade",
+            "type": "ChangePointsUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changePointsUpgrade.001",
+            "points": -120,
+            "position": [
+                16.0,
+                35.0,
+                0.0
+            ],
+            "ref": "pointsUpgrade",
+            "type": "ChangePointsUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changePointsUpgrade.002",
+            "points": -20,
+            "position": [
+                0.0,
+                14.0,
+                0.2
+            ],
+            "ref": "pointsUpgrade",
+            "type": "ChangePointsUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changePointsUpgrade.003",
+            "points": -120,
+            "position": [
+                16.0,
+                39.0,
+                0.0
+            ],
+            "ref": "pointsUpgrade",
+            "type": "ChangePointsUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -93.5,
+                3.4,
+                44.8
+            ],
+            "id": "temporarySpeedUpgrade.000",
+            "maxSpeedTimeInMilliSeconds": 5000,
+            "maxSpeedupFactor": 0.5,
+            "position": [
+                5.2,
+                36.3,
+                0.0
+            ],
+            "ref": "speedUpgrade",
+            "slowdownTimeInMilliSeconds": 500,
+            "speedupTimeInMilliSeconds": 500,
+            "type": "TemporarySpeedUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -93.5,
+                3.4,
+                44.8
+            ],
+            "id": "temporarySpeedUpgrade.001",
+            "maxSpeedTimeInMilliSeconds": 5000,
+            "maxSpeedupFactor": 0.5,
+            "position": [
+                0.5,
+                30.3,
+                1.0
+            ],
+            "ref": "speedUpgrade",
+            "slowdownTimeInMilliSeconds": 500,
+            "speedupTimeInMilliSeconds": 500,
+            "type": "TemporarySpeedUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -93.5,
+                3.4,
+                44.8
+            ],
+            "id": "temporarySpeedUpgrade.007",
+            "maxSpeedTimeInMilliSeconds": 5000,
+            "maxSpeedupFactor": 0.699999988079071,
+            "position": [
+                -0.2,
+                19.1,
+                1.4
+            ],
+            "ref": "speedUpgrade",
+            "slowdownTimeInMilliSeconds": 500,
+            "speedupTimeInMilliSeconds": 500,
+            "type": "TemporarySpeedUpgrade"
+        }
+    ]
+}
