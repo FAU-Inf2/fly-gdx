@@ -126,7 +126,7 @@ public class PlayerProfileManager {
     
     private void setPlayers() {
         playerProfiles = new ArrayList<PlayerProfile>();
-        final String selectSQL = "select player_id,fly_id,name,total_score,total_geld,current_levelgroup_id,current_level_id,passed_levelgroup_id,passed_level_id from player";
+        final String selectSQL = "select player_id,fly_id,name,total_score,total_geld,current_levelgroup_id,current_level_id,passed_levelgroup_id,passed_level_id,secret_key from player";
         
         DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
         
@@ -141,7 +141,8 @@ public class PlayerProfileManager {
                 playerProfile.setCurrentLevelProfile(cursor.getInt(6));
                 playerProfile.setPassedLevelgroupID(cursor.getInt(7));
                 playerProfile.setPassedLevelID(cursor.getInt(8));
-                
+				playerProfile.setSecretKey(cursor.getString(9));
+
                 playerProfiles.add(playerProfile);
             }
             cursor.close();
@@ -169,11 +170,18 @@ public class PlayerProfileManager {
     }
     
     public void saveFlyID(PlayerProfile playerProfile) {
-        
+
         final String sql = "update player set fly_id=" + playerProfile.getFlyID() + " where player_id=" + playerProfile.getId();
-        
+
         FlyDBManager.getInstance().execSQL(sql);
     }
+
+
+	public void saveSecretKey(PlayerProfile profile) {
+		final String sql = "update player set secret_key='" + profile.getSecretKey() + "' where player_id=" + profile.getId();
+
+		FlyDBManager.getInstance().execSQL(sql);
+	}
     
     public void updateIntColumn(PlayerProfile playerProfile, String colname, int newValue) {
         final String sql = "update player set " + colname + "=" + newValue + " where player_id=" + playerProfile.getId();
@@ -225,5 +233,5 @@ public class PlayerProfileManager {
             playerProfile.clearSettingManager();
         }
     }
-    
+
 }

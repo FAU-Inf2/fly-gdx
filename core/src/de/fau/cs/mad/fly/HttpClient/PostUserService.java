@@ -16,6 +16,11 @@ public class PostUserService {
     }
     
     private final FlyHttpResponseListener listener;
+
+	public static class UserRecord {
+		public int id;
+		public String secretKey;
+	}
     
     public void execute(String player) {
         String subURL = "/users";
@@ -35,9 +40,11 @@ public class PostUserService {
                 if (status.getStatusCode() == HttpStatus.SC_OK || status.getStatusCode() == HttpStatus.SC_CREATED) {
                     JsonReader reader = new JsonReader();
                     JsonValue val = reader.parse(httpResponse.getResultAsStream());
-                    int id = val.getInt("id");
-                    Gdx.app.log("PostUserService", "get fly id from server:" + id);
-                    listener.successful(id);
+					UserRecord record = new UserRecord();
+                    record.id = val.getInt("id");
+					record.secretKey = val.getString("secret_key");
+                    Gdx.app.log("PostUserService", "get fly id from server:" + record.id);
+                    listener.successful(record);
                 } else {
                     Gdx.app.log("PostUserService", "new fly id server return code: " + String.valueOf(status.getStatusCode()));
                     listener.failed(String.valueOf(status.getStatusCode()));

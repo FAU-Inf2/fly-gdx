@@ -50,6 +50,16 @@ allprojects {
             android.signingConfigs[configName].keyAlias = props['keyAlias']
             android.signingConfigs[configName].keyPassword = props['keyPassword']
         }
+
+        def apikeyFile = rootProject.file('apikey.properties')
+
+        if (apikeyFile.exists()) {
+            def props = new Properties()
+            props.load(new FileInputStream(apikeyFile))
+            def httpFile = rootProject.file("core/src/de/fau/cs/mad/fly/HttpClient/NetHttpsJavaImpl.java")
+            def content = httpFile.getText().replace("%__FLY_SERVER_ACCESS_TOKEN_DESKTOP__%", props["desktopKey"]).replace("%__FLY_SERVER_ACCESS_TOKEN_ANDROID__%", props["androidKey"]).replace("%__FLY_SERVER_ACCESS_TOKEN_IOS__%", props["iosKey"])
+            httpFile.write(content)
+        }
     }
 }
 // needed to add JNI shared libraries to APK when compiling on CLI

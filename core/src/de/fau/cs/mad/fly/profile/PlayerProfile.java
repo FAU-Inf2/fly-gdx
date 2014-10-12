@@ -76,6 +76,8 @@ public class PlayerProfile {
      * The fly id of the player profile.
      */
     private int flyID;
+
+	private String secretKey;
     
     /**
      * The setting manager with all the settings set by this profile.
@@ -215,6 +217,15 @@ public class PlayerProfile {
     public void setFlyID(int flyID) {
         this.flyID = flyID;
     }
+
+
+	public String getSecretKey() {
+		return secretKey;
+	}
+
+	public void setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+	}
     
     /**
      * Getter for the name.

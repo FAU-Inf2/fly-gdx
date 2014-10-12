@@ -106,12 +106,12 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
             });
             
         }
-        
+
         @Override
         public void failed(String msg) {
             // debug output
             Gdx.app.log("PostScoreHttpRespListener", ".failed:" + msg);
-            
+
             // show dialog with message for user
             Dialog uploadFailedMessage = new DialogWithOneButton(I18n.t("ConnectServerError"), I18n.t("ok")) {
                 @Override
@@ -130,7 +130,7 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
             
         }
     }
-    
+
     /**
      * generate Content
      * 
@@ -149,18 +149,18 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
         loadingPane.setScrollingDisabled(true, true);
         loadingInfoTable.add(new Label(I18n.t("StatusLoading"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
         outerTable.add(loadingPane);
-        
+
         stage.addActor(outerTable);
         
         generateBackButton();
     }
-    
+
     protected void generateContentDynamic() {
         final FlyHttpResponseListener listener = new GetLevelHighScoreListener(levelGroup);
         GetLevelHighScoreService getLevelHighScoreService = new GetLevelHighScoreService(listener);
         getLevelHighScoreService.execute(2, levelGroup.id);
     }
-    
+
     @Override
     public void show() {
         super.show();

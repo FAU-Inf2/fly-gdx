@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -30,7 +31,7 @@ import com.badlogic.gdx.files.FileHandle;
 public class RemoteServices {
     
     public static String getServerURL() {
-        return "https://fly-devel.cloudapp.net";
+        return "https://localhost:1443";
     }
     
     /**
@@ -87,9 +88,8 @@ public class RemoteServices {
         Certificate ca;
         try {
             ca = cf.generateCertificate(caInput);
-            // System.out.println("ca=" + ((X509Certificate)
-            // ca).getSubjectDN());
-        } finally {
+            System.out.println("ca=" + ((X509Certificate)ca).getSubjectDN());
+		} finally {
             caInput.close();
         }
         
