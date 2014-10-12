@@ -17,13 +17,13 @@ public class FlyDBManager {
     
     private static final String DATABASE_NAME = "faumadfly01.db";
     private static final int DATABASE_VERSION = 1;
-    private static final int LASTEST_DATABASE_VERSION = 1;
+    private static final int LASTEST_DATABASE_VERSION = 2;
     
     final Database dbHandler;
     
     private FlyDBManager() {
         Gdx.app.log("FlyDBManager", "setupDatabase begin " + System.currentTimeMillis());
-        String createTablePlayer = "create table if not exists player(player_id integer primary key autoincrement, fly_id text, name text not null, total_score integer not null default 0, total_geld integer not null default 0, current_levelgroup_id integer not null default 1, current_level_id integer not null default 1," + "passed_levelgroup_id integer not null default 1, passed_level_id integer not null default 1, secret_key text)";
+        String createTablePlayer = "create table if not exists player(player_id integer primary key autoincrement, fly_id text, name text not null, total_score integer not null default 0, total_geld integer not null default 0, current_levelgroup_id integer not null default 1, current_level_id integer not null default 1," + "passed_levelgroup_id integer not null default 1, passed_level_id integer not null default 1)";
         String createTableScore = "create table if not exists score(player_id integer not null, level_group_id integer not null, level_id integer not null, score integer not null, compare_score text, reached_date date, is_uploaded integer not null default 0, server_score_id integer)";
         // String createTableScoreDetail =
         // "create table if not exists score_detail(scoredetail_id integer primary key autoincrement, level_group_id integer not null, player_id integer not null, level_id integer not null,score_detail text not null, _value text)";
@@ -51,9 +51,20 @@ public class FlyDBManager {
             Gdx.app.log("FlyDBManager", "database opened " + System.currentTimeMillis());
             
             int dbVersion = getDBVersion();
+//            if(dbVersion <2 ) {            	
+//            	//add version 2 sql
+//            }
+//            
+//            if(dbVersion <3 ) {
+//            	//add version 3 sql
+//            }
+//            ...
+            	
             if (dbVersion < LASTEST_DATABASE_VERSION) {
                 // change LASTEST_DATABASE_VERSION amd add db update sql here
                 // when new version needs
+            	dbHandler.execSQL("ALTER TABLE player ADD COLUMN secret_key text");
+            	dbHandler.execSQL("ALTER TABLE player ADD COLUMN is_newname_uploaded integer not null default 1");
                 updateDBversion(LASTEST_DATABASE_VERSION);
             }
         }

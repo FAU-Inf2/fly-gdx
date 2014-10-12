@@ -99,14 +99,27 @@ public class PlayerProfile {
      */
     private int passedLevelID = DEFAULT_PASSED_LEVEL_ID;
     
-    private boolean nameChangedSinceLastUpload;
+    private boolean isNewnameUploaded = true;
     
     /**
+	 * @return the isNewnameUploaded
+	 */
+	public boolean isNewnameUploaded() {
+		return isNewnameUploaded;
+	}
+
+	/**
+	 * @param isNewnameUploaded the isNewnameUploaded to set
+	 */
+	public void setNewnameUploaded(boolean isNewnameUploaded) {
+		this.isNewnameUploaded = isNewnameUploaded;
+	}
+
+	/**
      * Creates a new profile without any more information.
      */
     public PlayerProfile() {
         this.settingManager = new SettingManager("fly_user_preferences_" + getId());
-        nameChangedSinceLastUpload = false;
     }
     
     /**
@@ -248,14 +261,6 @@ public class PlayerProfile {
         } else {
             this.name = name.substring(0, MAX_NAME_LENGTH - 1);
         }
-    }
-    
-    public boolean nameChangedSinceLastUpload() {
-        return nameChangedSinceLastUpload;
-    }
-    
-    public void setNameChangedSinceLastUpload(boolean nameChangedSinceLastUpload) {
-        this.nameChangedSinceLastUpload = nameChangedSinceLastUpload;
     }
     
     /**

@@ -31,7 +31,7 @@ import com.badlogic.gdx.files.FileHandle;
 public class RemoteServices {
     
     public static String getServerURL() {
-        return "https://localhost:1443";
+    	return "https://fly-devel.cloudapp.net";
     }
     
     /**
