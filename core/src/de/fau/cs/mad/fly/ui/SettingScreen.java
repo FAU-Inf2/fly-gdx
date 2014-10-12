@@ -18,7 +18,9 @@ import de.fau.cs.mad.fly.ui.help.HelpOverlay;
 import de.fau.cs.mad.fly.ui.help.OverlayFrame;
 import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,7 +68,7 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
 		HorizontalGroup top = new HorizontalGroup();
 		Table tabs = new Table();
 		final Button tab1 = new TextButton(I18n.t("generalSettings"), skin, "toggle");
-		final Button tab2 = new TextButton(I18n.t("audioSettings"), skin, "toggle");
+		final Button tab2 = new TextButton(I18n.t("audioSettings"),   skin, "toggle");
 		final Button tab3 = new TextButton(I18n.t("controlSettings"), skin, "toggle");
 		tabs.add(tab1).pad(50);
 		tabs.add(tab2).pad(50);
@@ -81,8 +83,11 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				generalContent.setVisible(tab1.isChecked());
-				audioContent.setVisible(tab2.isChecked());
-				controlContent.setVisible(tab3.isChecked());
+        tab1.setDisabled(tab1.isChecked());
+        audioContent.setVisible(tab2.isChecked());
+				tab2.setDisabled(tab2.isChecked());
+        controlContent.setVisible(tab3.isChecked());
+				tab3.setDisabled(tab3.isChecked());
 			}
 		};
 		tab1.addListener(tabListener);
@@ -127,19 +132,28 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
             for ( Table settingTable : settingsMap.values() )
             	settingTable.clear();
 			SettingManager settingManager = playerProfile.getSettingManager();
-            for (ISetting setting : settingManager.getSettings()) {
+			Map<ISetting.Groups, List<ISetting>> map = new HashMap<ISetting.Groups, List<ISetting>>();
+			for (ISetting setting : settingManager.getSettings()) {
 				if ( setting.isHidden() )
 					continue;
+
+				ISetting.Groups key = setting.group();
+				if (map.get(key) == null)
+					map.put(key, new ArrayList<ISetting>());
+				map.get(key).add(setting);
+
 				Table settingTable = settingsMap.get(setting.group());
                 settingTable.row().expand();
-                if (!helpScreenCreated) {
-                    helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t(setting.getHelpingText()), setting.getActor()));
-                }
+
 				float padding = 20;
 				Label label = new Label(setting.getDescription(), skin);
 				settingTable.add(label).right().pad(padding);
                 settingTable.add(setting.getActor()).pad(padding, 3 * padding, padding, padding).width(700f);
             }
+			if ( !helpScreenCreated )
+				for ( List<ISetting> settings : map.values() )
+					for ( ISetting setting : settings )
+						helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, I18n.t(setting.getHelpingText()), setting.getActor()));
             displayPlayer = playerProfile.getName();
         }
         helpScreenCreated = true;
