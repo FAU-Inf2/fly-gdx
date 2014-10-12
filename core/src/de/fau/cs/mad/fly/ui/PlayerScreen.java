@@ -47,6 +47,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
     private Label totalScoreValueLabel;
     private Label lastLevelValueLabel;
     private Label totalMoneyValueLabel;
+    private Label flyIDLabel;
     
     public final static int MAX_NAME_WIDTH = 1650;
     
@@ -168,10 +169,10 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         PlayerProfile playerProfile = playerProfileManager.getCurrentPlayerProfile();
         
         //show fly id
-        playerTable.add(new Label(I18n.t("labelFlyId") + ":", skin)).pad(padding).right();
-        Label tmp = new Label("" + playerProfile.getFlyID(), skin);//msgGetFlyId
-        playerTable.add(tmp).pad(padding);
-        playerTable.row();
+       // playerTable.add(new Label(I18n.t("labelFlyId") + ":", skin)).pad(padding).right();
+        flyIDLabel = new Label("" + playerProfile.getFlyID(), skin);
+        //playerTable.add(flyIDLabel).pad(padding);
+        //playerTable.row();
         
         // show total score
         playerTable.add(new Label(I18n.t("labelTotalScore"), skin)).pad(padding).right();
@@ -181,8 +182,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
             
             @Override
             public void changed(PlayerProfile newPlayerProfile) {
-                totalScoreValueLabel.setText(String.valueOf(newPlayerProfile.getMoney()));
-                updateLastLevelGroup(newPlayerProfile);
+            	updateLabels();
             }
             
         });
@@ -247,12 +247,18 @@ public class PlayerScreen extends BasicScreenWithBackButton {
     @Override
     public void show() {
         super.show();
-        if (totalScoreValueLabel != null) {
-            PlayerProfile currentPlayerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-            totalScoreValueLabel.setText(String.valueOf(currentPlayerProfile.getTotalScoreOfAll()));
-            totalMoneyValueLabel.setText(currentPlayerProfile.getMoney() + "");
-            updateLastLevelGroup(currentPlayerProfile);
-        }
-        updateUserTable(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
+        updateLabels();
+    }
+    
+    private void updateLabels(){
+    
+    	 if (totalScoreValueLabel != null) {
+             PlayerProfile currentPlayerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+             totalScoreValueLabel.setText(String.valueOf(currentPlayerProfile.getTotalScoreOfAll()));
+             totalMoneyValueLabel.setText(currentPlayerProfile.getMoney() + "");
+             flyIDLabel.setText(currentPlayerProfile.getFlyID() + "");
+             updateLastLevelGroup(currentPlayerProfile);
+         }
+         updateUserTable(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
     }
 }
