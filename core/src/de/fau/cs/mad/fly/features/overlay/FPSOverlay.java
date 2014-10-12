@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.features.overlay;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -16,45 +15,17 @@ import de.fau.cs.mad.fly.ui.UI;
  * @author Tobias Zangl
  */
 public class FPSOverlay implements IFeatureDraw {
-    
-    private final Stage stage;
-    private Label fpsDescription, fpsCounter;
+    private Label fpsCounter;
     
     public FPSOverlay(final Stage stage) {
-        this.stage = stage;
-        
         LabelStyle labelStyle = SkinManager.getInstance().getSkin().get("red", LabelStyle.class);
-        fpsDescription = new Label(I18n.t("fps"), labelStyle);
-        fpsDescription.setPosition(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE * 4);
-        stage.addActor(fpsDescription);
         fpsCounter = new Label("", labelStyle);
-        fpsCounter.setPosition(UI.Window.BORDER_SPACE + fpsDescription.getWidth() + 50, 5 * UI.Window.BORDER_SPACE);
+        fpsCounter.setPosition(UI.Window.BORDER_SPACE, UI.Window.BORDER_SPACE * 6);
         stage.addActor(fpsCounter);
-    }
-    
-    /**
-     * Adds a Label to the screen.
-     * 
-     * @param text
-     *            the default text for the Label
-     * @param labelStyle
-     *            the LabelStyle for the Label
-     * @param x
-     *            the x position on the screen in percent, should be between
-     *            -100.0, +100.0
-     * @param y
-     *            the y position on the screen in percent, should be between
-     *            -100.0, +100.0
-     */
-    public Label addLabel(String text, LabelStyle labelStyle, float x, float y) {
-        Label label = new Label(text, labelStyle);
-        label.setPosition(Gdx.graphics.getWidth() * x, Gdx.graphics.getHeight() * y);
-        stage.addActor(label);
-        return label;
     }
     
     @Override
     public void draw(float delta) {
-        fpsCounter.setText(String.valueOf((int) (1.0 / delta)));
+        fpsCounter.setText(I18n.t("fps") + " " + String.valueOf((int) (1.0 / delta)));
     }
 }

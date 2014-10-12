@@ -15,6 +15,7 @@ import de.fau.cs.mad.fly.game.GameObject;
  */
 public class SinusRotationMover implements IGameObjectMover {
     private GameObject gameObject;
+    private boolean active;
     
     private float i = 0.0f;
     
@@ -31,6 +32,7 @@ public class SinusRotationMover implements IGameObjectMover {
     
     public SinusRotationMover(GameObject gameObject) {
         this.gameObject = gameObject;
+        this.active = true;
         startPosition = new Vector3();
         gameObject.transform.getTranslation(startPosition);
     }
@@ -62,6 +64,10 @@ public class SinusRotationMover implements IGameObjectMover {
     
     @Override
     public void move(float delta) {
+    	if(!active) {
+    		return;
+    	}
+    	
         // store A*sin(B*x+C) in level file for x,y,z
         moving.x = X.x * (float) Math.sin(X.y * i + X.z);
         moving.y = Y.x * (float) Math.sin(Y.y * i + Y.z);
@@ -82,6 +88,11 @@ public class SinusRotationMover implements IGameObjectMover {
 		mover.Y = this.Y;
 		mover.Z = this.Z;
 		return mover;
+	}
+
+	@Override
+	public void setActive(boolean active) {
+		this.active = active;
 	}
     
 }
