@@ -1,11 +1,13 @@
 package de.fau.cs.mad.fly.ui;
 
 import java.util.Collection;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlaneUpgradeManager;
 import de.fau.cs.mad.fly.res.PlaneUpgrade;
@@ -27,6 +29,7 @@ public class PlaneUpgradeScreen extends PlaneBasicScreen {
         upgradesListTable = new Table();
        
         initUpgradeButtons();
+        initChosenPlaneDetail();
         generateBackButton();       
     }
     
@@ -65,5 +68,11 @@ public class PlaneUpgradeScreen extends PlaneBasicScreen {
     	}
     	planeUpgradeDetailScreen.setChosenUpgrade(upgrade);
     	planeUpgradeDetailScreen.set();
+    }
+    
+    @Override
+    public void show() {
+        super.show();
+        updateChosenPlaneDetail();
     }
 }
