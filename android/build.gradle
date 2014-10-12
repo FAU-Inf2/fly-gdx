@@ -57,7 +57,7 @@ allprojects {
             def props = new Properties()
             props.load(new FileInputStream(apikeyFile))
             def httpFile = rootProject.file("core/src/de/fau/cs/mad/fly/HttpClient/NetHttpsJavaImpl.java")
-            def content = httpFile.getText().replace("%__FLY_SERVER_ACCESS_TOKEN_DESKTOP__%", props["desktopKey"]).replace("%__FLY_SERVER_ACCESS_TOKEN_ANDROID__%", props["androidKey"]).replace("%__FLY_SERVER_ACCESS_TOKEN_IOS__%", props["iosKey"])
+            def content = httpFile.getText().replace("%__FLY_SERVER_ACCESS_TOKEN_DESKTOP__%", props["Desktop"]).replace("%__FLY_SERVER_ACCESS_TOKEN_ANDROID__%", props["Android"]).replace("%__FLY_SERVER_ACCESS_TOKEN_IOS__%", props["iOS"])
             httpFile.write(content)
         }
     }
