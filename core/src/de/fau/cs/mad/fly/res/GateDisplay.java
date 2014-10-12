@@ -69,17 +69,17 @@ public class GateDisplay extends GameObject implements Disposable {
     }
     
     /**
-     * Marks the game object with a special color.
+     * Marks the gate display with a special color.
      */
     public void mark() {
-        materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
+        materials.get(0).set(ColorAttribute.createDiffuse(0.8f, 0f, 0f, 1f));
     }
     
     /**
-     * Unmarks the object.
+     * Unmarks the gate display.
      */
     public void unmark() {
-        materials.get(0).set(ColorAttribute.createDiffuse(Color.GRAY));
+        materials.get(0).set(ColorAttribute.createDiffuse(Color.DARK_GRAY));
     }
     
     @Override
