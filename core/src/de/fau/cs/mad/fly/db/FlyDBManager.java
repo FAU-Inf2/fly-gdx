@@ -17,7 +17,7 @@ public class FlyDBManager {
     
     private static final String DATABASE_NAME = "faumadfly01.db";
     private static final int DATABASE_VERSION = 1;
-    private static final int LASTEST_DATABASE_VERSION = 1;
+    private static final int LASTEST_DATABASE_VERSION = 2;
     
     final Database dbHandler;
     
@@ -51,9 +51,20 @@ public class FlyDBManager {
             Gdx.app.log("FlyDBManager", "database opened " + System.currentTimeMillis());
             
             int dbVersion = getDBVersion();
+//            if(dbVersion <2 ) {            	
+//            	//add version 2 sql
+//            }
+//            
+//            if(dbVersion <3 ) {
+//            	//add version 3 sql
+//            }
+//            ...
+            	
             if (dbVersion < LASTEST_DATABASE_VERSION) {
                 // change LASTEST_DATABASE_VERSION amd add db update sql here
                 // when new version needs
+            	dbHandler.execSQL("ALTER TABLE player ADD COLUMN secret_key text");
+            	dbHandler.execSQL("ALTER TABLE player ADD COLUMN is_newname_uploaded integer not null default 1");
                 updateDBversion(LASTEST_DATABASE_VERSION);
             }
         }

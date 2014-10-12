@@ -12,7 +12,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.HttpMethods;
@@ -23,6 +25,7 @@ import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.StreamUtils;
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 
 public class NetHttpsJavaImpl {
 
@@ -114,15 +117,42 @@ public class NetHttpsJavaImpl {
 			final String method = httpRequest.getMethod();
 			URL url;
 
+			String token = System.getenv("FLY_SERVER_ACCESS_TOKEN");
+			if ( token == null )
+				switch ( Gdx.app.getType() ) {
+					case Desktop:
+						token = "%__FLY_SERVER_ACCESS_TOKEN_DESKTOP__%";
+						break;
+					case Android:
+						token = "%__FLY_SERVER_ACCESS_TOKEN_ANDROID__%";
+						break;
+					case iOS:
+						token = "%__FLY_SERVER_ACCESS_TOKEN_IOS__%";
+						break;
+				}
+
+			String tokenString = "Token token=\"" + token + "\"";
+			String secretKey = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSecretKey();
+			if ( secretKey != null )
+				tokenString += "; secret_key=\"" + secretKey + "\"";
+			httpRequest.setHeader("Authorization", tokenString);
+
 			if (method.equalsIgnoreCase(HttpMethods.GET)) {
 				String queryString = "";
 				String value = httpRequest.getContent();
-				if (value != null && !"".equals(value))
+				if (value != null && !value.isEmpty())
 					queryString = "?" + value;
 				url = new URL(httpRequest.getUrl() + queryString);
 			} else {
 				url = new URL(httpRequest.getUrl());
 			}
+
+//			HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+//				@Override
+//				public boolean verify(String s, SSLSession sslSession) {
+//					return true;
+//				}
+//			});
 
 			final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 			// should be enabled to upload data.
@@ -130,7 +160,8 @@ public class NetHttpsJavaImpl {
 			connection.setDoOutput(doingOutPut);
 			connection.setDoInput(true);
 			connection.setRequestMethod(method);
-			
+
+
 			connection.setSSLSocketFactory(RemoteServices.getSSLSocketFactory());
 			HttpsURLConnection.setFollowRedirects(httpRequest.getFollowRedirects());
 

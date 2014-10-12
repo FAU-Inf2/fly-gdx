@@ -6,6 +6,8 @@ import java.util.List;
 import com.badlogic.gdx.sql.DatabaseCursor;
 
 import de.fau.cs.mad.fly.I18n;
+import de.fau.cs.mad.fly.HttpClient.PutUserHttpRespListener;
+import de.fau.cs.mad.fly.HttpClient.PutUserService;
 import de.fau.cs.mad.fly.db.FlyDBManager;
 import de.fau.cs.mad.fly.settings.AppSettingsManager;
 
@@ -126,7 +128,7 @@ public class PlayerProfileManager {
     
     private void setPlayers() {
         playerProfiles = new ArrayList<PlayerProfile>();
-        final String selectSQL = "select player_id,fly_id,name,total_score,total_geld,current_levelgroup_id,current_level_id,passed_levelgroup_id,passed_level_id from player";
+        final String selectSQL = "select player_id,fly_id,name,total_score,total_geld,current_levelgroup_id,current_level_id,passed_levelgroup_id,passed_level_id,secret_key,is_newname_uploaded from player";
         
         DatabaseCursor cursor = FlyDBManager.getInstance().selectData(selectSQL);
         
@@ -141,7 +143,9 @@ public class PlayerProfileManager {
                 playerProfile.setCurrentLevelProfile(cursor.getInt(6));
                 playerProfile.setPassedLevelgroupID(cursor.getInt(7));
                 playerProfile.setPassedLevelID(cursor.getInt(8));
-                
+				playerProfile.setSecretKey(cursor.getString(9));
+				playerProfile.setNewnameUploaded(cursor.getInt(10)>0);
+
                 playerProfiles.add(playerProfile);
             }
             cursor.close();
@@ -169,11 +173,18 @@ public class PlayerProfileManager {
     }
     
     public void saveFlyID(PlayerProfile playerProfile) {
-        
+
         final String sql = "update player set fly_id=" + playerProfile.getFlyID() + " where player_id=" + playerProfile.getId();
-        
+
         FlyDBManager.getInstance().execSQL(sql);
     }
+
+
+	public void saveSecretKey(PlayerProfile profile) {
+		final String sql = "update player set secret_key='" + profile.getSecretKey() + "' where player_id=" + profile.getId();
+
+		FlyDBManager.getInstance().execSQL(sql);
+	}
     
     public void updateIntColumn(PlayerProfile playerProfile, String colname, int newValue) {
         final String sql = "update player set " + colname + "=" + newValue + " where player_id=" + playerProfile.getId();
@@ -189,15 +200,21 @@ public class PlayerProfileManager {
      */
     public void editCurrentPlayerName(String newPlayerProfileName) {
         if (!currentPlayerProfile.getName().equals(newPlayerProfileName)) {
-            updateIntColumn(currentPlayerProfile, "name", newPlayerProfileName);
+            updateStringColumn(currentPlayerProfile, "name", newPlayerProfileName);
             currentPlayerProfile.setName(newPlayerProfileName);
-            //TODO: change name on server
-            currentPlayerProfile.setNameChangedSinceLastUpload(true);
+           
+            //change name on server
+            if(currentPlayerProfile.getFlyID() > 0 ){
+            	updateIntColumn(currentPlayerProfile, "is_newname_uploaded", 0);
+            	currentPlayerProfile.setNewnameUploaded(false);
+            	new PutUserService( new PutUserHttpRespListener(currentPlayerProfile)).execute(currentPlayerProfile);
+            }
+            
             currentPlayerProfileChanged();
         }
     }
     
-    private void updateIntColumn(PlayerProfile playerProfile, String colname, String newValue) {
+    public void updateStringColumn(PlayerProfile playerProfile, String colname, String newValue) {
         final String sql = "update player set " + colname + "='" + newValue + "' where player_id=" + playerProfile.getId();
         FlyDBManager.getInstance().execSQL(sql);
     }
@@ -225,5 +242,5 @@ public class PlayerProfileManager {
             playerProfile.clearSettingManager();
         }
     }
-    
+
 }

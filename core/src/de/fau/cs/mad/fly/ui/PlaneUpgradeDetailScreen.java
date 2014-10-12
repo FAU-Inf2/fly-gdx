@@ -83,7 +83,7 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
 		updateUpgradeDetailTable();
 		
 		outTable.add().width(UI.Buttons.IMAGE_BUTTON_WIDTH);	
-		outTable.add(upgradeDetailTable).right().top().padRight(50f).padTop(0f).expand();
+		outTable.add(upgradeDetailTable).right().top().padRight(100f).padTop(0f).expand();
 		stage.addActor(scrollPane);
 	}
    
@@ -106,7 +106,7 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
                     
                     PlaneManager.getInstance().buyUpgradeForPlane(chosenUpgrade.name);
                     updateUpdateDetails();
-                    updateChosenPlaneDetail();
+                    //updateChosenPlaneDetail();
                     
                     upgradeButton.setText(I18n.t("equip"));
                     upgradeButton.setDisabled(false);//.setColor(Color.WHITE);
@@ -134,16 +134,15 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
                 if (equiped != bought) {
                     if (equiped == 0) {
                         downgradeButton.setText(I18n.t("unequip"));
-                        downgradeButton.setDisabled(false);//.setColor(Color.WHITE);
+                        downgradeButton.setDisabled(false);
                     }
                     
                     PlaneManager.getInstance().upgradePlane(name, 1);
                     updateUpdateDetails();
-                    updateChosenPlaneDetail();
+                    //updateChosenPlaneDetail();
                     
                     if (equiped + 1 == bought) {
-                        upgradeButton.setDisabled(true);//.setText(I18n.t("allreadyMaximal"));
-                        //upgradeButton.setColor(Color.GRAY);
+                        upgradeButton.setDisabled(true);
                     }
                 }
             }
@@ -164,7 +163,7 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
                     
                     PlaneManager.getInstance().upgradePlane(name, -1);
                     updateUpdateDetails();
-                    updateChosenPlaneDetail();
+                    //updateChosenPlaneDetail();
                     
                     if (equiped - 1 == 0) {
                         downgradeButton.setDisabled(true);//.setText(I18n.t("allreadyMinimal"));
@@ -283,6 +282,10 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
 		
 		upgradeDetailTable.add(downgradeButton).space(20).left();
 		upgradeDetailTable.add(upgradeButton).space(20).left();
+		upgradeDetailTable.row();
+		
+		upgradeDetailTable.add().space(20).left();
+		upgradeDetailTable.add().space(20).left();
 		upgradeDetailTable.row();
 	}
 

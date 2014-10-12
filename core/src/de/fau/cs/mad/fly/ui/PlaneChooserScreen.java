@@ -82,6 +82,7 @@ public class PlaneChooserScreen extends PlaneBasicScreen implements InputProcess
         
         // initialize the InputProcessor
         inputProcessor = new InputMultiplexer(stage, this, this.backProcessor);
+        initChosenPlaneDetail();
         generateBackButton();
     }
     
@@ -309,6 +310,7 @@ public class PlaneChooserScreen extends PlaneBasicScreen implements InputProcess
     public void show() {
         super.show();
         showHelpScreen = false;
+        updateChosenPlaneDetail();
     }
     
     @Override
