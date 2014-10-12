@@ -67,7 +67,7 @@
             "position": [
                 0.0,
                 12.0,
-                2.0
+                3.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -85,9 +85,9 @@
             "gateId": 2,
             "id": "Gate.002",
             "position": [
-                -39.0,
-                34.0,
-                52.0
+                -32.0,
+                37.0,
+                53.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -104,7 +104,7 @@
             "id": "Gate.003",
             "position": [
                 0.0,
-                18.0,
+                17.0,
                 5.0
             ],
             "ref": "torus",
@@ -125,7 +125,7 @@
             "position": [
                 0.0,
                 25.0,
-                9.0
+                11.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -143,7 +143,7 @@
             "gateId": 5,
             "id": "Gate.005",
             "position": [
-                0.0,
+                2.0,
                 31.0,
                 13.0
             ],
@@ -165,7 +165,7 @@
             "position": [
                 0.0,
                 38.0,
-                16.0
+                13.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -183,7 +183,7 @@
             "gateId": 7,
             "id": "Gate.007",
             "position": [
-                0.0,
+                -2.0,
                 48.0,
                 20.0
             ],
@@ -266,7 +266,7 @@
             "position": [
                 31.0,
                 56.0,
-                19.0
+                20.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -286,7 +286,7 @@
             "position": [
                 38.0,
                 49.0,
-                19.0
+                17.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -324,7 +324,7 @@
             "gateId": 14,
             "id": "Gate.014",
             "position": [
-                47.0,
+                48.0,
                 31.0,
                 18.0
             ],
@@ -342,7 +342,7 @@
             "gateId": 20,
             "id": "Gate.020",
             "position": [
-                -35.0,
+                -30.0,
                 55.0,
                 49.0
             ],
@@ -362,9 +362,9 @@
             "gateId": 19,
             "id": "Gate.019",
             "position": [
-                -26.0,
+                -23.0,
                 60.0,
-                43.0
+                42.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -382,9 +382,9 @@
             "gateId": 18,
             "id": "Gate.018",
             "position": [
-                -18.0,
+                -15.0,
                 60.0,
-                38.0
+                37.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -422,9 +422,9 @@
             "gateId": 21,
             "id": "Gate.021",
             "position": [
-                -41.0,
-                50.0,
-                55.0
+                -36.0,
+                51.0,
+                54.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -442,9 +442,9 @@
             "gateId": 22,
             "id": "Gate.022",
             "position": [
-                -45.0,
-                45.0,
-                58.0
+                -39.0,
+                46.0,
+                57.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -462,9 +462,9 @@
             "gateId": 23,
             "id": "Gate.023",
             "position": [
-                -44.0,
-                39.0,
-                57.0
+                -37.0,
+                40.0,
+                56.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -493,6 +493,6 @@
             "z": 0.0
         }
     },
-    "time": 78,
+    "time": 76,
     "upgrades": []
 }
