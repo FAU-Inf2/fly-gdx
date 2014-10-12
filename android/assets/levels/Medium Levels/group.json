@@ -83,6 +83,16 @@
 			"id": 16,
 			"name": "14",
 			"file": "level14.json"
+		},		
+		{
+			"id": 17,
+			"name": "T 8",
+			"file": "timeTutorial.json"
+		},		
+		{
+			"id": 18,
+			"name": "15",
+			"file": "level15.json"
 		}
 	]
 }

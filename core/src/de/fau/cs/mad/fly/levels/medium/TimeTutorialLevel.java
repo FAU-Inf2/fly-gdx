@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.levels.tutorials;
+package de.fau.cs.mad.fly.levels.medium;
 
 import java.util.List;
 
