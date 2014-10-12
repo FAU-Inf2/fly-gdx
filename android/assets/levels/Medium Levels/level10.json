@@ -10,7 +10,7 @@
         "border": "spacesphere",
         "hole": "torusHoleBox",
         "speedUpgrade": "speedUpgrade",
-        "torus": "torus"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -487,7 +487,7 @@
             "successors": []
         }
     ],
-    "id": 12,
+    "id": 212,
     "name": "Level 10",
     "start": {
         "position": {

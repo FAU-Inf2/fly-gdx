@@ -30,7 +30,7 @@
         "border": "spacesphere",
         "hole": "torusHoleBox",
         "speedUpgrade": "speedUpgrade",
-        "torus": "torus"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -75,7 +75,7 @@
             "successors": []
         }
     ],
-    "id": 5,
+    "id": 211,
     "name": "Speed Tutorial",
     "start": {
         "position": {

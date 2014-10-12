@@ -111,7 +111,7 @@
         "border": "spacesphere",
         "hole": "torusHoleBox",
         "pointsUpgrade": "pointsUpgrade",
-        "torus": "torus"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -137,7 +137,7 @@
             "successors": []
         }
     ],
-    "id": 7,
+    "id": 207,
     "name": "6",
     "start": {
         "position": {

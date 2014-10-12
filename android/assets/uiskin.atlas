@@ -1,6 +1,6 @@
 uiskin.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: MipMapLinearNearest,MipMapLinearNearest
 repeat: none
 default
   rotate: false
@@ -86,17 +86,17 @@ white
 button-up
   rotate: false
   xy: 1, 311
-  size: 108, 107
-  split: 53, 53, 53, 53
-  orig: 108, 107
+  size: 106, 106
+  split: 52, 52, 52, 52
+  orig: 106, 106
   offset: 0, 0
   index: -1
 button-down
   rotate: false
   xy: 260, 1
-  size: 108, 108
-  split: 53, 53, 53, 53
-  orig: 108, 108
+  size: 106, 106
+  split: 52, 52, 52, 52
+  orig: 106, 106
   offset: 0, 0
   index: -1
 button-disabled
@@ -154,8 +154,8 @@ arrow
 helpArrowDown
   rotate: false
   xy: 710, 1
-  size: 250, 172
-  orig: 250, 172
+  size: 250, 171
+  orig: 250, 171
   offset: 0, 0
   index: -1
 questionmark

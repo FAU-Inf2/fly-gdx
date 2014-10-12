@@ -30,7 +30,7 @@
         "border": "spacesphere",
         "hole": "torusHoleBox",
         "timeUpgrade": "timeUpgrade",
-        "torus": "torusTex"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -75,7 +75,7 @@
             "successors": []
         }
     ],
-    "id": 17,
+    "id": 217,
     "name": "Time Tutorial",
     "start": {
         "position": {
