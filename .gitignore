@@ -39,3 +39,4 @@ local.properties
 .idea/
 build/
 android/assets/*.db
+apikey.properties
