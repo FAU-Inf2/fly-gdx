@@ -104,6 +104,11 @@
 			"id": 220,
 			"name": "17",
 			"file": "level17.json"
+		},
+		{
+			"id": 221,
+			"name": "18",
+			"file": "level18.json"
 		}
 	]
 }

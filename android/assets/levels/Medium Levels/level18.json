@@ -13,7 +13,7 @@
             ],
             "id": "Cube.000",
             "position": [
-                -5.0,
+                -4.0,
                 14.0,
                 0.0
             ],
@@ -22,16 +22,6 @@
                 1.8,
                 1.8,
                 1.8
-            ],
-            "sinus_x": [
-                5.0,
-                1.0,
-                0.0
-            ],
-            "sinus_z": [
-                3.0,
-                1.0,
-                1.0
             ]
         },
         {
@@ -43,7 +33,7 @@
             "id": "Cube.001",
             "position": [
                 5.0,
-                41.0,
+                30.0,
                 1.0
             ],
             "ref": "asteroid",
@@ -61,6 +51,25 @@
                 3.0,
                 1.0,
                 1.0
+            ]
+        },
+        {
+            "euler": [
+                57.599999999999994,
+                157.9,
+                -1.6
+            ],
+            "id": "Cube.002",
+            "position": [
+                4.0,
+                46.0,
+                1.0
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.8,
+                1.8,
+                1.8
             ]
         }
     ],
@@ -81,13 +90,13 @@
             "euler": [
                 0.0,
                 0.0,
-                0.0
+                90.0
             ],
             "gateId": 0,
             "id": "Gate.000",
             "position": [
                 0.0,
-                8.0,
+                13.0,
                 0.0
             ],
             "ref": "torus",
@@ -100,13 +109,13 @@
             "euler": [
                 0.0,
                 0.0,
-                0.0
+                -90.0
             ],
             "gateId": 1,
             "id": "Gate.001",
             "position": [
                 0.0,
-                30.0,
+                24.0,
                 0.0
             ],
             "ref": "torus",
@@ -119,13 +128,51 @@
             "euler": [
                 0.0,
                 0.0,
-                0.0
+                -90.0
             ],
             "gateId": 2,
             "id": "Gate.002",
             "position": [
                 0.0,
-                61.0,
+                35.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                3
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                -90.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                0.0,
+                43.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                4
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                -90.0
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                0.0,
+                50.0,
                 0.0
             ],
             "ref": "torus",
@@ -133,7 +180,7 @@
             "successors": []
         }
     ],
-    "id": 220,
+    "id": 221,
     "name": "17",
     "start": {
         "position": {
@@ -172,7 +219,7 @@
                 0.0
             ],
             "ref": "timeUpgrade",
-            "time": 12,
+            "time": 13,
             "type": "ChangeTimeUpgrade"
         },
         {
@@ -188,12 +235,12 @@
             ],
             "id": "changeTimeUpgrade.001",
             "position": [
-                7.0,
-                46.0,
+                5.0,
+                35.0,
                 0.0
             ],
             "ref": "timeUpgrade",
-            "time": 13,
+            "time": 15,
             "type": "ChangeTimeUpgrade"
         }
     ]
