@@ -1,6 +1,7 @@
 {
 	"id": 2,
 	"name": "Medium Levels",
+	"moneyFactor":2,
 	"levels": [
 		{
 			"id": 201,
