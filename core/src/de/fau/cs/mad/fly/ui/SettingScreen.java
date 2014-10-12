@@ -138,7 +138,7 @@ public class SettingScreen extends BasicScreenWithBackButton implements WithHelp
 				float padding = 20;
 				Label label = new Label(setting.getDescription(), skin);
 				settingTable.add(label).right().pad(padding);
-                settingTable.add(setting.getActor()).pad(padding, 3 * padding, padding, padding).width(500f);
+                settingTable.add(setting.getActor()).pad(padding, 3 * padding, padding, padding).width(700f);
             }
             displayPlayer = playerProfile.getName();
         }
