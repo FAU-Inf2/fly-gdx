@@ -1,6 +1,6 @@
 uiskin.png
 format: RGBA8888
-filter: MipMapLinearNearest,MipMapLinearNearest
+filter: Nearest, Nearest
 repeat: none
 default
   rotate: false

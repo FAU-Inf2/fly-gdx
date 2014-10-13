@@ -324,7 +324,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         
         //gain money
         messageTable.row().expand();        
-        messageTable.add(new Label(I18n.t("gainMoney"), skin)).right();
+        messageTable.add(new Label(I18n.t("gainMoney") + ":", skin)).right();
         messageTable.add();
         messageTable.add(new Label(gainMoney+"", skin)).left();
         messageTable.row();
