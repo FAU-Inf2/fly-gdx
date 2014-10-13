@@ -230,9 +230,9 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
     private void showLevelMessage(Skin skin) {
         String levelMessage;
         if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().isTutorial()) {
-            levelMessage = I18n.t("tutorial.finished.first") + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + I18n.t("level.finished.last");
+            levelMessage = I18n.t("tutorial.finished.first") + " " + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + " " + I18n.t("level.finished.last");
         } else {
-            levelMessage = I18n.t("level.finished.first") + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + I18n.t("level.finished.last");
+            levelMessage = I18n.t("level.finished.first") + " " + PlayerProfileManager.getInstance().getCurrentPlayerProfile().getCurrentLevelProfile().name + " " + I18n.t("level.finished.last");
         }
         Label infoLabel = new Label(levelMessage, skin);
         messageTable.add(infoLabel).colspan(3);
