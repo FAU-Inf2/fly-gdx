@@ -8,7 +8,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
@@ -138,23 +137,23 @@ public class PlaneChooserScreen extends PlaneBasicScreen implements InputProcess
         Table planeListTable = new Table(skin);
         planeListTable.setFillParent(true);
         
-        int size = allPlanes.size();
+        int numberOfAllPlanes = allPlanes.size();
         int passedLevelGroupId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getPassedLevelgroupID();
         
         // add some space to avoid that back button and ship selection button
         // overlapp
         planeListTable.add().width(300).bottom().expand();
-        for (int i = 1; i <= size; i++) {
-            Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(i).modelRef + ".png"));
+        for (int planeIndex = 1; planeIndex <= numberOfAllPlanes; planeIndex++) {
+            Texture texture1 = new Texture(Gdx.files.internal("spaceships/previews/" + allPlanes.get(planeIndex).modelRef + ".png"));
             TextureRegion image = new TextureRegion(texture1);
             ImageButtonStyle style = new ImageButtonStyle(skin.get(UI.Buttons.SETTING_BUTTON_STYLE, ImageButtonStyle.class));
             style.imageUp = new TextureRegionDrawable(image);
             style.imageDown = new TextureRegionDrawable(image);
             
             final ImageButton button = new ImageButton(style);
-            if (!Fly.DEBUG_MODE && allPlanes.get(i).levelGroupDependency > passedLevelGroupId) {
+            if (!Fly.DEBUG_MODE && allPlanes.get(planeIndex).levelGroupDependency > passedLevelGroupId) {
                 button.setDisabled(true);
-                final int levelId = i;
+                final int levelId = planeIndex;
                 button.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -162,21 +161,23 @@ public class PlaneChooserScreen extends PlaneBasicScreen implements InputProcess
                         helpOverlay.clearListOfFrames();
                         
                         StringBuilder message = new StringBuilder();
-                        message.append(I18n.t("minLevelGroupForShip1"));
-                        message.append(" ");
-                        message.append(LevelGroupManager.getInstance().getLevelGroups().get(levelId-1).name);
-                        message.append(" ");
-                        message.append(I18n.t("minLevelGroupForShip2"));
-                        message.append(".");
+                        if (levelId < 4) {
+                            message.append(I18n.t("minLevelGroupForShip1"));
+                            message.append(" ");
+                            message.append(LevelGroupManager.getInstance().getLevelGroups().get(levelId - 1).name);
+                            message.append(" ");
+                            message.append(I18n.t("minLevelGroupForShip2"));
+                            message.append(".");
+                        } else {
+                            message.append(I18n.t("nextUpdate"));
+                        }
                         helpOverlay.addHelpFrame(new HelpFrameTextWithArrow(skin, message.toString(), button));
                         showHelpScreen = true;
                         helpOverlay.clicked(null, 0, 0);
                     }
                 });
-                
-                // TODO: add listener to show message
             } else {
-                final int index = i;
+                final int index = planeIndex;
                 
                 button.addListener(new ClickListener() {
                     @Override
@@ -318,11 +319,12 @@ public class PlaneChooserScreen extends PlaneBasicScreen implements InputProcess
         showHelpScreen = true;
         Gdx.input.setInputProcessor(helpOverlay);
     }
-
-	@Override
-	public void step(OverlayFrame frame) {}
-
-	@Override
+    
+    @Override
+    public void step(OverlayFrame frame) {
+    }
+    
+    @Override
     public void endHelp() {
         showHelpScreen = false;
         Gdx.input.setInputProcessor(inputProcessor);

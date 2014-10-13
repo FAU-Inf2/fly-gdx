@@ -14,11 +14,6 @@
 			"id": 2,
 			"name": "MediumLevels",
 			"path": "Medium Levels/"
-		},
-		{
-			"id": 3,
-			"name": "HardLevels",
-			"path": "Hard Levels/"
 		}
 	]
 }

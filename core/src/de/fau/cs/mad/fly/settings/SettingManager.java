@@ -256,7 +256,7 @@ public class SettingManager {
 		addBooleanSetting(INVERT_Y, false, "helpYInversion", false, ISetting.Groups.CONTROLS);
 		addBooleanSetting(SHOW_FPS, false, "helpShowFPS", false, ISetting.Groups.GENERAL);
 		addBooleanSetting(DISABLE_TUTORIALS, false, "helpDisableTutorials", false, ISetting.Groups.GENERAL);
-		addFloatSetting(MASTER_VOLUME, 1.0f, 0.0f, 1.0f, 0.01f, "helpMasterVolume", false, ISetting.Groups.AUDIO);
+		addFloatSetting(MASTER_VOLUME, 0.5f, 0.0f, 1.0f, 0.01f, "helpMasterVolume", false, ISetting.Groups.AUDIO);
 //		addBooleanSetting(DISABLE_SOUND, false, "helpDisableSound", false, ISetting.Groups.AUDIO);
 		switch (Gdx.app.getType()) {
 			case Android:

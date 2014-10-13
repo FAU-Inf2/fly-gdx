@@ -43,7 +43,7 @@ public class Fly extends Game implements Loadable<Fly> {
      * <p>
      * Currently debug mode only disables the level dependencies.
      */
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
     
     private LoadingScreen<Fly> splashScreen;
     
@@ -61,16 +61,12 @@ public class Fly extends Game implements Loadable<Fly> {
         
         // init Assets, has to be done in the main Tread because it needs the
         // OpenGl context that is only offered by the main Thread.
-        long time = System.currentTimeMillis();
         Assets.init();
-        Gdx.app.log("timing", "Fly.create assets init: " + String.valueOf(System.currentTimeMillis() - time));
         
         // load SkinManager, has to be done in the main Tread because it needs
         // the OpenGl context that is only offered by the main Thread.
-        time = System.currentTimeMillis();
         SkinManager.getInstance();
-        Gdx.app.log("timing", "Fly.create creating skin manager: " + String.valueOf(System.currentTimeMillis() - time));
-
+        
         addProgressListener(new ProgressListener.ProgressAdapter<Fly>() {
             @Override
             public void progressFinished(Fly fly) {
@@ -87,7 +83,7 @@ public class Fly extends Game implements Loadable<Fly> {
                 init();
             }
         };
-
+        
         Thread loadingThread = new Thread(runnable);
         loadingThread.start();
         
@@ -95,20 +91,11 @@ public class Fly extends Game implements Loadable<Fly> {
     }
     
     protected void init() {
-        long time = System.currentTimeMillis();
         LevelGroupManager.createLevelManager();
-        Gdx.app.log("timing", "Fly.create start level manager: " + String.valueOf(System.currentTimeMillis() - time));
         progress = 10;
-        
-        time = System.currentTimeMillis();
         PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-        Gdx.app.log("timing", "Fly.create creating db and getCurrentPlayerProfile " + String.valueOf(System.currentTimeMillis() - time));
         progress = 90;
-        
-        time = System.currentTimeMillis();
         ParticleController.createParticleController();
-        Gdx.app.log("timing", "Fly.create create particle controller: " + String.valueOf(System.currentTimeMillis() - time));
-        
         progress = 100;
     }
     
@@ -155,10 +142,6 @@ public class Fly extends Game implements Loadable<Fly> {
     public GameController getGameController() {
         return gameController;
     }
-    
-   
-    
-   
     
     /**
      * Switches the current screen to the {@link LoadingScreen}.
