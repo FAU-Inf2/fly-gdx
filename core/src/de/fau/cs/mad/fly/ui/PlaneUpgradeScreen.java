@@ -58,7 +58,7 @@ public class PlaneUpgradeScreen extends PlaneBasicScreen {
 			upgradesListTable.row();
 		}
 		
-		outTable.add(upgradesListTable).right().top().padRight(25f).padTop(0f).expand();
+		outTable.add(upgradesListTable).right().top().pad(UI.Window.BORDER_SPACE).expand();
 		stage.addActor(scrollPane);
 	}
 	
@@ -74,5 +74,7 @@ public class PlaneUpgradeScreen extends PlaneBasicScreen {
     public void show() {
         super.show();
         updateChosenPlaneDetail();
+        // place spaceship a little left of the middle a little down
+        currentSpaceship.transform.translate(-0.8f, -0.4f, 0f);
     }
 }

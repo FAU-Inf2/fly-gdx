@@ -31,10 +31,9 @@ import de.fau.cs.mad.fly.res.Assets;
  * 
  */
 public class PlaneBasicScreen extends BasicScreenWithBackButton implements Screen {
-
-	protected Skin skin;
-    protected Viewport viewport;    
     
+    protected Skin skin;
+    protected Viewport viewport;
     
     protected float screenHeight = Gdx.graphics.getHeight();
     protected float screenWidth = Gdx.graphics.getWidth();
@@ -43,30 +42,27 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
     
     protected ModelBatch batch;
     protected Environment environment;
-    protected PerspectiveCamera camera;   
+    protected PerspectiveCamera camera;
     
     protected GameObject currentSpaceship;
     protected Vector3 xRotationAxis = new Vector3(1.f, 0.f, 0.f);
     protected Vector3 yRotationAxis = new Vector3(0.f, 1.f, 0.f);
     
-   // private Table upgradesListTable;
     final LabelStyle labelStyle;
     
-    /** Labels to show the currents status of the current plane*/
-    private Label nameLabel, speedLabel, azimuthSpeedLabel, livesLabel;//, rollingSpeedLabel;
-
-    //private PlaneUpgradeDetailScreen planeUpgradeDetailScreen;
+    /** Labels to show the currents status of the current plane */
+    private Label nameLabel, speedLabel, azimuthSpeedLabel, livesLabel;
     
-	public PlaneBasicScreen(BasicScreen screenToGoBack) {
-        super(screenToGoBack);        
+    public PlaneBasicScreen(BasicScreen screenToGoBack) {
+        super(screenToGoBack);
         
         currentPlane = PlaneManager.getInstance().getChosenPlane();
-
+        
         setUpEnvironment();
         setUpCamera();
         
-        skin = SkinManager.getInstance().getSkin();       
-        labelStyle = skin.get( LabelStyle.class);
+        skin = SkinManager.getInstance().getSkin();
+        labelStyle = skin.get(LabelStyle.class);
         
         batch = new ModelBatch(null, new FlyShaderProvider(), null);
         
@@ -75,11 +71,9 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         float scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
         viewport = new FillViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
         stage.setViewport(viewport);
-        
-        //initChosenPlaneDetail();
     }
     
-	 /**
+    /**
      * Initializes the overlay which contains the details of the current
      * spaceship
      */
@@ -98,11 +92,6 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         planeDetailTable.add(speedLabel).pad(UI.Tables.PADDING).left();
         planeDetailTable.row().left().top().expand();
         
-//        planeDetailTable.add(new Label(I18n.t("pitch") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
-//        rollingSpeedLabel = new Label("", labelStyle);
-//        planeDetailTable.add(rollingSpeedLabel).pad(UI.Tables.PADDING).left();
-//        planeDetailTable.row().left().top().expand();
-        
         planeDetailTable.add(new Label(I18n.t("turnSpeed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
         azimuthSpeedLabel = new Label("", labelStyle);
         planeDetailTable.add(azimuthSpeedLabel).pad(UI.Tables.PADDING).left();
@@ -115,20 +104,19 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         outTable.add(planeDetailTable).top().left().expand().pad(100f);
         stage.addActor(outTable);
     }
-   
-	 /**
+    
+    /**
      * Updates the overlay with the details of the current plane
      */
     protected void updateChosenPlaneDetail() {
         nameLabel.setText(currentPlane.name);
         speedLabel.setText(Float.toString(currentPlane.speed));
-        //rollingSpeedLabel.setText(Float.toString(currentPlane.rollingSpeed));
         azimuthSpeedLabel.setText(Float.toString(currentPlane.azimuthSpeed));
         livesLabel.setText(Integer.toString(currentPlane.lives));
     }
     
     protected void loadCurrentPlane() {
-    	 // adding the preview of the first plane
+        // adding the preview of the first plane
         String ref = "models/planes/" + currentPlane.modelRef + "/" + currentPlane.modelRef;
         
         Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
@@ -146,7 +134,7 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
      * Sets up the environment for the level with its light.
      */
     private void setUpEnvironment() {
-    	environment = new Environment();
+        environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
     }
@@ -165,8 +153,8 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
     }
     
     @Override
-    public void render(float delta) {        
-       super.render(delta);
+    public void render(float delta) {
+        super.render(delta);
         
         batch.begin(camera);
         currentSpaceship.render(batch, environment, camera);
@@ -181,15 +169,13 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         stage.getViewport().update(width, height, true);
     }
     
-	@Override
-	public void show() {
-		Gdx.input.setCatchBackKey(true);
-		Gdx.input.setInputProcessor(inputProcessor);
-		currentPlane = PlaneManager.getInstance().getChosenPlane();
-		loadCurrentPlane();
-
-		//updateChosenPlaneDetail();
-	}
+    @Override
+    public void show() {
+        Gdx.input.setCatchBackKey(true);
+        Gdx.input.setInputProcessor(inputProcessor);
+        currentPlane = PlaneManager.getInstance().getChosenPlane();
+        loadCurrentPlane();
+    }
     
     @Override
     public void dispose() {
