@@ -65,9 +65,12 @@ public class PlaneManager {
                 planeHead.modelRef = json.getString("modelRef");
                 planeHead.levelGroupDependency = json.getInt("levelGroupDependency");
                 planeHead.speed = json.getFloat("speed");
+                planeHead.basicSpeed = planeHead.speed;
                 planeHead.setRollingSpeed(json.getFloat("rollingSpeed"));
                 planeHead.azimuthSpeed = json.getFloat("azimuthSpeed");
+                planeHead.basicAzimuthSpeed = planeHead.azimuthSpeed;
                 planeHead.lives = json.getInt("lives");
+                planeHead.basicLives = planeHead.lives;
                 JsonValue rotation = json.get("rotation");
                 if (rotation != null) {
                     Vector3 rotationVector = new Vector3(rotation.getFloat(0), rotation.getFloat(1), rotation.getFloat(2));
@@ -91,7 +94,12 @@ public class PlaneManager {
 		if (planes == null) {
 			getSpaceshipList();
 		}
+		
 		for (IPlane.Head planeHead  : planes.values()) {
+			planeHead.azimuthSpeed = planeHead.basicAzimuthSpeed;
+			planeHead.speed = planeHead.basicSpeed;
+			planeHead.lives = planeHead.basicLives;
+			
 			Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
 			planeHead.getUpgradesBought().clear();
 			planeHead.getUpgradesEquiped().clear();

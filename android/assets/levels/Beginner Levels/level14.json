@@ -4,9 +4,24 @@
         {
             "id": "border",
             "ref": "border"
+        },
+        {
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "Cube.001",
+            "position": [
+                53.9,
+                0.6,
+                -0.9
+            ],
+            "ref": "asteroid"
         }
     ],
     "dependencies": {
+        "asteroid": "asteroid",
         "border": "spacesphere",
         "hole": "torusHoleBox",
         "torus": "torus"
@@ -28,7 +43,7 @@
             "position": [
                 0.0,
                 7.0,
-                2.0
+                3.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -48,7 +63,7 @@
             "position": [
                 4.0,
                 12.0,
-                3.0
+                5.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -66,8 +81,8 @@
             "gateId": 3,
             "id": "Gate.003",
             "position": [
-                16.0,
-                16.0,
+                15.0,
+                15.0,
                 4.0
             ],
             "ref": "torus",
@@ -86,7 +101,7 @@
             "gateId": 2,
             "id": "Gate.002",
             "position": [
-                10.0,
+                9.0,
                 16.0,
                 4.0
             ],
@@ -128,11 +143,11 @@
             "position": [
                 25.0,
                 15.0,
-                5.0
+                6.0
             ],
             "ref": "torus",
             "refHole": "hole",
-            "score": 55,
+            "score": 48,
             "successors": [
                 6
             ]
@@ -166,7 +181,7 @@
             "gateId": 7,
             "id": "Gate.007",
             "position": [
-                30.0,
+                29.0,
                 6.0,
                 5.0
             ],
@@ -188,7 +203,7 @@
             "position": [
                 30.0,
                 1.0,
-                5.0
+                4.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -206,7 +221,7 @@
             "gateId": 9,
             "id": "Gate.009",
             "position": [
-                30.0,
+                31.0,
                 -3.0,
                 5.0
             ],
@@ -226,9 +241,9 @@
             "gateId": 10,
             "id": "Gate.010",
             "position": [
-                30.0,
+                29.0,
                 -7.0,
-                5.0
+                6.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -246,7 +261,7 @@
             "gateId": 11,
             "id": "Gate.011",
             "position": [
-                27.0,
+                26.0,
                 -12.0,
                 5.0
             ],
@@ -287,8 +302,8 @@
             "id": "Gate.013",
             "position": [
                 13.0,
-                -13.0,
-                5.0
+                -12.0,
+                4.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -327,7 +342,7 @@
             "id": "Gate.015",
             "position": [
                 0.0,
-                -13.0,
+                -14.0,
                 5.0
             ],
             "ref": "torus",

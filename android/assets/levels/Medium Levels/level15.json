@@ -10,7 +10,7 @@
         "border": "spacesphere",
         "hole": "torusHoleBox",
         "timeUpgrade": "timeUpgrade",
-        "torus": "torusTex"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -640,7 +640,7 @@
             ]
         }
     ],
-    "id": 18,
+    "id": 218,
     "name": "Level 15",
     "start": {
         "position": {

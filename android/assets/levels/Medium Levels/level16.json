@@ -1,0 +1,340 @@
+{
+    "class": "medium.ChooseRightGateLevel",
+    "components": [
+        {
+            "id": "border",
+            "ref": "border"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                1.0,
+                0.0
+            ],
+            "euler": [
+                57.599999999999994,
+                157.9,
+                -1.6
+            ],
+            "id": "Cube.000",
+            "position": [
+                0.0,
+                23.0,
+                0.0
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.8,
+                1.8,
+                1.8
+            ],
+            "sinus_x": [
+                2.0,
+                0.5,
+                0.0
+            ]
+        },
+        {
+            "angular_velocity": [
+                0.0,
+                3.0,
+                1.0
+            ],
+            "euler": [
+                57.599999999999994,
+                157.9,
+                -1.6
+            ],
+            "id": "Cube.001",
+            "position": [
+                0.0,
+                52.0,
+                -3.0
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.8,
+                1.8,
+                1.8
+            ],
+            "sinus_x": [
+                2.0,
+                0.5,
+                0.0
+            ]
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                0.0,
+                4.0
+            ],
+            "euler": [
+                57.599999999999994,
+                157.9,
+                -1.6
+            ],
+            "id": "Cube.002",
+            "position": [
+                6.0,
+                27.0,
+                0.0
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.8,
+                1.8,
+                1.8
+            ],
+            "sinus_x": [
+                2.0,
+                0.5,
+                0.0
+            ]
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "border": "spacesphere",
+        "hole": "torusHoleBox",
+        "torus": "torusMedium"
+    },
+    "gates": [
+        {
+            "successors": [
+                0,
+                1
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                -2.0,
+                11.0,
+                -2.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                2.0,
+                15.0,
+                2.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 2,
+            "id": "Gate.002",
+            "position": [
+                0.0,
+                25.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                3,
+                4
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                0.0,
+                38.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                0.0,
+                38.0,
+                -6.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 5,
+            "id": "Gate.005",
+            "position": [
+                0.0,
+                54.0,
+                -3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                6
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 6,
+            "id": "Gate.006",
+            "position": [
+                6.0,
+                54.0,
+                -3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                7,
+                8
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 7,
+            "id": "Gate.007",
+            "position": [
+                6.0,
+                38.0,
+                -3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                9
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 8,
+            "id": "Gate.008",
+            "position": [
+                6.0,
+                38.0,
+                4.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                9
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 9,
+            "id": "Gate.009",
+            "position": [
+                6.0,
+                25.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                10
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 10,
+            "id": "Gate.010",
+            "position": [
+                6.0,
+                15.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": []
+        }
+    ],
+    "id": 219,
+    "name": "16",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 80,
+    "upgrades": []
+}

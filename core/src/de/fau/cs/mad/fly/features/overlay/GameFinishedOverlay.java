@@ -250,10 +250,6 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         
         newScore = gameController.getScoreController().generateEndScore(gameController);
         
-        // adds an amount of money to the players profile that equals the score
-        // he got in this level
-        PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(newScore.getTotalScore());
-        
         // define some space between the labels and the values
         messageTable.columnDefaults(1).width(50f);
         
@@ -290,6 +286,8 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         }
         messageTable.row().expand();
         
+        // adds an amount of money to the players profile that equals the score
+        // he got in this level
         PlayerProfileManager.getInstance().getCurrentPlayerProfile().addMoney(gainMoney);
         
         // gates
@@ -326,7 +324,7 @@ public class GameFinishedOverlay implements IFeatureInit, IFeatureFinish {
         
         //gain money
         messageTable.row().expand();        
-        messageTable.add(new Label(I18n.t("gainMoney"), skin)).right();
+        messageTable.add(new Label(I18n.t("gainMoney") + ":", skin)).right();
         messageTable.add();
         messageTable.add(new Label(gainMoney+"", skin)).left();
         messageTable.row();

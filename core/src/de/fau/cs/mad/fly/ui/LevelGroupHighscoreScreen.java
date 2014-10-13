@@ -25,6 +25,8 @@ import de.fau.cs.mad.fly.HttpClient.PostScoreHttpRespListener;
 import de.fau.cs.mad.fly.HttpClient.PostUserHttpRespListener;
 import de.fau.cs.mad.fly.HttpClient.PostUserService;
 import de.fau.cs.mad.fly.HttpClient.PutHighscoreService;
+import de.fau.cs.mad.fly.HttpClient.PutUserHttpRespListener;
+import de.fau.cs.mad.fly.HttpClient.PutUserService;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
@@ -253,11 +255,19 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                 PostUserService postUser = new PostUserService(listener);
                 
                 postUser.execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName());
-            } else if (score.getServerScoreId() > 0) {
-                putHighscoreService.execute();
-            } else {
-                postHighscoreService.execute();
-            }
+			} else {
+				
+				if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().isNewnameUploaded() == false) {
+					new PutUserService( new PutUserHttpRespListener(PlayerProfileManager.getInstance().getCurrentPlayerProfile())).execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
+				}
+
+				if (score.getServerScoreId() > 0) {
+
+					putHighscoreService.execute();
+				} else {
+					postHighscoreService.execute();
+				}
+			}
         }
     }
     

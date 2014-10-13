@@ -1,8 +1,5 @@
 package de.fau.cs.mad.fly.HttpClient;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.HttpMethods;
 import com.badlogic.gdx.Net.HttpRequest;
@@ -12,47 +9,17 @@ import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+import de.fau.cs.mad.fly.profile.LevelGroup;
+
 /**
  * Service to recieve the highscores of one {@link LevelGroup}.
  * 
  * @author fan, Lukas Hahmann <lukas.hahmann@gmail.com>
  * 
  */
-public class GetLevelHighScoreService {
+public class GlobalLevelGroupHighScoreService {
     
-    public class ResponseData {
-        public List<LevelRecords> records = new ArrayList<LevelRecords>();
-        
-        public void addRecord(int levelId, String levelName, RecordItem record) {
-            for (LevelRecords levelRecords : records) {
-                if (levelRecords.levelID == levelId) {
-                    levelRecords.records.add(record);
-                    return;
-                }
-            }
-            
-            LevelRecords levelRecords = new LevelRecords();
-            levelRecords.levelID = levelId;
-            levelRecords.levelName = levelName;
-            levelRecords.records.add(record);
-            records.add(levelRecords);
-        }
-    }
-    
-    public class LevelRecords {
-        public int levelID;
-        public String levelName;
-        public List<RecordItem> records = new ArrayList<RecordItem>();
-    }
-    
-    public class RecordItem {
-        public int score;
-        public String username;
-        public int flyID;
-        public int rank;
-    }
-    
-    public GetLevelHighScoreService(FlyHttpResponseListener listener) {
+    public GlobalLevelGroupHighScoreService(FlyHttpResponseListener listener) {
         this.listener = listener;
     }
     
@@ -91,7 +58,7 @@ public class GetLevelHighScoreService {
                     String ress = httpResponse.getResultAsString();
                     Gdx.app.log("GetLevelHighScoreService", "Received:" + ress);
                     JsonValue json = reader.parse(ress);
-                    ResponseData response = new ResponseData();
+                    LevelGroupGlobalHighscores response = new LevelGroupGlobalHighscores();
                     
                     for (JsonValue jsonScore : json) {
                         RecordItem score = new RecordItem();

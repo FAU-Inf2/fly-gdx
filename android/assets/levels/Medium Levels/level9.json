@@ -9,7 +9,7 @@
     "dependencies": {
         "border": "spacesphere",
         "hole": "torusHoleBox",
-        "torus": "torus"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -603,8 +603,8 @@
             "successors": []
         }
     ],
-    "id": 10,
-    "name": "9",
+    "id": 210,
+    "name": "Level 9",
     "start": {
         "position": {
             "x": 0.0,

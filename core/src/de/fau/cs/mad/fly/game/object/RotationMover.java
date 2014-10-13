@@ -12,6 +12,7 @@ import de.fau.cs.mad.fly.game.GameObject;
  */
 public class RotationMover implements IGameObjectMover {
     private GameObject gameObject;
+    private boolean active;
     
     private Vector3 rotation = new Vector3();
     private float degrees = 0.0f;
@@ -24,6 +25,7 @@ public class RotationMover implements IGameObjectMover {
      */
     public RotationMover(GameObject gameObject) {
         this.gameObject = gameObject;
+        this.active = true;
     }
     
     /**
@@ -53,6 +55,10 @@ public class RotationMover implements IGameObjectMover {
     
     @Override
     public void move(float delta) {
+    	if(!active) {
+    		return;
+    	}
+    	
         gameObject.transform.rotate(rotation, degrees * delta * 10.0f);
         gameObject.getRigidBody().setWorldTransform(gameObject.transform);
     }
@@ -62,6 +68,11 @@ public class RotationMover implements IGameObjectMover {
 		RotationMover mover = new RotationMover(gameObject);
 		mover.setRotation(rotation, degrees);
 		return mover;
+	}
+
+	@Override
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 }

@@ -2,7 +2,7 @@
 {
 	"name": "engine",
 	"times": 3,
-	"price": 500,
+	"price": 3500,
 	"type": 0,
 	"values": [
 		2,
@@ -14,7 +14,7 @@
 {
 	"name": "wings",
 	"times": 2,
-	"price": 1000,
+	"price": 3000,
 	"type": 0,
 	"values": [
 		0,
@@ -26,7 +26,7 @@
 {
 	"name": "steamlinedShape",
 	"times": 2,
-	"price": 1000,
+	"price": 5000,
 	"type": 2,
 	"values": [
 		1,
@@ -38,7 +38,7 @@
 {
 	"name": "hoverModule",
 	"times": 3,
-	"price": 1000,
+	"price": 6000,
 	"type": 2,
 	"values": [
 		1,

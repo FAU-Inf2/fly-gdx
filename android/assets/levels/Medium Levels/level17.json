@@ -1,0 +1,200 @@
+{
+    "class": "",
+    "components": [
+        {
+            "id": "border",
+            "ref": "border"
+        },
+        {
+            "euler": [
+                57.599999999999994,
+                157.9,
+                -1.6
+            ],
+            "id": "Cube.000",
+            "position": [
+                -5.0,
+                14.0,
+                0.0
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.8,
+                1.8,
+                1.8
+            ],
+            "sinus_x": [
+                5.0,
+                1.0,
+                0.0
+            ],
+            "sinus_z": [
+                3.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "euler": [
+                57.599999999999994,
+                157.9,
+                -1.6
+            ],
+            "id": "Cube.001",
+            "position": [
+                5.0,
+                41.0,
+                1.0
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.8,
+                1.8,
+                1.8
+            ],
+            "sinus_x": [
+                6.0,
+                0.5,
+                2.0
+            ],
+            "sinus_z": [
+                3.0,
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "border": "spacesphere",
+        "hole": "torusHoleBox",
+        "timeUpgrade": "timeUpgrade",
+        "torus": "torusMedium"
+    },
+    "gates": [
+        {
+            "successors": [
+                0
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                8.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                1
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                30.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 2,
+            "id": "Gate.002",
+            "position": [
+                0.0,
+                61.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": []
+        }
+    ],
+    "id": 220,
+    "name": "17",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 14,
+    "upgrades": [
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade",
+            "position": [
+                -5.0,
+                20.0,
+                0.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 12,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.001",
+            "position": [
+                7.0,
+                46.0,
+                0.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 13,
+            "type": "ChangeTimeUpgrade"
+        }
+    ]
+}

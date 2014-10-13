@@ -1,6 +1,7 @@
 {
 	"id": 3,
 	"name": "Hard Levels",
+	"moneyFactor":3,
 	"levels": [
 		{
 			"id": 1,

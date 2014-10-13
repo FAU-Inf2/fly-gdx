@@ -10,10 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.HttpClient.FlyHttpResponseListener;
-import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService;
-import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.LevelRecords;
-import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.RecordItem;
-import de.fau.cs.mad.fly.HttpClient.GetLevelHighScoreService.ResponseData;
+import de.fau.cs.mad.fly.HttpClient.GlobalLevelGroupHighScoreService;
+import de.fau.cs.mad.fly.HttpClient.LevelGroupGlobalHighscores;
+import de.fau.cs.mad.fly.HttpClient.LevelRecords;
+import de.fau.cs.mad.fly.HttpClient.OwnLevelGroupHighScoreService;
+import de.fau.cs.mad.fly.HttpClient.RecordItem;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 
@@ -24,7 +25,7 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
  * 
  */
 public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
-
+    
     private Table outerTable;
     
     private ScrollPane loadingPane;
@@ -34,6 +35,12 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
     
     private LevelGroup levelGroup;
     
+    /** Global highscores of the current {@link #levelGroup}. */
+    private LevelGroupGlobalHighscores globalHighscores;
+    
+    /** Own highscores of the current {@link #levelGroup}. */
+    private LevelGroupGlobalHighscores ownHighscores;
+    
     public GlobalHighscoreScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
     }
@@ -42,93 +49,135 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
         levelGroup = group;
     }
     
-    public class GetLevelHighScoreListener implements FlyHttpResponseListener {
-        
-        final LevelGroup levelGroup;
-        
-        public GetLevelHighScoreListener(LevelGroup levelGroup) {
-            this.levelGroup = levelGroup;
-        }
+    private class GetLevelHighScoreListener implements FlyHttpResponseListener {
         
         @Override
         public void successful(Object obj) {
-            final ResponseData results = (ResponseData) obj;
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    Skin skin = SkinManager.getInstance().getSkin();
-                    String styleName;
-                    int currentFlyId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
-                    loadingPane.remove();
-                    
-                    Table infoTable = new Table();
-                    ScrollPane scrollPane;
-                    scrollPane = new ScrollPane(infoTable, skin, "semiTransparentBackground");
-                    scrollPane.setFadeScrollBars(false);
-                    scrollPane.setScrollingDisabled(true, false);
-                    
-                    if (results != null && results.records.size() > 0) {
-                        for (LevelRecords level : results.records) {
-                            String levelname = levelGroup.getLevelName(level.levelID);
-                            infoTable.row();
-                            infoTable.add(new Label(I18n.t("level") + " " + levelname, skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-                            infoTable.row();
-                            infoTable.add(new Label(I18n.t("rank"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-                            infoTable.add(new Label(I18n.t("player"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, padding, 0, padding);
-                            infoTable.add(new Label(I18n.t("score"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, 0, 0, padding);
-                            Gdx.app.log("GlobalHighscoreScreen", "level id:" + level.levelID + " count:" + level.records.size());
-                            
-                            for (RecordItem user : level.records) {
-                                infoTable.row();
-                                if(user.flyID == currentFlyId) {
-                                    styleName = "default";
-                                }
-                                else {
-                                    styleName = "darkGrey";
-                                }
-                                infoTable.add(new Label(user.rank + "", skin, styleName)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-                                infoTable.add(new Label(user.username + " (" + user.flyID + ")", skin, styleName)).left().pad(0, padding, 0, padding);
-                                infoTable.add(new Label(user.score + "", skin, styleName)).right().pad(0, 0, 0, padding);
-                            }
-                            infoTable.row();
-                        }
-                    } else {
-                        infoTable.row();
-                        infoTable.add(new Label(levelGroup.name, skin)).pad(0, 0, 0, padding).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-                        infoTable.row();
-                        infoTable.add(new Label(I18n.t("noScore"), skin, "darkGrey")).height(UI.Buttons.TEXT_BUTTON_HEIGHT);
-                    }
-                    
-                    outerTable.clear();
-                    outerTable.setFillParent(true);
-                    outerTable.add(scrollPane);
-                }
-            });
-            
+            globalHighscores = (LevelGroupGlobalHighscores) obj;
+            globalHighscoreRequestSuccessfull();
         }
         
         @Override
         public void failed(String msg) {
-            // debug output
-            Gdx.app.log("PostScoreHttpRespListener", ".failed:" + msg);
-            
-            // show dialog with message for user
-            Dialog uploadFailedMessage = new DialogWithOneButton(I18n.t("ConnectServerError"), I18n.t("ok")) {
-                @Override
-                public void result(Object result) {
-                    // hide dialog
-                    super.result(result);
-                    // trigger the routine to go back to previous screen
-                    backProcessor.keyDown(Keys.ESCAPE);
-                }
-            };
-            uploadFailedMessage.show(stage);
+            requestFailed(msg);
         }
         
         @Override
         public void cancelled() {
             
         }
+    }
+    
+    private class GetOwnHighScoreListener implements FlyHttpResponseListener {
+        
+        @Override
+        public void successful(Object obj) {
+            ownHighscores = (LevelGroupGlobalHighscores) obj;
+            ownHighscoreRequestSuccessfull();
+        }
+        
+        @Override
+        public void failed(String msg) {
+            requestFailed(msg);
+        }
+        
+        @Override
+        public void cancelled() {
+            
+        }
+    }
+    
+    private void ownHighscoreRequestSuccessfull() {
+        if (globalHighscores != null) {
+            createTable();
+        }
+    }
+    
+    private void globalHighscoreRequestSuccessfull() {
+        if (ownHighscores != null) {
+            createTable();
+        }
+    }
+    
+    private void createTable() {
+        Skin skin = SkinManager.getInstance().getSkin();
+        String styleName;
+        int currentFlyId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
+        loadingPane.remove();
+        boolean ownScoreContained = false;
+        
+        Table infoTable = new Table();
+        ScrollPane scrollPane;
+        scrollPane = new ScrollPane(infoTable, skin, "semiTransparentBackground");
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        
+        if (globalHighscores != null && globalHighscores.records.size() > 0) {
+            for (LevelRecords level : globalHighscores.records) {
+                String levelname = levelGroup.getLevelName(level.levelID);
+                infoTable.row();
+                infoTable.add(new Label(I18n.t("level") + " " + levelname, skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+                infoTable.row();
+                infoTable.add(new Label(I18n.t("rank"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+                infoTable.add(new Label(I18n.t("player"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, padding, 0, padding);
+                infoTable.add(new Label(I18n.t("score"), skin)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, 0, 0, padding);
+                Gdx.app.log("GlobalHighscoreScreen", "level id:" + level.levelID + " count:" + level.records.size());
+                
+                ownScoreContained = false;
+                for (RecordItem user : level.records) {
+                    infoTable.row();
+                    if (user.flyID == currentFlyId) {
+                        styleName = "default";
+                        ownScoreContained = true;
+                    } else {
+                        styleName = "darkGrey";
+                    }
+                    infoTable.add(new Label(user.rank + "", skin, styleName)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+                    infoTable.add(new Label(user.username + "#" + user.flyID, skin, styleName)).left().pad(0, padding, 0, padding);
+                    infoTable.add(new Label(user.score + "", skin, styleName)).right().pad(0, 0, 0, padding);
+                }
+                infoTable.row();
+                
+                if (ownScoreContained == false) {
+                    // search if own score exists
+                    for (LevelRecords levelRecord : ownHighscores.records) {
+                        if ((levelRecord.levelID) % 1000 == level.levelID) {
+                            styleName = "default";
+                            RecordItem user = levelRecord.records.get(0);
+                            infoTable.add(new Label(user.rank + "", skin, styleName)).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+                            infoTable.add(new Label(user.username + "#" + user.flyID, skin, styleName)).left().pad(0, padding, 0, padding);
+                            infoTable.add(new Label(user.score + "", skin, styleName)).right().pad(0, 0, 0, padding);
+                        }
+                    }
+                }
+            }
+        } else {
+            infoTable.row();
+            infoTable.add(new Label(levelGroup.name, skin)).pad(0, 0, 0, padding).left().height(UI.Buttons.TEXT_BUTTON_HEIGHT);
+            infoTable.row();
+            infoTable.add(new Label(I18n.t("noScore"), skin, "darkGrey")).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, 0, 0, padding);
+        }
+        ownHighscores = null;
+        globalHighscores = null;
+        outerTable.setFillParent(true);
+        outerTable.add(scrollPane);
+    }
+    
+    protected void requestFailed(String msg) {
+        // debug output
+        Gdx.app.log("PostScoreHttpRespListener", ".failed:" + msg);
+        
+        // show dialog with message for user
+        Dialog uploadFailedMessage = new DialogWithOneButton(I18n.t("ConnectServerError"), I18n.t("ok")) {
+            @Override
+            public void result(Object result) {
+                // hide dialog
+                super.result(result);
+                // trigger the routine to go back to previous screen
+                backProcessor.keyDown(Keys.ESCAPE);
+            }
+        };
+        uploadFailedMessage.show(stage);
     }
     
     /**
@@ -142,7 +191,7 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
         stage.clear();
         outerTable = new Table();
         outerTable.setFillParent(true);
-
+        
         Table loadingInfoTable = new Table();
         loadingPane = new ScrollPane(loadingInfoTable, skin, "semiTransparentBackground");
         loadingPane.setFadeScrollBars(false);
@@ -155,16 +204,18 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
         generateBackButton();
     }
     
-    protected void generateContentDynamic() {
-        final FlyHttpResponseListener listener = new GetLevelHighScoreListener(levelGroup);
-        GetLevelHighScoreService getLevelHighScoreService = new GetLevelHighScoreService(listener);
-        getLevelHighScoreService.execute(2, levelGroup.id);
-    }
-    
     @Override
     public void show() {
         super.show();
-        generateContentDynamic();
+        outerTable.clear();
+        final FlyHttpResponseListener listener = new GetLevelHighScoreListener();
+        GlobalLevelGroupHighScoreService getLevelHighScoreService = new GlobalLevelGroupHighScoreService(listener);
+        getLevelHighScoreService.execute(2, levelGroup.id);
+        
+        final FlyHttpResponseListener listener2 = new GetOwnHighScoreListener();
+        OwnLevelGroupHighScoreService getOwnHighscoresService = new OwnLevelGroupHighScoreService(listener2);
+        int playerFlyId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
+        getOwnHighscoresService.execute(playerFlyId, levelGroup.id);
     }
     
 }

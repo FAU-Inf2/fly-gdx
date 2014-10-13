@@ -11,7 +11,7 @@
         "hole": "torusHoleBox",
         "pointsUpgrade": "pointsUpgrade",
         "speedUpgrade": "speedUpgrade",
-        "torus": "torusTex"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -132,7 +132,7 @@
             "successors": []
         }
     ],
-    "id": 16,
+    "id": 216,
     "name": "14",
     "start": {
         "position": {

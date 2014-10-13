@@ -10,7 +10,7 @@
         "border": "spacesphere",
         "hole": "torusHoleBox",
         "timeUpgrade": "timeUpgrade",
-        "torus": "torusTex"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -359,7 +359,7 @@
             "successors": []
         }
     ],
-    "id": 15,
+    "id": 215,
     "name": "13",
     "start": {
         "position": {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import de.fau.cs.mad.fly.I18n;
+import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.ui.DialogWithOneButton;
 
@@ -35,11 +36,15 @@ public class PostUserHttpRespListener implements FlyHttpResponseListener {
     
     @Override
     public void successful(Object obj) {
-        int flyID = Integer.valueOf(obj.toString());
+        PostUserService.UserRecord record = (PostUserService.UserRecord) obj;
         PlayerProfileManager profileManager = PlayerProfileManager.getInstance();
-        profileManager.getCurrentPlayerProfile().setFlyID(flyID);
-        profileManager.saveFlyID(profileManager.getCurrentPlayerProfile());
-        requestData.FlyID = flyID;
+		PlayerProfile profile = profileManager.getCurrentPlayerProfile();
+
+        profile.setFlyID(record.id);
+        profile.setSecretKey(record.secretKey);
+        profileManager.saveFlyID(profile);
+		profileManager.saveSecretKey(profile);
+        requestData.FlyID = record.id;
         postHighscoreService.execute();
     }
     

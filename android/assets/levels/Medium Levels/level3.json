@@ -3,13 +3,13 @@
     "components": [
         {
             "id": "border",
-            "ref": "space"
+            "ref": "border"
         }
     ],
     "dependencies": {
+        "border": "spacesphere",
         "hole": "torusHoleBox",
-        "space": "spacesphere",
-        "torus": "torus"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -20,7 +20,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 0,
@@ -40,7 +40,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 1,
@@ -59,7 +59,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 2,
@@ -78,7 +78,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 -45.0
             ],
             "gateId": 3,
@@ -97,7 +97,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 -45.0
             ],
             "gateId": 4,
@@ -117,7 +117,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 90.0
             ],
             "gateId": 5,
@@ -136,7 +136,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 90.0
             ],
             "gateId": 6,
@@ -155,7 +155,7 @@
         {
             "euler": [
                 0.0,
-                -0.0,
+                0.0,
                 90.0
             ],
             "gateId": 7,
@@ -174,7 +174,7 @@
         {
             "euler": [
                 -90.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 8,
@@ -193,7 +193,7 @@
         {
             "euler": [
                 -90.0,
-                -0.0,
+                0.0,
                 0.0
             ],
             "gateId": 9,
@@ -208,8 +208,8 @@
             "successors": []
         }
     ],
-    "id": 3,
-    "name": "3",
+    "id": 203,
+    "name": "Level 3",
     "start": {
         "position": {
             "x": 0.0,
@@ -218,7 +218,7 @@
         },
         "upDirection": {
             "x": 0.0,
-            "y": -0.0,
+            "y": 0.0,
             "z": 1.0
         },
         "viewDirection": {

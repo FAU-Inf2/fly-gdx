@@ -76,7 +76,7 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         viewport = new FillViewport(Gdx.graphics.getWidth() * scalingFactor, Gdx.graphics.getHeight() * scalingFactor, stage.getCamera());
         stage.setViewport(viewport);
         
-        initChosenPlaneDetail();
+        //initChosenPlaneDetail();
     }
     
 	 /**
@@ -171,6 +171,9 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         batch.begin(camera);
         currentSpaceship.render(batch, environment, camera);
         batch.end();
+        
+        stage.act(delta);
+        stage.draw();
     }
     
     @Override
@@ -185,7 +188,7 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
 		currentPlane = PlaneManager.getInstance().getChosenPlane();
 		loadCurrentPlane();
 
-		updateChosenPlaneDetail();
+		//updateChosenPlaneDetail();
 	}
     
     @Override

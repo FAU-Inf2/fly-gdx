@@ -24,7 +24,7 @@
         "asteroid": "asteroid",
         "border": "spacesphere",
         "hole": "torusHoleBox",
-        "torus": "torus"
+        "torus": "torusMedium"
     },
     "gates": [
         {
@@ -623,8 +623,8 @@
             ]
         }
     ],
-    "id": 9,
-    "name": "8",
+    "id": 209,
+    "name": "Level 8",
     "start": {
         "position": {
             "x": 0.0,

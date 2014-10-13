@@ -8,7 +8,7 @@ import de.fau.cs.mad.fly.game.GameControllerBuilder;
 import de.fau.cs.mad.fly.levels.ILevel;
 
 /**
- * Level script file for the speed tutorial level.
+ * Level script file for the do not pick upgrades level.
  * 
  * @author Lukas Hahmann <lukas.hahmann@gmail.com>
  * 

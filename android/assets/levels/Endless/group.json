@@ -1,14 +1,15 @@
 {
 	"id": 0,
 	"name": "Endless Levels",
+	"moneyFactor":2,
 	"levels": [
 		{
-			"id": 1,
+			"id": 100,
 			"name": "Endless",
 			"file": "randomEndlessLevel.json"
 		},
 		{
-			"id": 2,
+			"id": 101,
 			"name": "EndlessRails",
 			"file": "randomEndlessRailLevel.json"
 		}
