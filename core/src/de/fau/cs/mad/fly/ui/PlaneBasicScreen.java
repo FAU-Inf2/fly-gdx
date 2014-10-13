@@ -53,7 +53,7 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
     final LabelStyle labelStyle;
     
     /** Labels to show the currents status of the current plane */
-    private Label nameLabel, speedLabel, azimuthSpeedLabel, livesLabel;
+    private Label nameLabel, speedLabel, azimuthSpeedLabel;
     
     public PlaneBasicScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
@@ -85,26 +85,20 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         Table planeDetailTable = new Table();
         planeDetailTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         
-        planeDetailTable.add(new Label(I18n.t("name") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
         nameLabel = new Label("", labelStyle);
-        planeDetailTable.add(nameLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
+        planeDetailTable.add(nameLabel).pad(UI.Tables.PADDING).colspan(2).center();
+        planeDetailTable.row().expand();
         
-        planeDetailTable.add(new Label(I18n.t("speed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
+        planeDetailTable.add(new Label(I18n.t("speed") + ":", labelStyle)).right();
         speedLabel = new Label("", labelStyle);
-        planeDetailTable.add(speedLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
+        planeDetailTable.add(speedLabel).right();
+        planeDetailTable.row().expand();
         
-        planeDetailTable.add(new Label(I18n.t("turnSpeed") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
+        planeDetailTable.add(new Label(I18n.t("turnSpeed") + ":", labelStyle)).right();
         azimuthSpeedLabel = new Label("", labelStyle);
-        planeDetailTable.add(azimuthSpeedLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
+        planeDetailTable.add(azimuthSpeedLabel).right();
         
-        planeDetailTable.add(new Label(I18n.t("lives") + ":", labelStyle)).pad(UI.Tables.PADDING).right();
-        livesLabel = new Label("", labelStyle);
-        planeDetailTable.add(livesLabel).pad(UI.Tables.PADDING).left();
-        planeDetailTable.row().left().top().expand();
-        outTable.add(planeDetailTable).top().left().expand().pad(100f);
+        outTable.add(planeDetailTable).top().left().expand().pad(UI.Window.BORDER_SPACE);
         stage.addActor(outTable);
     }
     
@@ -115,7 +109,6 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         nameLabel.setText(currentPlane.name);
         speedLabel.setText(Float.toString(currentPlane.speed));
         azimuthSpeedLabel.setText(Float.toString(currentPlane.azimuthSpeed));
-        livesLabel.setText(Integer.toString(currentPlane.lives));
     }
     
     protected void loadCurrentPlane() {

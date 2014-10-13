@@ -226,9 +226,8 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
         // setting up the Lables and Buttons according to current Upgrade
         setOptionButtonsState(money, bought, equiped);
         
-        upgradeDetailLeftTable.add(new Label(I18n.t("upgrade") + ": ", skin)).right();
         upgradeNameLabel.setText(I18n.t(chosenUpgrade.name));
-        upgradeDetailLeftTable.add(upgradeNameLabel).left();
+        upgradeDetailLeftTable.add(upgradeNameLabel).center().colspan(2).pad(UI.Tables.PADDING);
         upgradeDetailLeftTable.row();
         
         List<String> changes = getUpdateChanges();
@@ -249,10 +248,10 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
         upgradeDetailLeftTable.add(upgradeCostLabel).left();
         upgradeDetailLeftTable.row();
         
-        upgradeDetailLeftTable.add(new Label(I18n.t("gainMoney") + ": ", skin)).right();
+        upgradeDetailRightTable.add(new Label(I18n.t("gainMoney") + ": ", skin)).right();
         currentMoneyLabel.setText("" + money);
-        upgradeDetailLeftTable.add(currentMoneyLabel).left();
-        upgradeDetailLeftTable.row();
+        upgradeDetailRightTable.add(currentMoneyLabel).left();
+        upgradeDetailRightTable.row();
         
         upgradeDetailRightTable.add(new Label(I18n.t("bought") + ": ", skin)).right();
         upgradeBoughtLabel.setText(bought + "/" + chosenUpgrade.timesAvailable);
