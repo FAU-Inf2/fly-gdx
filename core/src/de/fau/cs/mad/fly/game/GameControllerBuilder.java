@@ -59,6 +59,7 @@ import de.fau.cs.mad.fly.res.GateCircuitAdapter;
 import de.fau.cs.mad.fly.res.GateCircuitListener;
 import de.fau.cs.mad.fly.res.GateGoal;
 import de.fau.cs.mad.fly.res.Level;
+import de.fau.cs.mad.fly.res.Perspective;
 import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.sound.AudioManager;
 import de.fau.cs.mad.fly.ui.BackProcessor;
@@ -200,7 +201,6 @@ public class GameControllerBuilder {
                 }
             }
         });
-        
         gateCircuit.addListener(scoreController);
         
         if (level.head.isEndless()) {
@@ -215,8 +215,18 @@ public class GameControllerBuilder {
                 }
             });
         } else if (level.head.isEndlessRails()) {
+
             generator = new EndlessRailLevelGenerator(Loader.getInstance().getCurrentLevel(), this);
-            flightController = new RailFlightController(player, playerProfile, generator, level.start);
+            if(Gdx.app.getType().equals(ApplicationType.iOS)) {
+                try {
+                    Constructor c = Class.forName("de.fau.cs.mad.fly.ios.input.IOSRailFlightController").getConstructor(Player.class, PlayerProfile.class, EndlessLevelGenerator.class, Perspective.class);
+                    flightController = (FlightController) c.newInstance(player, playerProfile, generator, level.start);
+                } catch(Exception e) {
+                    throw new GdxRuntimeException("Error instantiating IOSRailFlightController",e);
+                }
+            } else {
+                flightController = new RailFlightController(player, playerProfile, generator, level.start);
+            }
             CollisionDetector.getInstance().getCollisionContactListener().addListener((ICollisionListener) flightController);
             
             gateCircuit.addListener(new GateCircuitAdapter() {
