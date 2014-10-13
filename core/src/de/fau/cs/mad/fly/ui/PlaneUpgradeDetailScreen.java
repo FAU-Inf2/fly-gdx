@@ -6,9 +6,9 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
@@ -233,42 +233,34 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
         
         List<String> changes = getUpdateChanges();
         for (int i = 0; i < changes.size(); i++) {
-            if (i == 0) {
-                upgradeDetailLeftTable.add(new Label(I18n.t("changes") + ": ", skin)).right();
-                upgradeDetailLeftTable.add(new Label(changes.get(i), skin)).left();
-                upgradeDetailLeftTable.row();
-            } else {
-                upgradeDetailLeftTable.add();
-                upgradeDetailLeftTable.add(new Label(changes.get(i), skin)).left();
-                upgradeDetailLeftTable.row();
-            }
+            upgradeDetailLeftTable.add(new Label(changes.get(i), skin)).left().colspan(2);
+            upgradeDetailLeftTable.row();
         }
         
-        upgradeDetailLeftTable.add(new Label(I18n.t("cost") + ": ", skin)).right();
-        upgradeCostLabel.setText(chosenUpgrade.price + "");
+        upgradeCostLabel.setText(I18n.t("cost") + ": " + chosenUpgrade.price + "");
         upgradeDetailLeftTable.add(upgradeCostLabel).left();
         upgradeDetailLeftTable.row();
         
-        upgradeDetailRightTable.add(new Label(I18n.t("gainMoney") + ": ", skin)).right();
-        currentMoneyLabel.setText("" + money);
-        upgradeDetailRightTable.add(currentMoneyLabel).left();
+        currentMoneyLabel.setText(I18n.t("gainMoney") + ": " + money);
+        upgradeDetailRightTable.add(currentMoneyLabel);
         upgradeDetailRightTable.row();
         
-        upgradeDetailRightTable.add(new Label(I18n.t("bought") + ": ", skin)).right();
-        upgradeBoughtLabel.setText(bought + "/" + chosenUpgrade.timesAvailable);
-        upgradeDetailRightTable.add(upgradeBoughtLabel).left();
+        upgradeBoughtLabel.setText(I18n.t("bought") + ": " + bought + "/" + chosenUpgrade.timesAvailable);
+        upgradeDetailRightTable.add(upgradeBoughtLabel);
         upgradeDetailRightTable.row();
         
-        upgradeDetailRightTable.add(buyButton).pad(UI.Window.BORDER_SPACE).center().colspan(2);
+        upgradeDetailRightTable.add(buyButton).pad(UI.Window.BORDER_SPACE);
         upgradeDetailRightTable.row();
         
-        upgradeDetailRightTable.add(new Label(I18n.t("equiped") + ": ", skin)).right();
-        upgradeEquipedLabel.setText(equiped + "");
-        upgradeDetailRightTable.add(upgradeEquipedLabel).left();
+        upgradeEquipedLabel.setText(I18n.t("equiped") + ": " + equiped + "");
+        upgradeDetailRightTable.add(upgradeEquipedLabel);
         upgradeDetailRightTable.row();
         
-        upgradeDetailRightTable.add(downgradeButton).pad(UI.Window.BORDER_SPACE).left();
-        upgradeDetailRightTable.add(upgradeButton).pad(UI.Window.BORDER_SPACE).left();
+        Table buttonTable = new Table();
+        buttonTable.add(upgradeButton).pad(UI.Tables.PADDING);
+        buttonTable.add(downgradeButton).pad(UI.Tables.PADDING);
+        upgradeDetailRightTable.add(buttonTable);
+        
     }
     
     /**
