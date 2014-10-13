@@ -2,8 +2,6 @@ package de.fau.cs.mad.fly.levels.medium;
 
 import java.util.List;
 
-import com.badlogic.gdx.math.MathUtils;
-
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.features.overlay.InfoOverlay;
@@ -31,6 +29,8 @@ public class ChooseRightGateLevel implements ILevel, IFeatureInit, GateCircuitLi
     
     @Override
     public void init(GameController game) {
+    	InfoOverlay.getInstance().setOverlay(I18n.tLevel("medium.choose.right.gate"), 5);
+    	
     	components = game.getLevel().components;
         for(GameObject o : components) {
         	if(o.getMover() != null) {
