@@ -75,6 +75,6 @@ public class PlaneUpgradeScreen extends PlaneBasicScreen {
         super.show();
         updateChosenPlaneDetail();
         // place spaceship a little left of the middle a little down
-        currentSpaceship.transform.translate(-0.8f, -0.4f, 0f);
+        currentSpaceship.transform.translate(-0.8f, -0.5f, 0f);
     }
 }

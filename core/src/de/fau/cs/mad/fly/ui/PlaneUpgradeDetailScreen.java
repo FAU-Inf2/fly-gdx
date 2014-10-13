@@ -3,13 +3,15 @@ package de.fau.cs.mad.fly.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
@@ -69,7 +71,9 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
         upgradeEquipedLabel = new Label("", labelStyle);
         
         upgradeDetailRightTable = new Table();
+        upgradeDetailRightTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         upgradeDetailLeftTable = new Table();
+        upgradeDetailLeftTable.setBackground(new NinePatchDrawable(skin.get("semiTransparentBackground", NinePatch.class)));
         
         initUpgradeDetailTable();
         generateBackButton();
@@ -78,17 +82,12 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
     private void initUpgradeDetailTable() {
         Table outTable = new Table();
         outTable.setFillParent(true);
-        outTable.pad(0f);
-        ScrollPane scrollPane = new ScrollPane(outTable, skin);
-        scrollPane.setFillParent(true);
-        scrollPane.setFadeScrollBars(false);
         
         updateUpgradeDetailTable();
         
         outTable.add(upgradeDetailLeftTable).left().top().pad(UI.Window.BORDER_SPACE).expand();
-        outTable.row();
-        outTable.add(upgradeDetailRightTable).right().top().pad(UI.Window.BORDER_SPACE).expand();
-        stage.addActor(scrollPane);
+        outTable.add(upgradeDetailRightTable).right().bottom().pad(UI.Window.BORDER_SPACE).expand();
+        stage.addActor(outTable);
     }
     
     /**
@@ -260,7 +259,7 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
         upgradeDetailRightTable.add(upgradeBoughtLabel).left();
         upgradeDetailRightTable.row();
         
-        upgradeDetailRightTable.add(buyButton).padBottom(100f).center().colspan(2);
+        upgradeDetailRightTable.add(buyButton).pad(UI.Window.BORDER_SPACE).center().colspan(2);
         upgradeDetailRightTable.row();
         
         upgradeDetailRightTable.add(new Label(I18n.t("equiped") + ": ", skin)).right();
@@ -268,13 +267,8 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
         upgradeDetailRightTable.add(upgradeEquipedLabel).left();
         upgradeDetailRightTable.row();
         
-        upgradeDetailRightTable.add(downgradeButton).space(20).left();
-        upgradeDetailRightTable.add(upgradeButton).space(20).left();
-        upgradeDetailRightTable.row();
-        
-        upgradeDetailRightTable.add().space(20).left();
-        upgradeDetailRightTable.add().space(20).left();
-        upgradeDetailRightTable.row();
+        upgradeDetailRightTable.add(downgradeButton).pad(UI.Window.BORDER_SPACE).left();
+        upgradeDetailRightTable.add(upgradeButton).pad(UI.Window.BORDER_SPACE).left();
     }
     
     /**
@@ -298,6 +292,6 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
         super.show();
         updateUpgradeDetailTable();
         // place spaceship a little left of the middle a little down
-        currentSpaceship.transform.translate(-0.8f, -0.4f, 0f);
+        currentSpaceship.transform.translate(-0.8f, -0.5f, 0f);
     }
 }
