@@ -55,6 +55,8 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
     /** Labels to show the currents status of the current plane */
     private Label nameLabel, speedLabel, azimuthSpeedLabel;
     
+    private IPlane.Head displayedPlane = null;
+    
     public PlaneBasicScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
         
@@ -112,18 +114,21 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
     }
     
     protected void loadCurrentPlane() {
-        // adding the preview of the first plane
-        String ref = "models/planes/" + currentPlane.modelRef + "/" + currentPlane.modelRef;
-        
-        Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
-        GameModel model = Assets.manager.get(ref, GameModel.class);
-        
-        currentSpaceship = new GameObject(model, "spaceship");
-        
-        currentSpaceship.transform.rotate(yRotationAxis, 180.f);
-        xRotationAxis.rotate(yRotationAxis, -180.f);
-        currentSpaceship.transform.rotate(xRotationAxis, -20.f);
-        yRotationAxis.rotate(xRotationAxis, 20.f);
+		if (displayedPlane == null || displayedPlane.id != currentPlane.id) {
+			// adding the preview of the first plane
+			String ref = "models/planes/" + currentPlane.modelRef + "/" + currentPlane.modelRef;
+
+			Assets.load(new AssetDescriptor<GameModel>(ref, GameModel.class));
+			GameModel model = Assets.manager.get(ref, GameModel.class);
+
+			currentSpaceship = new GameObject(model, "spaceship");
+
+			currentSpaceship.transform.rotate(yRotationAxis, 180.f);
+			xRotationAxis.rotate(yRotationAxis, -180.f);
+			currentSpaceship.transform.rotate(xRotationAxis, -20.f);
+			yRotationAxis.rotate(xRotationAxis, 20.f);
+			displayedPlane = currentPlane;
+		}
     }
     
     /**
