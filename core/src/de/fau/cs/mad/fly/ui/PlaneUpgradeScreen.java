@@ -19,55 +19,56 @@ import de.fau.cs.mad.fly.res.PlaneUpgrade;
  * 
  */
 public class PlaneUpgradeScreen extends PlaneBasicScreen {
-
+    
     private Table upgradesListTable;
     
     private PlaneUpgradeDetailScreen planeUpgradeDetailScreen;
+    private boolean shipMoved = false;
     
-	public PlaneUpgradeScreen(BasicScreen screenToGoBack) {
+    public PlaneUpgradeScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
         upgradesListTable = new Table();
-       
+        
         initUpgradeButtons();
         initChosenPlaneDetail();
-        generateBackButton();       
+        generateBackButton();
     }
     
-	private void initUpgradeButtons() {
-		Table outTable = new Table();
-		outTable.setFillParent(true);
-		outTable.pad(0f);
-		
-		ScrollPane scrollPane = new ScrollPane(outTable, skin);
-		scrollPane.setFillParent(true);
-		scrollPane.setFadeScrollBars(false);
-
-		final Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
-
-		// Creates one Button for each Upgrade
-		for (final PlaneUpgrade upgrade : upgrades) {
-			final TextButton button = new TextButton(I18n.t(upgrade.name), skin);
-			button.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {					
-					openUpgradeDetailScreen(upgrade);
-				}
-			});
-
-			upgradesListTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).pad(15f);
-			upgradesListTable.row();
-		}
-		
-		outTable.add(upgradesListTable).right().top().pad(UI.Window.BORDER_SPACE).expand();
-		stage.addActor(scrollPane);
-	}
-	
-    private void openUpgradeDetailScreen(PlaneUpgrade upgrade){
-    	if( planeUpgradeDetailScreen == null ){
-    		planeUpgradeDetailScreen = new PlaneUpgradeDetailScreen(this, upgrade);
-    	}
-    	planeUpgradeDetailScreen.setChosenUpgrade(upgrade);
-    	planeUpgradeDetailScreen.set();
+    private void initUpgradeButtons() {
+        Table outTable = new Table();
+        outTable.setFillParent(true);
+        outTable.pad(0f);
+        
+        ScrollPane scrollPane = new ScrollPane(outTable, skin);
+        scrollPane.setFillParent(true);
+        scrollPane.setFadeScrollBars(false);
+        
+        final Collection<PlaneUpgrade> upgrades = PlaneUpgradeManager.getInstance().getUpgradeList().values();
+        
+        // Creates one Button for each Upgrade
+        for (final PlaneUpgrade upgrade : upgrades) {
+            final TextButton button = new TextButton(I18n.t(upgrade.name), skin);
+            button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    openUpgradeDetailScreen(upgrade);
+                }
+            });
+            
+            upgradesListTable.add(button).width(UI.Buttons.TEXT_BUTTON_WIDTH).pad(15f);
+            upgradesListTable.row();
+        }
+        
+        outTable.add(upgradesListTable).right().top().pad(UI.Window.BORDER_SPACE).expand();
+        stage.addActor(scrollPane);
+    }
+    
+    private void openUpgradeDetailScreen(PlaneUpgrade upgrade) {
+        if (planeUpgradeDetailScreen == null) {
+            planeUpgradeDetailScreen = new PlaneUpgradeDetailScreen(this, upgrade);
+        }
+        planeUpgradeDetailScreen.setChosenUpgrade(upgrade);
+        planeUpgradeDetailScreen.set();
     }
     
     @Override
@@ -75,6 +76,9 @@ public class PlaneUpgradeScreen extends PlaneBasicScreen {
         super.show();
         updateChosenPlaneDetail();
         // place spaceship a little left of the middle a little down
-        currentSpaceship.transform.translate(-0.8f, -0.5f, 0f);
+        if (!shipMoved) {
+            currentSpaceship.transform.translate(-0.8f, -0.5f, 0f);
+            shipMoved = true;
+        }
     }
 }
