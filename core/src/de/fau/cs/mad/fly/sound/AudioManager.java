@@ -22,18 +22,11 @@ import java.util.Collection;
  */
 public class AudioManager implements Disposable {
 
-    public static enum Sounds { CRASH, GATE_PASSED, PICKUP, TRIPLE, OMFG, CAMERA, HITMARKER, OH_YEAH, SONIC, SAD_VIOLIN, DAMN_SON };
+    public static enum Sounds { CRASH, GATE_PASSED, PICKUP };
 
     private final String CRASH_SOUND = "sounds/crash.wav";
     private final String GATE_PASSED_SOUND = "sounds/gatepassed.wav";
     private final String PICKUP = "sounds/pickup.wav";
-    private final String TRIPLE = "sounds/triple.wav";
-    private final String OH_YEAH = "sounds/ohyeah.wav";
-    private final String CAMERA = "sounds/camera.wav";
-    private final String HITMARKER = "sounds/hitmarker.wav";
-    private final String DAMN_SON = "sounds/damn_son.mp3";
-    private final String SONIC = "sounds/sonic.mp3";
-    private final String SAD_VIOLIN = "sounds/sadviolin.mp3";
 
     private Map<Sounds, Playable> soundMap = new HashMap<Sounds, Playable>();
 
@@ -43,14 +36,6 @@ public class AudioManager implements Disposable {
         soundMap.put(Sounds.CRASH,       create(CRASH_SOUND,       1.0f, false, Types.Sound));
         soundMap.put(Sounds.GATE_PASSED, create(GATE_PASSED_SOUND, 1.0f, false, Types.Sound));
         soundMap.put(Sounds.PICKUP,      create(PICKUP,            1.0f, false, Types.Sound));
-        soundMap.put(Sounds.TRIPLE,      create(TRIPLE,            0.0f, false, Types.Sound));
-        soundMap.put(Sounds.CAMERA,      create(CAMERA,            0.0f, false, Types.Sound));
-        soundMap.put(Sounds.HITMARKER,   create(HITMARKER,         0.0f, false, Types.Sound));
-        soundMap.put(Sounds.OH_YEAH,     create(OH_YEAH,           0.0f, false, Types.Sound));
-        soundMap.put(Sounds.DAMN_SON,    create(DAMN_SON,          0.0f, false, Types.Sound));
-
-        soundMap.put(Sounds.SONIC,       create(SONIC,             0.0f, true,  Types.Music));
-        soundMap.put(Sounds.SAD_VIOLIN,  create(SAD_VIOLIN,        1.0f, true,  Types.Music));
 	}
 
     public Playable get(Sounds sound) {

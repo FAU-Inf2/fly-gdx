@@ -36,7 +36,6 @@ public class ResizeGatesUpgradeHandler extends CollectibleObjects implements IFe
     
     @Override
     protected void handleCollecting(Collectible c) {
-        GameController.getInstance().getAudioManager().play(AudioManager.Sounds.DAMN_SON);
         GameController.getInstance().getAudioManager().play(AudioManager.Sounds.PICKUP);
         ResizeGatesUpgrade upgrade = (ResizeGatesUpgrade) c;
         resizeGates(upgrade.getScale());

@@ -218,18 +218,12 @@ public class GateCircuit implements IFeatureLoad, ICollisionListener {
         for (GateCircuitListener s : gateCircuitListeners)
             s.onGatePassed(gate);
         if ( finished ) {
-            GameController.getInstance().getAudioManager().play(AudioManager.Sounds.CAMERA);
             GameController.getInstance().getAudioManager().play(AudioManager.Sounds.GATE_PASSED);
             reachedLastGate = true;
             circuitFinished();
         } else if ( !gate.equals(virtualGate) ) {
             gateCount++;
             GameController.getInstance().getAudioManager().play(AudioManager.Sounds.GATE_PASSED);
-            GameController.getInstance().getAudioManager().play(AudioManager.Sounds.HITMARKER);
-            if ( gateCount == 3 )
-                GameController.getInstance().getAudioManager().play(AudioManager.Sounds.TRIPLE);
-            else if ( gateCount == 6 )
-                GameController.getInstance().getAudioManager().play(AudioManager.Sounds.OH_YEAH);
         }
         virtualGate = gate;
     }
