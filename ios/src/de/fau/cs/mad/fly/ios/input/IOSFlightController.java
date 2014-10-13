@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.settings.SettingManager;
 import org.robovm.apple.coremotion.CMAttitude;
 import org.robovm.apple.coremotion.CMDeviceMotion;
 import org.robovm.apple.coremotion.CMMotionManager;
@@ -35,17 +37,19 @@ public class IOSFlightController extends FlightController{
     public void resetSteering() {
         //necessary because it takes some time until the motionManager creates motion data.
         long startTime = TimeUtils.nanoTime();
-        long currentTime = startTime;
-        do {
-            if((TimeUtils.nanosToMillis(TimeUtils.timeSinceNanos(startTime))/1000.f) > 10.0f) {
-                throw new GdxRuntimeException("CMMotionManager is not delivering any data.");
-            }
-        } while(motionManager.getDeviceMotion() == null);
-        CMDeviceMotion motion = motionManager.getDeviceMotion();
-        Gdx.app.log("IOSFlightController.resetSteering", "motion object null: " + Boolean.toString(motion == null));
-        currentAttitude = motionManager.getDeviceMotion().getAttitude();
-        startRoll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
-        startPitch = -(float) (currentAttitude.getPitch() * 180 / Math.PI);
+		do {
+			if ( !motionManager.isDeviceMotionAvailable() || (TimeUtils.nanosToMillis(TimeUtils.timeSinceNanos(startTime)) / 1000.f) > 10.0f ) {
+				Gdx.app.log("IOSFlightController.resetSteering", "CMMotionManager is not available. Falling back to touch.");
+				PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().set(SettingManager.USE_TOUCH, true);
+				useSensorData = false;
+				return;
+			}
+		} while (motionManager.getDeviceMotion() == null);
+		CMDeviceMotion motion = motionManager.getDeviceMotion();
+		Gdx.app.log("IOSFlightController.resetSteering", "motion object null: " + Boolean.toString(motion == null));
+		currentAttitude = motionManager.getDeviceMotion().getAttitude();
+		startRoll = (float) (currentAttitude.getRoll() * 180 / Math.PI);
+		startPitch = -(float) (currentAttitude.getPitch() * 180 / Math.PI);
     }
 
     @Override
