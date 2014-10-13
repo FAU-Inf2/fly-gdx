@@ -24,8 +24,17 @@
     <pattern>com.badlogic.gdx.graphics.g3d.particles.influencers.*</pattern>
     <pattern>com.badlogic.gdx.scenes.scene2d.ui.*</pattern>
     <pattern>de.fau.cs.mad.fly.ios.sqlite.*</pattern>
-    <pattern>de.fau.cs.mad.fly.profile.PlayerProfileManager</pattern>
-    <pattern>de.fau.cs.mad.fly.ios.input.IOSFlightController</pattern>
+    <pattern>de.fau.cs.mad.fly.ios.input.*</pattern>
+    <pattern>de.fau.cs.mad.fly.features.ICollisionListener</pattern>
+    <pattern>de.fau.cs.mad.fly.features.game.EndlessLevelGenerator</pattern>
+    <pattern>de.fau.cs.mad.fly.features.game.EndlessRailLevelGenerator</pattern>
+    <pattern>de.fau.cs.mad.fly.features.upgrades.types.Collectible</pattern>
+    <pattern>de.fau.cs.mad.fly.game.GameObject</pattern>
+    <pattern>de.fau.cs.mad.fly.player.Player</pattern>
+    <pattern>de.fau.cs.mad.fly.profile.PlayerProfile</pattern>
+    <pattern>de.fau.cs.mad.fly.res.GateDisplay</pattern>
+    <pattern>de.fau.cs.mad.fly.res.GateGoal</pattern>
+    <pattern>de.fau.cs.mad.fly.res.Perspective</pattern>
     <pattern>com.android.okhttp.HttpsHandler</pattern>
     <pattern>com.android.org.conscrypt.**</pattern>
     <pattern>com.android.org.bouncycastle.jce.provider.BouncyCastleProvider</pattern>
