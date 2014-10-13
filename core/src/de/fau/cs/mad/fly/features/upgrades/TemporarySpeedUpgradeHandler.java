@@ -34,8 +34,6 @@ public class TemporarySpeedUpgradeHandler extends CollectibleObjects implements 
      */
     private IPlane plane;
     
-    private Playback sound;
-    
     private boolean upgradesActive;
     
     private List<SpeedUpgradeEffect> upgrades;
@@ -77,10 +75,8 @@ public class TemporarySpeedUpgradeHandler extends CollectibleObjects implements 
             InfoOverlay.getInstance().setOverlay(builder.toString(), 3);
             
             // start playing sound if not yet playing
-            if (!upgradesActive) {
-                sound = GameController.getInstance().getAudioManager().play(AudioManager.Sounds.SONIC);
-                upgradesActive = true;
-            }
+			GameController.getInstance().getAudioManager().play(AudioManager.Sounds.PICKUP);
+			upgradesActive = true;
         }
         
     }
@@ -103,16 +99,12 @@ public class TemporarySpeedUpgradeHandler extends CollectibleObjects implements 
             plane.setCurrentSpeed(plane.getBaseSpeed() * speedUpFactor);
         } else if (upgradesActive) {
             upgradesActive = false;
-            sound.stop();
             speedUpFactor = SpeedUpgradeEffect.NO_SPEEDUP;
             plane.setCurrentSpeed(plane.getBaseSpeed() * speedUpFactor);
         }
     }
-    
+
     @Override
     public void finish() {
-        if (sound != null) {
-            sound.stop();
-        }
     }
 }

@@ -24,7 +24,6 @@ public class ChangePointsUpgradeHandler extends CollectibleObjects {
     
     @Override
     protected void handleCollecting(Collectible c) {
-        GameController.getInstance().getAudioManager().play(AudioManager.Sounds.DAMN_SON);
         GameController.getInstance().getAudioManager().play(AudioManager.Sounds.PICKUP);
         ChangePointsUpgrade upgrade = (ChangePointsUpgrade) c;
         GameController.getInstance().getScoreController().addBonusPoints(upgrade.getPointsChange());

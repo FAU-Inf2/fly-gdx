@@ -233,7 +233,6 @@ public class GameController implements TimeIsUpListener {
             gameState = GameState.VICTORY;
         } else {
             gameState = GameState.NO_LIVES;
-            audioManager.play(AudioManager.Sounds.SAD_VIOLIN).setLooping(true);
         }
         
         endGame();
