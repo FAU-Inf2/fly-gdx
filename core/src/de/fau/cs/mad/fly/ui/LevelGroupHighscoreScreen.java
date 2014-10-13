@@ -90,7 +90,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         genarateScoreTable();
         // check if the user name has still its default name and show an
         // input field in this case
-        if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName().equals(I18n.t("default.playerName"))) {
+        if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName().equals(I18n.t("default.playerName"))) {
             updateUserNameFirst();
         }
     }
@@ -148,7 +148,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
             
             contentTable.add(new Label(levelGroup.name, skin)).pad(0, 0, UI.Buttons.SPACE, 0);
             contentTable.row();
-            contentTable.add(statisticsPane).expand();
+            contentTable.add(statisticsPane).padBottom(UI.Buttons.TEXT_BUTTON_HEIGHT + UI.Buttons.SPACE + UI.Window.BORDER_SPACE).expand();
             
             scores = ScoreManager.getInstance().getPlayerBestScores(PlayerProfileManager.getInstance().getCurrentPlayerProfile(), levelGroup);
             // it is faster if we remove this postRunnable, but it may also
@@ -183,7 +183,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                                 uploadScoreButton.setDisabled(true);
                             }
                             uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton));
-
+                            
                             scoreTable.add(uploadScoreButton).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, UI.Buttons.SPACE, 40, 120);
                         }
                         scoresUntilLineBreak--;
@@ -205,7 +205,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
     }
     
     private void updateUserNameFirst() {
-        BasicScreen editPlayerNameFirstScreen = new EditPlayerNameFirstScreen(this, ((Fly)Gdx.app.getApplicationListener()).getMainMenuScreen());
+        BasicScreen editPlayerNameFirstScreen = new EditPlayerNameFirstScreen(this, ((Fly) Gdx.app.getApplicationListener()).getMainMenuScreen());
         editPlayerNameFirstScreen.set();
     }
     
@@ -235,7 +235,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         public void changed(ChangeEvent event, Actor actor) {
             // check if the user name has still its default name and show an
             // input field in this case
-            if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName() == I18n.t("default.playerName")) {
+            if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName() == I18n.t("default.playerName")) {
                 updateUserNameFirst();
             }
             
@@ -255,19 +255,19 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                 PostUserService postUser = new PostUserService(listener);
                 
                 postUser.execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName());
-			} else {
-				
-				if(PlayerProfileManager.getInstance().getCurrentPlayerProfile().isNewnameUploaded() == false) {
-					new PutUserService( new PutUserHttpRespListener(PlayerProfileManager.getInstance().getCurrentPlayerProfile())).execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
-				}
-
-				if (score.getServerScoreId() > 0) {
-
-					putHighscoreService.execute();
-				} else {
-					postHighscoreService.execute();
-				}
-			}
+            } else {
+                
+                if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().isNewnameUploaded() == false) {
+                    new PutUserService(new PutUserHttpRespListener(PlayerProfileManager.getInstance().getCurrentPlayerProfile())).execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
+                }
+                
+                if (score.getServerScoreId() > 0) {
+                    
+                    putHighscoreService.execute();
+                } else {
+                    postHighscoreService.execute();
+                }
+            }
         }
     }
     

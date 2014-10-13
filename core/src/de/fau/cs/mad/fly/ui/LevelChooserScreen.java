@@ -3,7 +3,6 @@ package de.fau.cs.mad.fly.ui;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -20,7 +19,11 @@ import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
-import de.fau.cs.mad.fly.ui.help.*;
+import de.fau.cs.mad.fly.ui.help.HelpFrameText;
+import de.fau.cs.mad.fly.ui.help.HelpFrameTextWithArrow;
+import de.fau.cs.mad.fly.ui.help.HelpOverlay;
+import de.fau.cs.mad.fly.ui.help.OverlayFrame;
+import de.fau.cs.mad.fly.ui.help.WithHelpOverlay;
 
 /**
  * Offers the levels of one {@link LevelGroup }to start.
