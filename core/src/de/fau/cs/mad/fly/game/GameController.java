@@ -53,7 +53,12 @@ import de.fau.cs.mad.fly.sound.Playable;
  */
 public class GameController implements TimeIsUpListener {
     public enum GameState {
-        RUNNING, PAUSED, VICTORY, NO_LIVES, TIME_OVER
+        RUNNING(false), PAUSED(false), VICTORY(true), NO_LIVES(true), TIME_OVER(true);
+
+		public final boolean completed;
+		private GameState(boolean levelCompleted) {
+			this.completed = levelCompleted;
+		}
     }
     
     protected static GameController instance = null;
@@ -218,6 +223,9 @@ public class GameController implements TimeIsUpListener {
      *            or he is dead.
      */
     public void finishGame(boolean victory) {
+		if ( gameState.completed )
+			return;
+		new Throwable().printStackTrace();
         for ( Playable p : audioManager.allSounds() )
             if ( p.isMusic() )
                 p.stop();
