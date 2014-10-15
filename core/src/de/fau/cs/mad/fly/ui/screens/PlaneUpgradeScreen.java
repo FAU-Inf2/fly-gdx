@@ -24,7 +24,6 @@ public class PlaneUpgradeScreen extends PlaneBasicScreen {
     private Table upgradesListTable;
     
     private PlaneUpgradeDetailScreen planeUpgradeDetailScreen;
-    private boolean shipMoved = false;
     
     public PlaneUpgradeScreen(BasicScreen screenToGoBack) {
         super(screenToGoBack);
@@ -77,9 +76,6 @@ public class PlaneUpgradeScreen extends PlaneBasicScreen {
         super.show();
         updateChosenPlaneDetail();
         // place spaceship a little left of the middle a little down
-        if (!shipMoved) {
-            currentSpaceship.transform.translate(-0.8f, -0.5f, 0f);
-            shipMoved = true;
-        }
+        currentSpaceship.transform.setTranslation(X_OFFSET_OF_SPACESHIP_TRANSLATION, Y_OFFSET_OF_SPACESHIP_TRANSLATION, 0f);
     }
 }

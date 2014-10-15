@@ -36,6 +36,9 @@ import de.fau.cs.mad.fly.ui.UI;
  */
 public class PlaneBasicScreen extends BasicScreenWithBackButton implements Screen {
     
+    protected static final float X_OFFSET_OF_SPACESHIP_TRANSLATION = 0.8f;
+    protected static final float Y_OFFSET_OF_SPACESHIP_TRANSLATION = -0.5f;
+    
     protected Skin skin;
     protected Viewport viewport;
     

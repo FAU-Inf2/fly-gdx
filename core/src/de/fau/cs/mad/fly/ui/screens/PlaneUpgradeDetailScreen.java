@@ -35,7 +35,6 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
     final LabelStyle labelStyle;
     final Label upgradeNameLabel, upgradeCostLabel, currentMoneyLabel;
     final Label upgradeMaximumLabel, upgradeBoughtLabel, upgradeEquipedLabel;
-    private boolean shipMoved = false;
     
     final String[] names = { "speed", "pitch", "turnSpeed", "lives" };
     
@@ -286,9 +285,6 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
         super.show();
         updateUpgradeDetailTable();
         // place spaceship a little left of the middle a little down
-        if (!shipMoved) {
-            currentSpaceship.transform.translate(-0.8f, -0.5f, 0f);
-            shipMoved = true;
-        }
+        currentSpaceship.transform.setTranslation(X_OFFSET_OF_SPACESHIP_TRANSLATION, Y_OFFSET_OF_SPACESHIP_TRANSLATION, 0f);
     }
 }

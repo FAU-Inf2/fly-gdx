@@ -37,9 +37,6 @@ import de.fau.cs.mad.fly.ui.UI;
  * would leave the visible screen, it is placed below moved either to the right
  * or left (same strategy as for above)
  * <p>
- * - if actor is right or left outside the visible screen, its vertical position
- * is used to place label and actor in a row, so tat the arrow points in the
- * direction of the actor.
  * 
  * 
  * @author Lukas Hahmann <lukas.hahmann@gmail.com>
