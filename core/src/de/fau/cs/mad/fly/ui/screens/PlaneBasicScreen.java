@@ -158,16 +158,23 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         camera.update();
     }
     
+//    @Override
+//    public void render(float delta) {
+//        super.render(delta);
+//        
+//        batch.begin(camera);
+//        currentSpaceship.render(batch, environment, camera);
+//        batch.end();
+//        
+//        stage.act(delta);
+//        stage.draw();
+//    }
+//    
     @Override
-    public void render(float delta) {
-        super.render(delta);
-        
-        batch.begin(camera);
-        currentSpaceship.render(batch, environment, camera);
-        batch.end();
-        
-        stage.act(delta);
-        stage.draw();
+    public void moreRender(float delta){
+    	 batch.begin(camera);
+         currentSpaceship.render(batch, environment, camera);
+         batch.end();
     }
     
     @Override

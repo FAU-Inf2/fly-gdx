@@ -120,14 +120,18 @@ public class PlaneChooserScreen extends PlaneBasicScreen implements InputProcess
     }
     
     @Override
-    public void render(float delta) {
-        super.render(delta);
+    public void moreRender(float delta) {
+      
         
         // Steady rotation if the Player doesn't touch the Touch screen
         if (!touched) {
             currentSpaceship.transform.rotate(yRotationAxis, 0.2f);
             xRotationAxis.rotate(yRotationAxis, -0.2f);
         }
+        
+   	 batch.begin(camera);
+     currentSpaceship.render(batch, environment, camera);
+     batch.end();
         
         if (showHelpScreen) {
             helpOverlay.render();

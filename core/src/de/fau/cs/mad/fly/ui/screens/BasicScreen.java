@@ -95,8 +95,14 @@ public abstract class BasicScreen implements Screen {
         background.draw(batch);
         batch.end();
         
+        moreRender(delta);
+        
         stage.act(delta);
         stage.draw();
+    }
+    
+    public void moreRender(float delta){
+    	
     }
     
     @Override

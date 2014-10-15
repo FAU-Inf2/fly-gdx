@@ -172,9 +172,9 @@ public class PlaneUpgradeDetailScreen extends PlaneBasicScreen {
         int bought = PlaneManager.getInstance().getChosenPlane().getBoughtUpgradeCount(chosenUpgrade.name);
         int money = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getMoney();
         setOptionButtonsState(money, bought, equiped);
-        currentMoneyLabel.setText(money + "");
-        upgradeBoughtLabel.setText(bought + "");
-        upgradeEquipedLabel.setText(equiped + "");
+        currentMoneyLabel.setText(I18n.t("gainMoney") + ": " + money);
+        upgradeBoughtLabel.setText(I18n.t("bought") + ": " + bought + "/" + chosenUpgrade.timesAvailable);
+        upgradeEquipedLabel.setText(I18n.t("equiped") + ": " + equiped + "");
     }
     
     /**
