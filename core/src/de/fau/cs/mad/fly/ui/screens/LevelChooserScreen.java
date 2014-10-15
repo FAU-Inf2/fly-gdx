@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import java.util.List;
 
@@ -19,6 +19,8 @@ import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
+import de.fau.cs.mad.fly.ui.SkinManager;
+import de.fau.cs.mad.fly.ui.UI;
 import de.fau.cs.mad.fly.ui.help.HelpFrameText;
 import de.fau.cs.mad.fly.ui.help.HelpFrameTextWithArrow;
 import de.fau.cs.mad.fly.ui.help.HelpOverlay;

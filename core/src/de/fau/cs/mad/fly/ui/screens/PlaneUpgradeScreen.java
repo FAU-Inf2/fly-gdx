@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import java.util.Collection;
 
@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlaneUpgradeManager;
 import de.fau.cs.mad.fly.res.PlaneUpgrade;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * The Screen in which the Player can upgrade his Planes

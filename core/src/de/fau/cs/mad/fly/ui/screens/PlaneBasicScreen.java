@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,9 +11,9 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -25,6 +25,8 @@ import de.fau.cs.mad.fly.graphics.shaders.FlyShaderProvider;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.ui.SkinManager;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * The Screen in which the Player can upgrade his Planes

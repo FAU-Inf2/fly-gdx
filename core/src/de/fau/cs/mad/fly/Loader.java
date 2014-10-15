@@ -9,7 +9,7 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import de.fau.cs.mad.fly.profile.LevelProfile;
 import de.fau.cs.mad.fly.res.Assets;
 import de.fau.cs.mad.fly.res.Level;
-import de.fau.cs.mad.fly.ui.LevelLoadingScreen;
+import de.fau.cs.mad.fly.ui.screens.LevelLoadingScreen;
 
 /**
  * Created by Jakob Falke on 18.06.14.

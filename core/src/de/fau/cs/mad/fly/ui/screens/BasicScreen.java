@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.res.Assets;
+import de.fau.cs.mad.fly.ui.BackProcessor;
+import de.fau.cs.mad.fly.ui.UI;
 
 public abstract class BasicScreen implements Screen {
     

@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;

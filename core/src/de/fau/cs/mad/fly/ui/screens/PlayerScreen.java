@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import java.util.List;
 
@@ -20,6 +20,10 @@ import de.fau.cs.mad.fly.profile.ChangeListener;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.ui.DialogWithOkAndCancelButton;
+import de.fau.cs.mad.fly.ui.DialogWithOneButton;
+import de.fau.cs.mad.fly.ui.SkinManager;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Screen to see your user, to switch the user and to add a new user. Is called

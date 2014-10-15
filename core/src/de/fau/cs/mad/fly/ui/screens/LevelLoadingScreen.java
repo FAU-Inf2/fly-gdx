@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -8,6 +8,7 @@ import de.fau.cs.mad.fly.Loader;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
+import de.fau.cs.mad.fly.ui.GenericBackProcessor;
 
 /**
  * Displays the loading screen with a progress bar.

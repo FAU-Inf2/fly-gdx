@@ -63,9 +63,9 @@ import de.fau.cs.mad.fly.res.Perspective;
 import de.fau.cs.mad.fly.settings.SettingManager;
 import de.fau.cs.mad.fly.sound.AudioManager;
 import de.fau.cs.mad.fly.ui.BackProcessor;
-import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
+import de.fau.cs.mad.fly.ui.screens.MainMenuScreen;
 
 /**
  * This class implements the builder pattern to create a GameController with all

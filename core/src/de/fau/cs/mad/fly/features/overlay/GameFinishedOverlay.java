@@ -27,9 +27,9 @@ import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.profile.ScoreManager;
-import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
+import de.fau.cs.mad.fly.ui.screens.MainMenuScreen;
 
 /**
  * Message that is shown to the player when he/she finished the game.

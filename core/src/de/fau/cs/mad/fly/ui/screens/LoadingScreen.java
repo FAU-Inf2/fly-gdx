@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,6 +13,9 @@ import de.fau.cs.mad.fly.Loadable;
 import de.fau.cs.mad.fly.ProgressListener;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.settings.SettingManager;
+import de.fau.cs.mad.fly.ui.ScalableProgressBar;
+import de.fau.cs.mad.fly.ui.SkinManager;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Displays the splash screen.

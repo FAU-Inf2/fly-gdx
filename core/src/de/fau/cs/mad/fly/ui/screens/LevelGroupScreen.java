@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import java.util.List;
 
@@ -11,6 +11,8 @@ import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.ui.SkinManager;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Offers a selection of level groups.

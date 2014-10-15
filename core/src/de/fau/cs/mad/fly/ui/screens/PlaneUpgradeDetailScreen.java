@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,8 @@ import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlaneManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.PlaneUpgrade;
+import de.fau.cs.mad.fly.ui.SkinManager;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * The Screen in which the Player can buy and equip upgrade for his Planes

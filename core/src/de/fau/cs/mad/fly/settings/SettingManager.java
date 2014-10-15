@@ -248,7 +248,7 @@ public class SettingManager {
 
 	/**
 	 * Creates all settings that should be displayed in the
-	 * {@link de.fau.cs.mad.fly.ui.SettingScreen}.
+	 * {@link de.fau.cs.mad.fly.ui.screens.SettingScreen}.
 	 */
 	private void createSettings() {
 		// addBooleanSetting(SHOW_PAUSE, false);

@@ -3,6 +3,8 @@ package de.fau.cs.mad.fly.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
+import de.fau.cs.mad.fly.ui.screens.BasicScreen;
+
 /**
  * Handles the Back-Button of the Smartphone and the Escape-Button of the
  * Desktop to go back to the MainMenuScreen or leave the app.

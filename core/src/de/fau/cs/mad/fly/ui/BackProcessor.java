@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 
 import de.fau.cs.mad.fly.Fly;
+import de.fau.cs.mad.fly.ui.screens.LevelLoadingScreen;
+import de.fau.cs.mad.fly.ui.screens.MainMenuScreen;
 
 /**
  * Handles the Back-Button of the Smartphone and the Escape-Button of the

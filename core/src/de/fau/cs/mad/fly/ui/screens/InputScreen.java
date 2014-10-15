@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import java.util.List;
 
@@ -21,6 +21,10 @@ import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.ui.DialogWithOneButton;
+import de.fau.cs.mad.fly.ui.GenericBackProcessor;
+import de.fau.cs.mad.fly.ui.SkinManager;
+import de.fau.cs.mad.fly.ui.UserNameTextFieldFilter;
 
 public abstract class InputScreen extends BasicScreen {
     

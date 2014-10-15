@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.ui;
+package de.fau.cs.mad.fly.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -17,6 +17,9 @@ import de.fau.cs.mad.fly.HttpClient.OwnLevelGroupHighScoreService;
 import de.fau.cs.mad.fly.HttpClient.RecordItem;
 import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
+import de.fau.cs.mad.fly.ui.DialogWithOneButton;
+import de.fau.cs.mad.fly.ui.SkinManager;
+import de.fau.cs.mad.fly.ui.UI;
 
 /**
  * Screen to display the global highscores for a level group.
@@ -183,7 +186,7 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
     /**
      * generate Content
      * 
-     * @see de.fau.cs.mad.fly.ui.BasicScreen#generateContent()
+     * @see de.fau.cs.mad.fly.ui.screens.BasicScreen#generateContent()
      */
     @Override
     protected void generateContent() {

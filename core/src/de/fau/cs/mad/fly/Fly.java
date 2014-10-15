@@ -16,10 +16,10 @@ import de.fau.cs.mad.fly.game.ParticleController;
 import de.fau.cs.mad.fly.profile.LevelGroupManager;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.res.Assets;
-import de.fau.cs.mad.fly.ui.GameScreen;
-import de.fau.cs.mad.fly.ui.LoadingScreen;
-import de.fau.cs.mad.fly.ui.MainMenuScreen;
 import de.fau.cs.mad.fly.ui.SkinManager;
+import de.fau.cs.mad.fly.ui.screens.GameScreen;
+import de.fau.cs.mad.fly.ui.screens.LoadingScreen;
+import de.fau.cs.mad.fly.ui.screens.MainMenuScreen;
 
 /**
  * Manages the different game screens.
