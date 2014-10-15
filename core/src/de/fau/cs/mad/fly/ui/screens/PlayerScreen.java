@@ -193,7 +193,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
         playerTable.row();
         
         //show money
-        playerTable.add(new Label(I18n.t("gainMoney"), skin)).pad(padding).right();
+        playerTable.add(new Label(I18n.t("gainMoney") + ":", skin)).pad(padding).right();
         totalMoneyValueLabel = new Label("" + playerProfile.getMoney(), skin);
         playerTable.add(totalMoneyValueLabel).pad(padding);
         playerTable.row();
@@ -225,7 +225,7 @@ public class PlayerScreen extends BasicScreenWithBackButton {
      * @param skin
      */
     private void addLastLevel(PlayerProfile playerProfile, Skin skin) {
-        playerTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT).right();
+        playerTable.add(new Label(I18n.t("lastLevel") + ":", skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(padding).right();
         lastLevelValueLabel = new Label("", skin);
         playerTable.add(lastLevelValueLabel);
         updateLastLevelGroup(playerProfile);
