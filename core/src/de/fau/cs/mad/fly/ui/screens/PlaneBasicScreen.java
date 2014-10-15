@@ -96,12 +96,12 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
         planeDetailTable.add(nameLabel).pad(UI.Tables.PADDING).colspan(2).center();
         planeDetailTable.row().expand();
         
-        planeDetailTable.add(new Label(I18n.t("speed") + ":", labelStyle)).right();
+        planeDetailTable.add(new Label(I18n.t("speed") + ": ", labelStyle)).right();
         speedLabel = new Label("", labelStyle);
         planeDetailTable.add(speedLabel).right();
         planeDetailTable.row().expand();
         
-        planeDetailTable.add(new Label(I18n.t("turnSpeed") + ":", labelStyle)).right();
+        planeDetailTable.add(new Label(I18n.t("turnSpeed") + ": ", labelStyle)).right();
         azimuthSpeedLabel = new Label("", labelStyle);
         planeDetailTable.add(azimuthSpeedLabel).right();
         
