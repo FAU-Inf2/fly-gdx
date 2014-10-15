@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
-import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.ui.UI;
 
 /**
