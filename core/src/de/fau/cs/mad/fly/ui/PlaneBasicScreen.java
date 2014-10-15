@@ -109,8 +109,8 @@ public class PlaneBasicScreen extends BasicScreenWithBackButton implements Scree
      */
     protected void updateChosenPlaneDetail() {
         nameLabel.setText(currentPlane.name);
-        speedLabel.setText(Float.toString(currentPlane.speed));
-        azimuthSpeedLabel.setText(Float.toString(currentPlane.azimuthSpeed));
+        speedLabel.setText(I18n.floatToString(currentPlane.speed));
+        azimuthSpeedLabel.setText(I18n.floatToString(currentPlane.azimuthSpeed));
     }
     
     protected void loadCurrentPlane() {

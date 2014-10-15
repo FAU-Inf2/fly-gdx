@@ -1,10 +1,11 @@
 package de.fau.cs.mad.fly;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.I18NBundle;
-
-import java.util.Locale;
 
 /**
  * Created by danyel on 16/06/14.
@@ -40,6 +41,12 @@ public final class I18n {
     
     public static String tLevel(String key) {
         return levelBundle.get(key);
+    }
+    
+    public static String floatToString(float floatNumber) {
+        Locale locale = new Locale(gameBundle.getLocale().getLanguage(), gameBundle.getLocale().getCountry());
+        NumberFormat nf = NumberFormat.getNumberInstance(locale);
+        return nf.format(floatNumber);
     }
     
     private static void updateLocales() {

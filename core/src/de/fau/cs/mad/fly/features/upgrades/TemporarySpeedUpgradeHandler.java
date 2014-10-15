@@ -1,6 +1,5 @@
 package de.fau.cs.mad.fly.features.upgrades;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import de.fau.cs.mad.fly.features.upgrades.types.TemporarySpeedUpgrade;
 import de.fau.cs.mad.fly.game.GameController;
 import de.fau.cs.mad.fly.player.IPlane;
 import de.fau.cs.mad.fly.sound.AudioManager;
-import de.fau.cs.mad.fly.sound.Playback;
 
 /**
  * Used to display and handle instant speed upgrades.
@@ -68,9 +66,7 @@ public class TemporarySpeedUpgradeHandler extends CollectibleObjects implements 
             builder.append("\n");
             builder.append(I18n.t("bonus"));
             builder.append(" ");
-            DecimalFormat df = new DecimalFormat("0");
-            String factorRounded = df.format(upgrade.getEffect().getMaxSpeedupFactor() * 100f);
-            builder.append(factorRounded);
+            builder.append(I18n.floatToString(upgrade.getEffect().getMaxSpeedupFactor() * 100f));
             builder.append(" %");
             InfoOverlay.getInstance().setOverlay(builder.toString(), 3);
             
