@@ -8,7 +8,6 @@ import java.util.List;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -46,6 +45,7 @@ import de.fau.cs.mad.fly.features.upgrades.ChangeTimeUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.ResizeGatesUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.TemporarySpeedUpgradeHandler;
 import de.fau.cs.mad.fly.features.upgrades.types.TemporarySpeedUpgrade;
+import de.fau.cs.mad.fly.game.GameController.GameState;
 import de.fau.cs.mad.fly.graphics.shaders.FlyShaderProvider;
 import de.fau.cs.mad.fly.levels.DefaultLevel;
 import de.fau.cs.mad.fly.levels.ILevel;
@@ -86,6 +86,7 @@ public class GameControllerBuilder {
     private List<IFeatureDraw> optionalFeaturesToDraw;
     private List<IFeatureFinish> optionalFeaturesToFinish;
     private List<IFeatureDispose> optionalFeaturesToDispose;
+    private List<GameStateListener> gameStateListener;
     private FlightController flightController;
     private CameraController cameraController;
     private TimeController timeController;
@@ -108,6 +109,7 @@ public class GameControllerBuilder {
     public GameControllerBuilder init(final Fly game) {
         clearFeatureLists();
         
+        gameStateListener = new ArrayList<GameStateListener>();
         player = new Player();
         playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
         level = Loader.getInstance().getCurrentLevel();
@@ -167,10 +169,7 @@ public class GameControllerBuilder {
                 Player currentPlayer = GameController.getInstance().getPlayer();
 
                 if (!currentPlayer.decreaseLives()) {
-                    // Debug.setOverlay(0, "DEAD");
-                    game.getGameController().finishGame(false);
-                } else {
-                    // Debug.setOverlay(0, player.getLives());
+                    game.getGameController().setGameState(GameState.NO_LIVES);
                 }
             }
         });
@@ -598,6 +597,7 @@ public class GameControllerBuilder {
         gc.optionalFeaturesToDraw = optionalFeaturesToDraw;
         gc.optionalFeaturesToFinish = optionalFeaturesToFinish;
         gc.optionalFeaturesToDispose = optionalFeaturesToDispose;
+        gc.gameStateListeners = gameStateListener;
         gc.level = level;
         gc.player = player;
         gc.flightController = flightController;
@@ -605,6 +605,7 @@ public class GameControllerBuilder {
         // gc.batch = new ModelBatch();
         gc.batch = new ModelBatch(null, new FlyShaderProvider(), null);
         gc.setTimeController(timeController);
+        gc.registerGameStateListener(timeController);
         gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
         gc.audioManager = audioManager;
@@ -612,7 +613,7 @@ public class GameControllerBuilder {
         level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override
             public void onFinished() {
-                GameController.getInstance().finishGame(true);
+                GameController.getInstance().setGameState(GameState.VICTORY);
             }
         });
         return gc;

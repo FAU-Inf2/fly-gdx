@@ -46,17 +46,16 @@ public class GameScreen implements Screen {
     @Override
     public void pause() {
         Gdx.app.log("GameScreen", "pause");
-        if (gameController.isRunning()) {
-            gameController.pauseGame();
+        if (gameController.getGameState() == GameState.RUNNING) {
+            gameController.setGameState(GameState.PAUSED);
         }
     }
     
     @Override
     public void resume() {
         Gdx.app.log("GameScreen", "resume");
-        GameController.GameState state = gameController.getGameState();
-        if (state == GameState.PAUSED) {
-            gameController.resumeGame();
+        if (gameController.getGameState() == GameState.PAUSED) {
+            gameController.setGameState(GameState.RUNNING);
         }
     }
     

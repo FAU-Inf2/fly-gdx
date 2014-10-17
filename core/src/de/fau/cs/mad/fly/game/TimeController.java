@@ -3,14 +3,16 @@ package de.fau.cs.mad.fly.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fau.cs.mad.fly.game.GameController.GameState;
+
 /**
  * Manages the time in the game and calls listener if time in seconds has
  * changed or the game time is over.
  * 
- * @author Lukas Hahmann
+ * @author Lukas Hahmann <lukas.hahmann@gmail.com>
  * 
  */
-public class TimeController {
+public class TimeController implements GameStateListener {
     
     private int initTimeInMilliSeconds;
     private int currentTimeInMilliSeconds;
@@ -188,5 +190,16 @@ public class TimeController {
     /** Removes the registered {@link TimeIsUpListener} */
     public void removeTimeIsUpListener(TimeIsUpListener newListener) {
         timeIsUpListeners.remove(newListener);
+    }
+    
+    public void gameStateChanged(GameState newGameState) {
+        switch (newGameState) {
+        case RUNNING:
+            resume();
+            break;
+        default:
+            pause();
+            break;
+        }
     }
 }

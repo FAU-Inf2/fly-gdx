@@ -19,7 +19,6 @@ import de.fau.cs.mad.fly.features.IFeatureUpdate;
 import de.fau.cs.mad.fly.player.Player;
 import de.fau.cs.mad.fly.res.Level;
 import de.fau.cs.mad.fly.sound.AudioManager;
-import de.fau.cs.mad.fly.sound.Playable;
 
 /**
  * Manages the Player, the Level, the UI, the CameraController and all the
@@ -53,12 +52,7 @@ import de.fau.cs.mad.fly.sound.Playable;
  */
 public class GameController implements TimeIsUpListener {
     public enum GameState {
-        RUNNING(false), PAUSED(false), VICTORY(true), NO_LIVES(true), TIME_OVER(true);
-
-		public final boolean completed;
-		private GameState(boolean levelCompleted) {
-			this.completed = levelCompleted;
-		}
+        RUNNING, PAUSED, VICTORY, NO_LIVES, TIME_OVER;
     }
     
     protected static GameController instance = null;
@@ -71,6 +65,7 @@ public class GameController implements TimeIsUpListener {
     protected List<IFeatureDraw> optionalFeaturesToDraw;
     protected List<IFeatureDispose> optionalFeaturesToDispose;
     protected List<IFeatureFinish> optionalFeaturesToFinish;
+    protected List<GameStateListener> gameStateListeners;
     protected FlightController flightController;
     protected CameraController cameraController;
     protected PerspectiveCamera camera;
@@ -195,55 +190,9 @@ public class GameController implements TimeIsUpListener {
         
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(inputProcessor);
-        startGame();
-        Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
-    }
-    
-    /**
-     * Sets the game state to running.
-     */
-    public void startGame() {
-        gameState = GameState.RUNNING;
+        setGameState(GameState.RUNNING);
         timeController.initAndStartTimer((int) level.getLeftTime());
-    }
-    
-    /**
-     * Sets the game state to paused.
-     */
-    public void pauseGame() {
-        gameState = GameState.PAUSED;
-        timeController.pause();
-    }
-    
-    /**
-     * Sets the game state to finished and ends the game.
-     * 
-     * @param victory
-     *            True, if the player was victorious, false if the time is over
-     *            or he is dead.
-     */
-    public void finishGame(boolean victory) {
-		if ( gameState.completed )
-			return;
-		new Throwable().printStackTrace();
-        for ( Playable p : audioManager.allSounds() )
-            if ( p.isMusic() )
-                p.stop();
-        if (victory) {
-            gameState = GameState.VICTORY;
-        } else {
-            gameState = GameState.NO_LIVES;
-        }
-        
-        endGame();
-    }
-    
-    /**
-     * Sets the game from paused to running.
-     */
-    public void resumeGame() {
-        gameState = GameState.RUNNING;
-        timeController.resume();
+        Gdx.app.log("GameController.initGame", "OK HAVE FUN!");
     }
     
     /**
@@ -256,31 +205,25 @@ public class GameController implements TimeIsUpListener {
     }
     
     /**
-     * Checks if the game is running.
-     * 
-     * @return true if the game is running, otherwise false.
+     * Setter for the game state.
+     * <p>
+     * Calls all {@link #gameStateListeners} and calls {@link #endGame()} if
+     * necessary.
      */
-    public boolean isRunning() {
-        return gameState == GameState.RUNNING;
-    }
-    
-    /**
-     * Checks if the game is paused.
-     * 
-     * @return true if the game is paused, otherwise false.
-     */
-    public boolean isPaused() {
-        return gameState == GameState.PAUSED;
-    }
-    
-    /**
-     * Checks if the game is over and the player was victorious.
-     * 
-     * @return true if the game is over and the player was victorious, otherwise
-     *         false.
-     */
-    public boolean isVictory() {
-        return gameState == GameState.VICTORY;
+    public void setGameState(GameState newGameState) {
+        this.gameState = newGameState;
+        for (int i = gameStateListeners.size() - 1; i >= 0; i--) {
+            gameStateListeners.get(i).gameStateChanged(newGameState);
+        }
+        switch (newGameState) {
+        case PAUSED:
+            break;
+        case RUNNING:
+            break;
+        default:
+            endGame();
+            break;
+        }
     }
     
     /**
@@ -300,10 +243,6 @@ public class GameController implements TimeIsUpListener {
             flightController.update(delta);
             camera = cameraController.updateCamera();
             level.update(delta, camera);
-            
-            if ((int) level.getLeftTime() <= 0) {
-                finishGame(false);
-            }
             
             len = optionalFeaturesToUpdate.size();
             for (i = 0; i < len; i++) {
@@ -366,6 +305,7 @@ public class GameController implements TimeIsUpListener {
         optionalFeaturesToDraw.clear();
         optionalFeaturesToDispose.clear();
         optionalFeaturesToFinish.clear();
+        gameStateListeners.clear();
     }
     
     /**
@@ -377,7 +317,6 @@ public class GameController implements TimeIsUpListener {
     public void setTimeController(TimeController timeController) {
         this.timeController = timeController;
         timeController.registerTimeIsUpListener(this);
-        
     }
     
     /**
@@ -409,8 +348,15 @@ public class GameController implements TimeIsUpListener {
     
     @Override
     public boolean timeIsUp() {
-        gameState = GameState.TIME_OVER;
-        endGame();
+        setGameState(GameState.TIME_OVER);
         return true;
+    }
+    
+    public void registerGameStateListener(GameStateListener listener) {
+        gameStateListeners.add(listener);
+    }
+    
+    public void removeGameStateListener(GameStateListener listener) {
+        gameStateListeners.remove(listener);
     }
 }

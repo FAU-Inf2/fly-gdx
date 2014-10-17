@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.fau.cs.mad.fly.game.GameController.GameState;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreDetail;
 import de.fau.cs.mad.fly.res.GateCircuitAdapter;
@@ -57,7 +58,7 @@ public class ScoreController extends GateCircuitAdapter {
      * @return the score of the player with score details.
      */
     public Score generateEndScore(GameController gameController) {
-        if (gameController.isVictory()) {
+        if (GameState.VICTORY == gameController.getGameState()) {
             Score newScore = new Score();
             newScore.setReachedDate(new Date());
             

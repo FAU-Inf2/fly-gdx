@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.features.IFeatureInit;
 import de.fau.cs.mad.fly.game.GameController;
+import de.fau.cs.mad.fly.game.GameController.GameState;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
@@ -36,7 +37,7 @@ public class BackButtonOverlay implements IFeatureInit {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameController.pauseGame();
+                gameController.setGameState(GameState.PAUSED);
                 ((Fly) Gdx.app.getApplicationListener()).getMainMenuScreen().set();
             }
         });
