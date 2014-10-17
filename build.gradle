@@ -64,7 +64,7 @@ allprojects {
 }
 
 project(":desktop") {
-    apply plugin: "java"
+    apply plugin: "scala"
 
     dependencies {
         compile project(":core")
@@ -107,7 +107,7 @@ project(":android") {
 }
 
 project(":ios") {
-    apply plugin: "java"
+    apply plugin: "scala"
     apply plugin: "robovm"
 
     configurations { natives }
@@ -125,13 +125,13 @@ project(":ios") {
 }
 
 project(":core") {
-    apply plugin: "java"
+    apply plugin: "scala"
 
     dependencies {
+		compile "org.scala-lang:scala-library:2.11.3"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
-		compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-		
+        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     }
 }
 

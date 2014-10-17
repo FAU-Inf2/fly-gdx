@@ -1,9 +1,9 @@
 import java.util.regex.Pattern
 
-apply plugin: "java"
+apply plugin: "scala"
 
 sourceCompatibility = 1.6
-sourceSets.main.java.srcDirs = [ "src/" ]
+// sourceSets.main.java.srcDirs = [ "src/" ]
 
 project.ext.mainClassName = "de.fau.cs.mad.fly.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../android/assets");

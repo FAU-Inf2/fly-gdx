@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Created by danyel on 15/05/14.
  */
-public class Perspective {
+public class Perspective implements java.io.Serializable {
     public Vector3 position;
     public Vector3 viewDirection;
     public Vector3 upDirection;

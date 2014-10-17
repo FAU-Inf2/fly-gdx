@@ -31,7 +31,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            runProguard true
+            proguardFile file('proguard-project.txt')
+        }
         release {
+            runProguard true
+            proguardFile file('proguard-project.txt')
             signingConfig signingConfigs.release
         }
     }

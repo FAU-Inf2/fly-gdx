@@ -1,20 +1,175 @@
-# To enable ProGuard in your project, edit project.properties
-# to define the proguard.config property as described in that file.
-#
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in ${sdk.dir}/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the ProGuard
-# include property in project.properties.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Keep Android backend
+-keep class com.badlogic.gdx.backends.android.** { *; }
 
-# Add any project specific keep options here:
+-keep public class com.badlogic.gdx.backends.android.AndroidVisibilityListener {
+ public void createListener(com.badlogic.gdx.backends.android.AndroidApplication);
+}
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Port from proguard-android.txt
+
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontoptimize
+-dontpreverify
+
+-keepattributes *Annotation*
+-keep public class com.google.vending.licensing.ILicensingService
+-keep public class com.android.vending.licensing.ILicensingService
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keepclassmembers public class * extends android.view.View {
+   void set*(***);
+   *** get*();
+}
+
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+} 
+
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+} 
+
+-keepclassmembers class **.R$* {
+    public static <fields>;
+} 
+
+-dontwarn android.support.**
+
+# Port from proguard-project.txt of Libgdx template
+
+-dontwarn com.badlogic.gdx.backends.android.AndroidFragmentApplication
+
+-keepclassmembers class com.badlogic.gdx.backends.android.AndroidInput* {
+   <init>(com.badlogic.gdx.Application, android.content.Context, java.lang.Object, com.badlogic.gdx.backends.android.AndroidApplicationConfiguration);
+}
+
+# libgdx stuff
+
+-dontwarn com.badlogic.gdx.jnigen.*
+-keep public class android.content.Context
+-keep public interface com.badlogic.gdx.Application
+-keep public class com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+
+-dontwarn android.support.v4.**
+-keep class java.lang.reflect.**
+
+-keep class com.badlogic.** { *; }
+
+-keep class de.fau.cs.mad.fly.levels.** { *; }
+
+-keep class de.fau.cs.mad.fly.features.ICollisionListener
+-keep class de.fau.cs.mad.fly.features.game.EndlessLevelGenerator
+-keep class de.fau.cs.mad.fly.features.game.EndlessRailLevelGenerator
+-keep class de.fau.cs.mad.fly.features.upgrades.types.Collectible
+-keep class de.fau.cs.mad.fly.game.GameObject
+-keep class de.fau.cs.mad.fly.player.Player
+-keep class de.fau.cs.mad.fly.profile.PlayerProfile
+-keep class de.fau.cs.mad.fly.res.GateDisplay
+-keep class de.fau.cs.mad.fly.res.GateGoal
+
+-keepnames class * implements java.io.Serializable {
+    *;
+}
+
+-keep class sun.misc.Unsafe { *; }
+-keepattributes Signature
+
+## LibGDX
+
+# keep used
+
+# This needs also descriptor classes
+-keep public class com.badlogic.gdx.Screen
+-keep public class com.badlogic.gdx.Application
+-keep public class com.badlogic.gdx.ApplicationListener
+-keep public class com.badlogic.gdx.LifecycleListener
+-keep public class com.badlogic.gdx.InputProcessor
+-keep public class com.badlogic.gdx.files.FileHandle
+-keep public class com.badlogic.gdx.Files$FileType
+-keep public class com.badlogic.gdx.Graphics$DisplayMode
+-keep public class com.badlogic.gdx.Input$TextInputListener
+-keep public class com.badlogic.gdx.Input$Peripheral
+-keep public class com.badlogic.gdx.Input$Orientation
+-keep public class com.badlogic.gdx.Net$HttpRequest
+-keep public class com.badlogic.gdx.Net$HttpResponseListener
+-keep public class com.badlogic.gdx.Net$Protocol
+-keep public class com.badlogic.gdx.net.SocketHints
+-keep public class com.badlogic.gdx.net.ServerSocketHints
+-keep public class com.badlogic.gdx.utils.Array
+-keep public class com.badlogic.gdx.audio.Music$OnCompletionListener
+-keep public class com.badlogic.gdx.graphics.Pixmap
+
+## Scala
+
+# Don't warn for Scala's bytecode
+
+-dontwarn scala.**
+
+# Fix accesses to class members by means of introspection
+-keepclassmembernames class scala.concurrent.forkjoin.ForkJoinPool {
+    ** ctl;
+    ** stealCount;
+    ** plock;
+    ** qlock;
+    ** indexSeed;
+    ** parkBlocker;
+}
+-keepclassmembernames class scala.concurrent.forkjoin.ForkJoinPool$WorkQueue {
+    ** qlock;
+}
+-keepclassmembernames class scala.concurrent.forkjoin.ForkJoinTask {
+    ** status;
+}
+-keepclassmembernames class scala.concurrent.forkjoin.LinkedTransferQueue {
+    ** head;
+    ** tail;
+    ** sweepVotes;
+}
+-keepclassmembernames class scala.concurrent.forkjoin.LinkedTransferQueue$Node {
+    ** item;
+    ** next;
+    ** waiter;
+}
+
+# See bug https://issues.scala-lang.org/browse/SI-5397
+-keep class scala.collection.SeqLike { public protected *; }
+# This needs also descriptor classes
+-keep public class scala.Function1
+-keep public class scala.Function2
+-keep public class scala.collection.GenSeq
+-keep public class scala.collection.generic.CanBuildFrom
+-keep public class scala.math.Ordering
+
+# port from Libgdx template
+
+-verbose
+
+-dontwarn com.badlogic.gdx.utils.GdxBuild
+-dontwarn com.badlogic.gdx.physics.box2d.utils.Box2DBuild
+-dontwarn com.badlogic.gdx.jnigen.BuildTarget*
+
+-keepclassmembers class com.badlogic.gdx.physics.box2d.World {
+   boolean contactFilter(long, long);
+   void    beginContact(long);
+   void    endContact(long);
+   void    preSolve(long, long);
+   void    postSolve(long, long);
+   boolean reportFixture(long);
+   float   reportRayFixture(long, float, float, float, float, float);
+}
+
+# see https://github.com/ajhager/libgdx-sbt-project.g8/issues/85
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}

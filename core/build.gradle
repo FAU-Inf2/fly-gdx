@@ -1,12 +1,18 @@
-apply plugin: "java"
+apply plugin: "scala"
 apply plugin: "eclipse"
 
 sourceCompatibility = 1.6
 
-sourceSets.main.java.srcDirs = [ "src/" ]
-sourceSets.main.resources.srcDirs = [ "res/" ]
-sourceSets.test.java.srcDirs = [ "test/src/" ]
-sourceSets.test.resources.srcDirs = [ "test/res/" ]
+sourceSets {
+    main {
+        scala { srcDirs = [ "src/main/scala", "src/main/java" ] }
+        java { srcDirs = [ ] }
+    }
+    test {
+        scala { srcDirs = [ "src/test/scala", "src/test/java" ] }
+        java { srcDirs = [ ]}
+    }
+}
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.+'

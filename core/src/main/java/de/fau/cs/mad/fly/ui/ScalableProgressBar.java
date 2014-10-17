@@ -36,7 +36,7 @@ public class ScalableProgressBar extends Actor {
         Gdx.app.log("progress", String.valueOf(progress));
     }
     
-    static public class ScalableProgressBarStyle {
+    static public class ScalableProgressBarStyle implements java.io.Serializable {
         
         /** Background for the progress bar */
         public NinePatch background;
