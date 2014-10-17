@@ -211,18 +211,20 @@ public class GameController implements TimeIsUpListener {
      * necessary.
      */
     public void setGameState(GameState newGameState) {
-        this.gameState = newGameState;
-        for (int i = gameStateListeners.size() - 1; i >= 0; i--) {
-            gameStateListeners.get(i).gameStateChanged(newGameState);
-        }
-        switch (newGameState) {
-        case PAUSED:
-            break;
-        case RUNNING:
-            break;
-        default:
-            endGame();
-            break;
+        if (this.gameState == null || this.gameState == GameState.PAUSED || this.gameState == GameState.RUNNING) {
+            this.gameState = newGameState;
+            for (int i = gameStateListeners.size() - 1; i >= 0; i--) {
+                gameStateListeners.get(i).gameStateChanged(newGameState);
+            }
+            switch (newGameState) {
+            case PAUSED:
+                break;
+            case RUNNING:
+                break;
+            default:
+                endGame();
+                break;
+            }
         }
     }
     
@@ -306,6 +308,7 @@ public class GameController implements TimeIsUpListener {
         optionalFeaturesToDispose.clear();
         optionalFeaturesToFinish.clear();
         gameStateListeners.clear();
+        gameState = GameState.PAUSED;
     }
     
     /**

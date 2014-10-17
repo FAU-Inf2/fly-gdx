@@ -609,6 +609,7 @@ public class GameControllerBuilder {
         gc.scoreController = scoreController;
         gc.setInputProcessor(new InputMultiplexer(stage, flightController, new BackProcessor()));
         gc.audioManager = audioManager;
+        gc.setGameState(GameState.PAUSED);
 
         level.getGateCircuit().addListener(new GateCircuitAdapter() {
             @Override
