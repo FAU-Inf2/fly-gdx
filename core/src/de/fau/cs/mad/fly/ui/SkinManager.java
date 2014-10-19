@@ -37,7 +37,7 @@ public class SkinManager implements Disposable {
         skin = new Skin(atlas);
         
         Texture texture = new Texture(Gdx.files.internal("fonts/default.png"), true);
-        texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.MipMapLinearNearest);
+        texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);
         TextureRegion textureRegion = new TextureRegion(texture);
         FileHandle fontFile = Gdx.files.internal("fonts/default.fnt");
         
