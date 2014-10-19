@@ -37,7 +37,7 @@ public class SkinManager implements Disposable {
         skin = new Skin(atlas);
         
         Texture texture = new Texture(Gdx.files.internal("fonts/default.png"), true);
-        texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);
+        texture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.MipMapLinearNearest);
         TextureRegion textureRegion = new TextureRegion(texture);
         FileHandle fontFile = Gdx.files.internal("fonts/default.fnt");
         
@@ -71,7 +71,9 @@ public class SkinManager implements Disposable {
     
     @Override
     public void dispose() {
+        Gdx.app.log("SkinManager", ".dispose() - enter");
         if (skin != null) {
+            Gdx.app.log("SkinManager", ".dispose() - skin disposed");
             skin.dispose();
             skin = null;
             instance = null;

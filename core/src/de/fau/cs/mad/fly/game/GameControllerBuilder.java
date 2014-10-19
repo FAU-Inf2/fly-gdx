@@ -480,7 +480,7 @@ public class GameControllerBuilder {
      */
     private GameControllerBuilder addGateIndicator() {
         TextureRegion region = SkinManager.getInstance().getSkin().getRegion("arrow");
-        region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        //region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
         GateIndicator gateIndicator = new GateIndicator(region);
         addFeatureToLists(gateIndicator);
         return this;
