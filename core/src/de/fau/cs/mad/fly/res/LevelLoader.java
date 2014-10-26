@@ -334,8 +334,8 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
                     c = new TemporarySpeedUpgrade(models.get(ref), effect);
                     
                 } else if ("ResizeGatesUpgrade".equals(type)) {
-                    JsonValue jsonScale = jsonUpgrade.get("scale");
-                    Vector3 scale = new Vector3(jsonScale.getFloat(0), jsonScale.getFloat(1), jsonScale.getFloat(2));
+                    JsonValue jsonResizeFactor = jsonUpgrade.get("resizeFactor");
+                    Vector3 scale = new Vector3(jsonResizeFactor.getFloat(0), jsonResizeFactor.getFloat(1), jsonResizeFactor.getFloat(2));
                     c = new ResizeGatesUpgrade(models.get(ref), scale);
                 } else if ("ChangeSteeringUpgrade".equals(type)) {
                     c = new ChangeSteeringUpgrade(models.get(ref), jsonUpgrade.get("roll").asFloat(), jsonUpgrade.get("azimuth").asFloat(), jsonUpgrade.get("duration").asFloat());

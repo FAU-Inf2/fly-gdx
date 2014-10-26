@@ -1,4 +1,4 @@
-package de.fau.cs.mad.fly.levels.tutorials;
+package de.fau.cs.mad.fly.levels.medium;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class ResizeGatesTutorial implements ILevel, IFeatureInit, ICollisionList
     public void init(GameController game) {
         game.getLevel();
         
-        Vector3 scale = new Vector3(0.4f, 0.4f, 0.4f);
+        Vector3 scale = new Vector3(0.2f, 0.2f, 0.2f);
         Vector3 scaling = new Vector3();
         for (GateGoal g : game.getLevel().getGateCircuit().allGateGoals()) {
             if (g.getDisplay() != null) {

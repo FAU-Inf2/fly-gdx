@@ -88,7 +88,8 @@
 		{
 			"id": 217,
 			"name": "T 8",
-			"file": "timeTutorial.json"
+			"file": "timeTutorial.json",
+			"type": "tutorial"
 		},		
 		{
 			"id": 218,
@@ -114,6 +115,12 @@
 			"id": 222,
 			"name": "19",
 			"file": "level19.json"
+		},
+		{
+			"id": 223,
+			"name": "T 9",
+			"file": "gateResizeTutorial.json",
+			"type": "tutorial"
 		}
 	]
 }

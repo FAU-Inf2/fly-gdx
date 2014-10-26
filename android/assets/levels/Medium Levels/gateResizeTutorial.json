@@ -1,0 +1,86 @@
+{
+    "class": "medium.ResizeGatesTutorial",
+    "components": [
+        {
+            "id": "border",
+            "ref": "border"
+        }
+    ],
+    "dependencies": {
+        "border": "spacesphere",
+        "hole": "torusHoleBox",
+        "resizeGatesUpgrade": "resizeGatesUpgrade",
+        "torus": "torusMedium"
+    },
+    "gates": [
+        {
+            "successors": [
+                1
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                32.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": []
+        }
+    ],
+    "id": 223,
+    "name": "T 9",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 30,
+    "upgrades": [
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "resizeGatesUpgrade",
+            "position": [
+                0.0,
+                16.0,
+                5.0
+            ],
+            "ref": "resizeGatesUpgrade",
+            "resizeFactor": [
+                5.0,
+                5.0,
+                5.0
+            ],
+            "type": "ResizeGatesUpgrade"
+        }
+    ]
+}

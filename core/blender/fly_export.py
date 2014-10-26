@@ -225,7 +225,7 @@ class LevelExporter:
 				upgrades.append(up)
 			elif "resizeGatesUpgrade" in item.name:
 				up['type'] = "ResizeGatesUpgrade"
-				up['scale'] = [ ConvertHelper.convert_pos(item['scaleX']), ConvertHelper.convert_pos(item['scaleY']), ConvertHelper.convert_pos(item['scaleZ']) ]
+				up['resizeFactor'] = [ ConvertHelper.convert_pos(item['resizeFactorX']), ConvertHelper.convert_pos(item['resizeFactorY']), ConvertHelper.convert_pos(item['resizeFactorZ']) ]
 				self.addInfo(up, item)
 				upgrades.append(up)
 
