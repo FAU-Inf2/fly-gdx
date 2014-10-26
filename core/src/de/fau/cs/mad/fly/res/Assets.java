@@ -2,7 +2,6 @@ package de.fau.cs.mad.fly.res;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import de.fau.cs.mad.fly.game.GameModel;
@@ -16,7 +15,6 @@ public class Assets {
     public static AssetManager manager;
     
     public static final AssetDescriptor<TextureAtlas> textureAtlas = new AssetDescriptor<TextureAtlas>("uiskin.atlas", TextureAtlas.class);
-    public static final AssetDescriptor<Texture> background = new AssetDescriptor<Texture>("background.jpg", Texture.class);
     
     public static void init() {
         manager = new AssetManager();
