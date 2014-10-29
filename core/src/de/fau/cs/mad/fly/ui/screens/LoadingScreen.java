@@ -2,6 +2,7 @@ package de.fau.cs.mad.fly.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -49,11 +50,18 @@ public class LoadingScreen<T> extends BasicScreenWithBackButton {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Fly app = ((Fly) Gdx.app.getApplicationListener());
-                app.setGameScreen();
-                app.getGameController().initGame();
-                if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getBoolean(SettingManager.USE_TOUCH))
-                    app.getGameController().getFlightController().init();
+                
+                stage.addAction(Actions.sequence(Actions.fadeOut(.3f), Actions.run(new Runnable() {
+                    public void run() {
+                        Fly app = ((Fly) Gdx.app.getApplicationListener());
+                        app.setGameScreen();
+                        app.getGameController().initGame();
+                        if(!PlayerProfileManager.getInstance().getCurrentPlayerProfile().getSettingManager().getBoolean(SettingManager.USE_TOUCH)) {
+                            app.getGameController().getFlightController().init();
+                        }
+                    }
+                })));
+                
             }
         });
         table.add(button).bottom().width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).expand();
@@ -79,5 +87,6 @@ public class LoadingScreen<T> extends BasicScreenWithBackButton {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        stage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(1.5f)));
     }
 }

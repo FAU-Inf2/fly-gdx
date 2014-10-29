@@ -3,6 +3,7 @@ package de.fau.cs.mad.fly.ui.screens;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
@@ -112,21 +113,24 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	setPlaneChoosingScreen();
-                //((Fly) Gdx.app.getApplicationListener()).setPlaneChoosingScreen();
-                
             }
         });
         
         continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
-                
-                if(playerProfile.getSettingManager().getBoolean(SettingManager.DISABLE_TUTORIALS) && playerProfile.getCurrentLevelProfile().isTutorial()) {
-                	playerProfile.setToNextLevel();
-                }
-                
-                Loader.getInstance().loadLevel(playerProfile.getCurrentLevelProfile());
+                stage.addAction(Actions.sequence(Actions.fadeOut(.4f), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
+                        
+                        if(playerProfile.getSettingManager().getBoolean(SettingManager.DISABLE_TUTORIALS) && playerProfile.getCurrentLevelProfile().isTutorial()) {
+                            playerProfile.setToNextLevel();
+                        }
+                        
+                        Loader.getInstance().loadLevel(playerProfile.getCurrentLevelProfile());
+                    }
+                })));  
             }
         });
         
