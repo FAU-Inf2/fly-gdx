@@ -12,6 +12,15 @@ public final class UI {
     private UI() {
     }
     
+    /** Contains parameters for Transitions between screens */
+    public static final class Transitions {
+        /** This class should not be instantiated */
+        private Transitions() {}
+        
+        public static final float FADE_OUT_TIME = 0.2f;
+        public static final float FADE_IN_TIME = 0.3f;
+    }
+    
     /** This class contains basic parameter for creating windows */
     public static final class Window {
         

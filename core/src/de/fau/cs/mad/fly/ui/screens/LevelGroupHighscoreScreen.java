@@ -86,7 +86,6 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
      */
     @Override
     public void show() {
-        super.show();
         scoreTable.clear();
         contentTable.clear();
         genarateScoreTable();
@@ -95,6 +94,7 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName().equals(I18n.t("default.playerName"))) {
             updateUserNameFirst();
         }
+        super.show();
     }
     
     @Override

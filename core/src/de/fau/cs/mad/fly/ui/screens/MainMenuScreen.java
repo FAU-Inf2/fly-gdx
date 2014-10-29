@@ -105,21 +105,31 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         chooseLevelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setLevelGroupScreen();
+                stage.addAction(Actions.sequence(Actions.fadeOut(UI.Transitions.FADE_OUT_TIME), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        setLevelGroupScreen();
+                    }
+                })));
             }
         });
         
         choosePlaneButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	setPlaneChoosingScreen();
+                stage.addAction(Actions.sequence(Actions.fadeOut(UI.Transitions.FADE_OUT_TIME), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        setPlaneChoosingScreen();
+                    }
+                })));
             }
         });
         
         continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                stage.addAction(Actions.sequence(Actions.fadeOut(.4f), Actions.run(new Runnable() {
+                stage.addAction(Actions.sequence(Actions.fadeOut(UI.Transitions.FADE_OUT_TIME), Actions.run(new Runnable() {
                     @Override
                     public void run() {
                         PlayerProfile playerProfile = PlayerProfileManager.getInstance().getCurrentPlayerProfile();
@@ -137,21 +147,36 @@ public class MainMenuScreen extends BasicScreen implements WithHelpOverlay {
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setSettingScreen();
+                stage.addAction(Actions.sequence(Actions.fadeOut(UI.Transitions.FADE_OUT_TIME), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSettingScreen();
+                    }
+                })));
             }
         });
         
         playerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setPlayerScreen();
+                stage.addAction(Actions.sequence(Actions.fadeOut(UI.Transitions.FADE_OUT_TIME), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        setPlayerScreen();
+                    }
+                })));
             }
         });
         
         highscoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setHighscoreScreen();
+                stage.addAction(Actions.sequence(Actions.fadeOut(UI.Transitions.FADE_OUT_TIME), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        setHighscoreScreen();
+                    }
+                })));
             }
         });
     }

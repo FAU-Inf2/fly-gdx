@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -119,6 +120,7 @@ public abstract class BasicScreen implements Screen {
         Gdx.input.setCatchBackKey(true);
         // delegate all inputs to the #inputProcessor
         Gdx.input.setInputProcessor(inputProcessor);
+        stage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(UI.Transitions.FADE_IN_TIME)));
     }
     
     @Override

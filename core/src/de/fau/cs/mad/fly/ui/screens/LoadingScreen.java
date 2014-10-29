@@ -51,7 +51,7 @@ public class LoadingScreen<T> extends BasicScreenWithBackButton {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 
-                stage.addAction(Actions.sequence(Actions.fadeOut(.3f), Actions.run(new Runnable() {
+                stage.addAction(Actions.sequence(Actions.fadeOut(UI.Transitions.FADE_OUT_TIME), Actions.run(new Runnable() {
                     public void run() {
                         Fly app = ((Fly) Gdx.app.getApplicationListener());
                         app.setGameScreen();
@@ -87,6 +87,5 @@ public class LoadingScreen<T> extends BasicScreenWithBackButton {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        stage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(1.5f)));
     }
 }
