@@ -121,6 +121,11 @@
 			"name": "T 9",
 			"file": "gateResizeTutorial.json",
 			"type": "tutorial"
-		}
+		},
+		{
+			"id": 224,
+			"name": "20",
+			"file": "level20.json"
+		},
 	]
 }

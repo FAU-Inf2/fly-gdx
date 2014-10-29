@@ -1,0 +1,366 @@
+{
+    "class": "medium.BestWaySmallGatesLevel",
+    "components": [
+        {
+            "id": "border",
+            "ref": "border"
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "id": "Cube.003",
+            "position": [
+                16.0,
+                24.0,
+                0.0
+            ],
+            "ref": "asteroid",
+            "scale": [
+                2.6,
+                2.6,
+                2.6
+            ]
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "border": "spacesphere",
+        "hole": "torusHoleBox",
+        "resizeGatesUpgrade": "resizeGatesUpgrade",
+        "timeUpgrade": "timeUpgrade",
+        "torus": "torusMedium"
+    },
+    "gates": [
+        {
+            "successors": [
+                1,
+                4
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                0.0,
+                37.0,
+                2.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 1,
+            "id": "Gate.001",
+            "position": [
+                0.0,
+                15.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                0
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 2,
+            "id": "Gate.002",
+            "position": [
+                0.0,
+                57.0,
+                -1.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                3
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 3,
+            "id": "Gate.003",
+            "position": [
+                0.0,
+                76.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "successors": []
+        },
+        {
+            "euler": [
+                4.099999999999994,
+                2.9,
+                -34.9
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                10.0,
+                20.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                9.0,
+                -1.0,
+                -54.5
+            ],
+            "gateId": 5,
+            "id": "Gate.005",
+            "position": [
+                26.0,
+                32.0,
+                4.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                6
+            ]
+        },
+        {
+            "euler": [
+                4.099999999999994,
+                3.2,
+                35.9
+            ],
+            "gateId": 6,
+            "id": "Gate.006",
+            "position": [
+                28.0,
+                40.0,
+                6.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                7
+            ]
+        },
+        {
+            "euler": [
+                -0.7999999999999972,
+                2.9,
+                70.1
+            ],
+            "gateId": 7,
+            "id": "Gate.007",
+            "position": [
+                14.0,
+                47.0,
+                9.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                8
+            ]
+        },
+        {
+            "euler": [
+                -5.700000000000003,
+                2.6,
+                46.2
+            ],
+            "gateId": 8,
+            "id": "Gate.008",
+            "position": [
+                -11.0,
+                48.0,
+                5.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                9
+            ]
+        },
+        {
+            "euler": [
+                -0.7999999999999972,
+                2.9,
+                -34.9
+            ],
+            "gateId": 9,
+            "id": "Gate.009",
+            "position": [
+                -11.0,
+                52.0,
+                4.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                10
+            ]
+        },
+        {
+            "euler": [
+                -0.7999999999999972,
+                2.9,
+                0.1
+            ],
+            "gateId": 10,
+            "id": "Gate.010",
+            "position": [
+                3.7,
+                63.3,
+                7.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                3
+            ]
+        }
+    ],
+    "id": 224,
+    "name": "20",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 40,
+    "upgrades": [
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade",
+            "position": [
+                0.0,
+                38.0,
+                2.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 15,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.001",
+            "position": [
+                19.0,
+                27.0,
+                0.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 20,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.002",
+            "position": [
+                -11.0,
+                50.0,
+                4.6
+            ],
+            "ref": "timeUpgrade",
+            "time": 15,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                2.0,
+                0.0,
+                1.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "resizeGatesUpgrade",
+            "position": [
+                -11.0,
+                15.0,
+                5.0
+            ],
+            "ref": "resizeGatesUpgrade",
+            "resizeFactor": [
+                4.0,
+                4.0,
+                4.0
+            ],
+            "type": "ResizeGatesUpgrade"
+        }
+    ]
+}
