@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -59,10 +58,9 @@ public abstract class BasicScreen implements Screen {
     private void initialize() {
         batch = new SpriteBatch();
         
-        AssetDescriptor<Texture> assetBackground = new AssetDescriptor<Texture>("models/spacesphere/spacesphere.jpg", Texture.class);
+        AssetDescriptor<Texture> assetBackground = new AssetDescriptor<Texture>("background.jpg", Texture.class);
         Assets.load(assetBackground);
-        TextureRegion region = new TextureRegion(Assets.manager.get(assetBackground), 600, -60, 800, 2200);
-        background = new Sprite(region);
+        background = new Sprite(Assets.manager.get(assetBackground));
         widthScalingFactor = UI.Window.REFERENCE_WIDTH / (float) Gdx.graphics.getWidth();
         heightScalingFactor = UI.Window.REFERENCE_HEIGHT / (float) Gdx.graphics.getHeight();
         scalingFactor = Math.max(widthScalingFactor, heightScalingFactor);
