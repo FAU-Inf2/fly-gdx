@@ -1,0 +1,591 @@
+{
+    "class": "",
+    "components": [
+        {
+            "id": "border",
+            "ref": "border"
+        },
+        {
+            "euler": [
+                -34.6,
+                3.0,
+                7.5
+            ],
+            "id": "Cube.000",
+            "position": [
+                -24.9,
+                24.2,
+                -2.5
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.8,
+                2.3,
+                2.1
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "id": "Cube.001",
+            "position": [
+                -26.0,
+                -1.8,
+                -5.5
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.0,
+                1.3,
+                1.2
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "id": "Cube.002",
+            "position": [
+                -29.0,
+                14.2,
+                -10.5
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.0,
+                1.3,
+                1.2
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "id": "Cube.003",
+            "position": [
+                -3.0,
+                16.2,
+                -0.5
+            ],
+            "ref": "asteroid",
+            "scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "border": "spacesphere",
+        "hole": "torusHoleBox",
+        "timeUpgrade": "timeUpgrade",
+        "torus": "torusMedium"
+    },
+    "gates": [
+        {
+            "successors": [
+                4
+            ]
+        },
+        {
+            "euler": [
+                -5.0,
+                0.0,
+                -45.0
+            ],
+            "gateId": 0,
+            "id": "Gate.000",
+            "position": [
+                -11.7,
+                0.5,
+                -7.1
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                11
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                50.0
+            ],
+            "gateId": 2,
+            "id": "Gate.002",
+            "position": [
+                -14.4,
+                18.0,
+                -9.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                13
+            ]
+        },
+        {
+            "euler": [
+                -5.0,
+                0.0,
+                5.0
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                -0.1,
+                10.3,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                5
+            ]
+        },
+        {
+            "euler": [
+                -5.0,
+                0.0,
+                45.0
+            ],
+            "gateId": 5,
+            "id": "Gate.005",
+            "position": [
+                -5.9,
+                21.9,
+                -1.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                6
+            ]
+        },
+        {
+            "euler": [
+                -5.0,
+                0.0,
+                90.0
+            ],
+            "gateId": 6,
+            "id": "Gate.006",
+            "position": [
+                -16.9,
+                26.2,
+                -2.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                7
+            ]
+        },
+        {
+            "euler": [
+                5.0,
+                0.0,
+                -45.0
+            ],
+            "gateId": 7,
+            "id": "Gate.007",
+            "position": [
+                -30.0,
+                22.0,
+                -3.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                8
+            ]
+        },
+        {
+            "euler": [
+                5.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 8,
+            "id": "Gate.008",
+            "position": [
+                -36.0,
+                11.0,
+                -4.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                9
+            ]
+        },
+        {
+            "euler": [
+                5.0,
+                0.0,
+                45.0
+            ],
+            "gateId": 9,
+            "id": "Gate.009",
+            "position": [
+                -31.0,
+                0.0,
+                -5.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                10
+            ]
+        },
+        {
+            "euler": [
+                5.0,
+                0.0,
+                90.0
+            ],
+            "gateId": 10,
+            "id": "Gate.010",
+            "position": [
+                -21.3,
+                -3.7,
+                -6.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                0
+            ]
+        },
+        {
+            "euler": [
+                -5.0,
+                0.0,
+                5.0
+            ],
+            "gateId": 11,
+            "id": "Gate.011",
+            "position": [
+                -8.3,
+                11.3,
+                -8.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                2
+            ]
+        },
+        {
+            "euler": [
+                5.0,
+                0.0,
+                -35.0
+            ],
+            "gateId": 13,
+            "id": "Gate.013",
+            "position": [
+                -26.1,
+                18.3,
+                -10.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                14
+            ]
+        },
+        {
+            "euler": [
+                5.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 14,
+            "id": "Gate.014",
+            "position": [
+                -31.0,
+                10.0,
+                -11.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                15
+            ]
+        },
+        {
+            "euler": [
+                5.0,
+                0.0,
+                70.0
+            ],
+            "gateId": 15,
+            "id": "Gate.015",
+            "position": [
+                -24.9,
+                4.2,
+                -12.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                16
+            ]
+        },
+        {
+            "euler": [
+                -5.0,
+                0.0,
+                -30.0
+            ],
+            "gateId": 16,
+            "id": "Gate.016",
+            "position": [
+                -17.0,
+                5.0,
+                -13.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                17
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                45.0
+            ],
+            "gateId": 17,
+            "id": "Gate.017",
+            "position": [
+                -15.0,
+                12.0,
+                -14.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": [
+                20
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                73.0
+            ],
+            "gateId": 20,
+            "id": "Gate.020",
+            "position": [
+                -22.0,
+                15.0,
+                -15.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "successors": []
+        }
+    ],
+    "id": 226,
+    "name": "22",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 9,
+    "upgrades": [
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade",
+            "position": [
+                -0.1,
+                10.2,
+                0.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 13,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.001",
+            "position": [
+                -17.2,
+                26.2,
+                -2.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 14,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.002",
+            "position": [
+                -35.9,
+                11.1,
+                -4.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 12,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.003",
+            "position": [
+                -21.2,
+                -3.7,
+                -6.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 12,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.004",
+            "position": [
+                -8.3,
+                11.4,
+                -8.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 11,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.005",
+            "position": [
+                -26.1,
+                18.4,
+                -10.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 10,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.006",
+            "position": [
+                -24.8,
+                4.1,
+                -12.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 8,
+            "type": "ChangeTimeUpgrade"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                2.0,
+                0.0
+            ],
+            "euler": [
+                -90.0,
+                0.0,
+                0.0
+            ],
+            "id": "changeTimeUpgrade.007",
+            "position": [
+                -14.9,
+                11.9,
+                -14.0
+            ],
+            "ref": "timeUpgrade",
+            "time": 5,
+            "type": "ChangeTimeUpgrade"
+        }
+    ]
+}
