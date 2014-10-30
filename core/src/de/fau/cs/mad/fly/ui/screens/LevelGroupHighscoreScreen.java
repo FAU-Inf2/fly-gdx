@@ -8,7 +8,7 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -31,6 +31,8 @@ import de.fau.cs.mad.fly.profile.LevelGroup;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.Score;
 import de.fau.cs.mad.fly.profile.ScoreManager;
+import de.fau.cs.mad.fly.ui.DialogWithOneButton;
+import de.fau.cs.mad.fly.ui.LevelScoreEntry;
 import de.fau.cs.mad.fly.ui.SkinManager;
 import de.fau.cs.mad.fly.ui.UI;
 
@@ -44,8 +46,8 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
     
     private Table scoreTable;
     
-    private TextButton uploadScoreButton;
     private TextButton globalHighScoreButton;
+    private TextButton uploadAllScores;
     
     private LevelGroup levelGroup;
     
@@ -89,11 +91,6 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
         scoreTable.clear();
         contentTable.clear();
         genarateScoreTable();
-        // check if the user name has still its default name and show an
-        // input field in this case
-        if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName().equals(I18n.t("default.playerName"))) {
-            updateUserNameFirst();
-        }
         super.show();
     }
     
@@ -141,7 +138,12 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
             Table highscoreButtonTable = new Table();
             highscoreButtonTable.setFillParent(true);
             stage.addActor(highscoreButtonTable);
-            highscoreButtonTable.add(globalHighScoreButton).width(UI.Buttons.TEXT_BUTTON_WIDTH).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).bottom().expand();
+            highscoreButtonTable.add().width(UI.Buttons.IMAGE_BUTTON_WIDTH).pad(UI.Window.BORDER_SPACE).bottom().left().expand();
+            highscoreButtonTable.add(globalHighScoreButton).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).center().bottom().expand();
+            
+            uploadAllScores = new TextButton(I18n.t("uploadAll"), skin);
+            highscoreButtonTable.add(uploadAllScores).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Window.BORDER_SPACE).bottom().right().expand();
+            uploadAllScores.setDisabled(true);
             
             scoreTable.add(new Label(I18n.t("StatusLoading"), skin));
             final ScrollPane statisticsPane = new ScrollPane(scoreTable, skin, "semiTransparentBackground");
@@ -160,10 +162,13 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                 public void run() {
                     scoreTable.clear();
                     boolean scoresExist = false;
+                    TextButton uploadScoreButton;
                     
                     List<Integer> sortedKeys = new ArrayList<Integer>(scores.keySet());
                     Collections.sort(sortedKeys);
                     Collections.reverse(sortedKeys);
+                    
+                    UploadScoreClickListener uploadAllListener = new UploadScoreClickListener();
                     
                     for (Integer levelID : sortedKeys) {
                         Score score = scores.get(levelID);
@@ -181,10 +186,16 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                             scoreTable.add(new Label(score.getTotalScore() + "", skin)).pad(UI.Buttons.SPACE, 20, UI.Buttons.SPACE, UI.Buttons.SPACE).right();
                             
                             uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin);
+                            
                             if (score.isUploaded()) {
                                 uploadScoreButton.setDisabled(true);
+                            } else {
+                                UploadScoreClickListener listener = new UploadScoreClickListener();
+                                LevelScoreEntry levelScoreEntry = new LevelScoreEntry(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton);
+                                listener.addLevelScoreEntry(levelScoreEntry);
+                                uploadAllListener.addLevelScoreEntry(levelScoreEntry);
+                                uploadScoreButton.addListener(listener);
                             }
-                            uploadScoreButton.addListener(new UploadScoreClickListener(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton));
                             
                             scoreTable.add(uploadScoreButton).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(0, UI.Buttons.SPACE, 40, 120);
                         }
@@ -199,6 +210,12 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                     if (!scoresExist) {
                         scoreTable.add(new Label(I18n.t("noScore"), skin)).height(UI.Buttons.TEXT_BUTTON_HEIGHT).pad(UI.Buttons.SPACE);
                         scoreTable.row();
+                    }
+                    
+                    if (uploadAllListener.getNumberOfEntries() > 0) {
+                        // enable upload all button
+                        uploadAllScores.setDisabled(false);
+                        uploadAllScores.addListener(uploadAllListener);
                     }
                 }
             });
@@ -220,55 +237,101 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
      */
     public class UploadScoreClickListener extends ChangeListener {
         
-        private int levelgroupId;
-        private int levelId;
-        private Score score;
-        private Button button;
+        private List<LevelScoreEntry> levelScoreEntries = new ArrayList<LevelScoreEntry>();
+        private int uploadedScores = 0;
+        private int failedScores = 0;
         
-        public UploadScoreClickListener(int levelgroup, int level, Score score, TextButton button) {
-            super();
-            levelgroupId = levelgroup;
-            levelId = level;
-            this.score = score;
-            this.button = button;
+        private void addLevelScoreEntry(LevelScoreEntry levelScoreEntry) {
+            levelScoreEntries.add(levelScoreEntry);
+        }
+        
+        private int getNumberOfEntries() {
+            return levelScoreEntries.size();
         }
         
         @Override
         public void changed(ChangeEvent event, Actor actor) {
             // check if the user name has still its default name and show an
             // input field in this case
-            if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName() == I18n.t("default.playerName")) {
+            if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName().equals(I18n.t("default.playerName"))) {
                 updateUserNameFirst();
             }
             
-            final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
-            requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
-            requestData.LevelID = levelId;
-            requestData.Score = score;
-            requestData.LevelgroupID = levelgroupId;
-            final FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener(requestData, button, stage);
-            final PostHighscoreService postHighscoreService = new PostHighscoreService(postScoreListener, requestData);
-            final PutHighscoreService putHighscoreService = new PutHighscoreService(postScoreListener, requestData);
-            // if the current user has no fly-id (user id got from server side)
-            // in the database, then call another service PostUserService to get
-            // fly-id
-            if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() <= 0) {
-                FlyHttpResponseListener listener = new PostUserHttpRespListener(requestData, postHighscoreService, stage);
-                PostUserService postUser = new PostUserService(listener);
+            for (int i = 0; i < levelScoreEntries.size(); i++) {
                 
-                postUser.execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName());
-            } else {
+                final PostHighscoreService.RequestData requestData = new PostHighscoreService.RequestData();
+                requestData.FlyID = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID();
+                requestData.LevelID = levelScoreEntries.get(i).getLevelId();
+                requestData.Score = levelScoreEntries.get(i).getScore();
+                requestData.LevelGroupID = levelScoreEntries.get(i).getLevelGroupId();
                 
-                if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().isNewnameUploaded() == false) {
-                    new PutUserService(new PutUserHttpRespListener(PlayerProfileManager.getInstance().getCurrentPlayerProfile())).execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
-                }
+                // disable button to avoid spamming of the same score
+                levelScoreEntries.get(i).getButton().setDisabled(true);
                 
-                if (score.getServerScoreId() > 0) {
-                    
-                    putHighscoreService.execute();
+                FlyHttpResponseListener postScoreListener = new PostScoreHttpRespListener(requestData, levelScoreEntries.get(i).getButton(), this);
+                PostHighscoreService postHighscoreService = new PostHighscoreService(postScoreListener, requestData);
+                
+                if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().getFlyID() <= 0) {
+                    // if the current user has no fly-id (user id got from
+                    // server side) in the database, then call another service
+                    // PostUserService to get the fly-id
+                    FlyHttpResponseListener listener = new PostUserHttpRespListener(requestData, postHighscoreService, postScoreListener);
+                    PostUserService postUser = new PostUserService(listener);
+                    postUser.execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile().getName());
                 } else {
-                    postHighscoreService.execute();
+                    
+                    if (PlayerProfileManager.getInstance().getCurrentPlayerProfile().isNewnameUploaded() == false) {
+                        new PutUserService(new PutUserHttpRespListener(PlayerProfileManager.getInstance().getCurrentPlayerProfile())).execute(PlayerProfileManager.getInstance().getCurrentPlayerProfile());
+                    }
+                    
+                    if (levelScoreEntries.get(i).getScore().getServerScoreId() > 0) {
+                        PutHighscoreService putHighscoreService = new PutHighscoreService(postScoreListener, requestData);
+                        putHighscoreService.execute();
+                    } else {
+                        postHighscoreService.execute();
+                    }
                 }
+            }
+        }
+        
+        public void uploadSuccessfull() {
+            uploadedScores++;
+            if (uploadedScores >= levelScoreEntries.size()) {
+                // show dialog with message for user
+                Dialog uploadSuccessfullMessage = new DialogWithOneButton(I18n.t("ScoreUploaded"), I18n.t("ok"));
+                uploadSuccessfullMessage.show(stage);
+                uploadedScores = 0;
+            } else {
+                checkForPartlyFailedUpload();
+            }
+        }
+        
+        public void uploadFailed() {
+            failedScores++;
+            if (failedScores >= levelScoreEntries.size()) {
+                // show dialog with message for user
+                Dialog uploadFailedMessage = new DialogWithOneButton(I18n.t("ConnectServerError"), I18n.t("ok"));
+                uploadFailedMessage.show(stage);
+                failedScores = 0;
+            } else {
+                checkForPartlyFailedUpload();
+            }
+        }
+        
+        /**
+         * It may be that only some have been uploaded. In this case a
+         * corresponding message should be shown.
+         */
+        private void checkForPartlyFailedUpload() {
+            if (failedScores + uploadedScores == levelScoreEntries.size()) {
+                StringBuilder builder = new StringBuilder();
+                builder.append(uploadedScores);
+                builder.append("/");
+                builder.append(levelScoreEntries.size());
+                builder.append(" ");
+                builder.append(I18n.t("partlyUploaded"));
+                Dialog uploadFailedMessage = new DialogWithOneButton(builder.toString(), I18n.t("ok"));
+                uploadFailedMessage.show(stage);
             }
         }
     }

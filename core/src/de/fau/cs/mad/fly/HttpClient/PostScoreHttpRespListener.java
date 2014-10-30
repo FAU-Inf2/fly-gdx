@@ -1,14 +1,11 @@
 package de.fau.cs.mad.fly.HttpClient;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
-import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.profile.ScoreManager;
 import de.fau.cs.mad.fly.ui.DialogWithOneButton;
+import de.fau.cs.mad.fly.ui.screens.LevelGroupHighscoreScreen.UploadScoreClickListener;
 
 /**
  * Service to upload a highscore to the server;
@@ -21,7 +18,7 @@ public class PostScoreHttpRespListener implements FlyHttpResponseListener {
     /** {@link Button} to deactivate when upload was successful */
     private Button uploadButton;
     private PostHighscoreService.RequestData requestData;
-    private Stage stageToShowMessage;
+    private UploadScoreClickListener uploadListener;
     
     /**
      * Creates a new {@link PostScoreHttpRespListener}, that listens to response
@@ -37,42 +34,34 @@ public class PostScoreHttpRespListener implements FlyHttpResponseListener {
      * @param uploadButton
      * @param stageToShowMessage
      */
-    public PostScoreHttpRespListener(PostHighscoreService.RequestData requestData, Button uploadButton, Stage stageToShowMessage) {
+    public PostScoreHttpRespListener(PostHighscoreService.RequestData requestData, Button uploadButton, UploadScoreClickListener uploadListener) {
         this.requestData = requestData;
         this.uploadButton = uploadButton;
-        this.stageToShowMessage = stageToShowMessage;
+        this.uploadListener = uploadListener;
     }
     
     @Override
-    public void successful(Object obj) {
+    public synchronized void successful(Object obj) {
         uploadButton.setDisabled(true);
-        
-        Gdx.app.log("PostScoreHttpRespListener", ".successful: levelID: " + requestData.LevelID + ", group: " + requestData.LevelgroupID + ", id: " + requestData.Score.getServerScoreId());
         
         requestData.Score.setIsUploaded(true);
         int playerProfileId = PlayerProfileManager.getInstance().getCurrentPlayerProfile().getId();
-        ScoreManager.getInstance().updateIsUploaded(requestData.Score, playerProfileId, requestData.LevelgroupID, requestData.LevelID);
+        ScoreManager.getInstance().updateIsUploaded(requestData.Score, playerProfileId, requestData.LevelGroupID, requestData.LevelID);
         if (requestData.Score.getServerScoreId() <= 0) {
             PostHighscoreService.ResponseData response = (PostHighscoreService.ResponseData) obj;
             if (response != null) {
                 requestData.Score.setServerScoreId(response.scoreID);
             }
-            ScoreManager.getInstance().updateServerScoreId(requestData.Score, playerProfileId, requestData.LevelgroupID, requestData.LevelID);
+            ScoreManager.getInstance().updateServerScoreId(requestData.Score, playerProfileId, requestData.LevelGroupID, requestData.LevelID);
         }
         
-        // show dialog with message for user
-        Dialog uploadSuccessfullMessage = new DialogWithOneButton(I18n.t("ScoreUploaded"), I18n.t("ok"));
-        uploadSuccessfullMessage.show(stageToShowMessage);
+        uploadListener.uploadSuccessfull();
     }
     
     @Override
-    public void failed(String msg) {
-        // debug output
-        Gdx.app.log("PostScoreHttpRespListener", ".failed:" + msg);
-        
-        // show dialog with message for user
-        Dialog uploadFailedMessage = new DialogWithOneButton(I18n.t("ConnectServerError"), I18n.t("ok"));
-        uploadFailedMessage.show(stageToShowMessage);
+    public synchronized void failed(String msg) {
+        uploadButton.setDisabled(false);
+        uploadListener.uploadFailed();
     }
     
     @Override

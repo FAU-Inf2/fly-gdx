@@ -34,37 +34,8 @@ public class PutHighscoreService {
             public void handleHttpResponse(HttpResponse httpResponse) {
                 HttpStatus status = httpResponse.getStatus();
                 if (status.getStatusCode() == HttpStatus.SC_OK || status.getStatusCode() == HttpStatus.SC_NO_CONTENT) {
-                    
                 	 String ress = httpResponse.getResultAsString();
                      Gdx.app.log("PutHighscoreService", "Received:" + ress );
-                     
-                	// JsonReader reader = new JsonReader();
-                    // JsonValue json = reader.parse(ress);
-                    // ResponseData response = new ResponseData();
-                    // //List<ResponseItem> results = new
-                    // ArrayList<ResponseItem>();
-                    // JsonValue scoreJS = json.get("highscore");
-                    // response.scoreID = scoreJS.getInt("id");
-                    // response.rank = scoreJS.getInt("rank");
-                    //
-                    // for (JsonValue item : json.get("above")) {
-                    // ResponseItem res = new ResponseItem();
-                    // res.Score = item.getInt("points");
-                    // res.FlyID = item.get("user").getInt("id");
-                    // res.Username = item.get("user").getString("name");
-                    // response.above.add(res);
-                    // Gdx.app.log("PostHighscoreService", "" + res.Score);
-                    // }
-                    //
-                    // for (JsonValue item : json.get("below")) {
-                    // ResponseItem res = new ResponseItem();
-                    // res.Score = item.getInt("points");
-                    // res.FlyID = item.get("user").getInt("id");
-                    // res.Username = item.get("user").getString("name");
-                    // response.below.add(res);
-                    // Gdx.app.log("PostHighscoreService", "" + res.Score);
-                    // }
-                    
                     listener.successful(new Object());
                 } else {
                     listener.failed(String.valueOf(status.getStatusCode()));

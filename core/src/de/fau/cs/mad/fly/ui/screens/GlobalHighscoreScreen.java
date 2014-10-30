@@ -167,9 +167,6 @@ public class GlobalHighscoreScreen extends BasicScreenWithBackButton {
     }
     
     protected void requestFailed(String msg) {
-        // debug output
-        Gdx.app.log("PostScoreHttpRespListener", ".failed:" + msg);
-        
         // show dialog with message for user
         Dialog uploadFailedMessage = new DialogWithOneButton(I18n.t("ConnectServerError"), I18n.t("ok")) {
             @Override

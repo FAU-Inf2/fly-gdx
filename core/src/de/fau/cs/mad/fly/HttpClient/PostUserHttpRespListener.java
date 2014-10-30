@@ -1,10 +1,5 @@
 package de.fau.cs.mad.fly.HttpClient;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-
-import de.fau.cs.mad.fly.I18n;
 import de.fau.cs.mad.fly.profile.PlayerProfile;
 import de.fau.cs.mad.fly.profile.PlayerProfileManager;
 import de.fau.cs.mad.fly.ui.DialogWithOneButton;
@@ -26,12 +21,12 @@ public class PostUserHttpRespListener implements FlyHttpResponseListener {
     
     private final PostHighscoreService.RequestData requestData;
     private final PostHighscoreService postHighscoreService;
-    private final Stage stageToShowMessage;
+    private final FlyHttpResponseListener listener;
     
-    public PostUserHttpRespListener(PostHighscoreService.RequestData requestData, PostHighscoreService postHighscoreScreenService, Stage stageToShowMessage) {
+    public PostUserHttpRespListener(PostHighscoreService.RequestData requestData, PostHighscoreService postHighscoreScreenService, FlyHttpResponseListener listener) {
         this.requestData = requestData;
         this.postHighscoreService = postHighscoreScreenService;
-        this.stageToShowMessage = stageToShowMessage;
+        this.listener = listener;
     }
     
     @Override
@@ -50,15 +45,11 @@ public class PostUserHttpRespListener implements FlyHttpResponseListener {
     
     @Override
     public void failed(String msg) {
-        // debug output
-        Gdx.app.log("PostScoreHttpRespListener", ".failed:" + msg);
-        
-        // show dialog with message for user
-        Dialog uploadFailedMessage = new DialogWithOneButton(I18n.t("ConnectServerError"), I18n.t("ok"));
-        uploadFailedMessage.show(stageToShowMessage);
+        listener.failed(msg);
     }
     
     @Override
     public void cancelled() {
+        listener.cancelled();
     }
 }
