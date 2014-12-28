@@ -14,8 +14,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "FLY";
-		config.width = 1024;
-		config.height = 860;
+		config.width = 960;
+		config.height = 640;
 		// config.fullscreen = true;
 
 		new LwjglApplication(new Fly(), config);

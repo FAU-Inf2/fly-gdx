@@ -7,6 +7,16 @@
 			"id": 301,
 			"name": "1",
 			"file": "level1.json"
-		}
+		},
+		{
+			"id": 302,
+			"name": "2",
+			"file": "level2.json"
+		},
+        {
+            "id": 303,
+            "name": "3",
+            "file": "level3.json"
+        }
 	]
 }
