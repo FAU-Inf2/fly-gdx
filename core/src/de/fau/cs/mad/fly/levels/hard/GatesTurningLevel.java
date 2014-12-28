@@ -17,7 +17,7 @@ import de.fau.cs.mad.fly.res.GateGoal;
  * @author Lukas Hahmann <lukas.hahmann@gmail.com>
  * 
  */
-public class GatesTurningLevel implements ILevel, IFeatureInit, GateCircuitListener {
+public class GatesTurningLevel implements ILevel, IFeatureInit {
     
     @Override
     public void create(GameControllerBuilder builder) {
@@ -26,19 +26,7 @@ public class GatesTurningLevel implements ILevel, IFeatureInit, GateCircuitListe
     
     @Override
     public void init(GameController game) {
-        InfoOverlay.getInstance().setOverlay(I18n.tLevel("hard.choose.right.spaceship"), 5);
-    }
-    
-    @Override
-    public void onGatePassed(GateGoal gate) {
-        if (gate.getGateId() == 1) {
-            InfoOverlay.getInstance().setOverlay(I18n.tLevel("tutorial.gate.choose"), 3);
-        } 
-    }
-
-    @Override
-    public void onFinished() {
-        // nothing to do
+        InfoOverlay.getInstance().setOverlay(I18n.tLevel("hard.not.same.level"), 5);
     }
     
 }

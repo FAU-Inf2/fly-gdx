@@ -1,5 +1,5 @@
 {
-    "class": "hard.GatesTurningLevel",
+    "class": "",
     "components": [
         {
             "id": "border",
@@ -32,31 +32,7 @@
             "id": "Gate.000",
             "position": [
                 0.0,
-                -20.0,
-                5.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                11
-            ]
-        },
-        {
-            "angular_velocity": [
-                2.5,
-                0.0,
-                0.0
-            ],
-            "euler": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "gateId": 2,
-            "id": "Gate.002",
-            "position": [
-                0.0,
-                -2.0,
+                69.0,
                 0.0
             ],
             "ref": "torus",
@@ -65,7 +41,7 @@
         },
         {
             "euler": [
-                0.0,
+                -15.0,
                 0.0,
                 0.0
             ],
@@ -97,8 +73,8 @@
             "id": "Gate.005",
             "position": [
                 0.0,
-                22.0,
-                1.0
+                21.0,
+                0.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -116,8 +92,8 @@
             "id": "Gate.006",
             "position": [
                 0.0,
-                25.0,
-                5.0
+                29.0,
+                0.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -140,8 +116,8 @@
             "id": "Gate.007",
             "position": [
                 0.0,
-                24.0,
-                9.0
+                35.0,
+                0.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -159,8 +135,8 @@
             "id": "Gate.008",
             "position": [
                 0.0,
-                10.0,
-                10.0
+                45.0,
+                0.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -183,8 +159,8 @@
             "id": "Gate.009",
             "position": [
                 0.0,
-                -5.0,
-                10.0
+                52.0,
+                0.0
             ],
             "ref": "torus",
             "refHole": "hole",
@@ -202,37 +178,18 @@
             "id": "Gate.010",
             "position": [
                 0.0,
-                -19.0,
-                9.0
+                60.0,
+                0.0
             ],
             "ref": "torus",
             "refHole": "hole",
             "successors": [
                 0
             ]
-        },
-        {
-            "euler": [
-                -45.0,
-                0.0,
-                5.0
-            ],
-            "gateId": 11,
-            "id": "Gate.011",
-            "position": [
-                0.0,
-                -19.0,
-                1.0
-            ],
-            "ref": "torus",
-            "refHole": "hole",
-            "successors": [
-                2
-            ]
         }
     ],
-    "id": 302,
-    "name": "2",
+    "id": 303,
+    "name": "3",
     "start": {
         "position": {
             "x": 0.0,
@@ -250,6 +207,6 @@
             "z": 0.0
         }
     },
-    "time": 45,
+    "time": 35,
     "upgrades": []
 }
