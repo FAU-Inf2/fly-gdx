@@ -84,7 +84,7 @@ public class SpeedUpgradeEffect {
     }
     
     /**
-     * Checks weather this upgrade is active or if its time is up.
+     * Checks whether this upgrade is active or if its time is up.
      * 
      * @return
      */

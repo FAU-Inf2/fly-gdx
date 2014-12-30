@@ -36,8 +36,6 @@ public class TemporarySpeedUpgradeHandler extends CollectibleObjects implements 
     
     private List<SpeedUpgradeEffect> upgrades;
     
-    private float speedUpFactor;
-    
     /**
      * Creates a new {@link TemporarySpeedUpgradeHandler}.
      */
@@ -45,7 +43,6 @@ public class TemporarySpeedUpgradeHandler extends CollectibleObjects implements 
         super(TemporarySpeedUpgrade.TYPE);
         upgradesActive = false;
         upgrades = new ArrayList<SpeedUpgradeEffect>();
-        speedUpFactor = SpeedUpgradeEffect.NO_SPEEDUP;
     }
     
     @Override
@@ -81,7 +78,7 @@ public class TemporarySpeedUpgradeHandler extends CollectibleObjects implements 
     public void update(float delta) {
         int size = upgrades.size();
         if (size > 0) {
-            speedUpFactor = SpeedUpgradeEffect.NO_SPEEDUP;
+            float speedUpFactor = SpeedUpgradeEffect.NO_SPEEDUP;
             SpeedUpgradeEffect upgrade;
             for (int i = size - 1; i >= 0; i--) {
                 upgrade = upgrades.get(i);
@@ -95,8 +92,7 @@ public class TemporarySpeedUpgradeHandler extends CollectibleObjects implements 
             plane.setCurrentSpeed(plane.getBaseSpeed() * speedUpFactor);
         } else if (upgradesActive) {
             upgradesActive = false;
-            speedUpFactor = SpeedUpgradeEffect.NO_SPEEDUP;
-            plane.setCurrentSpeed(plane.getBaseSpeed() * speedUpFactor);
+            plane.setCurrentSpeed(plane.getBaseSpeed());
         }
     }
 
