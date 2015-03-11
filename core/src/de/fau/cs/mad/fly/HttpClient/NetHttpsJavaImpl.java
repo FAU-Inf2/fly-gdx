@@ -121,13 +121,13 @@ public class NetHttpsJavaImpl {
 			if ( token == null )
 				switch ( Gdx.app.getType() ) {
 					case Desktop:
-						token = "%__FLY_SERVER_ACCESS_TOKEN_DESKTOP__%";
+						token = "ef78b5edd1e46531cc815b2cf7107bc5e6f7564c0b6cf253be2306b2edc53484";
 						break;
 					case Android:
-						token = "%__FLY_SERVER_ACCESS_TOKEN_ANDROID__%";
+						token = "d96706409d2aaeb167944124041677b2073a2073c5e5a545e421097faee2ea38";
 						break;
 					case iOS:
-						token = "%__FLY_SERVER_ACCESS_TOKEN_IOS__%";
+						token = "798a943f9e113f365ee8c546eff290b453801aac36e1087ab615fc920bc1db4a";
 						break;
 				}
 

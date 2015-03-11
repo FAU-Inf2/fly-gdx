@@ -1,7 +1,11 @@
 package de.fau.cs.mad.fly.ui.screens;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
+import javax.lang.model.util.SimpleElementVisitor6;
 
 import de.fau.cs.mad.fly.Fly;
 import de.fau.cs.mad.fly.I18n;
@@ -186,11 +192,16 @@ public class LevelGroupHighscoreScreen extends BasicScreenWithBackButton {
                             scoreTable.add(new Label(score.getTotalScore() + "", skin)).pad(UI.Buttons.SPACE, 20, UI.Buttons.SPACE, UI.Buttons.SPACE).right();
                             
                             uploadScoreButton = new TextButton(I18n.t("uploadScoreButtonText"), skin);
-                            
-                            if (score.isUploaded()) {
+
+                            // here is a check for the reached date.
+                            // before the 11.03.15 this date has not been set.
+                            // at 11.03.15 the new empty database went online
+                            // now the uplaod date is set, if no date is set, the dataset may be uploaded to the old, but not to the current database
+                            if (score.isUploaded() && score.getReachedDate() == null) {
                                 uploadScoreButton.setDisabled(true);
                             } else {
                                 UploadScoreClickListener listener = new UploadScoreClickListener();
+                                score.setReachedDate(Calendar.getInstance().getTime());
                                 LevelScoreEntry levelScoreEntry = new LevelScoreEntry(levelGroup.id, Integer.valueOf(levelID), score, uploadScoreButton);
                                 listener.addLevelScoreEntry(levelScoreEntry);
                                 uploadAllListener.addLevelScoreEntry(levelScoreEntry);
