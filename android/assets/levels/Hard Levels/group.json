@@ -32,6 +32,11 @@
             "id": 306,
             "name": "6",
             "file": "level6.json"
+        },
+        {
+            "id": 307,
+            "name": "7",
+            "file": "level7.json"
         }
 	]
 }
