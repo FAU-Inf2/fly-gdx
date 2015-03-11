@@ -1,0 +1,133 @@
+{
+    "class": "",
+    "components": [
+        {
+            "id": "border",
+            "ref": "border"
+        },
+        {
+            "angular_velocity": [
+                1.0,
+                1.0,
+                0.0
+            ],
+            "euler": [
+                168.0,
+                -8.6,
+                -237.6
+            ],
+            "id": "Cube.003",
+            "position": [
+                0.0,
+                16.0,
+                0.0
+            ],
+            "ref": "asteroid",
+            "scale": [
+                1.0,
+                0.8,
+                1.2
+            ],
+            "sinus_x": [
+                3.0,
+                0.4000000059604645,
+                0.20000000298023224
+            ],
+            "sinus_z": [
+                3.0,
+                0.4000000059604645,
+                2.1999998092651367
+            ]
+        }
+    ],
+    "dependencies": {
+        "asteroid": "asteroid",
+        "border": "spacesphere",
+        "hole": "torusHoleBox",
+        "torus": "torusMedium"
+    },
+    "gates": [
+        {
+            "successors": [
+                4
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 4,
+            "id": "Gate.004",
+            "position": [
+                0.0,
+                12.0,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "sinus_x": [
+                3.0,
+                0.4000000059604645,
+                0.0
+            ],
+            "sinus_z": [
+                3.0,
+                0.4000000059604645,
+                2.0
+            ],
+            "successors": [
+                14
+            ]
+        },
+        {
+            "euler": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "gateId": 14,
+            "id": "Gate.014",
+            "position": [
+                0.0,
+                23.8,
+                0.0
+            ],
+            "ref": "torus",
+            "refHole": "hole",
+            "sinus_x": [
+                3.0000009536743164,
+                0.4000000059604645,
+                0.5
+            ],
+            "sinus_z": [
+                3.0,
+                0.4000000059604645,
+                2.5
+            ],
+            "successors": []
+        }
+    ],
+    "id": 306,
+    "name": "6",
+    "start": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "upDirection": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0
+        },
+        "viewDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        }
+    },
+    "time": 25,
+    "upgrades": []
+}
