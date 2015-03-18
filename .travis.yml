@@ -1,7 +1,2 @@
-language: android
-android:
-  components:
-    - build-tools-20.0.0
-    - android-20
-
-script: ./gradlew assembleDebug createIPA
+language: objective-c
+script: ./gradlew createIPA
