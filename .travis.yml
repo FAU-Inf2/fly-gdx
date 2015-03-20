@@ -3,7 +3,7 @@ android:
   components:
   - build-tools-20.0.0
   - android-20
-script: "./gradlew assembleDebug"
+script: "./gradlew assemble"
 before_install:
 - openssl aes-256-cbc -K $encrypted_ee2862c39370_key -iv $encrypted_ee2862c39370_iv
   -in keys.tar.enc -out keys.tar -d
