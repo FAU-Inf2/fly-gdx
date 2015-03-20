@@ -1,7 +1,13 @@
 language: android
 android:
   components:
-    - build-tools-20.0.0
-    - android-20
-
-script: ./gradlew assembleDebug
+  - build-tools-20.0.0
+  - android-20
+script: "./gradlew assembleDebug"
+before_install:
+- openssl aes-256-cbc -K $encrypted_ee2862c39370_key -iv $encrypted_ee2862c39370_iv
+  -in apikey.properties.enc -out apikey.properties -d
+- openssl aes-256-cbc -K $encrypted_ee2862c39370_key -iv $encrypted_ee2862c39370_iv
+  -in madfau.keystore.enc -out android/madfau.keystore -d
+- openssl aes-256-cbc -K $encrypted_ee2862c39370_key -iv $encrypted_ee2862c39370_iv
+  -in keystore.properties.enc -out keystore.properties -d
