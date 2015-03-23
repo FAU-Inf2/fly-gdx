@@ -1,11 +1,18 @@
+env:
+  global:
+  - secure: SmA5fbqAXBYRJZGR1YP3ajttgdIfMcJpT6iwEI24r5ssDtLrFaCodToPd9zs3nNn/SXPbFfnyNjf3otStoHZze7dDn5FsbpFQTBp+HIDaNHhMr76g3xLPy5hW5SbuVC+uDKV9e90nMTXI2fhu8cLUtlnu6ltGM6AyKHr9d8OIYQ=
+  - secure: JZPK0+nAHjBS7F2QatsvtP32CxkXFhCAzKXL64La3Dt0zTiUq3CkrHDvaB41UXRo/1Db2GEWdF/g1UdZn4Vpe8uMVhDpSEyj+IJhydrusCdLTLrKHUv/5kjw6LWxqnjVEiP+6ykIY734OSIqpBellCAJ2rtRWxiX3qg9Z+GiRKc=
 language: android
 android:
   components:
   - build-tools-20.0.0
   - android-20
-script: "./gradlew assemble"
 before_install:
 - openssl aes-256-cbc -K $encrypted_ee2862c39370_key -iv $encrypted_ee2862c39370_iv
   -in keys.tar.enc -out keys.tar -d
-- tar xvf keys.tar 
+- tar xvf keys.tar
 - mv madfau.keystore android/
+script: "./gradlew assemble"
+after_success:
+- mv android/build/outputs/apk/android-release.apk FLY-`git rev-parse HEAD`.apk
+- curl -u $LOGIN -F "apk=@FLY-`git rev-parse HEAD`.apk" -F "project=FASL" $URL
