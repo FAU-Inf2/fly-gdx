@@ -15,4 +15,4 @@ before_install:
 script: "./gradlew assemble"
 after_success:
 - mv android/build/outputs/apk/android-release.apk FLY-`git rev-parse HEAD`.apk
-- curl -u $LOGIN -F "apk=@FLY-`git rev-parse HEAD`.apk" -F "project=FASL" $URL
+- curl -u $LOGIN -F "apk=@FLY-`git rev-parse HEAD`.apk" -F "project=FLY" $URL
