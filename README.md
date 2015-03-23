@@ -1,4 +1,4 @@
-Fly
+Fly [![Build Status](https://travis-ci.org/FAU-Inf2/fly-gdx.svg?branch=master)](https://travis-ci.org/FAU-Inf2/fly-gdx)
 =========
 Fly is a 3D flying game for Android and PC.
 
